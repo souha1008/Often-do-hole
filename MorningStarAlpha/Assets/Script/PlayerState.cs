@@ -12,6 +12,8 @@ using UnityEngine;
 
 //うんち！
 //ちんちん！
+//やったーーーーーー！！
+
 
 public class PlayerState
 {
