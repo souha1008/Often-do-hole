@@ -8,6 +8,10 @@ using UnityEngine;
 /// プレイヤーの状態管理をするインターフェース
 /// MonoBehaviourは継承しない
 /// </summary>
+/// 
+
+//うんち！
+
 public class PlayerState
 {
     virtual public void UpdateState() { }      //継承先でコントローラーの入力
