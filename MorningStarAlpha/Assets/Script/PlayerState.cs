@@ -13,6 +13,7 @@ using UnityEngine;
 //うんち！
 //ちんちん！
 //やったーーーーーー！！
+//少し湿っている
 
 
 public class PlayerState
