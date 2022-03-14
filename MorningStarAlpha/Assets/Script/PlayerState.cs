@@ -15,6 +15,7 @@ using UnityEngine;
 //やったーーーーーー！！
 //少し湿っている
 //aaaaaaaaaaaaaaaaaaaaa
+//てすてす
 
 public class PlayerState
 {
