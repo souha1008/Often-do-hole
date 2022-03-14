@@ -426,7 +426,7 @@ public class PlayerStateSwing : PlayerState
     private bool finishFlag;
     private bool shotButton;
     private Vector3 ballPosition;
-    private const float SWING_ANGLER_VELOCITY = 4.0f; //振り子角速度 ←const値ではなく前のstateのvelocityで可変が良さそう
+    private const float SWING_ANGLER_VELOCITY = 2.7f; //振り子角速度 ←const値ではなく前のstateのvelocityで可変が良さそう
     private const float SWING_REREASE_ANGLE = 140.0f; //振り子がのなす角が一定以上になったら強制解除
 
     public PlayerStateSwing()//コンストラクタ
