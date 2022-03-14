@@ -11,6 +11,7 @@ using UnityEngine;
 /// 
 
 //‚¤‚ñ‚¿I
+//‚¿‚ñ‚¿‚ñI
 
 public class PlayerState
 {
