@@ -320,7 +320,7 @@ public class PlayerStateShot : PlayerState
             }
         } 
         
-        BulletMain BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>();
+        //BulletMain BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>();
 
         //ボールが触れたらスイング状態
         if (BulletScript.isTouched)
