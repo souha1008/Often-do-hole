@@ -25,11 +25,11 @@ public class Gimmick_SpringBoard : MonoBehaviour
             float Rad;           // 回転角
             Vector3 VecPower;    // 加えるベクトル量
 
-            //PlayerMain playermain = collider.gameObject.GetComponent<PlayerMain>();
+            PlayerMain playermain = collider.gameObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
             Rigidbody Rb = collider.gameObject.transform.GetComponent<Rigidbody>(); // リジッドボディ
             Rad = this.transform.localEulerAngles.z;  // ジャンプ台の回転角
             Rad = CalculationScript.AngleCalculation(Rad); // 角度ラジアン変換
-            VecPower = CalculationScript.AngleVectorXY(Rad) * SpringPower;
+            VecPower = CalculationScript.AngleVectorXY(Rad) * SpringPower;  // 飛ぶベクトル量
 
             if (VecPower.x < 1 && VecPower.x > -1) VecPower.x = 0;
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
@@ -37,9 +37,7 @@ public class Gimmick_SpringBoard : MonoBehaviour
             Debug.Log(VecPower.x);
             Debug.Log(VecPower.y);
 
-            //playermain.vel += new Vector2 (VecPower.x, VecPower.y);
-            Rb.velocity = new Vector3 (VecPower.x, VecPower.y, 0);
-            //Rb.AddForce(VecPower,ForceMode.VelocityChange);
+            playermain.vel = VecPower; // プレイヤーのベクトル量変更
         }
     }
 }
