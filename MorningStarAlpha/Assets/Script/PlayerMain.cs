@@ -11,25 +11,43 @@ public enum PlayerMoveDir
     RIGHT,
 }
 
+/// <summary>
+/// プレイヤーのステート
+/// ほかオブジェクトの読み取り用
+/// </summary>
+public enum EnumPlayerState 
+{ 
+    ON_GROUND, //地上にいる
+    SHOT,      //弾を撃っている状態
+    MIDAIR,　　//空中にいて弾を撃っていない
+    SWING,     //振り子状態
+}
+
+
 public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     public GameObject BulletPrefab;
     public PlayerState mode;                         // ステート
+    public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
     [System.NonSerialized] public GameObject Bullet = null;
     public HingeJoint hinge = null;
     public PlayerMoveDir dir;
-    public Vector2 vel;                              // 移動速度(inspector上で確認)
+    public Vector3 vel;                              // 移動速度(inspector上で確認)
     public Vector2 leftStick;                        // 左スティック
     public bool canShot;                             // 打てる状態か
+    public bool isOnGraund;                          // 地面に触れているか（onCollisionで変更）
 
     [SerializeField] private float[] AdjustAngles;                      //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
+
+
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
     [Range(0.1f, 1.0f)] public float  LATERAL_MOVE_THRESHORD;  // 走り左右移動時の左スティックしきい値
     public float                      MAX_RUN_SPEED;           // 走り最高速度
     public float                      MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
     public float                      ADD_RUN_SPEED;           // 走り一秒間で上がるスピード
+    public float                      MAX_FALL_SPEED;          // 重力による最低速度
     [Range(0.1f, 1.0f)] public float　RUN_FRICTION;            // 走りの減衰率
 
 
@@ -46,13 +64,15 @@ public class PlayerMain : MonoBehaviour
         PlayerState.Player = gameObject;
 
         rb = GetComponent<Rigidbody>();
-        mode = new PlayerStateStand();
+        mode = new PlayerStateOnGround(); //初期ステート
+        refState = EnumPlayerState.ON_GROUND;
         Bullet = null;
-        hinge = null;
-        dir = PlayerMoveDir.RIGHT;
+        hinge = null;　　　　　　　　　　 
+        dir = PlayerMoveDir.RIGHT;        //向き初期位置
         vel = new Vector2(0.0f ,0.0f);
         leftStick = new Vector2(0.0f, 0.0f);
         canShot = false;
+        isOnGraund = false;
     }
 
     private void Update()
@@ -65,6 +85,7 @@ public class PlayerMain : MonoBehaviour
     private void FixedUpdate()
     {
         mode.Move();
+        rb.velocity = vel;
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
         //mode.DebugMessage();
 #endif
@@ -142,5 +163,27 @@ public class PlayerMain : MonoBehaviour
             leftStick = vec;
         }
 #endif
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Vector3 avePoint = Vector3.zero;
+        for (int i = 0; i < collision.contacts.Length; i++)
+        {
+            avePoint += collision.contacts[i].point;
+        }
+
+        avePoint /= collision.contacts.Length;
+
+
+        if(avePoint.y < transform.position.y - 0.6f)
+        {
+            isOnGraund = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isOnGraund = false; 
     }
 }
