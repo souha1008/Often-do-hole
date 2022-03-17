@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 // フェードの状態
 public enum FADE_STATE
@@ -25,7 +24,6 @@ public enum FADE_KIND
 public class FadeManager : SingletonMonoBehaviour<FadeManager>
 {
     // 変数
-    public GameObject Player;                         // プレイヤーオブジェクト(※後で消す)
 
     // フェード秒数(ゲームオーバー)
     [Header("フェードにかかる秒数(ゲームオーバー)")]
@@ -79,10 +77,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), FadeTexture);
     }
 
-    private void Start()
-    {
-        
-    }
+    private void Start() { }
 
     private void FixedUpdate()
     {
@@ -138,9 +133,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     // フェードインしたときの処理(ゲームオーバー)
     private void FadeIn_GameOver()
     {
-        // ※後でチェックポイント処理に任せる予定
-        Player.GetComponent<Transform>().position = new Vector3(0, 10, 0);
-        Player.GetComponent<PlayerMain>().vel = new Vector3(0, 0, 0);
+        // チェックポイントに復帰処理
+        CheckPointManager.Instance.CheckPointAction();
     }
     // フェードインしたときの処理(シーン変更)
     private void FadeIn_SceneChange()
