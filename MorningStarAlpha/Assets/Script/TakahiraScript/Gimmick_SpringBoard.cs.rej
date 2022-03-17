@@ -1,0 +1,12 @@
+diff a/MorningStarAlpha/Assets/Script/TakahiraScript/Gimmick_SpringBoard.cs b/MorningStarAlpha/Assets/Script/TakahiraScript/Gimmick_SpringBoard.cs	(rejected hunks)
+@@ -37,9 +37,7 @@
+             Debug.Log(VecPower.x);
+             Debug.Log(VecPower.y);
+ 
+-            //playermain.vel += new Vector2 (VecPower.x, VecPower.y);
+-            Rb.velocity = new Vector3 (VecPower.x, VecPower.y, 0);
+-            //Rb.AddForce(VecPower,ForceMode.VelocityChange);
++            playermain.vel = VecPower; // �v���C���[�̃x�N�g���ʕύX
+         }
+     }
+ }

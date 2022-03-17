@@ -1,0 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CheckPoint : MonoBehaviour
+{
+    // 変数
+    [Header("復活座標オブジェクト")]
+    public GameObject RespawnPointObject;                       // 復活座標オブジェクト
+    [Header("メッシュ切り替え用スクリプトがついたオブジェクト")]
+    [SerializeField] private GameObject MeshOnOffObject;        // メッシュの表示非表示切り替え用
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        // コライダー
+        this.gameObject.GetComponent<Collider>().isTrigger = true;  // トリガーオン
+        RespawnPointObject.GetComponent<Collider>().isTrigger = true;     // トリガーオン
+
+        // チェックポイントのメッシュオンオフ用スクリプトを参照して、見える or 見えなくする
+        if (MeshOnOffObject.GetComponent<MeshOnOff>().MeshOn)
+        {
+            this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            RespawnPointObject.GetComponent<MeshRenderer>().enabled = true;
+        }
+        else
+        {
+            this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+            RespawnPointObject.GetComponent<MeshRenderer>().enabled = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Player")
+        {
+            CheckPointManager.Instance.SetCheckPoint(this);
+        }
+    }
+}
