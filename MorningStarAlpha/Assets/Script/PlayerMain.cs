@@ -73,11 +73,14 @@ public class PlayerMain : MonoBehaviour
         leftStick = new Vector2(0.0f, 0.0f);
         canShot = false;
         isOnGraund = false;
+
+        rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
     }
 
     private void Update()
     {
         InputStick();
+        MidAirCheck();
         mode.UpdateState();
         mode.StateTransition();
     }
@@ -104,6 +107,17 @@ public class PlayerMain : MonoBehaviour
         //入力取得
         leftStick.x = Input.GetAxis("Horizontal");
         leftStick.y = Input.GetAxis("Vertical");
+
+        //スティックの入力が一定以上ない場合は撃てない
+        if (leftStick.sqrMagnitude > 0.8f)
+        {
+            canShot = true;
+        }
+        else
+        {
+            canShot = false;
+        }
+
 
 
         //スティックの角度を求める
@@ -145,17 +159,6 @@ public class PlayerMain : MonoBehaviour
         Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
         vec = vec.normalized;
 
-
-        if (leftStick.sqrMagnitude > 0.8f)
-        {
-            canShot = true;
-        }
-        else
-        {
-            canShot = false;
-        }
-
-
 #if SPLIT_LEFTSTICK
         //分割処理
         if (canShot)
@@ -165,25 +168,37 @@ public class PlayerMain : MonoBehaviour
 #endif
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Vector3 avePoint = Vector3.zero;
+    private void OnCollisionStay(Collision collision)
+    { 
+        //接触点のうち、一つでも足元があれば着地判定
         for (int i = 0; i < collision.contacts.Length; i++)
         {
-            avePoint += collision.contacts[i].point;
-        }
+            if (collision.contacts[i].point.y < transform.position.y - 0.6f)
+            {
+                isOnGraund = true;
+            }
+        }   
+    }
 
-        avePoint /= collision.contacts.Length;
-
-
-        if(avePoint.y < transform.position.y - 0.6f)
+    //空中にいるかを判定する
+    //斜めの床がなければ必要なさそう
+    private void MidAirCheck()
+    {
+        if (isOnGraund)
         {
-            isOnGraund = true;
+            Ray downRay = new Ray(rb.position, Vector3.down);
+            if (Physics.Raycast(downRay, 1.2f) == false)
+            {
+                isOnGraund = false;
+            }
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        isOnGraund = false; 
+        if (isOnGraund)
+        {
+            isOnGraund = false;
+        }
     }
 }

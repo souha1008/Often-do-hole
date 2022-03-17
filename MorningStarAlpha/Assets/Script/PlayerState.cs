@@ -84,8 +84,7 @@ public class PlayerStateOnGround : PlayerState
 
     public override void StateTransition()
     {
-        Ray downRay = new Ray(PlayerScript.rb.position, Vector3.down);
-        if (Physics.Raycast(downRay, 1.2f) == false)
+        if (PlayerScript.isOnGraund == false)
         {
             PlayerScript.mode = new PlayerStateMidair(0.0f);
         }
