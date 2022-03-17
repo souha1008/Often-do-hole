@@ -35,7 +35,7 @@ public class Gimmick_Enemy_1 : Enemy_Main
     // 敵死亡処理
     public override void Death()
     {
-        // 死亡エフェクト
+        // ※死亡エフェクト
 
         // 自身を消す
         Destroy(this.gameObject);
@@ -46,9 +46,9 @@ public class Gimmick_Enemy_1 : Enemy_Main
     { 
         if (collider.gameObject.tag == "Player") // 当たったオブジェクトが錨だったらに変更予定
         {
-            // ヒットストップ
+            // ※ヒットストップ
 
-            // 当たったエフェクト
+            // ※当たったエフェクト
 
             Death(); // 死亡処理   
         }

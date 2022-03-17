@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class Gimmick_Thorn : MonoBehaviour
 {
-    public GameObject Fade = null;
-
     // Start is called before the first frame update
     void Start()
     {
-        if (Fade ==  null)
-        {
-            Fade = GameObject.Find("Fade");
-        }
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = true; // トリガーにする
     }
@@ -32,7 +26,7 @@ public class Gimmick_Thorn : MonoBehaviour
             // プレイヤーにダメージエフェクト
 
             // フェード処理
-            Fade.GetComponent<Fade>().SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
+            FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
         }
     }
 }

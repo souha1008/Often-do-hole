@@ -22,29 +22,66 @@ public enum FADE_KIND
 }
 
 
-public class Fade : MonoBehaviour
+public class FadeManager : SingletonMonoBehaviour<FadeManager>
 {
     // 変数
-    public GameObject Player;                         // プレイヤーオブジェクト
-    public Image FadeImage;                           // フェードのイメージ
-    public const float FadeRate_GameOver = 0.04f;     // フェード係数(ゲームオーバー)
-    public const float FadeRate_SceneChange = 0.02f;  // フェード係数(シーン変更)
-    public const float FadeRate_StageChange = 0.02f;  // フェード係数(ステージ変更)
+    public GameObject Player;                         // プレイヤーオブジェクト(※後で消す)
+
+    // フェード秒数(ゲームオーバー)
+    [Header("フェードにかかる秒数(ゲームオーバー)")]
+    [SerializeField] private float FadeTime_GameOver = 1;
+
+    // フェード秒数(シーン変更)
+    [Header("フェードにかかる秒数(シーン変更)")]
+    [SerializeField] private float FadeTime_SceneChange = 1;
+
+    // フェード秒数(ステージ変更)
+    [Header("フェードにかかる秒数(ステージ変更)")]
+    [SerializeField] private float FadeTime_StageChange = 1;
+
+
+    private Texture2D FadeTexture;                    // フェードのテクスチャ
     private float FadeRate;                           // フェード係数
     private FADE_STATE NowFadeState;                  // 現在のフェードの状態
     private FADE_STATE OldFadeState;                  // ひとつ前のフェードの状態
     private FADE_KIND NowFadeKind;                    // 現在のフェードの種類
     private Color FadeColor;                          // フェードのカラー
 
-    private void Start()
+    private void Awake()
     {
+        if (this != Instance)
+        {
+            Destroy(this);
+            return;
+        }
+
+        DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
+
         // 初期化
         NowFadeState = OldFadeState = FADE_STATE.FADE_NONE;
         NowFadeKind = FADE_KIND.FADE_GAMOVER;
-        FadeRate = FadeRate_GameOver;
+        FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
         FadeColor = new Color(0, 0, 0, 0);
 
-        DontDestroyOnLoad(this.gameObject);
+        //テクスチャ作成
+        FadeTexture = new Texture2D(32, 32, TextureFormat.RGB24, false);
+        FadeTexture.ReadPixels(new Rect(0, 0, 32, 32), 0, 0, false);
+        FadeTexture.SetPixel(0, 0, Color.white);
+        FadeTexture.Apply();
+    }
+    private void OnGUI()
+    {
+        if (NowFadeState == FADE_STATE.FADE_NONE)
+            return;
+
+        //透明度を更新してテクスチャを描画
+        GUI.color = FadeColor;
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), FadeTexture);
+    }
+
+    private void Start()
+    {
+        
     }
 
     private void FixedUpdate()
@@ -73,8 +110,6 @@ public class Fade : MonoBehaviour
                     NowFadeState = FADE_STATE.FADE_NONE;
                 }
             }
-
-            FadeImage.color = FadeColor; // カラー変更
         }
 
         // フェードイン時の処理
@@ -103,26 +138,21 @@ public class Fade : MonoBehaviour
     // フェードインしたときの処理(ゲームオーバー)
     private void FadeIn_GameOver()
     {
-        // 後でチェックポイント処理に任せる予定
+        // ※後でチェックポイント処理に任せる予定
         Player.GetComponent<Transform>().position = new Vector3(0, 10, 0);
         Player.GetComponent<PlayerMain>().vel = new Vector3(0, 0, 0);
     }
     // フェードインしたときの処理(シーン変更)
     private void FadeIn_SceneChange()
     {
-        // 後で別の処理に任せる予定
+        // ※後で別の処理に任せる予定
     }
     // フェードインしたときの処理(ステージ変更)
     private void FadeIn_StageChange()
     {
-        // 後で別の処理に任せる予定
+        // ※後で別の処理に任せる予定
     }
 
-
-    public FADE_STATE GetNowState()
-    {
-        return NowFadeState;
-    }
     // フェード変更
     //
     // 引数１：フェード状態の種類(今のところフェードアウトのみ)
@@ -137,17 +167,21 @@ public class Fade : MonoBehaviour
             switch(NowFadeKind)
             {
                 case FADE_KIND.FADE_GAMOVER:
-                    FadeRate = FadeRate_GameOver;
+                    FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
                     break;
                 case FADE_KIND.FADE_SCENECHANGE:
-                    FadeRate = FadeRate_SceneChange;
+                    FadeRate = Time.fixedDeltaTime / FadeTime_SceneChange;
                     break;
                 case FADE_KIND.FADE_STAGECHANGE:
-                    FadeRate = FadeRate_StageChange;
+                    FadeRate = Time.fixedDeltaTime / FadeTime_StageChange;
                     break;
                 default:
                     break;
             }
         }
+    }
+    public FADE_STATE GetNowState()
+    {
+        return NowFadeState;
     }
 }
