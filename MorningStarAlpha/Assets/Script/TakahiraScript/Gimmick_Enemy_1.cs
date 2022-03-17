@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Gimmick_Enemy_1 : Enemy_Main
 {
     // 変数
-    public float MoveVelX = 10.0f;
-    public float MoveVelXMax = 1400.0f;
-    private float MoveVelXMaxHalf;
-    GameObject Fade;
+    public float MoveVelX = 10.0f;      // X方向の動く量
+    public float MoveVelXMax = 1400.0f; // X方向の動く量最大値
+    private float MoveVelXMaxHalf;      // 最大値の半分
 
     // スタート処理
     public override void Init()
@@ -28,10 +28,12 @@ public class Gimmick_Enemy_1 : Enemy_Main
         {
             Vel.x = MoveVelX;
         }
+
+        Rad += new Vector3(0.0f, 0.0f, 10.0f);  // 回転
     }
 
     // 敵死亡処理
-    public override void Death() 
+    public override void Death()
     {
         // 死亡エフェクト
 

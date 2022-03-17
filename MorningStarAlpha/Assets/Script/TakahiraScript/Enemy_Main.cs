@@ -2,25 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_Main : MonoBehaviour
+
+// “GƒƒCƒ“ƒNƒ‰ƒX(Œp³‚µ‚Äg‚¤)
+public abstract class Enemy_Main : MonoBehaviour
 {
     // •Ï”
+    [SerializeField] protected Vector3 Rad;          // Šp“x
     [SerializeField] protected Vector3 Vel;          // ˆÚ“®—Ê
     [SerializeField] protected Vector3 TotalMoveVel; // ©•ª‚Ì‡ŒvˆÚ“®—Ê
     protected Rigidbody Rb;         // ƒŠƒWƒbƒhƒ{ƒfƒB
 
     // Œp³‚·‚é‚à‚Ì
-    virtual public void Init() { } // ƒXƒ^[ƒgˆ—
-    virtual public void Move() { }  // “G‚Ì“®‚«ˆ—
-    virtual public void Death() { } // “G€–Sˆ—
-    virtual public void OnTriggerEnter(Collider collider) { }    // ‰½‚©‚ÆÕ“Ëˆ—(ƒgƒŠƒK[)
-    //virtual public void OnCollisionEnter(Collision collision) { }   // ‰½‚©‚ÆÕ“Ëˆ—(ƒRƒŠƒWƒ‡ƒ“)
+    public abstract void Init(); // ƒXƒ^[ƒgˆ—
+    public abstract void Move();  // “G‚Ì“®‚«ˆ—
+    public abstract void Death(); // “G€–Sˆ—
+    public abstract void OnTriggerEnter(Collider collider);    // ‰½‚©‚ÆÕ“Ëˆ—(ƒgƒŠƒK[)
+    //public abstract void OnCollisionEnter(Collision collision);   // ‰½‚©‚ÆÕ“Ëˆ—(ƒRƒŠƒWƒ‡ƒ“)
 
 
     // Œp³æ‚Å©“®‚Å“®‚­ˆ—(ƒvƒƒeƒNƒg)
     protected void Start() 
     {
         // ‰Šú‰»
+        Rad = new Vector3(0, 0, 0);
         Vel = new Vector3(0, 0, 0);
         TotalMoveVel = new Vector3(0, 0, 0);
         Rb = null;
@@ -48,5 +52,19 @@ public class Enemy_Main : MonoBehaviour
         Move();                 // “G‚Ì“®‚«ˆ—
         TotalMoveVel += Vel;    // ‡ŒvˆÚ“®—Ê•ÏX
         Rb.velocity = Vel;      // ˆÚ“®—Ê•ÏX
+
+        // 0`360“x‚É•ÏX
+        if (Rad.x > 360 || Rad.x < 0 ||
+            Rad.y > 360 || Rad.y < 0 ||
+            Rad.z > 360 || Rad.z < 0)
+        {
+            if (Rad.x > 360) Rad.x -= 360;
+            if (Rad.x < 0) Rad.x += 360;
+            if (Rad.y > 360) Rad.y -= 360;
+            if (Rad.y < 0) Rad.y += 360;
+            if (Rad.z > 360) Rad.z -= 360;
+            if (Rad.z < 0) Rad.z += 360;
+        }
+        Rb.rotation = Quaternion.Euler(Rad);    // Šp“x•ÏX
     }
 }
