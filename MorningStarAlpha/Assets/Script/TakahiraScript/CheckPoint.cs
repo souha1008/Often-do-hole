@@ -34,6 +34,7 @@ public class CheckPoint : MonoBehaviour
     {
         if (collider.gameObject.tag == "Player")
         {
+            // チェックポイントのHitBoxに触れたらチェックポイント更新
             CheckPointManager.Instance.SetCheckPoint(this);
         }
     }
