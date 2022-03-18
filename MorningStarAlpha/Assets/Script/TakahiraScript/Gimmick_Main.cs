@@ -43,6 +43,9 @@ public abstract class Gimmick_Main : MonoBehaviour
         }
         Rb.isKinematic = false; // キネマティックオフ
         Rb.useGravity = false;  // 重力オフ
+        Rb.constraints = RigidbodyConstraints.None;             // フリーズを全部解除
+        Rb.constraints = RigidbodyConstraints.FreezeRotation;   // 回転のフリーズを全部オン
+
 
         // コライダー
         this.GetComponent<Collider>().isTrigger = true; // トリガーオン
