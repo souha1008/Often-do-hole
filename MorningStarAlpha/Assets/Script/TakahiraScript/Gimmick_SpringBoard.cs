@@ -25,16 +25,11 @@ public class Gimmick_SpringBoard : MonoBehaviour
         if (collider.gameObject.tag == "Player")
         {
             float Rad;           // 回転角
-            Vector3 VecPower;    // 加えるベクトル量
+            Vector3 VecPower = Vector3.zero;    // 加えるベクトル量
 
-<<<<<<< HEAD
-            PlayerMain playermain = collider.gameObject.GetComponent<PlayerMain>();
-            //Rigidbody Rb = collider.gameObject.transform.GetComponent<Rigidbody>(); // リジッドボディ
-            Rad = this.transform.localEulerAngles.z;  // ジャンプ台の回転角
-=======
             PlayerMain playermain = collider.gameObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
+            //Rigidbody Rb = collider.gameObject.transform.GetComponent<Rigidbody>(); // リジッドボディ
             Rad = this.transform.localEulerAngles.z;  // ジャンプ台の回転角(度)
->>>>>>> d9a0efad51fe98f2d16617ef743cb64dfe8d7231
             Rad = CalculationScript.AngleCalculation(Rad); // 角度ラジアン変換
             VecPower = CalculationScript.AngleVectorXY(Rad) * SpringPower;  // 飛ぶベクトル量
 
@@ -44,13 +39,9 @@ public class Gimmick_SpringBoard : MonoBehaviour
             //Debug.Log(VecPower.x);
             //Debug.Log(VecPower.y);
 
-<<<<<<< HEAD
-            playermain.vel = new Vector3 (VecPower.x, VecPower.y, 0);
             //Rb.velocity = new Vector3 (VecPower.x, VecPower.y, 0);
             //Rb.AddForce(VecPower,ForceMode.VelocityChange);
-=======
             playermain.vel = VecPower; // プレイヤーのベクトル量変更
->>>>>>> d9a0efad51fe98f2d16617ef743cb64dfe8d7231
         }
     }
 }

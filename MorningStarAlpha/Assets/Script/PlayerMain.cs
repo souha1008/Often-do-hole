@@ -30,7 +30,7 @@ public class PlayerMain : MonoBehaviour
     public GameObject BulletPrefab;
     public PlayerState mode;                         // ステート
     public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
-    [System.NonSerialized] public GameObject Bullet = null;
+    public GameObject Bullet = null;
     public HingeJoint hinge = null;
     public PlayerMoveDir dir;
     public Vector3 vel;                              // 移動速度(inspector上で確認)
@@ -167,6 +167,27 @@ public class PlayerMain : MonoBehaviour
         }
 #endif
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //空中で壁にぶつかったとき速度をなくす
+        if(refState == EnumPlayerState.MIDAIR)
+        {
+            for (int i = 0; i < collision.contacts.Length; i++)
+            {
+                if (Mathf.Abs(collision.contacts[i].point.x - transform.position.x) > 0.2f)
+                {
+                    vel.x *= 0.2f;
+                    if(vel.y > 1.0f)
+                    {
+                        vel.y = 0;
+                    }
+                    Debug.Log("KILL");
+                }
+            }
+        }
+    }
+
 
     private void OnCollisionStay(Collision collision)
     { 

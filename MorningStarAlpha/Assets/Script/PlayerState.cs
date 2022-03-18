@@ -295,6 +295,8 @@ public class PlayerStateMidair : PlayerState
 
 
         PlayerScript.vel += Vector3.down * 0.8f;
+
+        PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
     }
 
 

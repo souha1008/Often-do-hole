@@ -47,7 +47,7 @@ public class Gimmick_Enemy_1 : Enemy_Main
         if (collider.gameObject.tag == "Player") // 当たったオブジェクトが錨だったらに変更予定
         {
             // ※ヒットストップ
-
+            GameSpeedManager.Instance.StartHitStop();
             // ※当たったエフェクト
 
             Death(); // 死亡処理   
