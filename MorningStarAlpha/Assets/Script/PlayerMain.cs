@@ -71,7 +71,7 @@ public class PlayerMain : MonoBehaviour
             transform.position = CheckPointManager.GetCheckPointPos();
          }
         rb = GetComponent<Rigidbody>();
-        mode = new PlayerStateOnGround(); //初期ステート
+        mode = new PlayerStateTest(); //初期ステート
         refState = EnumPlayerState.ON_GROUND;
         Bullet = null;
         hinge = null;　　　　　　　　　　 

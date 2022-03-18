@@ -19,6 +19,38 @@ public class PlayerState
     static public PlayerMain PlayerScript;
 }
 
+
+public class PlayerStateTest : PlayerState
+{
+    Vector3 sPos, ePos;
+    float time = 0;
+
+    public PlayerStateTest()//コンストラクタ
+    {
+        PlayerScript.vel = Vector3.zero;
+        PlayerScript.canShot = true;
+
+        time = 0;
+        sPos = ePos = Player.transform.position;
+        ePos.x += 30.0f;
+        ePos.y += 10.0f;
+    }
+
+    public override void UpdateState()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (time < 3)
+            {
+                time += Time.deltaTime;
+                Player.transform.position = Easing.QuartIn(time, 3, sPos, ePos);
+            }
+        }
+    }
+}
+
+
+
 /// <summary>
 /// プレイヤーが地上にいる状態
 /// スティックで移動、弾の発射ができる
