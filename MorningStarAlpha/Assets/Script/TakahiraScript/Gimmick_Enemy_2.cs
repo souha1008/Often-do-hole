@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gimmick_Enemy_2 : Enemy_Main
+public class Gimmick_Enemy_2 : Gimmick_Main
 {
     // •Ï”
 

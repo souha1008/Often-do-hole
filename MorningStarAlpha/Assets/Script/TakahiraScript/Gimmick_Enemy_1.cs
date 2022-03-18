@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Gimmick_Enemy_1 : Enemy_Main
+public class Gimmick_Enemy_1 : Gimmick_Main
 {
     // •Ï”
     public float MoveVelX = 10.0f;      // X•ûŒü‚Ì“®‚­—Ê
