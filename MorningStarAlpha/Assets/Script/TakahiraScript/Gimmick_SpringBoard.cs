@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gimmick_SpringBoard : Gimmick_Main
 {
     // 変数
-    public float SpringPower = 3000.0f;   // ジャンプ台の力
+    public float SpringPower = 100.0f;   // ジャンプ台の力
 
     public override void Init()
     {

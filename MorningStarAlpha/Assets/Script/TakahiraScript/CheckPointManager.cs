@@ -32,8 +32,8 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
             PlayerObject = GameObject.Find("Player");
         }
         PlayerObject.GetComponent<Transform>().position = GetCheckPointPos();
-        PlayerObject.GetComponent<PlayerMain>().vel = new Vector3(0, 0, 0);
-        Debug.Log(GetCheckPointPos());
+        PlayerObject.GetComponent<PlayerMain>().vel = Vector3.zero;
+        //Debug.Log("リスポーン座標：" + GetCheckPointPos());
     }
 
 

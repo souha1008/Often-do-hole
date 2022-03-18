@@ -7,9 +7,16 @@ using UnityEngine;
 public abstract class Gimmick_Main : MonoBehaviour
 {
     // 変数
+    [Header("現在の角度")]
+    [Tooltip("0～360度で表示しています")]
     [SerializeField] protected Vector3 Rad;          // 角度
+
+    [Header("現在の移動量")]
     [SerializeField] protected Vector3 Vel;          // 移動量
+
+    [Header("合計移動量")]
     [SerializeField] protected Vector3 TotalMoveVel; // 自分の合計移動量
+
     protected Rigidbody Rb;         // リジッドボディ
 
     // 継承するもの
@@ -25,8 +32,8 @@ public abstract class Gimmick_Main : MonoBehaviour
     {
         // 初期化
         Rad = this.gameObject.transform.rotation.eulerAngles;
-        Vel = new Vector3(0, 0, 0);
-        TotalMoveVel = new Vector3(0, 0, 0);
+        Vel = Vector3.zero;
+        TotalMoveVel = Vector3.zero;
         Rb = null;
 
         // リジッドボディ
