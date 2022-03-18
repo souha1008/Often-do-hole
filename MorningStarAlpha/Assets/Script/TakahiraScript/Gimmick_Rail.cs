@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Gimmick_Rail : Gimmick_Main
 {
-    public override void Death()
-    {
-        
-    }
-
     public override void Init()
     {
         
@@ -17,6 +12,11 @@ public class Gimmick_Rail : Gimmick_Main
     public override void Move()
     {
         
+    }
+
+    public override void Death()
+    {
+
     }
 
     public override void OnTriggerEnter(Collider collider)

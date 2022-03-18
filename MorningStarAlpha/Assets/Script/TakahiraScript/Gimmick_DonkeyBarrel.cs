@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Gimmick_DonkeyBarrel : Gimmick_Main
 {
-    public override void Death()
-    {
-
-    }
-
     public override void Init()
     {
 
     }
 
     public override void Move()
+    {
+
+    }
+
+    public override void Death()
     {
 
     }
