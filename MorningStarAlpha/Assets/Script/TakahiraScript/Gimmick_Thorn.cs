@@ -22,7 +22,7 @@ public class Gimmick_Thorn : MonoBehaviour
         if(collider.gameObject.tag == "Player")
         {
             // プレイヤーを死亡状態に変更
-
+            PlayerMain.instance.mode = new PlayerStateDeath();
             // プレイヤーにダメージエフェクト
 
             // フェード処理

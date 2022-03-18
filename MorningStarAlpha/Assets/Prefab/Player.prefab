@@ -115,7 +115,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 120
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &4224886100132467939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,13 +128,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c243131bc93f6141a88e0acaee1a520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Vel: {x: 0, y: 0}
-  LeftStick: {x: 0, y: 0}
+  BulletPrefab: {fileID: 0}
+  refState: 0
+  Bullet: {fileID: 0}
+  hinge: {fileID: 0}
+  dir: 0
+  vel: {x: 0, y: 0, z: 0}
+  addVel: {x: 0, y: 0, z: 0}
+  leftStick: {x: 0, y: 0}
+  canShot: 0
+  isOnGraund: 0
+  AdjustAngles: []
   LATERAL_MOVE_THRESHORD: 0
   MAX_RUN_SPEED: 10
   MIN_RUN_SPEED: 2
   ADD_RUN_SPEED: 0.8
+  MAX_FALL_SPEED: 0
   RUN_FRICTION: 0.85
+  ADD_MIDAIR_SPEED: 0
+  MIDAIR_FRICTION: 0
+  BULLET_RECAST_TIME: 0
 --- !u!1 &4224886100507855629
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,6 +300,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
+  LINE_START_DISTANCE: 0
+  LINE_LENGTH: 0
 --- !u!1 &6215000810310584046
 GameObject:
   m_ObjectHideFlags: 0

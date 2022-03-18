@@ -20,9 +20,10 @@ public class CameraMove : MonoBehaviour
     //プレイヤーをカメラの中央に収め続ける
     void TracePlayer()
     {
-        Vector3 tempPos = Player.GetComponent<Transform>().position;
+        Vector3 tempPos = Player.transform.position;
 
         tempPos.z -= CAMERA_DISTANCE;
-        this.GetComponent<Transform>().position = tempPos;
+        tempPos.y += 6;
+        transform.position = tempPos;
     }
 }

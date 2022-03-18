@@ -4,34 +4,64 @@ using UnityEngine;
 
 public class UIDirection : MonoBehaviour
 {
-    [SerializeField] private PlayerMain Player;
+    [SerializeField] private PlayerMain PlayerScript;
     [SerializeField] private float LINE_START_DISTANCE;  //矢印の開始位置（プレイヤー中心からの長さ）
     [SerializeField] private float LINE_LENGTH;          //矢印の長さ
+
+    Color activeScol, activeEcol;
     private LineRenderer lr;
 
     void Start()
     {
         lr = GetComponent<LineRenderer>();
-        lr.SetPosition(0, Player.transform.position);
-        lr.SetPosition(1, Player.transform.position);
+        lr.SetPosition(0, PlayerScript.transform.position);
+        lr.SetPosition(1, PlayerScript.transform.position);
+
+        activeScol = lr.startColor;
+        activeEcol = lr.endColor;
     }
 
     private void LateUpdate()
     {
-        Vector3 vec = Player.leftStick.normalized;
+        Vector3 vec = PlayerScript.leftStick.normalized;
 
-        if (Player.canShot)
+
+        //打てる可能性があるステートなら表示
+        if (PlayerScript.refState == EnumPlayerState.ON_GROUND || PlayerScript.refState == EnumPlayerState.MIDAIR)
         {
-            //始点と終点を設定
-            lr.SetPosition(0, Player.transform.position + (vec * LINE_START_DISTANCE));
-            lr.SetPosition(1, Player.transform.position + (vec * (LINE_START_DISTANCE + LINE_LENGTH)));
+            //クールタイム回復したら色つける
+            if (PlayerScript.canShot)
+            {
+                lr.startColor = activeScol;
+                lr.endColor = activeEcol;
+            }
+            else
+            {
+                lr.startColor = Color.gray;
+                lr.endColor = Color.gray;
+            }
+
+            if (PlayerScript.stickCanShotRange)
+            {
+                //始点と終点を設定
+                lr.SetPosition(0, PlayerScript.transform.position + (vec * LINE_START_DISTANCE));
+                lr.SetPosition(1, PlayerScript.transform.position + (vec * (LINE_START_DISTANCE + LINE_LENGTH)));
+            }
+            else
+            {
+                //同じ位置に設定して消す
+                lr.SetPosition(0, PlayerScript.transform.position);
+                lr.SetPosition(1, PlayerScript.transform.position);
+            }
         }
         else
         {
             //同じ位置に設定して消す
-            lr.SetPosition(0, Player.transform.position);
-            lr.SetPosition(1, Player.transform.position);
+            lr.SetPosition(0, PlayerScript.transform.position);
+            lr.SetPosition(1, PlayerScript.transform.position);
         }
-       
+
+
+
     }
 }

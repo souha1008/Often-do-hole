@@ -21,12 +21,14 @@ public enum EnumPlayerState
     SHOT,      //弾を撃っている状態
     MIDAIR,　　//空中にいて弾を撃っていない
     SWING,     //振り子状態
+    DEATH,     //死亡状態
 }
 
 
 public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
+    [System.NonSerialized] public static PlayerMain instance;
     public GameObject BulletPrefab;
     public PlayerState mode;                         // ステート
     public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
@@ -34,7 +36,9 @@ public class PlayerMain : MonoBehaviour
     public HingeJoint hinge = null;
     public PlayerMoveDir dir;
     public Vector3 vel;                              // 移動速度(inspector上で確認)
+    public Vector3 addVel;                         　//ギミック等で追加される機能
     public Vector2 leftStick;                        // 左スティック
+    public bool stickCanShotRange;                             // 打てる状態か
     public bool canShot;                             // 打てる状態か
     public bool isOnGraund;                          // 地面に触れているか（onCollisionで変更）
 
@@ -60,6 +64,7 @@ public class PlayerMain : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
         PlayerState.PlayerScript = this;  //PlayerState側で参照できるようにする
         PlayerState.Player = gameObject;
 
@@ -69,9 +74,11 @@ public class PlayerMain : MonoBehaviour
         Bullet = null;
         hinge = null;　　　　　　　　　　 
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
-        vel = new Vector2(0.0f ,0.0f);
+        vel = Vector3.zero;
+        addVel = Vector3.zero;
         leftStick = new Vector2(0.0f, 0.0f);
-        canShot = false;
+        stickCanShotRange = false;
+        canShot = true;
         isOnGraund = false;
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
@@ -102,7 +109,7 @@ public class PlayerMain : MonoBehaviour
     private void InputStick()
     {
         //初期化
-        leftStick = new Vector2(0, 0);
+        leftStick = Vector2.zero;
 
         //入力取得
         leftStick.x = Input.GetAxis("Horizontal");
@@ -111,11 +118,11 @@ public class PlayerMain : MonoBehaviour
         //スティックの入力が一定以上ない場合は撃てない
         if (leftStick.sqrMagnitude > 0.8f)
         {
-            canShot = true;
+            stickCanShotRange = true;
         }
         else
         {
-            canShot = false;
+            stickCanShotRange = false;
         }
 
 

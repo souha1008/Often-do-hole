@@ -31,13 +31,14 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
         PlayerScript.vel.y = 0;
+        PlayerScript.canShot = true;
     }
 
     public override void UpdateState()
     {
         if (Input.GetButtonDown("Button_R"))
         {
-            if (PlayerScript.canShot)
+            if (PlayerScript.stickCanShotRange)
             {
                 shotButton = true;
             }
@@ -118,6 +119,7 @@ public class PlayerStateShot : PlayerState
     public PlayerStateShot()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.SHOT;
+        PlayerScript.canShot = false;
         //弾の生成と発射
         //発射時にぶつからないように発射位置を矢印方向にずらす
         Vector3 vec = PlayerScript.leftStick.normalized;
@@ -240,6 +242,7 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.refState = EnumPlayerState.MIDAIR;
         shotButton = false;
         countTimer = 0.0f;
+        PlayerScript.canShot = false;
     }
 
     public PlayerStateMidair()//コンストラクタ
@@ -253,6 +256,10 @@ public class PlayerStateMidair : PlayerState
     {
         Init();
         recastTime = recast_time;
+        if(recastTime < 0.0001f)
+        {
+            PlayerScript.canShot = true; 
+        }
     }
 
     
@@ -271,8 +278,13 @@ public class PlayerStateMidair : PlayerState
             PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
         }
 
-        if (countTimer > PlayerScript.BULLET_RECAST_TIME)
+        if (countTimer > recastTime)
         {
+            if(PlayerScript.canShot == false)
+            {
+                PlayerScript.canShot = true;
+            }
+
             if (Input.GetButtonDown("Button_R"))
             {
                 shotButton = true;
@@ -342,6 +354,7 @@ public class PlayerStateSwing : PlayerState
     public PlayerStateSwing()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.SWING;
+        PlayerScript.canShot = false;
         finishFlag = false;
         swingMode = SwingMode.Touced;
         BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>();　
@@ -454,11 +467,7 @@ public class PlayerStateSwing : PlayerState
             default:
                 break;
         }
-
-        
-
     }
-
 
     public override void StateTransition()
     {
@@ -472,6 +481,37 @@ public class PlayerStateSwing : PlayerState
     {
         Debug.Log("PlayerState:Swing");
     }
+}
+
+public class PlayerStateDeath : PlayerState
+{
+    public PlayerStateDeath()
+    {
+        PlayerScript.vel = Vector3.zero;
+        PlayerScript.addVel = Vector3.zero;
+
+        if (PlayerScript.Bullet != null)
+        {
+            PlayerScript.Bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        }
+    }
+
+    public override void UpdateState()
+    {
+        //死亡時エフェクト系
+    }
+
+    public override void Move()
+    {
+        //移動なし
+    }
+
+    public override void StateTransition()
+    {
+        //ここから派生することはない
+        //シーン変更してクイックリトライ位置にリポップ
+    }
+
 }
 
 
