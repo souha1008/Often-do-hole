@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gimmick_Thorn : MonoBehaviour
+public class Gimmick_Thorn : Gimmick_Main
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        // コリジョン
-        this.gameObject.GetComponent<Collider>().isTrigger = true; // トリガーにする
-    }
-
-    // Update is called once per frame
-    void Update()
+    public override void Init()
     {
         
     }
 
-    private void OnTriggerEnter(Collider collider)
+    public override void Move()
     {
-        if(collider.gameObject.tag == "Player")
+        
+    }
+
+    public override void Death()
+    {
+        
+    }
+
+    public override void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Player")
         {
             // プレイヤーを死亡状態に変更
             PlayerMain.instance.mode = new PlayerStateDeath();

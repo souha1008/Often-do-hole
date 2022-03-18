@@ -2,25 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gimmick_SpringBoard : MonoBehaviour
+public class Gimmick_SpringBoard : Gimmick_Main
 {
     // 変数
     public float SpringPower = 3000.0f;   // ジャンプ台の力
 
-    // Start is called before the first frame update
-    void Start()
+    public override void Init()
     {
-        this.gameObject.GetComponent<Collider>().isTrigger = true;  // トリガーオン
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Move()
     {
         
     }
 
-    // 何かと衝突処理(トリガー)
-    private void OnTriggerEnter(Collider collider)
+    public override void Death()
+    {
+        
+    }
+
+    public override void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.tag == "Player")
         {
