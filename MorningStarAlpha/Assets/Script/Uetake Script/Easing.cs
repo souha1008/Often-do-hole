@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Easing
 {
-    public static Vector3 QuadIn(float t, float totaltime, Vector3 min, Vector3 max)
+    public static float QuadIn(float t, float totaltime, float min, float max)
     {
         max -= min;
         t /= totaltime;
@@ -51,7 +51,7 @@ public static class Easing
         return max / 2 * (t * t * t + 2) + min;
     }
 
-    public static Vector3 QuartIn(float t, float totaltime, Vector3 min, Vector3 max)
+    public static float QuartIn(float t, float totaltime, float min, float max)
     {
         max -= min;
         t /= totaltime;

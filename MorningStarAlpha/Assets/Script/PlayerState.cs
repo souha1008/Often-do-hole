@@ -20,34 +20,33 @@ public class PlayerState
 }
 
 
-public class PlayerStateTest : PlayerState
-{
-    Vector3 sPos, ePos;
-    float time = 0;
+//public class PlayerStateTest : PlayerState
+//{
+//    Vector3 sPos, ePos;
+//    float time = 0;
 
-    public PlayerStateTest()//コンストラクタ
-    {
-        PlayerScript.vel = Vector3.zero;
-        PlayerScript.canShot = true;
+//    public PlayerStateTest()//コンストラクタ
+//    {
+//        PlayerScript.vel = Vector3.zero;
+//        PlayerScript.canShot = true;
 
-        time = 0;
-        sPos = ePos = Player.transform.position;
-        ePos.x += 30.0f;
-        ePos.y += 10.0f;
-    }
+//        time = 0;
+//        sPos = ePos = Player.transform.position;
+//        ePos.y += 10.0f;
+//    }
 
-    public override void UpdateState()
-    {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if (time < 3)
-            {
-                time += Time.deltaTime;
-                Player.transform.position = Easing.QuartIn(time, 3, sPos, ePos);
-            }
-        }
-    }
-}
+//    public override void UpdateState()
+//    {
+//        if (Input.GetKey(KeyCode.Space))
+//        {
+//            if (time < 1)
+//            {
+//                time += Time.deltaTime;
+               
+//            }
+//        }
+//    }
+//}
 
 
 

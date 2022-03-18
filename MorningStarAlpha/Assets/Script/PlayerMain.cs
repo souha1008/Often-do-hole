@@ -36,7 +36,7 @@ public class PlayerMain : MonoBehaviour
     public HingeJoint hinge = null;
     public PlayerMoveDir dir;
     public Vector3 vel;                              // 移動速度(inspector上で確認)
-    public Vector3 addVel;                         　//ギミック等で追加される機能
+    public Vector3 addVel;                         　// ギミック等で追加される速度
     public Vector2 leftStick;                        // 左スティック
     public bool stickCanShotRange;                   // 打てる状態か
     public bool canShot;                             // 打てる状態か
@@ -71,7 +71,7 @@ public class PlayerMain : MonoBehaviour
             transform.position = CheckPointManager.GetCheckPointPos();
          }
         rb = GetComponent<Rigidbody>();
-        mode = new PlayerStateTest(); //初期ステート
+        mode = new PlayerStateOnGround(); //初期ステート
         refState = EnumPlayerState.ON_GROUND;
         Bullet = null;
         hinge = null;　　　　　　　　　　 
