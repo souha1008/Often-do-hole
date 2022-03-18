@@ -487,6 +487,8 @@ public class PlayerStateDeath : PlayerState
 {
     public PlayerStateDeath()
     {
+        PlayerScript.refState = EnumPlayerState.DEATH;
+        PlayerScript.canShot = false;
         PlayerScript.vel = Vector3.zero;
         PlayerScript.addVel = Vector3.zero;
 
