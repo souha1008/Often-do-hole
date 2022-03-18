@@ -182,7 +182,7 @@ public class PlayerStateShot : PlayerState
                 Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
                 vec = vec.normalized;
 
-                BulletScript.rb.velocity = vec * 30;
+                BulletScript.rb.velocity = vec * 50;
 
                 //距離が一定以下になったら弾を非アクティブ
 
@@ -483,6 +483,10 @@ public class PlayerStateSwing : PlayerState
     }
 }
 
+
+/// <summary>
+/// 死亡時アニメーション等の制御クラス
+/// </summary>
 public class PlayerStateDeath : PlayerState
 {
     public PlayerStateDeath()
@@ -500,7 +504,8 @@ public class PlayerStateDeath : PlayerState
 
     public override void UpdateState()
     {
-        //死亡時エフェクト系
+        // フェード処理
+        FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
     }
 
     public override void Move()

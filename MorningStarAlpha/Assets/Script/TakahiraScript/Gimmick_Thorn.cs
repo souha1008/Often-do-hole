@@ -26,9 +26,6 @@ public class Gimmick_Thorn : Gimmick_Main
             // プレイヤーを死亡状態に変更
             PlayerMain.instance.mode = new PlayerStateDeath();
             // プレイヤーにダメージエフェクト
-
-            // フェード処理
-            FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
         }
     }
 }

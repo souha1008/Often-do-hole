@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
 {
-    [Header("プレイヤーオブジェクト(ない場合は\"Player\"を探す)")]
-    public GameObject PlayerObject;     // プレイヤーオブジェクト
     [Header("現在のリスポーン座標")]
-    public Vector3 RespawnPos;          // リスポーン座標
-
+    public static Vector3 RespawnPos;          // リスポーン座標
+    public static bool noTouchCheckPoint;
     private void Awake()
     {
         if (this != Instance)
@@ -17,23 +16,17 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
             Destroy(this);
             return;
         }
+
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
+        RespawnPos = Vector3.zero;
+        noTouchCheckPoint = false;
     }
 
     // チェックポイント使用処理
     public void CheckPointAction()
     {
         // ゲームシーンのリセット
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
-        // プレイヤーの位置を変更
-        if (PlayerObject == null)
-        {
-            PlayerObject = GameObject.Find("Player");
-        }
-        PlayerObject.GetComponent<Transform>().position = GetCheckPointPos();
-        PlayerObject.GetComponent<PlayerMain>().vel = Vector3.zero;
-        //Debug.Log("リスポーン座標：" + GetCheckPointPos());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 
@@ -41,11 +34,18 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     public void SetCheckPoint(CheckPoint checkpoint)
     {
         RespawnPos = checkpoint.RespawnPointObject.transform.position;
+        noTouchCheckPoint = true;
     }
 
     // 現在のチェックポイントの座標ゲット
-    public Vector3 GetCheckPointPos()
+    public static Vector3 GetCheckPointPos()
     {
         return RespawnPos;
+    }
+
+    // 現在のチェックポイントの座標ゲット
+    public static bool isTouchCheckPos()
+    {
+        return noTouchCheckPoint;
     }
 }

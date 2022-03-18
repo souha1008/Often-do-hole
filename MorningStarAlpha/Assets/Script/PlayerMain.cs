@@ -38,7 +38,7 @@ public class PlayerMain : MonoBehaviour
     public Vector3 vel;                              // 移動速度(inspector上で確認)
     public Vector3 addVel;                         　//ギミック等で追加される機能
     public Vector2 leftStick;                        // 左スティック
-    public bool stickCanShotRange;                             // 打てる状態か
+    public bool stickCanShotRange;                   // 打てる状態か
     public bool canShot;                             // 打てる状態か
     public bool isOnGraund;                          // 地面に触れているか（onCollisionで変更）
 
@@ -67,7 +67,9 @@ public class PlayerMain : MonoBehaviour
         instance = this;
         PlayerState.PlayerScript = this;  //PlayerState側で参照できるようにする
         PlayerState.Player = gameObject;
-
+        if (CheckPointManager.isTouchCheckPos() == true) {
+            transform.position = CheckPointManager.GetCheckPointPos();
+         }
         rb = GetComponent<Rigidbody>();
         mode = new PlayerStateOnGround(); //初期ステート
         refState = EnumPlayerState.ON_GROUND;
