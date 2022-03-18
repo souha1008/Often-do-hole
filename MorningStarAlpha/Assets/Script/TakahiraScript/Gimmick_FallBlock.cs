@@ -16,7 +16,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
 
         // リジッドボディ
-        Rb.mass = 100000.0f; // 重くして動かないようにする
+        Rb.isKinematic = true;
     }
 
     public override void Move()
@@ -49,6 +49,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         if (collision.gameObject.tag == "Bullet")
         {
             NowFall = true; // 落下中
+            Rb.isKinematic = false;
         }
         else if (collision.gameObject.tag == "Player")
         {
@@ -58,6 +59,7 @@ public class Gimmick_FallBlock : Gimmick_Main
             if (Physics.Raycast(ray_1, out hit, 1.5f))
             {
                 NowFall = true; // 落下中
+                Rb.isKinematic = false;
             }
         }
     }
