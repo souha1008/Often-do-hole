@@ -6,7 +6,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
 {
     public override void Init()
     {
-
+        
     }
 
     public override void Move()
@@ -21,6 +21,6 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-
+        
     }
 }

@@ -31,7 +31,7 @@ public class Gimmick_Enemy_2 : Gimmick_Main
     // 何かと衝突処理(トリガー)
     public override void OnTriggerEnter(Collider collider) 
     {
-        if (collider.gameObject.tag == "Player") // 当たったオブジェクトが錨だったらに変更予定
+        if (collider.gameObject.tag == "Bullet")
         {
             // ヒットストップ
 

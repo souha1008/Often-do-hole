@@ -44,13 +44,19 @@ public class Gimmick_Enemy_1 : Gimmick_Main
     // 何かと衝突処理(トリガー)
     public override void OnTriggerEnter(Collider collider) 
     { 
-        if (collider.gameObject.tag == "Player") // 当たったオブジェクトが錨だったらに変更予定
+        if (collider.gameObject.tag == "Bullet")
         {
             // ※ヒットストップ
             GameSpeedManager.Instance.StartHitStop();
             // ※当たったエフェクト
 
             Death(); // 死亡処理   
+        }
+
+        if (collider.gameObject.tag == "Player")
+        {
+            // プレイヤーノックバックステートに移行
+
         }
     }
 }

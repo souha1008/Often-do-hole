@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Gimmick_FallBlock : Gimmick_Main
 {
+    private bool NowFall = false;    // —‰º’†‚©
+
     public override void Init()
     {
 
@@ -21,6 +23,10 @@ public class Gimmick_FallBlock : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-
+        // ƒvƒŒƒCƒ„[‚©•d‚ÆÚG
+        if (collider.gameObject.tag == "Player" && collider.gameObject.tag == "Bullet")
+        {
+            NowFall = true;
+        }
     }
 }

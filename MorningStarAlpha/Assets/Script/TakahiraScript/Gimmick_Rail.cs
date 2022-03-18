@@ -21,6 +21,10 @@ public class Gimmick_Rail : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        
+        if (collider.gameObject.tag == "Player")
+        {
+            // レールステートに変更
+
+        }
     }
 }
