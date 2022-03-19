@@ -6,16 +6,26 @@ using UnityEngine;
 // ギミックメインクラス(継承して使う)
 public abstract class Gimmick_Main : MonoBehaviour
 {
+    [System.Serializable]
+    public class NowMoveInfo
+    {
+        [Header("現在の角度")]
+        [Tooltip("0～360度で表示しています")]
+        public Vector3 Rad;          // 角度
+
+        [Header("現在の移動量")]
+        public Vector3 Vel;          // 移動量
+
+        [Header("合計移動量")]
+        public Vector3 TotalMoveVel; // 自分の合計移動量
+    }
+    [Tooltip("現在の移動情報")]
+    public NowMoveInfo MoveInfo;
+
     // 変数
-    [Header("現在の角度")]
-    [Tooltip("0～360度で表示しています")]
-    [SerializeField] protected Vector3 Rad;          // 角度
-
-    [Header("現在の移動量")]
-    [SerializeField] protected Vector3 Vel;          // 移動量
-
-    [Header("合計移動量")]
-    [SerializeField] protected Vector3 TotalMoveVel; // 自分の合計移動量
+    protected Vector3 Rad;          // 角度
+    protected Vector3 Vel;          // 移動量
+    protected Vector3 TotalMoveVel; // 自分の合計移動量
 
     protected Rigidbody Rb;         // リジッドボディ
 
@@ -77,5 +87,9 @@ public abstract class Gimmick_Main : MonoBehaviour
             if (Rad.z < 0) Rad.z += 360;
         }
         Rb.rotation = Quaternion.Euler(Rad);    // 角度変更
+
+        MoveInfo.Rad = Rad;
+        MoveInfo.Vel = Vel;
+        MoveInfo.TotalMoveVel = TotalMoveVel;
     }
 }
