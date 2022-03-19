@@ -172,9 +172,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ffbd01faf060ca4cb1bb67a1bba9a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
   FallLength: 15
   FallTime: 3
 --- !u!65 &23539560
@@ -1072,9 +1073,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ffbd01faf060ca4cb1bb67a1bba9a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
   FallLength: 15
   FallTime: 3
 --- !u!65 &514216858
@@ -1256,8 +1258,32 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: Move_X
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: Move_Y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: MoveLength_Y
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
       propertyPath: MoveDirection
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: MoveDirection_X
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: MoveDirection_Y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6381747820642381920, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
       propertyPath: m_RootOrder
@@ -1503,9 +1529,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93775ed3b59d00a43858ec5e6ce3e2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
   MoveVelX: 10
   MoveVelXMax: 1000
 --- !u!65 &884448996
@@ -1788,9 +1815,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ffbd01faf060ca4cb1bb67a1bba9a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
   FallLength: 15
   FallTime: 3
 --- !u!54 &951531811
@@ -2336,9 +2364,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93775ed3b59d00a43858ec5e6ce3e2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
   MoveVelX: 10
   MoveVelXMax: 1000
 --- !u!65 &1159275474
@@ -3248,9 +3277,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4560ea3399f3244bcfa57573a69282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1445016756
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3747,9 +3777,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ffbd01faf060ca4cb1bb67a1bba9a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
   FallLength: 15
   FallTime: 3
 --- !u!65 &1823272917
