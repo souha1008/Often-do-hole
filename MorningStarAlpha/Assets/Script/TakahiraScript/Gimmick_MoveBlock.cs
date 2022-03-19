@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Gimmick_MoveBlock : Gimmick_Main
 {
+    public enum MOVE_DIRECTION
+    {
+        MoveRight,
+        MoveLeft
+    }
     // 変数
     [Header("移動距離")]
     public float MoveLength = 15.0f;    // 動く距離
@@ -11,9 +16,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
     [Header("何秒かけて移動するか")]
     public float MoveTime = 3.0f;       // 何秒かけて移動するか
 
-    [Header("移動方向(右)")]
-    public bool MoveRight = true;       // 移動方向(true:右、false:左)
+    [Header("移動方向")]
+    public MOVE_DIRECTION MoveDirection = MOVE_DIRECTION.MoveRight; // 移動方向
 
+    private bool MoveRight;             // 移動方向(右)
     private bool NowMove;               // 移動中か
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
@@ -26,6 +32,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
         NowMove = true;
         NowTime = 0.0f;
         StartPos = this.gameObject.transform.position;
+        MoveRight = MoveDirectionBoolChange(MoveDirection);
         Fugou = CalculationScript.FugouChange(MoveRight);
 
         // コリジョン
@@ -53,6 +60,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
             NowTime = 0.0f;
             MoveRight = CalculationScript.TureFalseChange(MoveRight);   // 向き反転
             Fugou = CalculationScript.FugouChange(MoveRight);   // 符号反転
+            MoveDirection = BoolMoveDirectionChange(MoveRight); // 向き表示変化
             NowMove = true;
         }
 
@@ -84,5 +92,21 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             PlayerObject = collision.gameObject;
         }
+    }
+
+    private bool MoveDirectionBoolChange(MOVE_DIRECTION MoveDirection)
+    {
+        if (MoveDirection == MOVE_DIRECTION.MoveRight)
+            return true;
+        else
+            return false;
+    }
+
+    private MOVE_DIRECTION BoolMoveDirectionChange(bool MoveRight)
+    {
+        if (MoveRight)
+            return MOVE_DIRECTION.MoveRight;
+        else
+            return MOVE_DIRECTION.MoveLeft;
     }
 }
