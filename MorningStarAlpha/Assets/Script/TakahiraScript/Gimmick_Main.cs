@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class Gimmick_Main : MonoBehaviour
 {
     [System.Serializable]
-    public class NowMoveInfo
+    private class NowMoveInfo
     {
         [Header("現在の角度")]
         [Tooltip("0～360度で表示しています")]
@@ -20,7 +20,7 @@ public abstract class Gimmick_Main : MonoBehaviour
         public Vector3 TotalMoveVel; // 自分の合計移動量
     }
     [Tooltip("現在の移動情報")]
-    public NowMoveInfo MoveInfo;
+    [SerializeField] private NowMoveInfo MoveInfo;
 
     // 変数
     protected Vector3 Rad;          // 角度
