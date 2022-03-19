@@ -91,7 +91,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2907611852633609069}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 125178e204fb08e479097a3016b6e7ca, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -106,7 +106,7 @@ Rigidbody:
   m_GameObject: {fileID: 2907611852633609069}
   serializedVersion: 2
   m_Mass: 1.02
-  m_Drag: 0.15
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -127,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isTouched: 0
   onceFlag: 0
+  isStrained: 0
   BULLET_SPEED: 40
   BULLET_START_DISTANCE: 2
   BULLET_ROPE_LENGTH: 10

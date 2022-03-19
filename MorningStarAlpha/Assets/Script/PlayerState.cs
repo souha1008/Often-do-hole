@@ -98,13 +98,29 @@ public class PlayerStateOnGround : PlayerState
     {
         if(PlayerScript.leftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)　//右移動
         {
-            PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED;
+            if (PlayerScript.vel.x < -0.2f)
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * 2;
+            }
+            else
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED;
+            }
+           
             PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
         }
         else if (PlayerScript.leftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1)　//左移動
         {
-            PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1;
-            PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
+
+            if (PlayerScript.vel.x > 0.2f)
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2;
+            }
+            else
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1;
+            }
+                PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
         }
         else //減衰
         {
@@ -165,9 +181,16 @@ public class PlayerStateShot : PlayerState
 
         if (countTime > 0.3)
         {
-            if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+            if (shotState == SHOT_STATE.STRAINED)
             {
-                shotState = SHOT_STATE.RETURN;                                          
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+                {
+                    if (PlayerScript.Bullet != null)
+                    {
+                        BulletScript.ReturnBullet();
+                    }
+                    shotState = SHOT_STATE.RETURN;
+                }
             }
         }
     }
@@ -182,7 +205,7 @@ public class PlayerStateShot : PlayerState
 
             case SHOT_STATE.GO:
                
-                bulletVecs.Enqueue(BulletScript.rb.velocity);
+                bulletVecs.Enqueue(BulletScript.vel);
 
                 //紐の長さを超えたら引っ張られている状態にする
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
@@ -194,9 +217,9 @@ public class PlayerStateShot : PlayerState
 
             case SHOT_STATE.STRAINED:
                 //弾の進行方向の逆方向に位置補正
-                bulletVecs.Enqueue(BulletScript.rb.velocity);
+                Debug.Log("aaaa");
+                bulletVecs.Enqueue(BulletScript.vel);
                 PlayerScript.vel = bulletVecs.Dequeue();
-                PlayerScript.rb.velocity = new Vector3(PlayerScript.vel.x, PlayerScript.vel.y, 0);
 
                 //調整
                 //if (interval > BulletScript.BULLET_ROPE_LENGTH)
@@ -213,7 +236,7 @@ public class PlayerStateShot : PlayerState
                 Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
                 vec = vec.normalized;
 
-                BulletScript.rb.velocity = vec * 50;
+                BulletScript.vel = vec * 50;
 
                 //距離が一定以下になったら弾を非アクティブ
 
@@ -420,8 +443,7 @@ public class PlayerStateSwing : PlayerState
             {
                 if (degree < SWING_REREASE_ANGLE)
                 {
-                    BulletScript.gameObject.GetComponent<Collider>().isTrigger = true;
-                    BulletScript.rb.isKinematic = false;
+                    BulletScript.ReturnBullet();
                     swingMode = SwingMode.Rereased;
 
                     //勢い追加
@@ -436,8 +458,7 @@ public class PlayerStateSwing : PlayerState
             {
                 if (degree > 360 - SWING_REREASE_ANGLE)
                 {
-                    BulletScript.gameObject.GetComponent<Collider>().isTrigger = true;
-                    BulletScript.rb.isKinematic = false;
+                    BulletScript.ReturnBullet();
                     swingMode = SwingMode.Rereased;
 
                     //勢い追加
@@ -482,7 +503,7 @@ public class PlayerStateSwing : PlayerState
                 Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
                 vec = vec.normalized;
 
-                BulletScript.rb.velocity = vec * 100;
+                BulletScript.vel= vec * 100;
 
                 //距離が一定以下になったら弾を非アクティブ
 
@@ -530,6 +551,8 @@ public class PlayerStateDeath : PlayerState
         if (PlayerScript.Bullet != null)
         {
             PlayerScript.Bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            PlayerScript.Bullet.GetComponent<BulletMain>().vel = Vector3.zero;
+            PlayerScript.Bullet.GetComponent<BulletMain>().isStrained = true;
         }
     }
 
