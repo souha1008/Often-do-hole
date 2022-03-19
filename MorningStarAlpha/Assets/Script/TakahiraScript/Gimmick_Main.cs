@@ -22,9 +22,10 @@ public abstract class Gimmick_Main : MonoBehaviour
     // 継承するもの
     public abstract void Init(); // スタート処理
     public abstract void Move();  // ギミックの動き処理
+    public virtual void UpdateMove() { }   // Updateを使った動き処理
     public abstract void Death(); // ギミック死亡処理
     public abstract void OnTriggerEnter(Collider collider);    // 何かと衝突処理(トリガー)
-    //public abstract void OnCollisionEnter(Collision collision);   // 何かと衝突処理(コリジョン)
+    public virtual void OnCollisionEnter(Collision collision) { }   // 何かと衝突処理(コリジョン)
 
 
     // 継承先で自動で動く処理(プロテクト)
@@ -55,7 +56,7 @@ public abstract class Gimmick_Main : MonoBehaviour
     }
     protected void Update()
     {
-
+        UpdateMove();
     }
     protected void FixedUpdate() 
     {

@@ -4,33 +4,63 @@ using UnityEngine;
 
 public class Gimmick_FallBlock : Gimmick_Main
 {
-    public float FallPower = 0.1f;     // 落ちる力
+    [Header("落下距離")]
+    public float FallLength = 15.0f;   // 落ちる距離
+
+    [Header("何秒かけて落下するか")]
+    public float FallTime = 3.0f;       // 何秒かけて落下するか
+
     private bool NowFall;               // 落下中か
+    private float NowTime;              // 経過時間
+    private Vector3 StartPos;           // 初期座標
+    private GameObject PlayerObject;    // プレイヤーオブジェクト
 
     public override void Init()
     {
         // 初期化
         NowFall = false;
+        NowTime = 0.0f;
+        StartPos = this.gameObject.transform.position;
+        PlayerObject = null;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
 
         // リジッドボディ
-        Rb.isKinematic = true;
+        Rb.isKinematic = true;  // キネマティックオン
     }
 
-    public override void Move()
+    public override void UpdateMove()
     {
-        // ※後でイージングを利用した処理に変更予定
+        // ポジション変更
         if (NowFall)
         {
-            Vel.y += -FallPower;
+            Vector3 OldPos = this.gameObject.transform.position;
+            this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+            NowTime += Time.deltaTime;
+
+            // プレイヤーからレイ飛ばして真下にブロックがあったら
+            //if (PlayerObject != null)
+            //{
+            //    Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
+            //    RaycastHit hit;
+            //    if (Physics.Raycast(ray, out hit, 1.5f))
+            //    {
+            //        if(hit.collider == this)
+            //        {
+            //            PlayerObject.gameObject.transform.position =
+            //                PlayerObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+            //        }
+            //    }
+            //}
         }
-        if (TotalMoveVel.y <= -500.0f)
+        if (NowTime > FallTime)
         {
             Death();
         }
     }
+
+    public override void Move() { }
 
     public override void Death()
     {
@@ -38,18 +68,15 @@ public class Gimmick_FallBlock : Gimmick_Main
         Destroy(this.gameObject);
     }
 
-    public override void OnTriggerEnter(Collider collider)
-    {
-        
-    }
+    public override void OnTriggerEnter(Collider collider) { }
 
-    public void OnCollisionEnter(Collision collision)
+    public override void OnCollisionEnter(Collision collision)
     {
         // プレイヤーか錨と接触
         if (collision.gameObject.tag == "Bullet")
         {
             NowFall = true; // 落下中
-            Rb.isKinematic = false;
+            //Rb.isKinematic = false;
         }
         else if (collision.gameObject.tag == "Player")
         {
@@ -59,31 +86,9 @@ public class Gimmick_FallBlock : Gimmick_Main
             if (Physics.Raycast(ray_1, out hit, 1.5f))
             {
                 NowFall = true; // 落下中
-                Rb.isKinematic = false;
+                //Rb.isKinematic = false;
+                PlayerObject = collision.gameObject;
             }
         }
     }
-
-    // プレイヤーの落下でぽむぽむするの調整用
-    //public void OnCollisionStay(Collision collision)
-    //{
-    //    // プレイヤーと接触中
-    //    if (collision.gameObject.tag == "Player")
-    //    {
-    //        // プレイヤーの右と左にレイを上下2本ずつ飛ばす
-    //        Ray ray_1 = new Ray(collision.gameObject.transform.position + new Vector3(0, 0.5f, 0), Vector3.left);
-    //        Ray ray_2 = new Ray(collision.gameObject.transform.position + new Vector3(0, -0.5f, 0), Vector3.left);
-    //        Ray ray_3 = new Ray(collision.gameObject.transform.position + new Vector3(0, 0.5f, 0), Vector3.right);
-    //        Ray ray_4 = new Ray(collision.gameObject.transform.position + new Vector3(0, -0.5f, 0), Vector3.right);
-
-    //        RaycastHit hit;
-    //        if (Physics.Raycast(ray_1, out hit, 1.5f) || Physics.Raycast(ray_2, out hit, 1.5f) ||
-    //            Physics.Raycast(ray_3, out hit, 1.5f) || Physics.Raycast(ray_4, out hit, 1.5f))
-    //        {
-    //            return;
-    //        }
-    //        // プレイヤーの速度も同じにする
-    //        collision.gameObject.GetComponent<PlayerMain>().vel.y = Vel.y;
-    //    }
-    //}
 }
