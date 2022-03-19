@@ -79,6 +79,11 @@ public class BulletMain : MonoBehaviour
                     rb.velocity = Vector3.zero;
                     break;
 
+                case "Iron":
+                    PlayerScript.ForciblyReturnBullet(true);
+                break;
+
+
                 case "Player":
                     break;
 

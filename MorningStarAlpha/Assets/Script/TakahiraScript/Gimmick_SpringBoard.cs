@@ -26,6 +26,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
     {
         if (collider.gameObject.tag == "Player")
         {
+
             float Rad;           // 回転角
             Vector3 VecPower = Vector3.zero;    // 加えるベクトル量
 
@@ -40,7 +41,12 @@ public class Gimmick_SpringBoard : Gimmick_Main
             //Debug.Log(VecPower.x);
             //Debug.Log(VecPower.y);
 
-            playermain.vel = VecPower; // プレイヤーのベクトル量変更
+      
+            playermain.ForciblyReturnBullet(false);
+            playermain.vel = Vector3.zero;
+            playermain.addVel = VecPower;
+
+            Debug.Log("aaaa");
         }
     }
 }

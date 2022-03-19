@@ -40,8 +40,10 @@ public class PlayerMain : MonoBehaviour
     public Vector2 leftStick;                        // 左スティック
     public bool stickCanShotRange;                   // 打てる状態か
     public bool canShot;                             // 打てる状態か
-    public bool isOnGraund;                          // 地面に触れているか（onCollisionで変更）
-
+    public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
+    public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
+    public bool forciblyReturnBulletFlag;                // 強制的に弾を戻させるフラグ
+    public bool forciblyReturnSaveVelocity;
     [SerializeField] private float[] AdjustAngles;                      //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
 
@@ -67,6 +69,8 @@ public class PlayerMain : MonoBehaviour
         instance = this;
         PlayerState.PlayerScript = this;  //PlayerState側で参照できるようにする
         PlayerState.Player = gameObject;
+
+        //出現位置の設定
         if (CheckPointManager.isTouchCheckPos() == true) {
             transform.position = CheckPointManager.GetCheckPointPos();
          }
@@ -81,8 +85,11 @@ public class PlayerMain : MonoBehaviour
         leftStick = new Vector2(0.0f, 0.0f);
         stickCanShotRange = false;
         canShot = true;
-        isOnGraund = false;
+        isOnGround = false;
+        useVelocity = true;
 
+        forciblyReturnBulletFlag = false;
+        forciblyReturnSaveVelocity = false;
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
     }
 
@@ -96,14 +103,29 @@ public class PlayerMain : MonoBehaviour
 
     private void FixedUpdate()
     {
+        rb.WakeUp();
         mode.Move();
-        rb.velocity = vel;
+        rb.velocity = Vector3.zero;
+        if (useVelocity)
+        {
+            rb.velocity = vel;
+        }
+        rb.velocity += addVel;
+
+        if(Mathf.Abs(addVel.magnitude) > 10.0f)
+        {
+            addVel *= 0.96f;
+        }
+        else
+        {
+            addVel = Vector3.zero;
+        }
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
         //mode.DebugMessage();
 #endif
     }
 
-    private void LateUpdate()
+        private void LateUpdate()
     {
      
     }
@@ -153,8 +175,6 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-        Debug.Log(angle);
-
         //角度を読める値に調整
         if(angle > 180)
         {
@@ -177,6 +197,21 @@ public class PlayerMain : MonoBehaviour
 #endif
     }
 
+    /// <summary>
+    /// 強制的に弾を引き戻させる
+    /// </summary>
+    /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
+    ///　false:引き戻し時にもとのベロシティを殺す
+    /// </param>
+    public void ForciblyReturnBullet(bool saveVelocity)
+    {
+        if (Bullet != null)
+        {
+            forciblyReturnBulletFlag = true;
+            forciblyReturnSaveVelocity = saveVelocity;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         //空中で壁にぶつかったとき速度をなくす
@@ -184,7 +219,7 @@ public class PlayerMain : MonoBehaviour
         {
             for (int i = 0; i < collision.contacts.Length; i++)
             {
-                if (Mathf.Abs(collision.contacts[i].point.x - transform.position.x) > 0.2f)
+                if (Mathf.Abs(collision.contacts[i].point.x - transform.position.x) > 0.3f)
                 {
                     vel.x *= 0.2f;
                     if(vel.y > 1.0f)
@@ -205,7 +240,7 @@ public class PlayerMain : MonoBehaviour
         {
             if (collision.contacts[i].point.y < transform.position.y - 0.6f)
             {
-                isOnGraund = true;
+                isOnGround = true;
             }
         }   
     }
@@ -214,21 +249,21 @@ public class PlayerMain : MonoBehaviour
     //斜めの床がなければ必要なさそう
     private void MidAirCheck()
     {
-        if (isOnGraund)
+        if (isOnGround)
         {
             Ray downRay = new Ray(rb.position, Vector3.down);
             if (Physics.Raycast(downRay, 1.2f) == false)
             {
-                isOnGraund = false;
+                isOnGround = false;
             }
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (isOnGraund)
+        if (isOnGround)
         {
-            isOnGraund = false;
+            isOnGround = false;
         }
     }
 }
