@@ -35,7 +35,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         // ポジション変更
         if (NowFall)
         {
-            Vector3 OldPos = this.gameObject.transform.position;
+            //Vector3 OldPos = this.gameObject.transform.position;
             this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
             NowTime += Time.deltaTime;
 
@@ -46,7 +46,7 @@ public class Gimmick_FallBlock : Gimmick_Main
             //    RaycastHit hit;
             //    if (Physics.Raycast(ray, out hit, 1.5f))
             //    {
-            //        if(hit.collider == this)
+            //        if(hit.collider.gameObject == this.gameObject)
             //        {
             //            PlayerObject.gameObject.transform.position =
             //                PlayerObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
@@ -60,15 +60,11 @@ public class Gimmick_FallBlock : Gimmick_Main
         }
     }
 
-    public override void Move() { }
-
     public override void Death()
     {
         // 自分自身を消す
         Destroy(this.gameObject);
     }
-
-    public override void OnTriggerEnter(Collider collider) { }
 
     public override void OnCollisionEnter(Collision collision)
     {

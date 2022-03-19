@@ -21,10 +21,10 @@ public abstract class Gimmick_Main : MonoBehaviour
 
     // 継承するもの
     public abstract void Init(); // スタート処理
-    public abstract void Move();  // ギミックの動き処理
+    public virtual void Move() { }  // ギミックの動き処理
     public virtual void UpdateMove() { }   // Updateを使った動き処理
     public abstract void Death(); // ギミック死亡処理
-    public abstract void OnTriggerEnter(Collider collider);    // 何かと衝突処理(トリガー)
+    public virtual void OnTriggerEnter(Collider collider) { }    // 何かと衝突処理(トリガー)
     public virtual void OnCollisionEnter(Collision collision) { }   // 何かと衝突処理(コリジョン)
 
 

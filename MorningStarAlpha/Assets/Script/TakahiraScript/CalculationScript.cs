@@ -24,4 +24,22 @@ static public class CalculationScript
         // Vector3Œ^‚ÉŠi”[
         return new Vector3(x, y, z);
     }
+
+    // true‚È‚çfalse‚ðfalse‚È‚çtrue‚ð•Ô‚·
+    public static bool TureFalseChange(bool TrueorFalse)
+    {
+        if (TrueorFalse)
+            return false;
+        else
+            return true;
+    }
+
+    // true‚È‚ç1.0f‚ðfalse‚È‚ç-1.0f‚ð•Ô‚·
+    public static float FugouChange(bool TrueorFalse)
+    {
+        if (TrueorFalse)
+            return 1.0f;
+        else
+            return -1.0f;
+    }
 }
