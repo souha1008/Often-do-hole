@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
 {
-    [Header("現在のリスポーン座標")]
+    [Label("現在のリスポーン座標")]
     public static Vector3 RespawnPos;          // リスポーン座標
     public static bool noTouchCheckPoint;
     private void Awake()

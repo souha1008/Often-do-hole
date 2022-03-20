@@ -43,7 +43,7 @@ public class AttributeTest : MonoBehaviour
     // ヒントの表示(カーソルを合わせるとチップスがでる)
     //==================
     [Tooltip("ヒント名")]
-    public float Tooltip = 0.0f;
+    [ReadOnly] public string Tooltip = "←カーソルをTolltipに合わせる";
 
     //==================
     // スライダーの表示
