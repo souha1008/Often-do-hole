@@ -9,18 +9,19 @@ public abstract class Gimmick_Main : MonoBehaviour
     [System.Serializable]
     public class NowMoveInfo
     {
-        [Header("現在の角度")]
+        [SerializeField, Label("角度")]
         [Tooltip("0～360度で表示しています")]
         public Vector3 Rad;          // 角度
 
-        [Header("現在の移動量")]
+        [SerializeField, Label("現在の移動量")]
         public Vector3 Vel;          // 移動量
 
-        [Header("合計移動量")]
+        [SerializeField, Label("合計移動量")]
         public Vector3 TotalMoveVel; // 自分の合計移動量
     }
-    [Tooltip("現在の移動情報")]
+    [Label("現在の移動情報")]
     public NowMoveInfo MoveInfo;
+
 
     // 変数
     protected Vector3 Rad;          // 角度

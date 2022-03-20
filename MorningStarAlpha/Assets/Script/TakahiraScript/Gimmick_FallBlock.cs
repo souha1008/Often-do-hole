@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Gimmick_FallBlock : Gimmick_Main
 {
-    [Header("—Ž‰º‹——£")]
+    [Label("—Ž‰º‹——£")]
     public float FallLength = 15.0f;   // —Ž‚¿‚é‹——£
 
-    [Header("‰½•b‚©‚¯‚Ä—Ž‰º‚·‚é‚©")]
+    [Label("‰½•b‚©‚¯‚Ä—Ž‰º‚·‚é‚©")]
     public float FallTime = 3.0f;       // ‰½•b‚©‚¯‚Ä—Ž‰º‚·‚é‚©
 
     private bool NowFall;               // —Ž‰º’†‚©
