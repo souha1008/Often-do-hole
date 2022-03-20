@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 23539561}
   - component: {fileID: 23539560}
   - component: {fileID: 23539559}
-  - component: {fileID: 23539558}
   m_Layer: 0
   m_Name: FallBlock_2
   m_TagString: Platform
@@ -144,22 +143,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &23539558
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23539557}
-  serializedVersion: 2
-  m_Mass: 1000
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
 --- !u!114 &23539559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1014,11 +997,12 @@ MonoBehaviour:
   Output: 0
   Label: 0
   Header: 0
-  Tooltip: 0
+  Tooltip: "\u2190\u30AB\u30FC\u30BD\u30EB\u3092Tolltip\u306B\u5408\u308F\u305B\u308B"
   Range: 0
   Multiline: 
   speed: 990
   Text: 
+  TestEnum: 0
 --- !u!4 &446691368
 Transform:
   m_ObjectHideFlags: 0
@@ -1089,7 +1073,6 @@ GameObject:
   - component: {fileID: 514216859}
   - component: {fileID: 514216858}
   - component: {fileID: 514216857}
-  - component: {fileID: 514216856}
   m_Layer: 0
   m_Name: FallBlock_3
   m_TagString: Platform
@@ -1097,22 +1080,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &514216856
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 514216855}
-  serializedVersion: 2
-  m_Mass: 1000
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
 --- !u!114 &514216857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1322,6 +1289,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: MoveTime_Y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
+      propertyPath: StartTime_Y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2677225771246186978, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
       propertyPath: MoveLength_Y
       value: 15
       objectReference: {fileID: 0}
@@ -1393,7 +1368,8 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 21e1356b1074c844ebdc7db5c16ec665, type: 3}
 --- !u!1 &705507993
 GameObject:
@@ -1779,7 +1755,6 @@ GameObject:
   - component: {fileID: 951531807}
   - component: {fileID: 951531806}
   - component: {fileID: 951531810}
-  - component: {fileID: 951531811}
   m_Layer: 0
   m_Name: FallBlock_1
   m_TagString: Platform
@@ -1881,22 +1856,6 @@ MonoBehaviour:
     TotalMoveVel: {x: 0, y: 0, z: 0}
   FallLength: 15
   FallTime: 3
---- !u!54 &951531811
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951531805}
-  serializedVersion: 2
-  m_Mass: 1000
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
 --- !u!1 &955916154
 GameObject:
   m_ObjectHideFlags: 0
@@ -3801,7 +3760,6 @@ GameObject:
   - component: {fileID: 1823272918}
   - component: {fileID: 1823272917}
   - component: {fileID: 1823272916}
-  - component: {fileID: 1823272915}
   m_Layer: 0
   m_Name: FallBlock_4
   m_TagString: Platform
@@ -3809,22 +3767,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!54 &1823272915
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1823272914}
-  serializedVersion: 2
-  m_Mass: 1000
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 120
-  m_CollisionDetection: 0
 --- !u!114 &1823272916
 MonoBehaviour:
   m_ObjectHideFlags: 0

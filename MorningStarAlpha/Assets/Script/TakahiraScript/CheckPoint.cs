@@ -5,9 +5,9 @@ using UnityEngine;
 public class CheckPoint : MonoBehaviour
 {
     // 変数
-    [Header("復活座標オブジェクト")]
+    [Label("復活座標オブジェクト")]
     public GameObject RespawnPointObject;                       // 復活座標オブジェクト
-    [Header("メッシュ切り替え用スクリプトがついたオブジェクト")]
+    [Label("メッシュ切り替え用スクリプトがついたオブジェクト")]
     [SerializeField] private GameObject MeshOnOffObject;        // メッシュの表示非表示切り替え用
 
     // Start is called before the first frame update
