@@ -62,6 +62,10 @@ public class AttributeTest : MonoBehaviour
     //==================
     [ContextMenuItem("Random", "RandomNumber")] // "メニューの名前", "関数名"
     public int speed;
+    void RandomNumber()
+    {
+        speed = Random.Range(0, 1000);
+    }
 
     //==================
     // テキスト追加
@@ -71,10 +75,26 @@ public class AttributeTest : MonoBehaviour
 
 
 
-    void RandomNumber()
+    //==================
+    // Enumのラベルの変更
+    //==================
+    public enum TEST_ENUM
     {
-        speed = Random.Range(0, 1000);
+        [EnumCName("てすと１")] // 列挙したやつに名前つける
+        Test_1,
+        [EnumCName("てすと２")] // 列挙したやつに名前つける
+        Test_2,
+        [EnumCName("てすと３")] // 列挙したやつに名前つける
+        Test_3
     }
+    //[EnumPName(typeof(TEST_ENUM))] // 列挙したEnumの使用方法(ラベルなし)
+    [EnumPName("てすとEnum", typeof(TEST_ENUM))] // 列挙したEnumの使用方法(ラベルあり)
+    public TEST_ENUM TestEnum;
+
+
+
+
+
 
     private void Start()
     {
