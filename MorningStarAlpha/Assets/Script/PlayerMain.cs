@@ -1,5 +1,3 @@
-//#define SPLIT_LEFTSTICK
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,6 +43,8 @@ public class PlayerMain : MonoBehaviour
     public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
     public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
     public bool forciblyReturnSaveVelocity;
+
+    [SerializeField] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
 
@@ -167,25 +167,35 @@ public class PlayerMain : MonoBehaviour
         {
             degree += 360;
         }
-
         float angle = 0.0f;
 
         //AjustAngles内の一番近い値にスティックを補正
         float minDif = 9999.0f;
         float dif;
 
-        for (int i = 0;i < AdjustAngles.Length; i++)
+        for (int i = 0; i < AdjustAngles.Length; i++)
         {
-             dif = Mathf.Abs(AdjustAngles[i] - degree);
-            if(dif< minDif)
+            dif = Mathf.Abs(AdjustAngles[i] - degree);
+            if (dif < minDif)
+            {
+                minDif = dif;
+                angle = AdjustAngles[i];
+            }
+
+            dif = Mathf.Abs(AdjustAngles[i] + 360 - degree);
+            if (dif < minDif)
             {
                 minDif = dif;
                 angle = AdjustAngles[i];
             }
         }
 
+
+        Debug.Log("Degree:" + degree);
+        Debug.Log("Angle :" + angle);
+
         //角度を読める値に調整
-        if(angle > 180)
+        if (angle > 180)
         {
             angle -= 360;
         }
@@ -197,13 +207,11 @@ public class PlayerMain : MonoBehaviour
         Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
         vec = vec.normalized;
 
-#if SPLIT_LEFTSTICK
         //分割処理
-        if (canShot)
+        if (SplitStick)
         {
             leftStick = vec;
         }
-#endif
     }
 
     /// <summary>
