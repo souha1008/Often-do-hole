@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class Gimmick_FallBlock : Gimmick_Main
 {
-    [Header("落下距離")]
+    [Label("落下距離")]
     public float FallLength = 15.0f;   // 落ちる距離
 
-    [Header("何秒かけて落下するか")]
+    [Label("何秒かけて落下するか")]
     public float FallTime = 3.0f;       // 何秒かけて落下するか
 
     private bool NowFall;               // 落下中か
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
     private GameObject PlayerObject;    // プレイヤーオブジェクト
+    private GameObject BulletObject;    // 錨オブジェクト
 
     public override void Init()
     {
@@ -22,6 +23,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         NowTime = 0.0f;
         StartPos = this.gameObject.transform.position;
         PlayerObject = null;
+        BulletObject = null;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
@@ -53,6 +55,12 @@ public class Gimmick_FallBlock : Gimmick_Main
                     }
                 }
             }
+
+            if (BulletObject != null)
+            {
+                BulletObject.gameObject.transform.position =
+                            BulletObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+            }
         }
         if (NowTime > FallTime)
         {
@@ -72,6 +80,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         if (collision.gameObject.tag == "Bullet")
         {
             NowFall = true; // 落下中
+            BulletObject = collision.gameObject;
         }
         else if (collision.gameObject.tag == "Player")
         {

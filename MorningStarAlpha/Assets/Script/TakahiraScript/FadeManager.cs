@@ -26,15 +26,15 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     // 変数
 
     // フェード秒数(ゲームオーバー)
-    [Header("フェードにかかる秒数(ゲームオーバー)")]
+    [Label("フェード秒数(ゲームオーバー)")]
     [SerializeField] private float FadeTime_GameOver = 1;
 
     // フェード秒数(シーン変更)
-    [Header("フェードにかかる秒数(シーン変更)")]
+    [Label("フェード秒数(シーン変更)")]
     [SerializeField] private float FadeTime_SceneChange = 1;
 
     // フェード秒数(ステージ変更)
-    [Header("フェードにかかる秒数(ステージ変更)")]
+    [Label("フェード秒数(ステージ変更)")]
     [SerializeField] private float FadeTime_StageChange = 1;
 
 

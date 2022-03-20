@@ -102,6 +102,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
     private GameObject PlayerObject;            // プレイヤーオブジェクト
+    private GameObject BulletObject;            // 錨オブジェクト
 
     private Vector3 OldPos;
 
@@ -128,6 +129,8 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
         // プレイヤーオブジェクト発見
         PlayerObject = GameObject.Find("Player");
+        // 錨オブジェクトnull
+        BulletObject = null;
     }
 
     public override void UpdateMove()
@@ -194,12 +197,19 @@ public class Gimmick_MoveBlock : Gimmick_Main
             {
                 if (hit.collider.gameObject == this.gameObject)
                 {
-                    Debug.Log("プレイヤーブロックの上移動中");
-                    Debug.Log(this.gameObject.transform.position.x - OldPos.x);
+                    //Debug.Log("プレイヤーブロックの上移動中");
+                    //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
                     PlayerObject.transform.position = PlayerObject.transform.position +
                         new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
                 }
             }
+        }
+
+        // 錨オブジェクトが当たったら
+        if (BulletObject != null)
+        {
+            BulletObject.transform.position = BulletObject.transform.position +
+                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
         }
     }
 
@@ -213,6 +223,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
         if (collision.gameObject.tag == "Player")
         {
             PlayerObject = collision.gameObject;
+        }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            BulletObject = collision.gameObject;
         }
     }
 
