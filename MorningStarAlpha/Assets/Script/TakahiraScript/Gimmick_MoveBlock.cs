@@ -132,13 +132,19 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     public override void UpdateMove()
     {        
+        
+    }
+
+    public override void FixedMove()
+    {
+        OldPos = this.gameObject.transform.position;
         if (Move_X) // X方向移動が使用されていたら
         {
             if (NowMove_X)
             {
-                this.gameObject.transform.position = 
+                this.gameObject.transform.position =
                     new Vector3(Easing.QuadInOut(NowTime_X, MoveTime_X, StartPos_X, StartPos_X + MoveLength_X * Fugou_X), gameObject.transform.position.y, gameObject.transform.position.z);
-                NowTime_X += Time.deltaTime;
+                NowTime_X += Time.fixedDeltaTime;
 
                 // 移動終了
                 if (NowTime_X > MoveTime_X)
@@ -159,9 +165,9 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             if (NowMove_Y)
             {
-                this.gameObject.transform.position = 
+                this.gameObject.transform.position =
                     new Vector3(gameObject.transform.position.x, Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
-                NowTime_Y += Time.deltaTime;
+                NowTime_Y += Time.fixedDeltaTime;
 
                 // 移動終了
                 if (NowTime_Y > MoveTime_Y)
@@ -179,27 +185,6 @@ public class Gimmick_MoveBlock : Gimmick_Main
         }
 
         // プレイヤーからレイ飛ばして真下にブロックがあったら
-        //if (PlayerObject != null)
-        //{
-        //    Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
-        //    RaycastHit hit;
-        //    if (Physics.Raycast(ray, out hit, 1.5f))
-        //    {
-        //        if (hit.collider.gameObject == this.gameObject)
-        //        {
-        //            Debug.Log("プレイヤーブロックの上移動中");
-        //            Debug.Log(this.gameObject.transform.position.x - OldPos.x);
-        //            PlayerMain playermain = PlayerObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
-        //            playermain.floorVel =
-        //                new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
-        //        }
-        //    }
-        //}
-    }
-
-    public override void FixedMove()
-    {
-        // プレイヤーからレイ飛ばして真下にブロックがあったら
         if (PlayerObject != null)
         {
             Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
@@ -211,15 +196,9 @@ public class Gimmick_MoveBlock : Gimmick_Main
                 {
                     Debug.Log("プレイヤーブロックの上移動中");
                     Debug.Log(this.gameObject.transform.position.x - OldPos.x);
-                    playermain.floorVel =
-                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.fixedDeltaTime;
-                    OldPos = this.gameObject.transform.position;
+                    PlayerObject.transform.position = PlayerObject.transform.position +
+                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
                 }
-            }
-            else
-            {
-                playermain.floorVel = Vector3.zero;
-                OldPos = this.gameObject.transform.position;
             }
         }
     }
