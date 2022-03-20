@@ -78,7 +78,7 @@ public class PlayerStateOnGround : PlayerState
         //プレイヤー向き回転処理
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
         {
-            if (PlayerScript.leftStick.x < -0.1f)
+            if (PlayerScript.leftStick.x < -0.01f)
             {
                 PlayerScript.dir = PlayerMoveDir.LEFT;
                 PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
@@ -86,7 +86,7 @@ public class PlayerStateOnGround : PlayerState
         }
         else if (PlayerScript.dir == PlayerMoveDir.LEFT)
         {
-            if (PlayerScript.leftStick.x > 0.1f)
+            if (PlayerScript.leftStick.x > 0.01f)
             {
                 PlayerScript.dir = PlayerMoveDir.RIGHT;
                 PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
@@ -168,6 +168,7 @@ public class PlayerStateShot_2 : PlayerState
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.canShot = false;
         PlayerScript.forciblyReturnBulletFlag = false;
+        PlayerScript.addVel = Vector3.zero;
         //弾の生成と発射
         //発射時にぶつからないように発射位置を矢印方向にずらす
         Vector3 vec = PlayerScript.leftStick.normalized;
@@ -339,12 +340,12 @@ public class PlayerStateMidair : PlayerState
     {
         countTimer += Time.deltaTime;
 
-        if (PlayerScript.leftStick.x > 0.2f)
+        if (PlayerScript.leftStick.x > 0.01f)
         {
             PlayerScript.dir = PlayerMoveDir.RIGHT;
             PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
         }
-        else if (PlayerScript.leftStick.x < -0.2f)
+        else if (PlayerScript.leftStick.x < -0.01f)
         {
             PlayerScript.dir = PlayerMoveDir.LEFT;
             PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
@@ -576,9 +577,13 @@ public class PlayerStateSwing_2 : PlayerState
 
 
     private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
+    private Vector3 startPlayerVel;　　　　　　 //突入時
     private float startAngle;    //開始時の二点間アングル
-
-    public PlayerStateSwing_2()//コンストラクタ
+    private float endAngle;      //自動切り離しされる角度(start角度依存)
+    private float minAnglerVel;  //最低角速度（自動切り離し地点にいる時）
+    private float maxAnglerVel;　//最高角速度 (真下にプレイヤーが居る時）
+    private float nowAnglerVel;  //現在角速度
+    public PlayerStateSwing_2()  //コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.SWING;
         PlayerScript.canShot = false;
@@ -599,9 +604,28 @@ public class PlayerStateSwing_2 : PlayerState
         betweenLength = Vector3.Distance(Player.transform.position, ballPosition);
 
         float degree = CalculationScript.TwoPointAngle360(ballPosition, Player.transform.position);
-        startAngle = degree;
+        startAngle = endAngle = degree;
 
-        Debug.Log(startAngle);
+
+
+        //切り離しアングルの計算
+        float diff_down = Mathf.Abs(startAngle - 180.0f);
+        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+        {
+            endAngle -= diff_down + diff_down;
+            endAngle = Mathf.Clamp(endAngle, 90, 140);
+        }
+        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+        {
+            endAngle += diff_down + diff_down;
+
+            endAngle = Mathf.Clamp(endAngle, 220, 270);
+        }
+
+        //突入時角速度の計算
+        minAnglerVel = 2.0f;
+        maxAnglerVel = 4.5f;
+        nowAnglerVel = minAnglerVel;
     }
 
     public override void UpdateState()
@@ -620,7 +644,7 @@ public class PlayerStateSwing_2 : PlayerState
         {
             if (PlayerScript.dir == PlayerMoveDir.RIGHT)
             {
-                if (degree < SWING_REREASE_ANGLE)
+                if (degree < endAngle)
                 {
                     PlayerScript.useVelocity = true;
                     BulletScript.ReturnBullet();
@@ -636,7 +660,7 @@ public class PlayerStateSwing_2 : PlayerState
             }
             else if (PlayerScript.dir == PlayerMoveDir.LEFT)
             {
-                if (degree > 360 - SWING_REREASE_ANGLE)
+                if (degree > endAngle)
                 {
                     PlayerScript.useVelocity = true;
                     BulletScript.ReturnBullet();
@@ -655,18 +679,29 @@ public class PlayerStateSwing_2 : PlayerState
 
     public override void Move()
     {
+        float degree = CalculationScript.TwoPointAngle360(ballPosition, Player.transform.position);
+        float deg180dif = Mathf.Abs(degree - 180);
         switch (swingMode)
         {
             case SwingMode.Touced:
+                //角速度計算
+                float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
+                deg180Ratio = Mathf.Clamp01(deg180Ratio); //一応範囲内に補正
+                deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
+
+                float vvv = Easing.Linear(deg180Ratio, 1.0f, 0.0f, 1.0f);
+
+                nowAnglerVel = ((maxAnglerVel - minAnglerVel) * vvv) + minAnglerVel;
+
                 //向きによって回転方向が違う
                 Quaternion angleAxis = Quaternion.AngleAxis(SWING_ANGLER_VELOCITY, Vector3.forward);
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    angleAxis = Quaternion.AngleAxis(SWING_ANGLER_VELOCITY, Vector3.forward);
+                    angleAxis = Quaternion.AngleAxis(nowAnglerVel, Vector3.forward);
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {
-                    angleAxis = Quaternion.AngleAxis(SWING_ANGLER_VELOCITY * -1, Vector3.forward);
+                    angleAxis = Quaternion.AngleAxis(nowAnglerVel * -1, Vector3.forward);
                 }
 
                 Vector3 pos = Player.transform.position;

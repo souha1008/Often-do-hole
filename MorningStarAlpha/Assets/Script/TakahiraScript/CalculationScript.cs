@@ -27,8 +27,6 @@ static public class CalculationScript
         {
             degree += 360;
         }
-
-        Debug.Log(degree);
         return degree;
     }
 

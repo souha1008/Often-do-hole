@@ -101,13 +101,13 @@ public class PlayerMain : MonoBehaviour
     {
         InputStick();
         MidAirCheck();
+      
         mode.UpdateState();
         mode.StateTransition();
     }
 
     private void FixedUpdate()
     {
-        rb.WakeUp();
         mode.Move();
         rb.velocity = Vector3.zero;
         if (useVelocity)

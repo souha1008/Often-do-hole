@@ -12,6 +12,17 @@ public class CameraMove : MonoBehaviour
         TracePlayer();
     }
 
+    //private void Update()
+    //{
+    //    TracePlayer();
+    //}
+
+    //private void FixedUpdate()
+    //{
+    //    TracePlayer();
+    //}
+
+
     private void LateUpdate()
     {
         TracePlayer();
