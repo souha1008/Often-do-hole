@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class AttributeTest : MonoBehaviour
 {
+    //+++++++++++++++++++++++++++++++++++++++++++++
     // アトリビュートの機能テストスクリプト(使い方)
+    //+++++++++++++++++++++++++++++++++++++++++++++
+
 
     //==================
     // 表示しない
@@ -53,6 +56,25 @@ public class AttributeTest : MonoBehaviour
     //==================
     [Multiline(10)] // int型
     public string Multiline; // string型
+
+    //==================
+    // コンテキストメニュー追加(右クリックであらかじめ用意した関数・メソッドを実行出来る)
+    //==================
+    [ContextMenuItem("Random", "RandomNumber")] // "メニューの名前", "関数名"
+    public int speed;
+
+    //==================
+    // テキスト追加
+    //==================
+    [TextArea(1, 10)] // "最小表示行数", "スクロールバー出るまでの行数"
+    public string Text;
+
+
+
+    void RandomNumber()
+    {
+        speed = Random.Range(0, 1000);
+    }
 
     private void Start()
     {
