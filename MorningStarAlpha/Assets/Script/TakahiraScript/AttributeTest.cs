@@ -22,6 +22,12 @@ public class AttributeTest : MonoBehaviour
     private float Output = 0.0f;
 
     //==================
+    // リードオンリー
+    //==================
+    [ReadOnly] 
+    public int ReadOnly = 0;
+
+    //==================
     // ラベルの変更
     //==================
     [Label("ラベル名")]
