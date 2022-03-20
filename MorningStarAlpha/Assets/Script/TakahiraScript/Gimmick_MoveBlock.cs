@@ -16,6 +16,7 @@ public class Gimmick_MoveBlockEditor : Editor
     SerializedProperty MoveDirection_X, MoveDirection_Y;
     SerializedProperty MoveLength_X, MoveLength_Y;
     SerializedProperty MoveTime_X, MoveTime_Y;
+    SerializedProperty StartTime_X, StartTime_Y;
 
     public Gimmick_MoveBlock.MOVE_DIRECTION_X Move_Direction_X;
 
@@ -33,6 +34,8 @@ public class Gimmick_MoveBlockEditor : Editor
         MoveLength_Y = serializedObject.FindProperty("MoveLength_Y");
         MoveTime_X = serializedObject.FindProperty("MoveTime_X");
         MoveTime_Y = serializedObject.FindProperty("MoveTime_Y");
+        StartTime_X = serializedObject.FindProperty("StartTime_X");
+        StartTime_Y = serializedObject.FindProperty("StartTime_Y");
     }
     public override void OnInspectorGUI()
     {
@@ -44,19 +47,21 @@ public class Gimmick_MoveBlockEditor : Editor
 
 
         // X・Y方向移動
-        Move_X.boolValue = EditorGUILayout.BeginToggleGroup("X方向移動", Move_X.boolValue);
+        Move_X.boolValue = EditorGUILayout.BeginToggleGroup("X方向移動", Move_X.boolValue); // グループ化始まり
         MoveDirection_X.enumValueIndex =
             EditorGUILayout.Popup("移動方向", MoveDirection_X.enumValueIndex, new string[] { "右移動", "左移動"});
         MoveLength_X.floatValue = EditorGUILayout.FloatField("移動距離", MoveLength_X.floatValue);
         MoveTime_X.floatValue = EditorGUILayout.FloatField("何秒かけて移動するか", MoveTime_X.floatValue);
+        StartTime_X.floatValue = EditorGUILayout.Slider("初期経過時間", StartTime_X.floatValue, 0, MoveTime_X.floatValue);    // スライダーを表示（引数は「初期値,最小値,最大値」）
         EditorGUILayout.EndToggleGroup();   // グループ化
 
 
-        Move_Y.boolValue = EditorGUILayout.BeginToggleGroup("Y方向移動", Move_Y.boolValue);
+        Move_Y.boolValue = EditorGUILayout.BeginToggleGroup("Y方向移動", Move_Y.boolValue); // グループ化始まり
         MoveDirection_Y.enumValueIndex =
             EditorGUILayout.Popup("移動方向", MoveDirection_Y.enumValueIndex, new string[] { "上移動", "下移動" });
         MoveLength_Y.floatValue = EditorGUILayout.FloatField("移動距離", MoveLength_Y.floatValue);
         MoveTime_Y.floatValue = EditorGUILayout.FloatField("何秒かけて移動するか", MoveTime_Y.floatValue);
+        StartTime_Y.floatValue = EditorGUILayout.Slider("初期経過時間", StartTime_Y.floatValue, 0, MoveTime_Y.floatValue);    // スライダーを表示（引数は「初期値,最小値,最大値」）
         EditorGUILayout.EndToggleGroup();   // グループ化
 
 
@@ -83,6 +88,8 @@ public class Gimmick_MoveBlock : Gimmick_Main
     public float MoveLength_Y = 15.0f;    // 動く距離
     public float MoveTime_X = 3.0f;       // 何秒かけて移動するか
     public float MoveTime_Y = 3.0f;       // 何秒かけて移動するか
+    public float StartTime_X;             // 初期経過時間
+    public float StartTime_Y;             // 初期経過時間
     public MOVE_DIRECTION_X MoveDirection_X; // 移動方向
     public MOVE_DIRECTION_Y MoveDirection_Y; // 移動方向
 
@@ -96,19 +103,23 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private GameObject PlayerObject;            // プレイヤーオブジェクト
     private float Fugou_X, Fugou_Y;             // 符号
 
+    private Vector3 OldPos;
+    private bool OldPosFlag;
+
     public override void Init()
     {
         // 初期化
         NowMove_X = true;
         NowMove_Y = true;
-        NowTime_X = 0.0f;
-        NowTime_Y = 0.0f;
+        NowTime_X = StartTime_X;
+        NowTime_Y = StartTime_Y;
         StartPos_X = this.gameObject.transform.position.x;
         StartPos_Y = this.gameObject.transform.position.y;
         MoveRight = MoveDirectionBoolChangeX(MoveDirection_X);
         MoveUp = MoveDirectionBoolChangeY(MoveDirection_Y);
         Fugou_X = CalculationScript.FugouChange(MoveRight);
         Fugou_Y = CalculationScript.FugouChange(MoveUp);
+        OldPos = this.gameObject.transform.position;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
@@ -118,8 +129,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
     }
 
     public override void UpdateMove()
-    {
-        Vector3 OldPos = this.gameObject.transform.position;
+    {        
         if (Move_X) // X方向移動が使用されていたら
         {
             if (NowMove_X)
@@ -165,19 +175,47 @@ public class Gimmick_MoveBlock : Gimmick_Main
             }
         }
 
-            // プレイヤーからレイ飛ばして真下にブロックがあったら
-            if (PlayerObject != null)
+        // プレイヤーからレイ飛ばして真下にブロックがあったら
+        //if (PlayerObject != null)
+        //{
+        //    Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(ray, out hit, 1.5f))
+        //    {
+        //        if (hit.collider.gameObject == this.gameObject)
+        //        {
+        //            Debug.Log("プレイヤーブロックの上移動中");
+        //            Debug.Log(this.gameObject.transform.position.x - OldPos.x);
+        //            PlayerMain playermain = PlayerObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
+        //            playermain.floorVel =
+        //                new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+        //        }
+        //    }
+        //}
+    }
+
+    public override void Move()
+    {
+        // プレイヤーからレイ飛ばして真下にブロックがあったら
+        if (PlayerObject != null)
         {
             Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
             RaycastHit hit;
+            PlayerMain playermain = PlayerObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
             if (Physics.Raycast(ray, out hit, 1.5f))
             {
                 if (hit.collider.gameObject == this.gameObject)
                 {
-                    //Debug.Log("プレイヤーブロックの上移動中");
-                    PlayerObject.gameObject.transform.position =
-                        PlayerObject.gameObject.transform.position + new Vector3(this.gameObject.transform.position.x - OldPos.x, 0, 0);
+                    Debug.Log("プレイヤーブロックの上移動中");
+                    Debug.Log(this.gameObject.transform.position.x - OldPos.x);
+                    playermain.floorVel =
+                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 50;
+                    OldPos = this.gameObject.transform.position;
                 }
+            }
+            else
+            {
+                playermain.floorVel = Vector3.zero;
             }
         }
     }
