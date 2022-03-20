@@ -36,15 +36,16 @@ public class PlayerMain : MonoBehaviour
     public HingeJoint hinge = null;
     public PlayerMoveDir dir;
     public Vector3 vel;                              // 移動速度(inspector上で確認)
-    public Vector3 addVel;                         　// ギミック等で追加される速度
+    public Vector3 addVel;                           // ギミック等で追加される速度
+    public Vector3 floorVel;                         // 動く床等でのベロシティ
     public Vector2 leftStick;                        // 左スティック
     public bool stickCanShotRange;                   // 打てる状態か
     public bool canShot;                             // 打てる状態か
     public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
     public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
-    public bool forciblyReturnBulletFlag;                // 強制的に弾を戻させるフラグ
+    public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
     public bool forciblyReturnSaveVelocity;
-    [SerializeField] private float[] AdjustAngles;                      //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
+    [SerializeField] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
 
 
@@ -54,6 +55,8 @@ public class PlayerMain : MonoBehaviour
     public float                      MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
     public float                      ADD_RUN_SPEED;           // 走り一秒間で上がるスピード
     public float                      MAX_FALL_SPEED;          // 重力による最低速度
+    public float                      FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
+    public float                      STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
     [Range(0.1f, 1.0f)] public float　RUN_FRICTION;            // 走りの減衰率
 
 
@@ -82,6 +85,7 @@ public class PlayerMain : MonoBehaviour
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
         vel = Vector3.zero;
         addVel = Vector3.zero;
+        floorVel = Vector3.zero;
         leftStick = new Vector2(0.0f, 0.0f);
         stickCanShotRange = false;
         canShot = true;
@@ -111,8 +115,10 @@ public class PlayerMain : MonoBehaviour
             rb.velocity = vel;
         }
         rb.velocity += addVel;
+        rb.velocity += floorVel;
 
-        if(Mathf.Abs(addVel.magnitude) > 10.0f)
+
+        if (Mathf.Abs(addVel.magnitude) > 10.0f)
         {
             addVel *= 0.96f;
         }
@@ -120,12 +126,15 @@ public class PlayerMain : MonoBehaviour
         {
             addVel = Vector3.zero;
         }
+
+
+
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
         //mode.DebugMessage();
 #endif
     }
 
-        private void LateUpdate()
+    private void LateUpdate()
     {
      
     }

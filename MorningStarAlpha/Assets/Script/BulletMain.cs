@@ -37,18 +37,14 @@ public class BulletMain : MonoBehaviour
         isTouched = false;
 
         vel += vec * BULLET_SPEED;
-        //rb.AddForce(vec * BULLET_SPEED, ForceMode.VelocityChange);
     }
 
     void FixedUpdate()
     {
         if (isStrained == false)
         {
-            if (rb.velocity.y > BULLET_MAXFALLSPEED * -1)
-            {
-                vel += Vector3.down * 0.4f;
-               // rb.AddForce(Vector3.down * 3.8f, ForceMode.Acceleration);
-            }
+            vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
+            Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
         }
         rb.velocity = vel;
     }
