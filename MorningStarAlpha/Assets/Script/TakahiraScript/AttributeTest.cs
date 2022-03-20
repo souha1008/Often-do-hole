@@ -8,12 +8,11 @@ public class AttributeTest : MonoBehaviour
     // アトリビュートの機能テストスクリプト(使い方)
     //+++++++++++++++++++++++++++++++++++++++++++++
 
+    // 空オブジェクトの AttributeTestObject にアタッチしているので合わせて見ることをおすすめいたします
 
-    //==================
-    // 表示しない
-    //==================
-    [HideInInspector]
-    public float NoOutput = 0.0f;
+
+    [Space(30.0f), Header("[アトリビュート機能のテスト用]")]
+
 
     //==================
     // 表示する
@@ -21,11 +20,23 @@ public class AttributeTest : MonoBehaviour
     [SerializeField]
     private float Output = 0.0f;
 
+
+
+    //==================
+    // 表示しない
+    //==================
+    [HideInInspector]
+    public float NoOutput = 0.0f;
+
+
+
     //==================
     // リードオンリー
     //==================
     [ReadOnly] 
     public int ReadOnly = 0;
+
+
 
     //==================
     // ラベルの変更
@@ -33,16 +44,22 @@ public class AttributeTest : MonoBehaviour
     [Label("ラベル名")]
     public float Label = 0.0f;
 
+
+
     //==================
     // ヘッダーの追加
     //==================
     [Header("ヘッダー名")]
     public float Header = 0.0f;
 
+
+
     //==================
     // 空白の追加
     //==================
     [Space(50.0f)] // int, float型
+
+
 
 
     //==================
@@ -51,17 +68,23 @@ public class AttributeTest : MonoBehaviour
     [Tooltip("ヒント名")]
     [ReadOnly] public string Tooltip = "←カーソルをTolltipに合わせる";
 
+
+
     //==================
     // スライダーの表示
     //==================
     [Range(0.0f, 100.0f)] // int, float型
     public float Range = 0.0f;
 
+
+
     //==================
     // 改行追加
     //==================
     [Multiline(10)] // int型
     public string Multiline; // string型
+
+
 
     //==================
     // コンテキストメニュー追加(右クリックであらかじめ用意した関数・メソッドを実行出来る)
@@ -72,6 +95,8 @@ public class AttributeTest : MonoBehaviour
     {
         speed = Random.Range(0, 1000);
     }
+
+
 
     //==================
     // テキスト追加
