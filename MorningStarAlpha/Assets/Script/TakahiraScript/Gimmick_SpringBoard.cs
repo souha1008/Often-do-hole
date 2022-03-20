@@ -12,7 +12,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
     }
 
-    public override void Move()
+    public override void FixedMove()
     {
         
     }

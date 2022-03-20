@@ -9,7 +9,7 @@ public class Gimmick_Rail : Gimmick_Main
         
     }
 
-    public override void Move()
+    public override void FixedMove()
     {
         
     }

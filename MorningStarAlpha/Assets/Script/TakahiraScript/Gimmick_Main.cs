@@ -31,7 +31,7 @@ public abstract class Gimmick_Main : MonoBehaviour
 
     // 継承するもの
     public abstract void Init(); // スタート処理
-    public virtual void Move() { }  // ギミックの動き処理
+    public virtual void FixedMove() { }  // ギミックの動き処理
     public virtual void UpdateMove() { }   // Updateを使った動き処理
     public abstract void Death(); // ギミック死亡処理
     public virtual void OnTriggerEnter(Collider collider) { }    // 何かと衝突処理(トリガー)
@@ -70,7 +70,7 @@ public abstract class Gimmick_Main : MonoBehaviour
     }
     protected void FixedUpdate() 
     {
-        Move();                 // ギミックの動き処理
+        FixedMove();                 // ギミックの動き処理
         TotalMoveVel += Vel;    // 合計移動量変更
         Rb.velocity = Vel;      // 移動量変更
 

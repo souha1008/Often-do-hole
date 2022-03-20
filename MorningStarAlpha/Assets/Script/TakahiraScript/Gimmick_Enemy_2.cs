@@ -14,7 +14,7 @@ public class Gimmick_Enemy_2 : Gimmick_Main
     }
 
     // “G‚Ì“®‚«ˆ—
-    public override void Move()
+    public override void FixedMove()
     {
 
     }

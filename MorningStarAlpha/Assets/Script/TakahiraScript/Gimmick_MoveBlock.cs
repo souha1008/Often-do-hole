@@ -100,11 +100,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private bool NowMove_X, NowMove_Y;          // 移動中か
     private float NowTime_X, NowTime_Y;         // 経過時間
     private float StartPos_X, StartPos_Y;       // 初期座標
-    private GameObject PlayerObject;            // プレイヤーオブジェクト
     private float Fugou_X, Fugou_Y;             // 符号
+    private GameObject PlayerObject;            // プレイヤーオブジェクト
 
     private Vector3 OldPos;
-    private bool OldPosFlag;
 
     public override void Init()
     {
@@ -126,6 +125,9 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
         // リジッドボディ
         Rb.isKinematic = true;
+
+        // プレイヤーオブジェクト発見
+        PlayerObject = GameObject.Find("Player");
     }
 
     public override void UpdateMove()
@@ -157,7 +159,8 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             if (NowMove_Y)
             {
-                this.gameObject.transform.position = new Vector3(gameObject.transform.position.x, Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
+                this.gameObject.transform.position = 
+                    new Vector3(gameObject.transform.position.x, Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
                 NowTime_Y += Time.deltaTime;
 
                 // 移動終了
@@ -194,7 +197,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
         //}
     }
 
-    public override void Move()
+    public override void FixedMove()
     {
         // プレイヤーからレイ飛ばして真下にブロックがあったら
         if (PlayerObject != null)
@@ -209,13 +212,14 @@ public class Gimmick_MoveBlock : Gimmick_Main
                     Debug.Log("プレイヤーブロックの上移動中");
                     Debug.Log(this.gameObject.transform.position.x - OldPos.x);
                     playermain.floorVel =
-                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 50;
+                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.fixedDeltaTime;
                     OldPos = this.gameObject.transform.position;
                 }
             }
             else
             {
                 playermain.floorVel = Vector3.zero;
+                OldPos = this.gameObject.transform.position;
             }
         }
     }

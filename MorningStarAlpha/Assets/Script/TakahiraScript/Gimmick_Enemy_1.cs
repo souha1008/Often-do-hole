@@ -18,7 +18,7 @@ public class Gimmick_Enemy_1 : Gimmick_Main
     }
 
     // “G‚Ì“®‚«ˆ—
-    public override void Move() 
+    public override void FixedMove() 
     {
         if (TotalMoveVel.x > MoveVelXMaxHalf)
         {
