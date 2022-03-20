@@ -53,4 +53,9 @@ public class AttributeTest : MonoBehaviour
     //==================
     [Multiline(10)] // intå^
     public string Multiline; // stringå^
+
+    private void Start()
+    {
+        NoOutput = Output;
+    }
 }

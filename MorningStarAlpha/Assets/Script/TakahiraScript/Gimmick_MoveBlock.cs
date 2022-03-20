@@ -194,8 +194,8 @@ public class Gimmick_MoveBlock : Gimmick_Main
             {
                 if (hit.collider.gameObject == this.gameObject)
                 {
-                    Debug.Log("プレイヤーブロックの上移動中");
-                    Debug.Log(this.gameObject.transform.position.x - OldPos.x);
+                    //Debug.Log("プレイヤーブロックの上移動中");
+                    //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
                     PlayerObject.transform.position = PlayerObject.transform.position +
                         new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
                 }
