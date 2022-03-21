@@ -51,7 +51,7 @@ public class PlayerMain : MonoBehaviour
     [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float  MIDAIR_FRICTION;         // 空中の速度減衰率
     [Tooltip("空中で再び球が打てるようになる時間")]public float                      BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
                                                                                              //----------プレイヤー物理挙動関連の定数終わり----------------------
-    [Space(20.0f), Header("[以下実行時変数確認用：変更不可]")]
+    [ Header("[以下実行時変数確認用：変更不可]")]
 
     [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
     [ReadOnly, Tooltip("イカリの情報")] public GameObject Bullet = null;
