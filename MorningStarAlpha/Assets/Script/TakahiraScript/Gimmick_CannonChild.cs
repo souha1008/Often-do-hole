@@ -36,7 +36,7 @@ public class Gimmick_CannonChild : Gimmick_Main
         //PlayerObject = GameObject.Find("Player");
     }
 
-    public override void FixedMove()
+    public override void UpdateMove()
     {
         // ’Ç”öˆ—
         if (ChaseFlag)
@@ -54,7 +54,7 @@ public class Gimmick_CannonChild : Gimmick_Main
         {
             Death();
         }
-        NowLifeTime += Time.fixedDeltaTime; // ŠÔ‰ÁZ
+        NowLifeTime += Time.deltaTime; // ŠÔ‰ÁZ
     }
 
     public override void Death()

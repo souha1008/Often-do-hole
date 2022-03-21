@@ -107,7 +107,7 @@ public class Gimmick_CannonParent : Gimmick_Main
         PlayerObject = GameObject.Find("Player");
     }
 
-    public override void FixedMove()
+    public override void UpdateMove()
     {
         // プレイヤーの座標
         Vector3 PlayerPos = PlayerObject.transform.position;
@@ -137,7 +137,7 @@ public class Gimmick_CannonParent : Gimmick_Main
                 NowShootTime = 0.0f; // 経過時間リセット
             }
 
-            NowShootTime += Time.fixedDeltaTime; // 経過時間加算
+            NowShootTime += Time.deltaTime; // 経過時間加算
         }
     }
 
