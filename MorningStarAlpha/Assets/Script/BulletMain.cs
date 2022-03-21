@@ -10,7 +10,10 @@ public class BulletMain : MonoBehaviour
     public Vector3 vel;
     public bool isTouched; //’e‚ª‚È‚É‚©‚ÉG‚ê‚½‚©
     public bool onceFlag; //ˆê‰ñ‚Ì”­Ë‚É•t‚«ÚG‚ª‹N‚±‚é‚Ì‚Íˆê‰ñ
-    public bool isStrained; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
+    public bool StopDownVel; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
+    public bool returnEnd;
+    public bool FollowEnd;
+
     //’eŠÖŒW’è”
     [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬   
     [SerializeField] private float BULLET_START_DISTANCE; //’e‚Ì”­ËˆÊ’u
@@ -28,7 +31,9 @@ public class BulletMain : MonoBehaviour
         PlayerScript = Player.GetComponent<PlayerMain>();
       
         onceFlag = false;
-        isStrained = false;
+        StopDownVel = false;
+        returnEnd = false;
+        FollowEnd = false;
         Vector3 vec = PlayerScript.leftStick.normalized;
 
         //’e‚Ì‰Šú‰»
@@ -41,7 +46,7 @@ public class BulletMain : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isStrained == false)
+        if (StopDownVel == false)
         {
             vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
             Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
@@ -51,15 +56,75 @@ public class BulletMain : MonoBehaviour
 
     public void ReturnBullet()
     {
-        isStrained = true;
+        StopDownVel = true;
         rb.isKinematic = false;
         GetComponent<Collider>().isTrigger = true;
         rb.velocity = Vector3.zero;
         vel = Vector3.zero;
     }
 
+    public void FollowedPlayer()
+    {
+        StopDownVel = true;
+        rb.isKinematic = true;
+    }
+
+    /// <summary>
+    ///@–ÊŒü‚«
+    /// </summary>
+    enum Aspect
+    {
+        UP,        //ã–Ê
+        DOWN,      //‰º–Ê
+        LEFT,      //¶–Ê
+        RIGHT,@@ //‰E–Ê
+        INVALID,   //—áŠO
+    }
+
+    /// <summary>
+    /// –@üƒxƒNƒgƒ‹‚É‚æ‚Á‚Ä–Ê‚ÌŒü‚«‚ğæ“¾
+    /// </summary>
+    /// <param name="vec">–@ü</param>
+    /// <returns></returns>
+    private Aspect DetetAspect(Vector3 vec)
+    {
+        Aspect returnAspect = Aspect.INVALID;
+        if (Mathf.Abs(vec.y) > 0.5f) //y¬•ª‚ª‘å‚«‚¢‚Ì‚ÅcŒü‚«
+        {
+            if (vec.y > 0)
+            {
+                returnAspect = Aspect.UP;
+            }
+            else
+            {
+                returnAspect = Aspect.DOWN;
+            }
+        }
+        else if (Mathf.Abs(vec.x) > 0.5f) //x¬•ª‚ª‘å‚«‚¢‚Ì‚Å‰¡Œü‚«
+        {
+            if (vec.x > 0)
+            {
+                returnAspect = Aspect.RIGHT;
+            }
+            else
+            {
+                returnAspect = Aspect.LEFT;
+            }
+        }
+        else
+        {
+            returnAspect = Aspect.INVALID;
+            Debug.LogError("ÚG–Ê‚Ì–@ü‚ª—áŠO‚Å‚·");
+        }
+
+        return returnAspect;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
+        Aspect colAspect = Aspect.INVALID;
+        colAspect = DetetAspect(collision.contacts[0].normal); //ÚG“_‚Ì–@üƒxƒNƒgƒ‹
+
         if (onceFlag == false)
         {
             onceFlag = true;
@@ -68,11 +133,21 @@ public class BulletMain : MonoBehaviour
             switch (tag)
             {
                 case "Platform":
-                    isTouched = true;
 
-                    //•¨—‰^“®‚ğ’â~
-                    rb.isKinematic = true;
-                    rb.velocity = Vector3.zero;
+                    if (colAspect == Aspect.DOWN)
+                    {
+                        isTouched = true;
+
+                        //•¨—‰^“®‚ğ’â~
+                        rb.isKinematic = true;
+                        rb.velocity = Vector3.zero;
+
+                    }
+                    else
+                    {
+                        PlayerScript.ForciblyReturnBullet(true);
+                    }
+
                     break;
 
                 case "Iron":

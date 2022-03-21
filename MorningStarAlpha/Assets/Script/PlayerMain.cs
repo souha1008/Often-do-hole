@@ -50,7 +50,8 @@ public class PlayerMain : MonoBehaviour
     [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
     [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float  MIDAIR_FRICTION;         // 空中の速度減衰率
     [Tooltip("空中で再び球が打てるようになる時間")]public float                      BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
-                                                                                             //----------プレイヤー物理挙動関連の定数終わり----------------------
+    //----------プレイヤー物理挙動関連の定数終わり----------------------
+
     [ Header("[以下実行時変数確認用：変更不可]")]
 
     [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
@@ -99,7 +100,8 @@ public class PlayerMain : MonoBehaviour
     private void Update()
     {
         InputStick();
-        MidAirCheck();
+        CheckCanShot();
+        CheckMidAir();
       
         mode.UpdateState();
         mode.StateTransition();
@@ -146,18 +148,6 @@ public class PlayerMain : MonoBehaviour
         //入力取得
         leftStick.x = Input.GetAxis("Horizontal");
         leftStick.y = Input.GetAxis("Vertical");
-
-        //スティックの入力が一定以上ない場合は撃てない
-        if (leftStick.sqrMagnitude > 0.8f)
-        {
-            stickCanShotRange = true;
-        }
-        else
-        {
-            stickCanShotRange = false;
-        }
-
-
 
         //スティックの角度を求める
         float rad = Mathf.Atan2(leftStick.x, leftStick.y);
@@ -210,6 +200,23 @@ public class PlayerMain : MonoBehaviour
     }
 
     /// <summary>
+    /// 弾をうてる状態なのかをチェックする
+    /// </summary>
+    private void CheckCanShot()
+    {
+        //スティックの入力が一定以上ない場合は撃てない
+        if (leftStick.sqrMagnitude > 0.7f)
+        {
+            stickCanShotRange = true;
+        }
+        else
+        {
+            stickCanShotRange = false;
+        }
+    }
+
+
+    /// <summary>
     /// 強制的に弾を引き戻させる
     /// </summary>
     /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
@@ -259,7 +266,7 @@ public class PlayerMain : MonoBehaviour
 
     //空中にいるかを判定する
     //斜めの床がなければ必要なさそう
-    private void MidAirCheck()
+    private void CheckMidAir()
     {
         if (isOnGround)
         {

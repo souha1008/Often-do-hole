@@ -155,7 +155,8 @@ public class PlayerStateShot_2 : PlayerState
     private enum SHOT_STATE{
         GO,         //引っ張られずに飛んでいる
         STRAINED,　 //プレイヤーを引っ張りながら飛んでいる
-        RETURN,     //プレイヤーに戻っている
+        RETURN,     //弾がプレイヤーに戻って終了
+        FOLLOW,     //弾に勢いよく飛んでいき終了
     }
 
     SHOT_STATE shotState;               //紐が張り詰めているか（張り詰めていたら弾についていく）
@@ -254,17 +255,30 @@ public class PlayerStateShot_2 : PlayerState
 
             case SHOT_STATE.RETURN:
                 //自分へ弾を引き戻す
-                Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
-                vec = vec.normalized;
+                Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
+                vecToPlayer = vecToPlayer.normalized;
 
-                BulletScript.vel = vec * 100;
+                BulletScript.vel = vecToPlayer * 100;
 
                 //距離が一定以下になったら終了処理フラグを建てる
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
                 }
-            
+                break;
+
+            case SHOT_STATE.FOLLOW:
+                //自分へ弾を引き戻す
+                Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
+                vecToBullet = vecToBullet.normalized;
+
+                PlayerScript.vel = vecToBullet * 20;
+
+                if (interval < 4.0f)
+                {
+                    finishFlag = true;
+                }
+
                 break;
         }
 
@@ -763,7 +777,7 @@ public class PlayerStateDeath : PlayerState
         {
             PlayerScript.Bullet.GetComponent<Rigidbody>().velocity = Vector3.zero;
             PlayerScript.Bullet.GetComponent<BulletMain>().vel = Vector3.zero;
-            PlayerScript.Bullet.GetComponent<BulletMain>().isStrained = true;
+            PlayerScript.Bullet.GetComponent<BulletMain>().StopDownVel = true;
         }
     }
 
