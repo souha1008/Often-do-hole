@@ -1,4 +1,4 @@
-//#define SPLIT_LEFTSTICK
+#define SPLIT_LEFTSTICK
 
 using System.Collections;
 using System.Collections.Generic;
