@@ -46,7 +46,7 @@ public class Gimmick_Enemy_1 : Gimmick_Main
     { 
         if (collider.gameObject.tag == "Bullet")
         {
-            // ※ヒットストップ
+            // ヒットストップ
             GameSpeedManager.Instance.StartHitStop();
             // ※当たったエフェクト
 
