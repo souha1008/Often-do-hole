@@ -6,8 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
 {
-    [Label("現在のリスポーン座標")]
-    public static Vector3 RespawnPos;          // リスポーン座標
+    [Label("現在のリスポーンオブジェクト")]
+    public GameObject RespawnObject = null;
+    [Label("現在のリスポーン座標")]    
+    public Vector3 NowRespawnPos;       // 現在のリスポーン座標(見るだけ)
+
+    public static Vector3 RespawnPos;   // リスポーン座標
     public static bool noTouchCheckPoint;
     private void Awake()
     {
@@ -20,6 +24,12 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
         RespawnPos = Vector3.zero;
         noTouchCheckPoint = false;
+
+        // 初期リスポーンセット
+        if (RespawnObject != null)
+        {
+            SetCheckPoint(RespawnObject.GetComponentInChildren<CheckPoint>());
+        }
     }
 
     // チェックポイント使用処理
@@ -35,6 +45,8 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     {
         RespawnPos = checkpoint.RespawnPointObject.transform.position;
         noTouchCheckPoint = true;
+        RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
+        NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
     }
 
     // 現在のチェックポイントの座標ゲット
