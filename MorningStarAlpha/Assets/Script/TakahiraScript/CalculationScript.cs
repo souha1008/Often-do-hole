@@ -30,6 +30,20 @@ static public class CalculationScript
         return degree;
     }
 
+    // “ñ“_ŠÔ‚ÌŠp“x‚ğ‹‚ß‚é(Unity‚ÌTransformŠp“x‚Æˆê’v)
+    // –ß‚è’lF0`360(ZŠp“x)
+    public static float UnityTwoPointAngle360(Vector3 origin, Vector3 target)
+    {
+        Vector3 dt = target - origin;
+        float rad = Mathf.Atan2(dt.y, dt.x);
+        float degree = rad * Mathf.Rad2Deg;
+        if (degree < 0) // ‰E•ûŒü‚ğŠî€‚ÉŒv‰ñ‚è‚É0~360‚Ì’l‚É•â³
+        {
+            degree += 360;
+        }
+        return degree;
+    }
+
     // XY¬•ªŒvZ—p
     public static Vector3 AngleVectorXY(float AngleRad)
     {
@@ -40,17 +54,6 @@ static public class CalculationScript
 
         // Vector3Œ^‚ÉŠi”[
         return new Vector3(x, y, z);
-    }
-
-
-
-    // true‚È‚çfalse‚ğfalse‚È‚çtrue‚ğ•Ô‚·
-    public static bool TureFalseChange(bool TrueorFalse)
-    {
-        if (TrueorFalse)
-            return false;
-        else
-            return true;
     }
 
     // true‚È‚ç1.0f‚ğfalse‚È‚ç-1.0f‚ğ•Ô‚·
