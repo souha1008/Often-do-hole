@@ -11,11 +11,11 @@ public class BulletMain : MonoBehaviour
     public bool isTouched; //’e‚ª‚È‚É‚©‚ÉG‚ê‚½‚©
     public bool onceFlag; //ˆê‰ñ‚Ì”­Ë‚É•t‚«ÚG‚ª‹N‚±‚é‚Ì‚Íˆê‰ñ
     public bool StopDownVel; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
-    public bool returnEnd;
-    public bool FollowEnd;
+    public bool swingEnd;
+    public bool followEnd;
 
-    //’eŠÖŒW’è”
-    [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬   
+   //’eŠÖŒW’è”
+   [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬   
     [SerializeField] private float BULLET_START_DISTANCE; //’e‚Ì”­ËˆÊ’u
     [SerializeField] public float BULLET_ROPE_LENGTH; //•R‚Ì’·‚³
     private float BULLET_MAXFALLSPEED = 35.0f;
@@ -32,8 +32,8 @@ public class BulletMain : MonoBehaviour
       
         onceFlag = false;
         StopDownVel = false;
-        returnEnd = false;
-        FollowEnd = false;
+        swingEnd = false;
+        followEnd = false;
         Vector3 vec = PlayerScript.leftStick.normalized;
 
         //’e‚Ì‰Šú‰»
@@ -67,6 +67,9 @@ public class BulletMain : MonoBehaviour
     {
         StopDownVel = true;
         rb.isKinematic = true;
+        GetComponent<Collider>().isTrigger = true;
+        rb.velocity = Vector3.zero;
+        vel = Vector3.zero;
     }
 
     /// <summary>
@@ -114,7 +117,7 @@ public class BulletMain : MonoBehaviour
         else
         {
             returnAspect = Aspect.INVALID;
-            Debug.LogError("ÚG–Ê‚Ì–@ü‚ª—áŠO‚Å‚·");
+            Debug.LogError("ÚG–Ê‚Ì–@ü‚ªÎ‚ß‚Ì‰Â”\«‚ª‚ ‚è‚Ü‚·");
         }
 
         return returnAspect;
@@ -133,27 +136,25 @@ public class BulletMain : MonoBehaviour
             switch (tag)
             {
                 case "Platform":
-
-                    if (colAspect == Aspect.DOWN)
+                    isTouched = true;
+                    rb.isKinematic = true;
+                    rb.velocity = Vector3.zero;
+                    if (colAspect == Aspect.UP)
                     {
-                        isTouched = true;
-
-                        //•¨—‰^“®‚ğ’â~
-                        rb.isKinematic = true;
-                        rb.velocity = Vector3.zero;
-
+                        //FOLLOWó‘Ô‚ÉˆÚs
+                        followEnd = true;
                     }
                     else
                     {
-                        PlayerScript.ForciblyReturnBullet(true);
+                        //SWINGó‘Ô‚ÉˆÚs
+                        swingEnd = true;
                     }
 
                     break;
 
                 case "Iron":
                     PlayerScript.ForciblyReturnBullet(true);
-                break;
-
+                    break;
 
                 case "Player":
                     break;

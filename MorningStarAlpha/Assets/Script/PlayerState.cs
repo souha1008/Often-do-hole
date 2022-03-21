@@ -190,9 +190,9 @@ public class PlayerStateShot_2 : PlayerState
                 {
                     if (PlayerScript.Bullet != null)
                     {
-                        PlayerScript.vel = bulletVecs.Dequeue();
                         BulletScript.ReturnBullet();
                     }
+                    PlayerScript.vel = bulletVecs.Dequeue();
                     PlayerScript.useVelocity = true;
                     shotState = SHOT_STATE.RETURN;           
                 }
@@ -225,6 +225,21 @@ public class PlayerStateShot_2 : PlayerState
             //弾からプレイヤー方向へBULLET_ROPE_LENGTHだけ離れた位置に常に補正
             Vector3 diff = (PlayerScript.transform.position - PlayerScript.Bullet.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
             Player.transform.position = PlayerScript.Bullet.transform.position + diff;
+        }
+
+        if (BulletScript.isTouched)
+        {
+            if (BulletScript.followEnd)
+            {
+                if (PlayerScript.Bullet != null)
+                {
+                    BulletScript.FollowedPlayer();
+                }
+                PlayerScript.vel = bulletVecs.Dequeue();
+                PlayerScript.useVelocity = true;
+                BulletScript.followEnd = false;
+                shotState = SHOT_STATE.FOLLOW;
+            }
         }
     }
 
@@ -272,7 +287,7 @@ public class PlayerStateShot_2 : PlayerState
                 Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
                 vecToBullet = vecToBullet.normalized;
 
-                PlayerScript.vel = vecToBullet * 20;
+                PlayerScript.vel += vecToBullet * 2;
 
                 if (interval < 4.0f)
                 {
@@ -304,7 +319,11 @@ public class PlayerStateShot_2 : PlayerState
         //ボールが触れたらスイング状態
         if (BulletScript.isTouched)
         {
-            PlayerScript.mode = new PlayerStateSwing_2();
+            if (BulletScript.swingEnd)
+            {
+                BulletScript.swingEnd = false;
+                PlayerScript.mode = new PlayerStateSwing_2();
+            }
         }
     }
     public override void DebugMessage()
