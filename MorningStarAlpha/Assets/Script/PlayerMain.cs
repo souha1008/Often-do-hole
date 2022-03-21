@@ -29,43 +29,43 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public static PlayerMain instance;
     public GameObject BulletPrefab;
     public PlayerState mode;                         // ステート
-    public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
-    public GameObject Bullet = null;
-    public HingeJoint hinge = null;
-    public PlayerMoveDir dir;
-    public Vector3 vel;                              // 移動速度(inspector上で確認)
-    public Vector3 addVel;                           // ギミック等で追加される速度
-    public Vector3 floorVel;                         // 動く床等でのベロシティ
-    public Vector2 leftStick;                        // 左スティック
-    public bool stickCanShotRange;                   // 打てる状態か
-    public bool canShot;                             // 打てる状態か
-    public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
-    public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
-    public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
-    public bool forciblyReturnSaveVelocity;
+   
 
-    [SerializeField] private bool SplitStick;        //これにチェックが入っていたら分割
-    [SerializeField] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
+    [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
+    [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
 
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
-    [Range(0.1f, 1.0f)] public float  LATERAL_MOVE_THRESHORD;  // 走り左右移動時の左スティックしきい値
-    public float                      MAX_RUN_SPEED;           // 走り最高速度
-    public float                      MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
-    public float                      ADD_RUN_SPEED;           // 走り一秒間で上がるスピード
-    public float                      MAX_FALL_SPEED;          // 重力による最低速度
-    public float                      FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
-    public float                      STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
-    [Range(0.1f, 1.0f)] public float　RUN_FRICTION;            // 走りの減衰率
+    [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
+    [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
+    [Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
+    [Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED;           // 走り一フレームで上がるスピード
+    [Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED;          // 重力による最低速度
+    [Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
+    [Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
+    [Range(0.1f, 1.0f), Tooltip("地上速度減衰率")] public float　RUN_FRICTION;            // 走りの減衰率
 
 
-    public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
-    [Range(0.1f, 1.0f)] public float  MIDAIR_FRICTION;         // 空中の速度減衰率
-    public float                      BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
-    //----------プレイヤー物理挙動関連の定数終わり----------------------
+    [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
+    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float  MIDAIR_FRICTION;         // 空中の速度減衰率
+    [Tooltip("空中で再び球が打てるようになる時間")]public float                      BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
+                                                                                             //----------プレイヤー物理挙動関連の定数終わり----------------------
+    [Space(20.0f), Header("[以下実行時変数確認用：変更不可]")]
 
-    
+    [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
+    [ReadOnly, Tooltip("イカリの情報")] public GameObject Bullet = null;
+    [ReadOnly, Tooltip("プレイヤーの向き")] public PlayerMoveDir dir;
+    [ReadOnly, Tooltip("プレイヤーの速度:入力によるもの")] public Vector3 vel;                              // 移動速度(inspector上で確認)
+    [ReadOnly, Tooltip("プレイヤーの速度:ギミックでの反発によるもの")] public Vector3 addVel;                           // ギミック等で追加される速度
+    [ReadOnly, Tooltip("プレイヤーの速度:移動床によるもの")] public Vector3 floorVel;                         // 動く床等でのベロシティ
+    [ReadOnly, Tooltip("スティック入力角")] public Vector2 leftStick;                        // 左スティック
+    [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;                   // 打てる状態か
+    [ReadOnly, Tooltip("射出クールタイムが回復しているか")] public bool canShot;                             // 打てる状態か
+    [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
+    [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
+    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
+    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
 
     void Awake()
     {
@@ -80,8 +80,7 @@ public class PlayerMain : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         mode = new PlayerStateOnGround(); //初期ステート
         refState = EnumPlayerState.ON_GROUND;
-        Bullet = null;
-        hinge = null;　　　　　　　　　　 
+        Bullet = null;　　　　　　　　　　 
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
         vel = Vector3.zero;
         addVel = Vector3.zero;
@@ -189,10 +188,6 @@ public class PlayerMain : MonoBehaviour
                 angle = AdjustAngles[i];
             }
         }
-
-
-        Debug.Log("Degree:" + degree);
-        Debug.Log("Angle :" + angle);
 
         //角度を読める値に調整
         if (angle > 180)
