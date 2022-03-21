@@ -287,7 +287,7 @@ public class PlayerStateShot_2 : PlayerState
                 Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
                 vecToBullet = vecToBullet.normalized;
 
-                PlayerScript.vel += vecToBullet * 2;
+                PlayerScript.vel += vecToBullet * 3;
 
                 if (interval < 4.0f)
                 {
@@ -620,6 +620,7 @@ public class PlayerStateSwing_2 : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.SWING;
         PlayerScript.canShot = false;
+        PlayerScript.endSwing = false;
         finishFlag = false;
         swingMode = SwingMode.Touced;
         BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>();
@@ -675,6 +676,14 @@ public class PlayerStateSwing_2 : PlayerState
         //àÍíËäpìxà»è„Ç≈êÿÇËó£Çµ
         if (swingMode == SwingMode.Touced)
         {
+            if (PlayerScript.endSwing)
+            {
+                PlayerScript.endSwing = false;
+                PlayerScript.useVelocity = true;
+                BulletScript.ReturnBullet();
+                swingMode = SwingMode.Rereased;
+            }
+
             if (PlayerScript.dir == PlayerMoveDir.RIGHT)
             {
                 if (degree < endAngle)

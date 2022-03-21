@@ -67,6 +67,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
     [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
+    [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
 
     void Awake()
     {
@@ -249,8 +250,13 @@ public class PlayerMain : MonoBehaviour
                 }
             }
         }
-    }
 
+        //swing中に壁にぶつかったら消す
+        if (refState == EnumPlayerState.SWING)
+        {
+            endSwing = true;
+        }
+    }
 
     private void OnCollisionStay(Collision collision)
     { 
@@ -261,7 +267,13 @@ public class PlayerMain : MonoBehaviour
             {
                 isOnGround = true;
             }
-        }   
+        }
+
+        //swing中に壁にぶつかったら消す
+        if (refState == EnumPlayerState.SWING)
+        {
+            endSwing = true;
+        }
     }
 
     //空中にいるかを判定する
