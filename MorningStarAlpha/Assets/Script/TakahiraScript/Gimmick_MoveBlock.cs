@@ -162,7 +162,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
             {
                 StartPos_X = this.gameObject.transform.position.x;
                 NowTime_X = 0.0f;
-                MoveRight = CalculationScript.TureFalseChange(MoveRight);   // Œü‚«”½“]
+                MoveRight = !MoveRight;   // Œü‚«”½“]
                 Fugou_X = CalculationScript.FugouChange(MoveRight);   // •„†”½“]
                 MoveDirection_X = BoolMoveDirectionChangeX(MoveRight); // Œü‚«•\¦•Ï‰»
                 NowMove_X = true;
@@ -185,7 +185,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
             {
                 StartPos_Y = this.gameObject.transform.position.y;
                 NowTime_Y = 0.0f;
-                MoveUp = CalculationScript.TureFalseChange(MoveUp);   // Œü‚«”½“]
+                MoveUp = !MoveUp;   // Œü‚«”½“]
                 Fugou_Y = CalculationScript.FugouChange(MoveUp);   // •„†”½“]
                 MoveDirection_Y = BoolMoveDirectionChangeY(MoveUp); // Œü‚«•\¦•Ï‰»
                 NowMove_Y = true;
