@@ -143,7 +143,6 @@ public class BulletMain : MonoBehaviour
                     {
                         //FOLLOWèÛë‘Ç…à⁄çs
                         followEnd = true;
-                        Debug.Log("col");
                     }
                     else
                     {

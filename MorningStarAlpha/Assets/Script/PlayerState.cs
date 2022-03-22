@@ -57,6 +57,8 @@ public class PlayerState
 public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
+    private bool isSlide;
+
     public PlayerStateOnGround()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
@@ -68,7 +70,25 @@ public class PlayerStateOnGround : PlayerState
         {
             GameObject.Destroy(PlayerScript.Bullet);
         }
+
+        isSlide = false;
     }
+
+    public PlayerStateOnGround(bool is_slide)//コンストラクタ
+    {
+        PlayerScript.refState = EnumPlayerState.ON_GROUND;
+        shotButton = false;
+        PlayerScript.vel.y = 0;
+        PlayerScript.canShot = true;
+
+        if (PlayerScript.Bullet != null)
+        {
+            GameObject.Destroy(PlayerScript.Bullet);
+        }
+
+        isSlide = is_slide;
+    }
+
 
     public override void UpdateState()
     {
@@ -101,37 +121,45 @@ public class PlayerStateOnGround : PlayerState
 
     public override void Move()
     {
-        if(PlayerScript.leftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)　//右移動
-        {
-            if (PlayerScript.vel.x < -0.2f)
-            {
-                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * 2;
-            }
-            else
-            {
-                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED;
-            }
-           
-            PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
-        }
-        else if (PlayerScript.leftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1)　//左移動
+        if (isSlide)
         {
 
-            if (PlayerScript.vel.x > 0.2f)
+        }
+        else
+        {
+
+            if (PlayerScript.leftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {
-                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2;
+                if (PlayerScript.vel.x < -0.2f)
+                {
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * 2;
+                }
+                else
+                {
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED;
+                }
+
+                PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
             }
-            else
+            else if (PlayerScript.leftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
             {
-                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1;
-            }
+
+                if (PlayerScript.vel.x > 0.2f)
+                {
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2;
+                }
+                else
+                {
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1;
+                }
                 PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
-        }
-        else //減衰
-        {
-            PlayerScript.vel *= PlayerScript.RUN_FRICTION;
-        }
+            }
+            else //減衰
+            {
+                PlayerScript.vel *= PlayerScript.RUN_FRICTION;
+            }
 
+        }
     }
 
 
@@ -144,7 +172,7 @@ public class PlayerStateOnGround : PlayerState
 
         if (shotButton)
         {
-            PlayerScript.mode = new PlayerStateShot_3();
+            PlayerScript.mode = new PlayerStateShot_2();
         }
     }
 
@@ -417,11 +445,18 @@ public class PlayerStateShot_3 : PlayerState
         {
             float interval;
             interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
+
+           
             if (interval > BulletScript.BULLET_ROPE_LENGTH)
             {
                 //弾からプレイヤー方向へBULLET_ROPE_LENGTHだけ離れた位置に常に補正
+                PlayerScript.useVelocity = false;
                 Vector3 diff = (PlayerScript.transform.position - PlayerScript.Bullet.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
                 Player.transform.position = PlayerScript.Bullet.transform.position + diff;
+            }
+            else
+            {
+                PlayerScript.useVelocity = true;
             }
         }
 
@@ -462,9 +497,15 @@ public class PlayerStateShot_3 : PlayerState
 
             case ShotState.STRAINED:
                 bulletVecs.Enqueue(BulletScript.vel);
+                if (PlayerScript.useVelocity == true)
+                {
+                    PlayerScript.vel = bulletVecs.Peek(); //* (1 /Time.fixedDeltaTime); //PlayerScript.FALL_GRAVITY; //
+                }
+
                 bulletVecs.Dequeue();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
+                
                 break;
 
             case ShotState.RETURN:
@@ -625,7 +666,7 @@ public class PlayerStateMidair : PlayerState
     { 
         if (shotButton)
         {
-            PlayerScript.mode = new PlayerStateShot_3();
+            PlayerScript.mode = new PlayerStateShot_2();
         }
 
         //着地したら立っている状態に移行
