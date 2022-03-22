@@ -22,8 +22,6 @@ public class Gimmick_MoveBlockEditor : Editor
     SerializedProperty MoveTime_X, MoveTime_Y;
     SerializedProperty StartTime_X, StartTime_Y;
 
-    public MOVE_DIRECTION_X Move_Direction_X;
-
     void OnEnable()
     {
         // シリアライズオブジェクトを取得

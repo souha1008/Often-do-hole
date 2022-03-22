@@ -22,7 +22,7 @@ public class Gimmick_EnemyEditor : Editor
     SerializedProperty MoveTime_X, MoveTime_Y;
     SerializedProperty StartTime_X, StartTime_Y;
 
-    public MOVE_DIRECTION_X Move_Direction_X;
+    SerializedProperty EasingType_X, EasingType_Y;
 
     void OnEnable()
     {
@@ -40,6 +40,8 @@ public class Gimmick_EnemyEditor : Editor
         MoveTime_Y = serializedObject.FindProperty("MoveTime_Y");
         StartTime_X = serializedObject.FindProperty("StartTime_X");
         StartTime_Y = serializedObject.FindProperty("StartTime_Y");
+        EasingType_X = serializedObject.FindProperty("EasingType_X");
+        EasingType_Y = serializedObject.FindProperty("EasingType_Y");
     }
     public override void OnInspectorGUI()
     {
@@ -59,6 +61,21 @@ public class Gimmick_EnemyEditor : Editor
             MoveLength_X.floatValue = EditorGUILayout.FloatField("移動距離", MoveLength_X.floatValue);
             MoveTime_X.floatValue = EditorGUILayout.FloatField("何秒かけて移動するか", MoveTime_X.floatValue);
             StartTime_X.floatValue = EditorGUILayout.Slider("初期経過時間", StartTime_X.floatValue, 0, MoveTime_X.floatValue);    // スライダーを表示（引数は「初期値,最小値,最大値」）
+            EasingType_X.enumValueIndex =
+                EditorGUILayout.Popup("イージングタイプ(動き方)", EasingType_X.enumValueIndex, 
+                new string[] 
+                {   "LINEAR",
+                    "QUAD_IN", "QUAD_OUT", "QUAD_INOUT", 
+                    "CUBIC_IN", "CUBIC_OUT", "CUBIC_INOUT", 
+                    "QUART_IN", "QUART_OUT", "QUART_INOUT",
+                    "QUINT_IN", "QUINT_OUT", "QUINT_INOUT",
+                    "SINE_IN", "SINE_OUT", "SINE_INOUT", 
+                    "EXP_IN", "EXP_OUT", "EXP_INOUT",
+                    "CIRC_IN", "CIRC_OUT", "CIRC_INOUT",
+                    "ELASTIC_IN", "ELASTIC_OUT", "ELASTIC_INOUT",
+                    "BACK_IN", "BACK_OUT", "BACK_INOUT",
+                    "BOUNCE_IN", "BOUNCE_OUT", "BOUNCE_INOUT"
+                });
         }
         EditorGUILayout.EndToggleGroup();   // グループ化
 
@@ -71,6 +88,21 @@ public class Gimmick_EnemyEditor : Editor
             MoveLength_Y.floatValue = EditorGUILayout.FloatField("移動距離", MoveLength_Y.floatValue);
             MoveTime_Y.floatValue = EditorGUILayout.FloatField("何秒かけて移動するか", MoveTime_Y.floatValue);
             StartTime_Y.floatValue = EditorGUILayout.Slider("初期経過時間", StartTime_Y.floatValue, 0, MoveTime_Y.floatValue);    // スライダーを表示（引数は「初期値,最小値,最大値」）
+            EasingType_Y.enumValueIndex =
+                EditorGUILayout.Popup("イージングタイプ(動き方)", EasingType_Y.enumValueIndex,
+                new string[]
+                {   "LINEAR",
+                    "QUAD_IN", "QUAD_OUT", "QUAD_INOUT",
+                    "CUBIC_IN", "CUBIC_OUT", "CUBIC_INOUT",
+                    "QUART_IN", "QUART_OUT", "QUART_INOUT",
+                    "QUINT_IN", "QUINT_OUT", "QUINT_INOUT",
+                    "SINE_IN", "SINE_OUT", "SINE_INOUT",
+                    "EXP_IN", "EXP_OUT", "EXP_INOUT",
+                    "CIRC_IN", "CIRC_OUT", "CIRC_INOUT",
+                    "ELASTIC_IN", "ELASTIC_OUT", "ELASTIC_INOUT",
+                    "BACK_IN", "BACK_OUT", "BACK_INOUT",
+                    "BOUNCE_IN", "BOUNCE_OUT", "BOUNCE_INOUT"
+                });
         }
         EditorGUILayout.EndToggleGroup();   // グループ化
 
@@ -83,6 +115,9 @@ public class Gimmick_EnemyEditor : Editor
 public class Gimmick_Enemy : Gimmick_Main
 {
     // 変数
+    public EASING_TYPE EasingType_X;        // イージングタイプ
+    public EASING_TYPE EasingType_Y;        // イージングタイプ
+
     public float MoveLength_X = 15.0f;    // 動く距離
     public float MoveLength_Y = 15.0f;    // 動く距離
     public float MoveTime_X = 3.0f;       // 何秒かけて移動するか
@@ -121,15 +156,16 @@ public class Gimmick_Enemy : Gimmick_Main
     }
 
     // 敵の動き処理
-    public override void FixedMove() 
+    public override void FixedMove()
     {
         OldPos = this.gameObject.transform.position;
         if (Move_X) // X方向移動が使用されていたら
         {
             if (NowMove_X)
             {
-                this.gameObject.transform.position =
-                    new Vector3(Easing.QuadInOut(NowTime_X, MoveTime_X, StartPos_X, StartPos_X + MoveLength_X * Fugou_X), gameObject.transform.position.y, gameObject.transform.position.z);
+                this.gameObject.transform.position = 
+                    new Vector3(Easing.EasingTypeFloat(EasingType_X, NowTime_X, MoveTime_X, StartPos_X, StartPos_X + MoveLength_X * Fugou_X), gameObject.transform.position.y, gameObject.transform.position.z);
+
                 NowTime_X += Time.fixedDeltaTime;
 
                 // 移動終了
@@ -152,7 +188,7 @@ public class Gimmick_Enemy : Gimmick_Main
             if (NowMove_Y)
             {
                 this.gameObject.transform.position =
-                    new Vector3(gameObject.transform.position.x, Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
+                    new Vector3(gameObject.transform.position.x, Easing.EasingTypeFloat(EasingType_Y, NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
                 NowTime_Y += Time.fixedDeltaTime;
 
                 // 移動終了
@@ -183,8 +219,8 @@ public class Gimmick_Enemy : Gimmick_Main
     }
 
     // 何かと衝突処理(トリガー)
-    public override void OnTriggerEnter(Collider collider) 
-    { 
+    public override void OnTriggerEnter(Collider collider)
+    {
         if (collider.gameObject.tag == "Bullet")
         {
             // ヒットストップ

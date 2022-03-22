@@ -3,7 +3,8 @@ using UnityEngine;
 // イージングのタイプ
 public enum EASING_TYPE
 {
-    QUAD_IN = 0,
+    LINEAR = 0,
+    QUAD_IN,
     QUAD_OUT,
     QUAD_INOUT,
     CUBIC_IN,
@@ -32,13 +33,82 @@ public enum EASING_TYPE
     BACK_INOUT,
     BOUNCE_IN,
     BOUNCE_OUT,
-    BOUNCE_INOUT,
-    LINEAR
+    BOUNCE_INOUT
 };
-
 
 public static class Easing
 {
+    // イージングタイプで動き処理
+    public static float EasingTypeFloat(EASING_TYPE EasingType, float NowTime, float MoveTime, float StartPos, float EndPos)
+    {
+        switch (EasingType)
+        {
+            case EASING_TYPE.LINEAR:
+                return Easing.Linear(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUAD_IN:
+                return Easing.QuadIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUAD_OUT:
+                return Easing.QuadOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUAD_INOUT:
+                return Easing.QuadInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.CUBIC_IN:
+                return Easing.CubicIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.CUBIC_OUT:
+                return Easing.CubicOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.CUBIC_INOUT:
+                return Easing.CubicInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUART_IN:
+                return Easing.QuartIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUART_OUT:
+                return Easing.QuartOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUART_INOUT:
+                return Easing.QuartInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUINT_IN:
+                return Easing.QuintIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUINT_OUT:
+                return Easing.QuintOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.QUINT_INOUT:
+                return Easing.QuintInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.SINE_IN:
+                return Easing.SineIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.SINE_OUT:
+                return Easing.SineOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.SINE_INOUT:
+                return Easing.SineInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.EXP_IN:
+                return Easing.ExpIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.EXP_OUT:
+                return Easing.ExpOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.EXP_INOUT:
+                return Easing.ExpInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.CIRC_IN:
+                return Easing.CircIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.CIRC_OUT:
+                return Easing.CircOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.CIRC_INOUT:
+                return Easing.CircInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.ELASTIC_IN:
+                return Easing.ElasticIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.ELASTIC_OUT:
+                return Easing.ElasticOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.ELASTIC_INOUT:
+                return Easing.ElasticInOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.BACK_IN:
+                return Easing.BackIn(NowTime, MoveTime, StartPos, EndPos, Mathf.Abs(StartPos - EndPos) * 0.3f);
+            case EASING_TYPE.BACK_OUT:
+                return Easing.BackOut(NowTime, MoveTime, StartPos, EndPos, Mathf.Abs(StartPos - EndPos) * 0.3f);
+            case EASING_TYPE.BACK_INOUT:
+                return Easing.BackInOut(NowTime, MoveTime, StartPos, EndPos, Mathf.Abs(StartPos - EndPos) * 0.3f);
+            case EASING_TYPE.BOUNCE_IN:
+                return Easing.BounceIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.BOUNCE_OUT:
+                return Easing.BounceOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.BOUNCE_INOUT:
+                return Easing.BounceInOut(NowTime, MoveTime, StartPos, EndPos);
+            default:
+                return Easing.QuadInOut(NowTime, MoveTime, StartPos, EndPos);
+        }
+    }
     public static float QuadIn(float t, float totaltime, float min, float max)
     {
         max -= min;
