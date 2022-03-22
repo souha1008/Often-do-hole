@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1122,17 +1122,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 115
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &232740376 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4224886100132467938, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
-  m_PrefabInstance: {fileID: 4224886099937247994}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &232740377 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
   m_PrefabInstance: {fileID: 4224886099937247994}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 232740376}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c243131bc93f6141a88e0acaee1a520, type: 3}
@@ -5583,11 +5578,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1c91dd1acdd3084ea4ce6d7d9f8cdc6, type: 3}
+  m_Script: {fileID: 11500000, guid: bb1470d1b6138f143bb90abb579b9237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 232740376}
-  CAMERA_DISTANCE: 30
+  cameraPosY: 0
+  cameraDistanceZ: -45
 --- !u!1 &975478684
 GameObject:
   m_ObjectHideFlags: 0
