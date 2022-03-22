@@ -112,7 +112,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 120
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!114 &2907611852633609067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +128,9 @@ MonoBehaviour:
   vel: {x: 0, y: 0, z: 0}
   isTouched: 0
   onceFlag: 0
-  isStrained: 0
+  StopDownVel: 0
+  swingEnd: 0
+  followEnd: 0
   BULLET_SPEED: 40
   BULLET_START_DISTANCE: 2
   BULLET_ROPE_LENGTH: 10
