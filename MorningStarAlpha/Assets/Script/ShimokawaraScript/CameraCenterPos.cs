@@ -16,20 +16,25 @@ public enum GO_POS_Y
 
 
 
-public class CameraPos : MonoBehaviour
+public class CameraCenterPos : MonoBehaviour
 {
+    //[Header("プレイヤーとカメラの距離はMainCamera参照")]
+
 
     Vector3 PlayerPos = Vector3.zero;
     Vector3 OldPlayerPos = Vector3.zero;
 
-    [Header("カメラ距離調整")]
-    [Range(-10, -60), SerializeField, Tooltip("カメラ距離調整")] private float cameraDistanceZ ;//Zの距離  
+    //[Header("カメラ距離調整")]
+    //[Range(-10, -60), SerializeField, Tooltip("カメラ距離調整")] private float cameraDistanceZ ;//Zの距離  
 
     [Header("チェックが入っていたらY固定")]
     [SerializeField, Tooltip("チェックが入っていたらY固定")] private bool FreezeY;        //これにチェックが入っていたら分割
 
     [Header("”Y固定時のみ”この値でカメラ高さ調整     プラスでカメラが上へ")]
     [Range(-10, 20), SerializeField, Tooltip("”Y固定時のみ”この値でカメラ高さ調整 \nプラスでカメラが上へ")] private float cameraDistanceY;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
+
+    [Header("描画の有無")]
+    [SerializeField, Tooltip("描画の有無")] private bool isDraw;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
 
     //卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍
@@ -70,10 +75,18 @@ public class CameraPos : MonoBehaviour
 
 
 
+    
+
+
     void Start()
     {
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
+
+        if(!isDraw)
+        {
+            this.GetComponent<Material>().color = Color.clear;
+        }
     }
 
 
@@ -82,12 +95,12 @@ public class CameraPos : MonoBehaviour
         //分岐
         if(!FreezeY)
         {
-            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, cameraDistanceZ);
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
 
         }
         else
         {
-            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, cameraDistanceZ);
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
         }
     }
