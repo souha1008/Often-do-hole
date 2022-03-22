@@ -1,5 +1,41 @@
 using UnityEngine;
 
+// イージングのタイプ
+public enum EASING_TYPE
+{
+    QUAD_IN = 0,
+    QUAD_OUT,
+    QUAD_INOUT,
+    CUBIC_IN,
+    CUBIC_OUT,
+    CUBIC_INOUT,
+    QUART_IN,
+    QUART_OUT,
+    QUART_INOUT,
+    QUINT_IN,
+    QUINT_OUT,
+    QUINT_INOUT,
+    SINE_IN,
+    SINE_OUT,
+    SINE_INOUT,
+    EXP_IN,
+    EXP_OUT,
+    EXP_INOUT,
+    CIRC_IN,
+    CIRC_OUT,
+    CIRC_INOUT,
+    ELASTIC_IN,
+    ELASTIC_OUT,
+    ELASTIC_INOUT,
+    BACK_IN,
+    BACK_OUT,
+    BACK_INOUT,
+    BOUNCE_IN,
+    BOUNCE_OUT,
+    BOUNCE_INOUT,
+    LINEAR
+};
+
 
 public static class Easing
 {

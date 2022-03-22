@@ -6,13 +6,13 @@ using UnityEngine;
 using UnityEditor;
 
 
-// Gimmick_MoveBlockクラスを拡張
-[CustomEditor(typeof(Gimmick_MoveBlock))]
+// Gimmick_Enemyクラスを拡張
+[CustomEditor(typeof(Gimmick_Enemy))]
 
 // 複数選択有効
 [CanEditMultipleObjects]
 
-public class Gimmick_MoveBlockEditor : Editor
+public class Gimmick_EnemyEditor : Editor
 {
     // シリアライズオブジェクト
     SerializedProperty MoveInfo;
@@ -59,7 +59,7 @@ public class Gimmick_MoveBlockEditor : Editor
             MoveLength_X.floatValue = EditorGUILayout.FloatField("移動距離", MoveLength_X.floatValue);
             MoveTime_X.floatValue = EditorGUILayout.FloatField("何秒かけて移動するか", MoveTime_X.floatValue);
             StartTime_X.floatValue = EditorGUILayout.Slider("初期経過時間", StartTime_X.floatValue, 0, MoveTime_X.floatValue);    // スライダーを表示（引数は「初期値,最小値,最大値」）
-        }     
+        }
         EditorGUILayout.EndToggleGroup();   // グループ化
 
 
@@ -80,18 +80,7 @@ public class Gimmick_MoveBlockEditor : Editor
 }
 #endif
 
-public enum MOVE_DIRECTION_X
-{
-    MoveRight,
-    MoveLeft
-}
-public enum MOVE_DIRECTION_Y
-{
-    MoveUp,
-    MoveDown
-}
-
-public class Gimmick_MoveBlock : Gimmick_Main
+public class Gimmick_Enemy : Gimmick_Main
 {
     // 変数
     public float MoveLength_X = 15.0f;    // 動く距離
@@ -111,11 +100,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private float NowTime_X, NowTime_Y;         // 経過時間
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
-    private GameObject PlayerObject;            // プレイヤーオブジェクト
-    private GameObject BulletObject;            // 錨オブジェクト
 
-    private Vector3 OldPos;
+    private Vector3 OldPos;                     // ひとつ前の座標確認用
 
+    // スタート処理
     public override void Init()
     {
         // 初期化
@@ -130,25 +118,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
         Fugou_X = CalculationScript.FugouChange(MoveRight);
         Fugou_Y = CalculationScript.FugouChange(MoveUp);
         OldPos = this.gameObject.transform.position;
-
-        // コリジョン
-        this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
-
-        // リジッドボディ
-        Rb.isKinematic = true;
-
-        // プレイヤーオブジェクト発見
-        PlayerObject = GameObject.Find("Player");
-        // 錨オブジェクトnull
-        BulletObject = null;
     }
 
-    public override void UpdateMove()
-    {        
-        
-    }
-
-    public override void FixedMove()
+    // 敵の動き処理
+    public override void FixedMove() 
     {
         OldPos = this.gameObject.transform.position;
         if (Move_X) // X方向移動が使用されていたら
@@ -197,46 +170,34 @@ public class Gimmick_MoveBlock : Gimmick_Main
             }
         }
 
-        // プレイヤーからレイ飛ばして真下にブロックがあったら
-        if (PlayerObject != null)
-        {
-            Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
-            RaycastHit hit;
-            PlayerMain playermain = PlayerObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
-            if (Physics.Raycast(ray, out hit, 1.5f))
-            {
-                if (hit.collider.gameObject == this.gameObject)
-                {
-                    //Debug.Log("プレイヤーブロックの上移動中");
-                    //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
-                    PlayerObject.transform.position = PlayerObject.transform.position +
-                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
-                }
-            }
-        }
-
-        // 錨オブジェクトが当たったら
-        if (BulletObject != null)
-        {
-            BulletObject.transform.position = BulletObject.transform.position +
-                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
-        }
+        Rad += new Vector3(0.0f, 0.0f, 10.0f);  // 回転
     }
 
+    // 敵死亡処理
     public override void Death()
     {
+        // ※死亡エフェクト
 
+        // 自身を消す
+        Destroy(this.gameObject);
     }
 
-    public override void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Player")
+    // 何かと衝突処理(トリガー)
+    public override void OnTriggerEnter(Collider collider) 
+    { 
+        if (collider.gameObject.tag == "Bullet")
         {
-            PlayerObject = collision.gameObject;
+            // ヒットストップ
+            GameSpeedManager.Instance.StartHitStop();
+            // ※当たったエフェクト
+
+            Death(); // 死亡処理   
         }
-        if (collision.gameObject.tag == "Bullet")
+
+        if (collider.gameObject.tag == "Player")
         {
-            BulletObject = collision.gameObject;
+            // プレイヤーノックバックステートに移行
+
         }
     }
 

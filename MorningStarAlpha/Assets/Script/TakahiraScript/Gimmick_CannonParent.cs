@@ -4,10 +4,13 @@ using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
-#endif
 
-#if UNITY_EDITOR
+// Gimmick_CannonParentクラスを拡張
 [CustomEditor(typeof(Gimmick_CannonParent))]
+
+// 複数選択有効
+[CanEditMultipleObjects]
+
 public class Gimmick_CannonParentEditor : Editor
 {
     // シリアライズオブジェクト
