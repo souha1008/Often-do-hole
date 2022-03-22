@@ -1,56 +1,121 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public enum GO_POS
+public enum GO_POS_X
 {
     LEFT,
     RIGHT,
     STAY
 }
 
+public enum GO_POS_Y
+{
+    UP,
+    DOWN,
+    STAY
+}
+
+
+
 public class CameraPos : MonoBehaviour
 {
+
+    Vector3 PlayerPos = Vector3.zero;
+    Vector3 OldPlayerPos = Vector3.zero;
+
+    [Header("カメラ距離調整")]
+    [Range(-10, -60), SerializeField, Tooltip("カメラ距離調整")] private float cameraDistanceZ ;//Zの距離  
+
+    [Header("チェックが入っていたらY固定")]
+    [SerializeField, Tooltip("チェックが入っていたらY固定")] private bool FreezeY;        //これにチェックが入っていたら分割
+
+    [Header("”Y固定時のみ”この値でカメラ高さ調整     プラスでカメラが上へ")]
+    [Range(-10, 20), SerializeField, Tooltip("”Y固定時のみ”この値でカメラ高さ調整 \nプラスでカメラが上へ")] private float cameraDistanceY;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
+
+
+    //卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍
+    //横移動
+    //卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍
     float RightSavePos = 0;
     float LeftSavePos = 0;
 
-    float Difference = 0.0f;
+    float DifferenceX = 0.0f;
+
+    [Header("移動速度倍率 横")]
+    [Range(0.1f, 3.0f), SerializeField, Tooltip("移動速度倍率 横")] private float SpeedMultiX = 0.5f;
 
     //10
-    float MAX_DIFFERENCE = 10;
-    float MAX_CAMERA_MOVE = 0.6f;
+    [Header("焦点とプレイヤーの距離上限 横")]
+    [Range(1,15), SerializeField, Tooltip("焦点とプレイヤーの距離上限 横")] private float MAX_DIFFERENCE_X = 10;
+
+
+    [Header("1F当たりの移動距離上限 横")]
+    [Range(0.1f, 3.0f), SerializeField, Tooltip("1F当たりの移動距離上限 横")] private float MAX_CAMERA_MOVE_X = 0.6f;
 
     //方向転換して進んだ距離
-    float ReturnMove = 0;
+    float ReturnMove_X = 0;
 
-    Vector3 OldPlayerPos = Vector3.zero;
+    //卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍
+    //縦移動
+    //卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍卍
+    GO_POS_Y GoPosY = GO_POS_Y.DOWN;
 
-    public float cameraPosY = 5.3f;
-    public float cameraDistanceZ = -50;//Zの距離
+    float DifferenceY = 0.0f;
+
+    float SpeedMultiY = 0.5f;
+
+    float UP_CAMEPA_SPEED = 0.08f;
+
+    float UP_DIFFERENCE_Y = 10;
+    float DOWN_DIFERENCE_Y = 0;
+
+
 
     void Start()
     {
-        Difference = MAX_DIFFERENCE;
+        DifferenceX = MAX_DIFFERENCE_X;
+        DifferenceY = UP_DIFFERENCE_Y;
     }
 
 
     void Update()
     {
-        transform.position = PlayerMain.instance.transform.position + new Vector3(Difference, 2, cameraDistanceZ);
+        //分岐
+        if(!FreezeY)
+        {
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, cameraDistanceZ);
+
+        }
+        else
+        {
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, cameraDistanceZ);
+
+        }
     }
 
     void FixedUpdate()
     {
         //プレイヤー座標
-        Vector3 PlayerPos = PlayerMain.instance.transform.position;
+        PlayerPos = PlayerMain.instance.transform.position;
 
+        FixedX();
+        //分岐
+        if(!FreezeY)
+        {
+            FixedY();
+        }
+        
+        OldPlayerPos = PlayerMain.instance.transform.position;
+
+    }
+
+    void FixedX()
+    {
         //進んだ量
         float TempVel = PlayerPos.x - OldPlayerPos.x;
-        Debug.Log(TempVel);
 
         //カメラの移動量 
-        float TempCameraMove = Mathf.Min(TempVel * 0.5f, MAX_CAMERA_MOVE);
-        TempCameraMove = Mathf.Max(TempVel * 0.5f, -MAX_CAMERA_MOVE);
+        float TempCameraMove = Mathf.Min(TempVel * SpeedMultiX, MAX_CAMERA_MOVE_X);
+        TempCameraMove = Mathf.Max(TempVel * SpeedMultiX, -MAX_CAMERA_MOVE_X);
 
         if (TempVel > 0.1f)
         {
@@ -58,9 +123,9 @@ public class CameraPos : MonoBehaviour
             RightSavePos = PlayerMain.instance.transform.position.x;
 
             //一定以上折り返したら
-            if (PlayerPos.x > LeftSavePos + ReturnMove)
+            if (PlayerPos.x > LeftSavePos + ReturnMove_X)
             {
-                Difference = Mathf.Min(Difference + TempCameraMove, MAX_DIFFERENCE);
+                DifferenceX = Mathf.Min(DifferenceX + TempCameraMove, MAX_DIFFERENCE_X);
             }
         }
         if (TempVel < -0.1f)
@@ -69,15 +134,82 @@ public class CameraPos : MonoBehaviour
             LeftSavePos = PlayerMain.instance.transform.position.x;
 
             //一定以上折り返したら
-            if (PlayerPos.x < RightSavePos - ReturnMove)
+            if (PlayerPos.x < RightSavePos - ReturnMove_X)
             {
-                Debug.Log("通った");
-                Difference = Mathf.Max(Difference + TempCameraMove, -MAX_DIFFERENCE);
+                DifferenceX = Mathf.Max(DifferenceX + TempCameraMove, -MAX_DIFFERENCE_X);
             }
         }
 
-        OldPlayerPos = PlayerMain.instance.transform.position;
     }
+
+    void FixedY()
+    {
+        //進んだ量
+        float TempVel = PlayerPos.y - OldPlayerPos.y;
+
+        //カメラの移動量 
+        float TempCameraMove = Mathf.Abs(TempVel) * SpeedMultiY;
+
+#if false
+        if (TempVel > 0.1f)
+        {
+            GoPosY = GO_POS_Y.DOWN;
+        }
+        else if(TempVel <= 0.0f)
+        {
+            GoPosY = GO_POS_Y.UP;
+        }
+        else
+        {
+            GoPosY = GO_POS_Y.STAY;
+        }
+
+        switch (GoPosY)
+        {
+            case GO_POS_Y.UP:
+                DifferenceY = Mathf.Min(UP_DIFFERENCE_Y, DifferenceY + TempCameraMove);
+
+                break;
+            case GO_POS_Y.DOWN:
+                DifferenceY = Mathf.Max(DOWN_DIFERENCE_Y, DifferenceY - TempCameraMove);
+                break;
+            default:
+                break;
+        }
+#endif
+
+        //上昇中下がって地に足付くと上がる
+
+        //上昇中
+        if (TempVel > 0.1f)
+        {
+            GoPosY = GO_POS_Y.DOWN;
+        }
+        //地上
+        else if (PlayerMain.instance.isOnGround)
+        {
+            GoPosY = GO_POS_Y.UP;
+        }
+        else
+        {
+            GoPosY = GO_POS_Y.STAY;
+        }
+
+        switch (GoPosY)
+        {
+            case GO_POS_Y.UP:
+                DifferenceY = Mathf.Min(UP_DIFFERENCE_Y, DifferenceY + UP_CAMEPA_SPEED);
+
+                break;
+            case GO_POS_Y.DOWN:
+                DifferenceY = Mathf.Max(DOWN_DIFERENCE_Y, DifferenceY - TempCameraMove);
+                break;
+            default:
+                break;
+        }
+
+    }
+
 
     public void ManualUpdate()
     {
@@ -88,7 +220,7 @@ public class CameraPos : MonoBehaviour
 
 #if false
 
-    GO_POS GoPos = GO_POS.STAY;
+    GO_POS_X GoPos = GO_POS_X.STAY;
     float Difference = 0.0f;
     
     float MAX_DIFFERENCE = 10;
@@ -157,11 +289,11 @@ public class CameraPos : MonoBehaviour
 
             if(RightCnt < 10)
             {
-                GoPos = GO_POS.STAY;
+                GoPos = GO_POS_X.STAY;
             }
             else
             {
-                GoPos = GO_POS.RIGHT;
+                GoPos = GO_POS_X.RIGHT;
             }
         }
         else if (Stick.x < -0.2f)
@@ -171,11 +303,11 @@ public class CameraPos : MonoBehaviour
 
             if (LeftCnt < 10)
             {
-                GoPos = GO_POS.STAY;
+                GoPos = GO_POS_X.STAY;
             }
             else
             {
-                GoPos = GO_POS.LEFT;
+                GoPos = GO_POS_X.LEFT;
             }
         }
         else
@@ -192,17 +324,17 @@ public class CameraPos : MonoBehaviour
         {
             
 
-            case GO_POS.RIGHT:
+            case GO_POS_X.RIGHT:
                 CameraMoveSpeed = Mathf.Min(CameraMoveSpeed + ADD_SPEED, MAX_SPEED);
                 Difference = Mathf.Min(Difference + CameraMoveSpeed, MAX_DIFFERENCE);
                 break;
 
-            case GO_POS.LEFT:
+            case GO_POS_X.LEFT:
                 CameraMoveSpeed = Mathf.Min(CameraMoveSpeed + ADD_SPEED, MAX_SPEED);
                 Difference = Mathf.Max(Difference - CameraMoveSpeed, -MAX_DIFFERENCE);
                 break;
 
-            case GO_POS.STAY:
+            case GO_POS_X.STAY:
                 CameraMoveSpeed = 0.0f;
                 break;
         }
