@@ -144,7 +144,7 @@ public class PlayerStateOnGround : PlayerState
 
         if (shotButton)
         {
-            PlayerScript.mode = new PlayerStateShot_2();
+            PlayerScript.mode = new PlayerStateShot_3();
         }
     }
 
@@ -339,6 +339,200 @@ public class PlayerStateShot_2 : PlayerState
 
 
 /// <summary>
+/// 弾を撃った状態(一度紐が伸び切ったら長さ固定のもの)
+/// 弾はオブジェクトには接触していない
+/// スティックでの移動不可、弾を引き戻すことのみ可能
+/// </summary>
+public class PlayerStateShot_3 : PlayerState
+{
+    float countTime;               //発射からの時間
+    Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
+    bool finishFlag;
+    BulletMain BulletScript;
+    public PlayerStateShot_3()//コンストラクタ
+    {
+        PlayerScript.refState = EnumPlayerState.SHOT;
+        PlayerScript.shotState = ShotState.GO;
+        PlayerScript.canShot = false;
+        PlayerScript.forciblyReturnBulletFlag = false;
+        PlayerScript.addVel = Vector3.zero;
+        //弾の生成と発射
+        //発射時にぶつからないように発射位置を矢印方向にずらす
+        Vector3 vec = PlayerScript.leftStick.normalized;
+        vec = vec * 5;
+        vec.y += 1.0f;
+        Vector3 popPos = PlayerScript.transform.position + vec;
+
+        if (PlayerScript.Bullet != null)
+        {
+            GameObject.Destroy(PlayerScript.Bullet);
+        }
+        PlayerScript.Bullet = Object.Instantiate(PlayerScript.BulletPrefab, popPos, Quaternion.identity);
+        BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>(); //バレット情報のスナップ
+    }
+
+    public override void UpdateState()
+    {
+        countTime += Time.deltaTime;
+
+        if (countTime > 0.3)
+        {
+            if (PlayerScript.shotState == ShotState.STRAINED)
+            {
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+                {
+                    if (PlayerScript.Bullet != null)
+                    {
+                        BulletScript.ReturnBullet();
+                    }
+                    PlayerScript.vel = bulletVecs.Dequeue();
+                    PlayerScript.useVelocity = true;
+                    PlayerScript.shotState = ShotState.RETURN;
+                }
+            }
+        }
+
+        //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
+        if (PlayerScript.forciblyReturnBulletFlag)
+        {
+            PlayerScript.forciblyReturnBulletFlag = false;
+            if (PlayerScript.Bullet != null)
+            {
+                if (PlayerScript.forciblyReturnSaveVelocity)
+                {
+                    PlayerScript.vel = bulletVecs.Dequeue();
+                }
+                else
+                {
+                    PlayerScript.vel = Vector3.zero;
+                }
+
+                BulletScript.ReturnBullet();
+            }
+            PlayerScript.useVelocity = true;
+            PlayerScript.shotState = ShotState.RETURN;
+        }
+
+        if (PlayerScript.shotState == ShotState.STRAINED)
+        {
+            float interval;
+            interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
+            if (interval > BulletScript.BULLET_ROPE_LENGTH)
+            {
+                //弾からプレイヤー方向へBULLET_ROPE_LENGTHだけ離れた位置に常に補正
+                Vector3 diff = (PlayerScript.transform.position - PlayerScript.Bullet.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
+                Player.transform.position = PlayerScript.Bullet.transform.position + diff;
+            }
+        }
+
+        if (BulletScript.isTouched)
+        {
+            if (BulletScript.followEnd)
+            {
+                if (PlayerScript.Bullet != null)
+                {
+                    BulletScript.FollowedPlayer();
+                }
+                PlayerScript.vel = bulletVecs.Dequeue();
+                PlayerScript.useVelocity = true;
+                BulletScript.followEnd = false;
+                PlayerScript.shotState = ShotState.FOLLOW;
+            }
+        }
+    }
+
+    public override void Move()
+    {
+
+        float interval;
+        interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
+        switch (PlayerScript.shotState)
+        {
+
+            case ShotState.GO:
+                bulletVecs.Enqueue(BulletScript.vel);
+
+                //紐の長さを超えたら引っ張られている状態にする
+                if (interval > BulletScript.BULLET_ROPE_LENGTH)
+                {
+                    PlayerScript.shotState = ShotState.STRAINED;
+                    PlayerScript.useVelocity = false;
+                }
+                break;
+
+            case ShotState.STRAINED:
+                bulletVecs.Enqueue(BulletScript.vel);
+                bulletVecs.Dequeue();
+                //このとき、移動処理は直にposition変更しているため???????、update内に記述
+                //ここに記述するとカメラがブレる
+                break;
+
+            case ShotState.RETURN:
+                //自分へ弾を引き戻す
+                Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
+                vecToPlayer = vecToPlayer.normalized;
+
+                BulletScript.vel = vecToPlayer * 100;
+
+                //距離が一定以下になったら終了処理フラグを建てる
+                if (interval < 4.0f)
+                {
+                    finishFlag = true;
+                }
+                break;
+
+            case ShotState.FOLLOW:
+                //自分へ弾を引き戻す
+                Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
+                vecToBullet = vecToBullet.normalized;
+
+                PlayerScript.vel += vecToBullet * 3;
+
+                if (interval < 4.0f)
+                {
+                    finishFlag = true;
+                }
+
+                break;
+        }
+
+
+    }
+
+    public override void StateTransition()
+    {
+        if (finishFlag)
+        {
+            Object.Destroy(BulletScript.gameObject);
+            //着地したら立っている状態に移行
+            if (PlayerScript.isOnGround)
+            {
+                PlayerScript.mode = new PlayerStateOnGround();
+            }
+            else //そうでないなら空中
+            {
+                PlayerScript.mode = new PlayerStateMidair();
+            }
+        }
+
+        //ボールが触れたらスイング状態
+        if (BulletScript.isTouched)
+        {
+            if (BulletScript.swingEnd)
+            {
+                BulletScript.swingEnd = false;
+                PlayerScript.mode = new PlayerStateSwing_2();
+            }
+        }
+    }
+    public override void DebugMessage()
+    {
+        Debug.Log("PlayerState:Shot");
+    }
+}
+
+
+/// <summary>
 /// プレイヤーが空中にいる状態
 /// クールタイムを経て、弾の発射ができる
 /// </summary>
@@ -431,7 +625,7 @@ public class PlayerStateMidair : PlayerState
     { 
         if (shotButton)
         {
-            PlayerScript.mode = new PlayerStateShot_2();
+            PlayerScript.mode = new PlayerStateShot_3();
         }
 
         //着地したら立っている状態に移行
