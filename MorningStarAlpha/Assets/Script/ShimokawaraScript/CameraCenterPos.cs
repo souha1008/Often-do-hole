@@ -85,7 +85,7 @@ public class CameraCenterPos : MonoBehaviour
 
         if(!isDraw)
         {
-            this.GetComponent<Material>().color = Color.clear;
+            GetComponent<Renderer>().material.color = Color.clear;
         }
     }
 
