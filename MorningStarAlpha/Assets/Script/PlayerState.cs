@@ -345,7 +345,7 @@ public class PlayerStateShot_2 : PlayerState
             }
             else //‚»‚¤‚Å‚È‚¢‚È‚ç‹ó’†
             {
-                PlayerScript.mode = new PlayerStateMidair();
+                PlayerScript.mode = new PlayerStateMidair(999.0f);
             }
         } 
    
