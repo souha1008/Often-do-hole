@@ -89,7 +89,6 @@ public class PlayerStateOnGround : PlayerState
         isSlide = is_slide;
     }
 
-
     public override void UpdateState()
     {
         if (Input.GetButtonDown("Button_R"))
@@ -127,7 +126,6 @@ public class PlayerStateOnGround : PlayerState
         }
         else
         {
-
             if (PlayerScript.leftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {
                 if (PlayerScript.vel.x < -0.2f)
@@ -209,6 +207,14 @@ public class PlayerStateShot_2 : PlayerState
         }
         PlayerScript.Bullet = Object.Instantiate(PlayerScript.BulletPrefab, popPos, Quaternion.identity);
         BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>(); //バレット情報のスナップ
+    }
+
+    ~PlayerStateShot_2()
+    {
+        if (PlayerScript.Bullet != null)
+        {
+            Object.Destroy(PlayerScript.Bullet);
+        }
     }
 
     public override void UpdateState()
@@ -337,7 +343,6 @@ public class PlayerStateShot_2 : PlayerState
     {
         if (finishFlag)
         {
-            Object.Destroy(BulletScript.gameObject);
             //着地したら立っている状態に移行
             if (PlayerScript.isOnGround)
             {
@@ -544,7 +549,6 @@ public class PlayerStateShot_3 : PlayerState
     {
         if (finishFlag)
         {
-            Object.Destroy(BulletScript.gameObject);
             //着地したら立っている状態に移行
             if (PlayerScript.isOnGround)
             {
@@ -810,7 +814,6 @@ public class PlayerStateSwing : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
-                    Object.Destroy(BulletScript.gameObject);
                 }
 
                 break;
@@ -871,6 +874,14 @@ public class PlayerStateSwing_2 : PlayerState
         PlayerScript.vel = Vector3.zero;
 
         CalculateStartVariable();
+    }
+
+    ~PlayerStateSwing_2()
+    {
+        if (PlayerScript.Bullet != null)
+        {
+            Object.Destroy(PlayerScript.Bullet);
+        }
     }
 
     public void CalculateStartVariable()
@@ -1005,7 +1016,7 @@ public class PlayerStateSwing_2 : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
-                    Object.Destroy(BulletScript.gameObject);
+                    
                 }
                 break;
 
