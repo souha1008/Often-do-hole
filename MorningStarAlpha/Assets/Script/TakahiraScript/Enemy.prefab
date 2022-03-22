@@ -108,8 +108,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93775ed3b59d00a43858ec5e6ce3e2a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Rad: {x: 0, y: 0, z: 0}
-  Vel: {x: 0, y: 0, z: 0}
-  TotalMoveVel: {x: 0, y: 0, z: 0}
-  MoveVelX: 10
-  MoveVelXMax: 1000
+  MoveInfo:
+    Rad: {x: 0, y: 0, z: 0}
+    Vel: {x: 0, y: 0, z: 0}
+    TotalMoveVel: {x: 0, y: 0, z: 0}
+  EasingType_X1: 3
+  EasingType_X2: 3
+  EasingType_Y1: 0
+  EasingType_Y2: 0
+  MoveLength_X: 15
+  MoveLength_Y: 15
+  MoveTime_X1: 2
+  MoveTime_X2: 2
+  MoveTime_Y1: 2
+  MoveTime_Y2: 2
+  StartTime_X: 0
+  StartTime_Y: 0
+  MoveDirection_X: 1
+  MoveDirection_Y: 0
+  Move_X: 1
+  Move_Y: 0
