@@ -2450,8 +2450,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a811682e7cc36f4daba4ccf019855d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NoOutput: 0
   Output: 0
+  NoOutput: 0
+  ReadOnly: 0
   Label: 0
   Header: 0
   Tooltip: 0
@@ -2459,6 +2460,7 @@ MonoBehaviour:
   Multiline: 
   speed: 990
   Text: 
+  TestEnum: 0
 --- !u!4 &446691368
 Transform:
   m_ObjectHideFlags: 0
@@ -2611,6 +2613,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abed39be4b1e104da8ec01830428944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RespawnObject: {fileID: 0}
+  NowRespawnPos: {x: 0, y: 0, z: 0}
 --- !u!1 &513986403
 GameObject:
   m_ObjectHideFlags: 0
@@ -13324,9 +13328,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
+      propertyPath: SplitStick
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: BulletPrefab
       value: 
       objectReference: {fileID: 2907611852633609069, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
+    - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
+      propertyPath: FALL_GRAVITY
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: ADD_RUN_SPEED
       value: 0.8
