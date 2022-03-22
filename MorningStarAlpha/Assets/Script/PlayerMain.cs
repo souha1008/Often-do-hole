@@ -86,10 +86,12 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("プレイヤーの速度:入力によるもの")] public Vector3 vel;                              // 移動速度(inspector上で確認)
     [ReadOnly, Tooltip("プレイヤーの速度:ギミックでの反発によるもの")] public Vector3 addVel;                           // ギミック等で追加される速度
     [ReadOnly, Tooltip("プレイヤーの速度:移動床によるもの")] public Vector3 floorVel;                         // 動く床等でのベロシティ
-    [ReadOnly, Tooltip("スティック入力角")] public Vector2 leftStick;                        // 左スティック
-    [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;                   // 打てる状態か
-    [ReadOnly, Tooltip("射出クールタイムが回復しているか")] public bool canShot;                             // 打てる状態か
+    [ReadOnly, Tooltip("スティック入力角")] public Vector2 leftStick;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
+    [ReadOnly, Tooltip("打てる可能性があるか")] public bool canShotState;                             // 打てる状態か
+    [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
+    [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
+    [ReadOnly, Tooltip("最終的に打てるかどうか")] public bool canShot;                             // 打てる状態か
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
     [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
@@ -116,10 +118,13 @@ public class PlayerMain : MonoBehaviour
         addVel = Vector3.zero;
         floorVel = Vector3.zero;
         leftStick = new Vector2(0.0f, 0.0f);
+        canShotState = true;
         stickCanShotRange = false;
-        canShot = true;
+        CanShotColBlock = false;
+        canShot = false;
         isOnGround = false;
         useVelocity = true;
+
 
         forciblyReturnBulletFlag = false;
         forciblyReturnSaveVelocity = false;
@@ -234,7 +239,7 @@ public class PlayerMain : MonoBehaviour
     private void CheckCanShot()
     {
         //スティックの入力が一定以上ない場合は撃てない
-        if (leftStick.sqrMagnitude > 0.7f)
+        if(Mathf.Abs(leftStick.magnitude) > 0.7f)
         {
             stickCanShotRange = true;
         }
@@ -242,7 +247,40 @@ public class PlayerMain : MonoBehaviour
         {
             stickCanShotRange = false;
         }
-    }
+
+        //デバッグログ
+        Vector3 StartPos;
+        StartPos = transform.position;
+        StartPos.y += 1.0f;
+
+        RaycastHit hit;
+        if (Physics.Raycast(StartPos, leftStick, out hit, 3.0f))
+        {
+            if (hit.collider.CompareTag("Platform"))
+            {
+                CanShotColBlock = false;
+                Debug.Log("col . plat");
+            }
+        }
+        else
+        {
+            CanShotColBlock = true;
+            Debug.Log("coln . stick");
+        }
+        StartPos.z += 2.0f;
+        Debug.DrawRay(StartPos, leftStick * 3.0f, Color.red);
+
+
+        //最終的に打てるかの決定
+        if(canShotState && stickCanShotRange && CanShotColBlock)
+        {
+            canShot = true;
+        }
+        else
+        {
+            canShot = false;
+        }
+    } 
 
 
     /// <summary>

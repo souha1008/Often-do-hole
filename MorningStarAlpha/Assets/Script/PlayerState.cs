@@ -64,7 +64,7 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
         PlayerScript.vel.y = 0;
-        PlayerScript.canShot = true;
+        PlayerScript.canShotState = true;
 
         if(PlayerScript.Bullet != null)
         {
@@ -79,7 +79,7 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
         PlayerScript.vel.y = 0;
-        PlayerScript.canShot = true;
+        PlayerScript.canShotState = true;
 
         if (PlayerScript.Bullet != null)
         {
@@ -94,7 +94,7 @@ public class PlayerStateOnGround : PlayerState
     {
         if (Input.GetButtonDown("Button_R"))
         {
-            if (PlayerScript.stickCanShotRange)
+            if (PlayerScript.canShot)
             {
                 shotButton = true;
             }
@@ -193,13 +193,13 @@ public class PlayerStateShot_2 : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
-        PlayerScript.canShot = false;
+        PlayerScript.canShotState = false;
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
         //弾の生成と発射
         //発射時にぶつからないように発射位置を矢印方向にずらす
         Vector3 vec = PlayerScript.leftStick.normalized;
-        vec = vec * 5;
+        vec = vec * 3;
         vec.y += 1.0f;
         Vector3 popPos = PlayerScript.transform.position + vec;
 
@@ -381,7 +381,7 @@ public class PlayerStateShot_3 : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
-        PlayerScript.canShot = false;
+        PlayerScript.canShotState = false;
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
         //弾の生成と発射
@@ -588,7 +588,7 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.refState = EnumPlayerState.MIDAIR;
         shotButton = false;
         countTimer = 0.0f;
-        PlayerScript.canShot = false;
+        PlayerScript.canShotState = false;
 
         if (PlayerScript.Bullet != null)
         {
@@ -609,7 +609,7 @@ public class PlayerStateMidair : PlayerState
         recastTime = recast_time;
         if(recastTime < 0.0001f)
         {
-            PlayerScript.canShot = true; 
+            PlayerScript.canShotState = true; 
         }
     }
 
@@ -631,12 +631,15 @@ public class PlayerStateMidair : PlayerState
 
         if (countTimer > recastTime)
         {
-            if(PlayerScript.canShot == false)
+            if(PlayerScript.canShotState == false)
             {
-                PlayerScript.canShot = true;
+                PlayerScript.canShotState = true;
             }
+        }
 
-            if (Input.GetButtonDown("Button_R"))
+        if (Input.GetButtonDown("Button_R"))
+        {
+            if (PlayerScript.canShot)
             {
                 shotButton = true;
             }
@@ -704,7 +707,7 @@ public class PlayerStateSwing : PlayerState
     public PlayerStateSwing()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.SWING;
-        PlayerScript.canShot = false;
+        PlayerScript.canShotState = false;
         finishFlag = false;
         swingMode = SwingMode.Touced;
         BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>();　
@@ -857,7 +860,7 @@ public class PlayerStateSwing_2 : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.SWING;
         PlayerScript.swingState = SwingState.TOUCHED;
-        PlayerScript.canShot = false;
+        PlayerScript.canShotState = false;
         PlayerScript.endSwing = false;
         finishFlag = false;
         BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>();
@@ -1035,7 +1038,7 @@ public class PlayerStateDeath : PlayerState
     public PlayerStateDeath()
     {
         PlayerScript.refState = EnumPlayerState.DEATH;
-        PlayerScript.canShot = false;
+        PlayerScript.canShotState = false;
         PlayerScript.vel = Vector3.zero;
         PlayerScript.addVel = Vector3.zero;
 
