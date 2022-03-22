@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-=======
-#define SPLIT_LEFTSTICK
-
->>>>>>> origin/Stage01
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
