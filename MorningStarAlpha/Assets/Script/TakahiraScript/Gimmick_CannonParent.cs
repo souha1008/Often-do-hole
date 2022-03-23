@@ -46,6 +46,7 @@ public class Gimmick_CannonParentEditor : Editor
         EditorGUILayout.LabelField("[砲台の設定]");
         EditorGUILayout.Space(5);
 
+        FixedRadFlag.boolValue = EditorGUILayout.Toggle("砲台の角度固定", FixedRadFlag.boolValue);
         CannonChild.objectReferenceValue = EditorGUILayout.ObjectField("打ち出す弾オブジェクト", CannonChild.objectReferenceValue, typeof(GameObject), true);
         StartLength.floatValue = EditorGUILayout.FloatField("動き出すプレイヤーとの距離", StartLength.floatValue);
         ShootTime.floatValue = EditorGUILayout.FloatField("打ち出す間隔の時間", ShootTime.floatValue);
@@ -55,7 +56,7 @@ public class Gimmick_CannonParentEditor : Editor
         EditorGUILayout.LabelField("[弾の設定]");
         EditorGUILayout.Space(5);
 
-        FixedRadFlag.boolValue = EditorGUILayout.Toggle("砲台の角度固定", FixedRadFlag.boolValue);
+        
 
         if (!FixedRadFlag.boolValue) // 砲台固定でないなら
             ChaseFlag.boolValue = EditorGUILayout.Toggle("弾が追尾するか", ChaseFlag.boolValue);

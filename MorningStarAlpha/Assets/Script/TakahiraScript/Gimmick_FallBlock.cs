@@ -22,7 +22,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         NowFall = false;
         NowTime = 0.0f;
         StartPos = this.gameObject.transform.position;
-        PlayerObject = null;
+        PlayerObject = GameObject.Find("Player");
         BulletObject = null;
 
         // コリジョン
@@ -70,6 +70,12 @@ public class Gimmick_FallBlock : Gimmick_Main
 
     public override void Death()
     {
+        // プレイヤーの錨引き戻し
+        if(PlayerObject != null)
+        {
+            PlayerObject.GetComponent<PlayerMain>().endSwing = true;
+        }
+
         // 自分自身を消す
         Destroy(this.gameObject);
     }
