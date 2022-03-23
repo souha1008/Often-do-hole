@@ -348,6 +348,23 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
+
+        //FOLLOWíÜÇ…ï«Ç…ìñÇΩÇÈÇ∆è„Ç…ï‚ê≥
+        if (refState == EnumPlayerState.SHOT)
+        {
+            if (shotState == ShotState.FOLLOW)
+            {
+                Aspect asp = DetectAspect.DetetAspect(collision.contacts[0].normal);
+
+                if (asp == Aspect.LEFT || asp == Aspect.RIGHT)
+                {
+                    Vector3 tempPos = transform.position;
+                    tempPos.y += 0.7f;
+                    transform.position = tempPos;
+                }
+            }
+        }
+
         //swingíÜÇ…ï«Ç…Ç‘Ç¬Ç©Ç¡ÇΩÇÁè¡Ç∑
         if (refState == EnumPlayerState.SWING)
         {

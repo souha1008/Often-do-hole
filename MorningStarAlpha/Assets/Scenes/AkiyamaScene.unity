@@ -8341,7 +8341,6 @@ GameObject:
   - component: {fileID: 1298646769}
   - component: {fileID: 1298646768}
   - component: {fileID: 1298646767}
-  - component: {fileID: 1298646771}
   m_Layer: 0
   m_Name: platform (9)
   m_TagString: Platform
@@ -8425,20 +8424,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 80
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1298646771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1298646766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 267b7769918e6774785c2f188b14db81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CenterObj: {fileID: 0}
-  CAMERA_DISTANCE: 0
 --- !u!1 &1304839767
 GameObject:
   m_ObjectHideFlags: 0
@@ -13641,15 +13626,15 @@ PrefabInstance:
       objectReference: {fileID: 2907611852633609069, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: FALL_GRAVITY
-      value: 0.8
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: ADD_RUN_SPEED
-      value: 0.8
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: MAX_RUN_SPEED
-      value: 15
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: MIN_RUN_SPEED
@@ -13665,11 +13650,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: ADD_MIDAIR_SPEED
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: STRAINED_GRAVITY
-      value: 0.4
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: BULLET_RECAST_TIME

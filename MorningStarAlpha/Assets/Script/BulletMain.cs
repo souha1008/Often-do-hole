@@ -46,13 +46,13 @@ public class BulletMain : MonoBehaviour
         //進行方向と同じ向きに投げる場合威力補正
         if (Mathf.Sign(vec.x) == Mathf.Sign(PlayerScript.vel.x))
         {
-            vel += PlayerScript.vel *= 0.8f;
+            vel += PlayerScript.vel *= 0.6f;
         }
 
-        if(Mathf.Abs(PlayerScript.vel.x) > 20.0f)
-        {
-            vel *= 0.8f;
-        }
+        //if(Mathf.Abs(PlayerScript.vel.x) > 20.0f)
+        //{
+        //    vel *= 0.8f;
+        //}
     }
 
     void FixedUpdate()
@@ -64,7 +64,6 @@ public class BulletMain : MonoBehaviour
                 vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
                 Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
             }
-
             rb.velocity = vel;
         }
     }
@@ -93,63 +92,12 @@ public class BulletMain : MonoBehaviour
         }
     }
 
-    /// <summary>
-    ///　面向き
-    /// </summary>
-    enum Aspect
-    {
-        UP,        //上面
-        DOWN,      //下面
-        LEFT,      //左面
-        RIGHT,　　 //右面
-        INVALID,   //例外
-    }
-
-    /// <summary>
-    /// 法線ベクトルによって面の向きを取得
-    /// </summary>
-    /// <param name="vec">法線</param>
-    /// <returns></returns>
-    private Aspect DetetAspect(Vector3 vec)
-    {
-        Aspect returnAspect = Aspect.INVALID;
-        if (Mathf.Abs(vec.y) > 0.5f) //y成分が大きいので縦向き
-        {
-            if (vec.y > 0)
-            {
-                returnAspect = Aspect.UP;
-            }
-            else
-            {
-                returnAspect = Aspect.DOWN;
-            }
-        }
-        else if (Mathf.Abs(vec.x) > 0.5f) //x成分が大きいので横向き
-        {
-            if (vec.x > 0)
-            {
-                returnAspect = Aspect.RIGHT;
-            }
-            else
-            {
-                returnAspect = Aspect.LEFT;
-            }
-        }
-        else
-        {
-            returnAspect = Aspect.INVALID;
-            Debug.LogError("接触面の法線が斜めの可能性があります");
-        }
-
-        return returnAspect;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (ReferenceEquals(Player, null) == false)
         {
             Aspect colAspect = Aspect.INVALID;
-            colAspect = DetetAspect(collision.contacts[0].normal); //接触点の法線ベクトル
+            colAspect = DetectAspect.DetetAspect(collision.contacts[0].normal); //接触点の法線ベクトル
 
             if (onceFlag == false)
             {

@@ -58,22 +58,32 @@ public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
     private bool isSlide; //横から素早く着地するとスライド
-    private const float SLIDE_END_TIME = 0.4f; 
+    private const float SLIDE_END_TIME = 0.2f; 
     private float slideEndTimer;
+    private const float shotRecastTime = 0.3f;
+    private float ShotTimer;
 
     public PlayerStateOnGround()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
         PlayerScript.vel.y = 0;
-        PlayerScript.canShotState = true;
+        PlayerScript.canShotState = true; 
 
         if(PlayerScript.Bullet != null)
         {
             GameObject.Destroy(PlayerScript.Bullet);
         }
 
-        isSlide = false;
+        if(Mathf.Abs(PlayerScript.vel.x) > 30.0f)
+        {
+            isSlide = true;
+        }
+        else
+        {
+            isSlide = false;
+            PlayerScript.canShotState = true;
+        }
     }
 
     public PlayerStateOnGround(bool is_slide)//コンストラクタ
@@ -125,6 +135,7 @@ public class PlayerStateOnGround : PlayerState
     {
         Debug.Log(isSlide);
 
+
         if (isSlide)
         {
             float slide_Weaken = 0.5f;
@@ -167,6 +178,7 @@ public class PlayerStateOnGround : PlayerState
             if(slideEndTimer > SLIDE_END_TIME)
             {
                 isSlide = false;
+                PlayerScript.canShotState = true;
             }
         }
         else //!isSlide
@@ -342,15 +354,18 @@ public class PlayerStateShot_2 : PlayerState
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
                 {
                     //引っ張られたタイミングでボール減速
-                    if(BulletScript.vel.magnitude > 60.0f)
-                    {
-                        BulletScript.vel *= 0.64f;
-                    }
-                    else
-                    {
-                        BulletScript.vel *= 0.8f;
-                    }
-                    
+                    //if(BulletScript.vel.magnitude > 60.0f)
+                    //{
+                    //    BulletScript.vel *= 0.64f;
+                    //}
+                    //else if(BulletScript.vel.magnitude > 40.0f)
+                    //{
+                    //    BulletScript.vel *= 0.92f;
+                    //}
+
+                    BulletScript.vel *= 0.84f;
+                
+
                     PlayerScript.shotState = ShotState.STRAINED;
                     PlayerScript.useVelocity = false;
                 }
@@ -402,7 +417,7 @@ public class PlayerStateShot_2 : PlayerState
             //着地したら立っている状態に移行
             if (PlayerScript.isOnGround)
             {
-                PlayerScript.mode = new PlayerStateOnGround(true);
+                PlayerScript.mode = new PlayerStateOnGround();
             }
             else //そうでないなら空中
             {
@@ -738,7 +753,7 @@ public class PlayerStateMidair : PlayerState
         //着地したら立っている状態に移行
         if (PlayerScript.isOnGround)
         {
-            PlayerScript.mode = new PlayerStateOnGround(false);
+            PlayerScript.mode = new PlayerStateOnGround();
         }
     }
 
@@ -838,6 +853,8 @@ public class PlayerStateSwing : PlayerState
 
     public override void Move()
     {
+        ballPosition = BulletScript.transform.position;
+
         switch (swingMode) 
         {
             case SwingMode.Touced:
