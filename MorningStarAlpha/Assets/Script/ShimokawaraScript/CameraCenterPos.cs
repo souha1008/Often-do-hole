@@ -83,17 +83,24 @@ public class CameraCenterPos : MonoBehaviour
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
 
-        if(!isDraw)
-        {
-            GetComponent<Renderer>().material.color = Color.clear;
-        }
+       
     }
 
 
     void Update()
     {
+        if (!isDraw)
+        {
+            GetComponent<Renderer>().material.color = Color.clear;
+        }
+        else
+        {
+            GetComponent<Renderer>().material.color = new Color(1,0,0,0.5f);
+        }
+
+
         //•ªŠò
-        if(!FreezeY)
+        if (!FreezeY)
         {
             transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
 
