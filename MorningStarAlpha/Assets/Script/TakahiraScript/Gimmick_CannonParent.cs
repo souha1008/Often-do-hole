@@ -140,8 +140,8 @@ public class Gimmick_CannonParent : Gimmick_Main
                 Shoot();
                 NowShootTime = 0.0f; // 経過時間リセット
             }
-
-            NowShootTime += Time.deltaTime; // 経過時間加算
+            else
+                NowShootTime += Time.deltaTime; // 経過時間加算
         }
     }
 
