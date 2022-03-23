@@ -51,9 +51,9 @@ public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
-    public GameObject BulletPrefab;
+    public GameObject Bullet_2;
     public PlayerState mode;                         // ステート
-   
+
 
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
@@ -81,7 +81,6 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
     [ReadOnly, Tooltip("ショット状態の細かなステート")] public ShotState shotState;
     [ReadOnly, Tooltip("swing状態の細かなstate")] public SwingState swingState;
-    [ReadOnly, Tooltip("イカリの情報")] public GameObject Bullet = null;
     [ReadOnly, Tooltip("プレイヤーの向き")] public PlayerMoveDir dir;
     [ReadOnly, Tooltip("プレイヤーの速度:入力によるもの")] public Vector3 vel;                              // 移動速度(inspector上で確認)
     [ReadOnly, Tooltip("プレイヤーの速度:ギミックでの反発によるもの")] public Vector3 addVel;                           // ギミック等で追加される速度
@@ -108,11 +107,15 @@ public class PlayerMain : MonoBehaviour
             transform.position = CheckPointManager.GetCheckPointPos();
          }
         rb = GetComponent<Rigidbody>();
+        
+    }
+
+    private void Start()
+    {
         mode = new PlayerStateOnGround(); //初期ステート
         refState = EnumPlayerState.ON_GROUND;
         shotState = ShotState.NONE;
         swingState = SwingState.NONE;
-        Bullet = null;　　　　　　　　　　 
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
         vel = Vector3.zero;
         addVel = Vector3.zero;
@@ -124,7 +127,6 @@ public class PlayerMain : MonoBehaviour
         canShot = false;
         isOnGround = false;
         useVelocity = true;
-
 
         forciblyReturnBulletFlag = false;
         forciblyReturnSaveVelocity = false;
@@ -301,11 +303,9 @@ public class PlayerMain : MonoBehaviour
     /// </param>
     public void ForciblyReturnBullet(bool saveVelocity)
     {
-        if (Bullet != null)
-        {
-            forciblyReturnBulletFlag = true;
-            forciblyReturnSaveVelocity = saveVelocity;
-        }
+        
+        forciblyReturnBulletFlag = true;
+        forciblyReturnSaveVelocity = saveVelocity;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -347,7 +347,6 @@ public class PlayerMain : MonoBehaviour
                 isOnGround = true;
             }
         }
-
 
         //FOLLOW中に壁に当たると上に補正
         if (refState == EnumPlayerState.SHOT)

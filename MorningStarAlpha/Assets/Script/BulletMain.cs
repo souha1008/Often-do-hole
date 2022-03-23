@@ -5,7 +5,9 @@ using UnityEngine;
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
-    private GameObject Player;
+
+    [System.NonSerialized] public Rigidbody rb_2;
+    [SerializeField] private GameObject Player;
     private PlayerMain PlayerScript;
     public Vector3 vel;
     public bool isTouched; //’e‚ª‚È‚É‚©‚ÉG‚ê‚½‚©
@@ -15,7 +17,7 @@ public class BulletMain : MonoBehaviour
     public bool followEnd;
 
    //’eŠÖŒW’è”
-   [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬   
+    [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬   
     [SerializeField] private float BULLET_START_DISTANCE; //’e‚Ì”­ËˆÊ’u
     [SerializeField] public float BULLET_ROPE_LENGTH; //•R‚Ì’·‚³
     private float BULLET_MAXFALLSPEED = 35.0f;
@@ -23,13 +25,17 @@ public class BulletMain : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        PlayerState.BulletScript = this;
     }
 
     private void Start()
     {
-        Player = GameObject.Find("Player");
         PlayerScript = Player.GetComponent<PlayerMain>();
-      
+    }
+
+    public void ShotBullet()
+    {
+        rb.isKinematic = false;
         onceFlag = false;
         StopVelChange = false;
         swingEnd = false;
@@ -49,10 +55,6 @@ public class BulletMain : MonoBehaviour
             vel += PlayerScript.vel *= 0.6f;
         }
 
-        //if(Mathf.Abs(PlayerScript.vel.x) > 20.0f)
-        //{
-        //    vel *= 0.8f;
-        //}
     }
 
     void FixedUpdate()
