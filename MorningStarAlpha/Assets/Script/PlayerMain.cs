@@ -136,14 +136,28 @@ public class PlayerMain : MonoBehaviour
         InputStick();
         CheckCanShot();
         CheckMidAir();
-      
-        mode.UpdateState();
-        mode.StateTransition();
+
+        if (mode != null)
+        {
+            mode.UpdateState();
+            mode.StateTransition();
+        }
+        else
+        {
+            Debug.LogError("STATE == NULL");
+        }
     }
 
     private void FixedUpdate()
     {
-        mode.Move();
+        if (mode != null)
+        {
+            mode.Move();
+        }
+        else
+        {
+            Debug.LogError("STATE == NULL");
+        }
         rb.velocity = Vector3.zero;
         if (useVelocity)
         {
@@ -161,8 +175,6 @@ public class PlayerMain : MonoBehaviour
         {
             addVel = Vector3.zero;
         }
-
-
 
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
         //mode.DebugMessage();
@@ -259,13 +271,11 @@ public class PlayerMain : MonoBehaviour
             if (hit.collider.CompareTag("Platform"))
             {
                 CanShotColBlock = false;
-                Debug.Log("col . plat");
             }
         }
         else
         {
             CanShotColBlock = true;
-            Debug.Log("coln . stick");
         }
         StartPos.z += 2.0f;
         Debug.DrawRay(StartPos, leftStick * 3.0f, Color.red);

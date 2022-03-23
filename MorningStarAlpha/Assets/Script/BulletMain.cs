@@ -10,7 +10,7 @@ public class BulletMain : MonoBehaviour
     public Vector3 vel;
     public bool isTouched; //弾がなにかに触れたか
     public bool onceFlag; //一回の発射に付き接触が起こるのは一回
-    public bool StopDownVel; //弾が戻されて引っ張られている状態
+    public bool StopVelChange; //弾が戻されて引っ張られている状態
     public bool swingEnd;
     public bool followEnd;
 
@@ -31,7 +31,7 @@ public class BulletMain : MonoBehaviour
         PlayerScript = Player.GetComponent<PlayerMain>();
       
         onceFlag = false;
-        StopDownVel = false;
+        StopVelChange = false;
         swingEnd = false;
         followEnd = false;
         Vector3 vec = PlayerScript.leftStick.normalized;
@@ -42,34 +42,55 @@ public class BulletMain : MonoBehaviour
         isTouched = false;
 
         vel += vec * BULLET_SPEED;
+
+        //進行方向と同じ向きに投げる場合威力補正
+        if (Mathf.Sign(vec.x) == Mathf.Sign(PlayerScript.vel.x))
+        {
+            vel += PlayerScript.vel *= 0.8f;
+        }
+
+        if(Mathf.Abs(PlayerScript.vel.x) > 20.0f)
+        {
+            vel *= 0.8f;
+        }
     }
 
     void FixedUpdate()
     {
-        if (StopDownVel == false)
+        if (ReferenceEquals(Player, null) == false)
         {
-            vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
-            Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
+            if (StopVelChange == false)
+            {
+                vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
+                Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
+            }
+
+            rb.velocity = vel;
         }
-        rb.velocity = vel;
     }
 
     public void ReturnBullet()
     {
-        StopDownVel = true;
-        rb.isKinematic = false;
-        GetComponent<Collider>().isTrigger = true;
-        rb.velocity = Vector3.zero;
-        vel = Vector3.zero;
+        if (ReferenceEquals(Player, null) == false)
+        {
+            StopVelChange = true;
+            rb.isKinematic = false;
+            GetComponent<Collider>().isTrigger = true;
+            rb.velocity = Vector3.zero;
+            vel = Vector3.zero;
+        }
     }
 
     public void FollowedPlayer()
     {
-        StopDownVel = true;
-        rb.isKinematic = true;
-        GetComponent<Collider>().isTrigger = true;
-        rb.velocity = Vector3.zero;
-        vel = Vector3.zero;
+        if (ReferenceEquals(Player, null) == false)
+        {
+            StopVelChange = true;
+            rb.isKinematic = true;
+            GetComponent<Collider>().isTrigger = true;
+            rb.velocity = Vector3.zero;
+            vel = Vector3.zero;
+        }
     }
 
     /// <summary>
@@ -125,43 +146,52 @@ public class BulletMain : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Aspect colAspect = Aspect.INVALID;
-        colAspect = DetetAspect(collision.contacts[0].normal); //接触点の法線ベクトル
-
-        if (onceFlag == false)
+        if (ReferenceEquals(Player, null) == false)
         {
-            onceFlag = true;
-            //collsion先のtagで場合分け
-            string tag = collision.gameObject.tag;
-            switch (tag)
+            Aspect colAspect = Aspect.INVALID;
+            colAspect = DetetAspect(collision.contacts[0].normal); //接触点の法線ベクトル
+
+            if (onceFlag == false)
             {
-                case "Platform":
-                    isTouched = true;
-                    rb.isKinematic = true;
-                    rb.velocity = Vector3.zero;
-                    if (colAspect == Aspect.UP)
-                    {
-                        //FOLLOW状態に移行
-                        followEnd = true;
-                    }
-                    else
-                    {
-                        //SWING状態に移行
-                        swingEnd = true;
-                    }
+                onceFlag = true;
+                //collsion先のtagで場合分け
+                string tag = collision.gameObject.tag;
+                switch (tag)
+                {
+                    case "Platform":
+                        isTouched = true;
+                        rb.isKinematic = true;
+                        rb.velocity = Vector3.zero;
+                        if (colAspect == Aspect.UP)
+                        {
+                            //FOLLOW状態に移行
+                            followEnd = true;
+                        }
+                        else
+                        {
+                            //SWING状態に移行
+                            swingEnd = true;
+                        }
 
-                    break;
+                        break;
 
-                case "Iron":
-                    PlayerScript.ForciblyReturnBullet(true);
-                    break;
+                    case "Iron":
+                        PlayerScript.ForciblyReturnBullet(true);
+                        break;
 
-                case "Player":
-                    break;
+                    case "Player":
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Player = null;
+        PlayerScript = null;
     }
 }
