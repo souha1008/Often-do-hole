@@ -95,7 +95,7 @@ public class Gimmick_Barrel : Gimmick_Main
             PlayerObject = collider.gameObject;
             //StartPlayerPos = PlayerObject.transform.position;
             //PlayerObject.GetComponent<PlayerMain>().forciblyReturnBulletFlag = true;
-            PlayerObject.GetComponent<PlayerMain>().mode = new PlayerState_Barrel(WaitTime, SpringVec, gameObject.transform.position);
+            PlayerObject.GetComponent<PlayerMain>().mode = new PlayerState_Barrel(WaitTime, SpringVec, gameObject.transform.position, true);
             StartFlag = true;
         }
         if (collider.gameObject.tag == "Bullet" && !StartFlag)
@@ -103,7 +103,7 @@ public class Gimmick_Barrel : Gimmick_Main
             PlayerObject = GameObject.Find("Player");
             //StartPlayerPos = PlayerObject.transform.position;
             //PlayerObject.GetComponent<PlayerMain>().forciblyReturnBulletFlag = true;
-            PlayerObject.GetComponent<PlayerMain>().mode = new PlayerState_Barrel(WaitTime, SpringVec, gameObject.transform.position);
+            PlayerObject.GetComponent<PlayerMain>().mode = new PlayerState_Barrel(WaitTime, SpringVec, gameObject.transform.position, false);
             StartFlag = true;
         }
     }
