@@ -40,7 +40,7 @@ public class BulletMain : MonoBehaviour
         StopVelChange = false;
         swingEnd = false;
         followEnd = false;
-        Vector3 vec = PlayerScript.leftStick.normalized;
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
         //’e‚Ì‰Šú‰»
         rb.velocity = Vector3.zero;

@@ -93,7 +93,8 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("プレイヤーの速度:入力によるもの")] public Vector3 vel;                              // 移動速度(inspector上で確認)
     [ReadOnly, Tooltip("プレイヤーの速度:ギミックでの反発によるもの")] public Vector3 addVel;                           // ギミック等で追加される速度
     [ReadOnly, Tooltip("プレイヤーの速度:移動床によるもの")] public Vector3 floorVel;                         // 動く床等でのベロシティ
-    [ReadOnly, Tooltip("スティック入力角")] public Vector2 leftStick;                        // 左スティック  
+    [ReadOnly, Tooltip("スティック入力角（調整前）")] public Vector2 sourceLeftStick;                        // 左スティック  
+    [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
     [ReadOnly, Tooltip("打てる可能性があるか")] public bool canShotState;                             // 打てる状態か
     [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
@@ -103,7 +104,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
-
+    [ReadOnly, Tooltip("スイング跳ね返り用")] public bool counterSwing;
     void Awake()
     {
         instance = this;
@@ -128,7 +129,7 @@ public class PlayerMain : MonoBehaviour
         vel = Vector3.zero;
         addVel = Vector3.zero;
         floorVel = Vector3.zero;
-        leftStick = new Vector2(0.0f, 0.0f);
+        sourceLeftStick = adjustLeftStick = new Vector2(0.0f, 0.0f);
         canShotState = true;
         stickCanShotRange = false;
         CanShotColBlock = false;
@@ -138,6 +139,10 @@ public class PlayerMain : MonoBehaviour
 
         forciblyReturnBulletFlag = false;
         forciblyReturnSaveVelocity = false;
+
+        endSwing = false;
+        counterSwing = false;
+
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
 
         mode = new PlayerStateOnGround(); //初期ステート
@@ -195,20 +200,20 @@ public class PlayerMain : MonoBehaviour
 
     private void LateUpdate()
     {
-     
+        
     }
 
     private void InputStick()
     {
         //初期化
-        leftStick = Vector2.zero;
+        sourceLeftStick = adjustLeftStick = Vector2.zero;
 
         //入力取得
-        leftStick.x = Input.GetAxis("Horizontal");
-        leftStick.y = Input.GetAxis("Vertical");
+        sourceLeftStick.x = adjustLeftStick.x = Input.GetAxis("Horizontal");
+        sourceLeftStick.y = adjustLeftStick.y = Input.GetAxis("Vertical");
 
         //スティックの入力が一定以上ない場合は撃てない
-        if (Mathf.Abs(leftStick.magnitude) > 0.7f)
+        if (Mathf.Abs(sourceLeftStick.magnitude) > 0.7f)
         {
             stickCanShotRange = true;
         }
@@ -218,9 +223,7 @@ public class PlayerMain : MonoBehaviour
         }
 
         //スティックの角度を求める
-
-
-        float rad = Mathf.Atan2(leftStick.x, leftStick.y);
+        float rad = Mathf.Atan2(adjustLeftStick.x, adjustLeftStick.y);
         float degree = rad * Mathf.Rad2Deg;
         if (degree < 0)//上方向を基準に時計回りに0~360の値に補正
         {
@@ -264,13 +267,14 @@ public class PlayerMain : MonoBehaviour
 
         //分割処理
 
-        if (stickCanShotRange)
+        if (SplitStick)
         {
-            if (SplitStick)
+            if (stickCanShotRange)
             {
-                leftStick = vec;
+                adjustLeftStick = vec;
             }
         }
+        
     }
 
     /// <summary>
@@ -278,15 +282,6 @@ public class PlayerMain : MonoBehaviour
     /// </summary>
     private void CheckCanShot()
     {
-        //スティックの入力が一定以上ない場合は撃てない
-        if(Mathf.Abs(leftStick.magnitude) > 0.7f)
-        {
-            stickCanShotRange = true;
-        }
-        else
-        {
-            stickCanShotRange = false;
-        }
 
         //デバッグログ
         Vector3 StartPos;
@@ -294,7 +289,7 @@ public class PlayerMain : MonoBehaviour
         StartPos.y += 1.0f;
 
         RaycastHit hit;
-        if (Physics.Raycast(StartPos, leftStick, out hit, 3.0f))
+        if (Physics.Raycast(StartPos, adjustLeftStick, out hit, 3.0f))
         {
             if (hit.collider.CompareTag("Platform"))
             {
@@ -306,7 +301,7 @@ public class PlayerMain : MonoBehaviour
             CanShotColBlock = true;
         }
         StartPos.z += 2.0f;
-        Debug.DrawRay(StartPos, leftStick * 3.0f, Color.red);
+        Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
 
 
         //最終的に打てるかの決定
@@ -336,8 +331,10 @@ public class PlayerMain : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Aspect asp = DetectAspect.DetetAspect(collision.contacts[0].normal);
+
         //空中で壁にぶつかったとき速度をなくす
-        if(refState == EnumPlayerState.MIDAIR)
+        if (refState == EnumPlayerState.MIDAIR)
         {
             for (int i = 0; i < collision.contacts.Length; i++)
             {
@@ -358,7 +355,18 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                endSwing = true;
+                if(dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
+                {
+                    counterSwing = true;
+                }
+                else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
+                {
+                    counterSwing = true;
+                }
+                else
+                {
+                    endSwing = true;
+                }
             }
         }
     }
