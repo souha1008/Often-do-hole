@@ -47,7 +47,7 @@ public class PlayerState_Barrel : PlayerState
 
     public override void UpdateState() // Update
     {
-        NowTime += Time.deltaTime;
+        //NowTime += Time.deltaTime;
     }
 
     public override void Move() // FixedUpdate
@@ -58,13 +58,13 @@ public class PlayerState_Barrel : PlayerState
             PlayerScript.transform.position =
                new Vector3(Easing.QuadInOut(NowTime, WaitTimeMin, StartPlayerPos.x, GimmickPos.x),
                Easing.QuadInOut(NowTime, WaitTimeMin, StartPlayerPos.y, GimmickPos.y), GimmickPos.z);
-            Debug.Log("中心に移動");
+            //Debug.Log("中心に移動");
         }
         else // それ以外は中心でとどまる
         {
             PlayerScript.transform.position = GimmickPos;
             PlayerScript.GetComponent<MeshRenderer>().enabled = false; // メッシュ切り替え
-            Debug.Log("中心でとどまる");
+            //Debug.Log("中心でとどまる");
         }
 
         // 発射
@@ -73,7 +73,7 @@ public class PlayerState_Barrel : PlayerState
             PlayerScript.addVel = JumpPower;
             PlayerScript.GetComponent<MeshRenderer>().enabled = true; // メッシュ切り替え
             StateChangeFlag = true;
-            Debug.Log("発射");
+            //Debug.Log("発射");
         }
 
         //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
@@ -142,6 +142,8 @@ public class PlayerState_Barrel : PlayerState
             default:
                 break;
         }
+
+        NowTime += Time.fixedDeltaTime; // 時間加算
     }
 
     public override void StateTransition() // シーン移動

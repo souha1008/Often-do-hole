@@ -11,7 +11,6 @@ public class Gimmick_Barrel : Gimmick_Main
 
     private bool StartFlag; // 起動フラグ
     private float NowTime;  // 経過時間
-    //private Vector3 StartPlayerPos;     // プレイヤーの初期座標
     private GameObject PlayerObject;    // プレイヤーオブジェクト
     private Vector3 SpringVec;          // 飛ぶベクトル量
 
@@ -31,24 +30,14 @@ public class Gimmick_Barrel : Gimmick_Main
         {
             if (NowTime >= WaitTime) // 発射時間経過した
             {
-                Jump(); // 発射
                 NowTime = 0.0f; // 時間リセット
                 StartFlag = false; // 起動フラグオフ
             }
             else
             {
-                PlayerPosChange(); // プレイヤーの位置移動
                 NowTime += Time.fixedDeltaTime; // 時間加算
             }
         }
-    }
-
-    private void Jump()
-    {
-        if (PlayerObject != null)
-        {
-            //SpringVec = JumpPower();
-        }   
     }
 
     private Vector3 JumpPower()
@@ -66,23 +55,6 @@ public class Gimmick_Barrel : Gimmick_Main
         return VecPower;
     }
 
-    private void PlayerPosChange()
-    {
-        if (PlayerObject != null)
-        {
-            //if (NowTime <= WaitTime / 5.0f) // 1/5の時間だけ中心に向かって移動
-            //{
-            //     PlayerObject.transform.position =
-            //        new Vector3(Easing.QuadInOut(NowTime, WaitTime / 5.0f, StartPlayerPos.x, gameObject.transform.position.x), 
-            //        Easing.QuadInOut(NowTime, WaitTime / 5.0f, StartPlayerPos.y, gameObject.transform.position.y), gameObject.transform.position.z);
-            //}
-            //else // それ以外は中心でとどまる
-            //{
-            //    PlayerObject.transform.position = this.gameObject.transform.position;
-            //}
-        }
-    }
-
     public override void Death()
     {
 
@@ -93,16 +65,12 @@ public class Gimmick_Barrel : Gimmick_Main
         if (collider.gameObject.tag == "Player" && !StartFlag)
         {
             PlayerObject = collider.gameObject;
-            //StartPlayerPos = PlayerObject.transform.position;
-            //PlayerObject.GetComponent<PlayerMain>().forciblyReturnBulletFlag = true;
             PlayerObject.GetComponent<PlayerMain>().mode = new PlayerState_Barrel(WaitTime, SpringVec, gameObject.transform.position, true);
             StartFlag = true;
         }
         if (collider.gameObject.tag == "Bullet" && !StartFlag)
         {
             PlayerObject = GameObject.Find("Player");
-            //StartPlayerPos = PlayerObject.transform.position;
-            //PlayerObject.GetComponent<PlayerMain>().forciblyReturnBulletFlag = true;
             PlayerObject.GetComponent<PlayerMain>().mode = new PlayerState_Barrel(WaitTime, SpringVec, gameObject.transform.position, false);
             StartFlag = true;
         }
