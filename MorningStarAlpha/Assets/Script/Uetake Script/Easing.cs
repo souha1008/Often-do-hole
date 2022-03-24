@@ -5,6 +5,9 @@ public enum EASING_TYPE
 {
     LINEAR = 0,
     QUAD_IN,
+    SINE_IN,
+    SINE_OUT,
+    SINE_INOUT,
     QUAD_OUT,
     QUAD_INOUT,
     CUBIC_IN,
@@ -16,9 +19,6 @@ public enum EASING_TYPE
     QUINT_IN,
     QUINT_OUT,
     QUINT_INOUT,
-    SINE_IN,
-    SINE_OUT,
-    SINE_INOUT,
     EXP_IN,
     EXP_OUT,
     EXP_INOUT,
@@ -45,6 +45,12 @@ public static class Easing
         {
             case EASING_TYPE.LINEAR:
                 return Easing.Linear(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.SINE_IN:
+                return Easing.SineIn(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.SINE_OUT:
+                return Easing.SineOut(NowTime, MoveTime, StartPos, EndPos);
+            case EASING_TYPE.SINE_INOUT:
+                return Easing.SineInOut(NowTime, MoveTime, StartPos, EndPos);
             case EASING_TYPE.QUAD_IN:
                 return Easing.QuadIn(NowTime, MoveTime, StartPos, EndPos);
             case EASING_TYPE.QUAD_OUT:
@@ -69,12 +75,6 @@ public static class Easing
                 return Easing.QuintOut(NowTime, MoveTime, StartPos, EndPos);
             case EASING_TYPE.QUINT_INOUT:
                 return Easing.QuintInOut(NowTime, MoveTime, StartPos, EndPos);
-            case EASING_TYPE.SINE_IN:
-                return Easing.SineIn(NowTime, MoveTime, StartPos, EndPos);
-            case EASING_TYPE.SINE_OUT:
-                return Easing.SineOut(NowTime, MoveTime, StartPos, EndPos);
-            case EASING_TYPE.SINE_INOUT:
-                return Easing.SineInOut(NowTime, MoveTime, StartPos, EndPos);
             case EASING_TYPE.EXP_IN:
                 return Easing.ExpIn(NowTime, MoveTime, StartPos, EndPos);
             case EASING_TYPE.EXP_OUT:
