@@ -94,12 +94,48 @@ public class BulletMain : MonoBehaviour
         }
     }
 
+    private IEnumerator AdjustColPoint(Aspect colAspect, Vector3 colPoint)
+    {
+        Vector3 adjustPos = transform.position;
+
+        switch (colAspect)
+        {
+            case Aspect.UP:
+                adjustPos.y = colPoint.y + GetComponent<Collider>().bounds.size.y;
+                break;
+
+            case Aspect.DOWN:
+                adjustPos.y = colPoint.y - GetComponent<Collider>().bounds.size.y;
+                break;
+
+            case Aspect.LEFT:
+                adjustPos.x = colPoint.x - GetComponent<Collider>().bounds.size.x;
+                break;
+
+            case Aspect.RIGHT:
+                adjustPos.x = colPoint.x + GetComponent<Collider>().bounds.size.x;
+                break;
+        }
+   
+        yield return new WaitForSeconds(0.3f);
+
+        transform.position = adjustPos * 1.2f;
+
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            Aspect colAspect = Aspect.INVALID;
-            colAspect = DetectAspect.DetetAspect(collision.contacts[0].normal); //接触点の法線ベクトル
+            Aspect colAspect = DetectAspect.DetetAspect(collision.contacts[0].normal); //接触点の法線ベクトル
+            Vector3 colPoint = collision.contacts[0].point;
+
+            //錨が刺さる場所を壁ピッタリにする処理
+
+             AdjustColPoint(colAspect, colPoint);
+
+
+            
 
             if (onceFlag == false)
             {

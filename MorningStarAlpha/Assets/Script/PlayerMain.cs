@@ -197,7 +197,19 @@ public class PlayerMain : MonoBehaviour
         leftStick.x = Input.GetAxis("Horizontal");
         leftStick.y = Input.GetAxis("Vertical");
 
+        //スティックの入力が一定以上ない場合は撃てない
+        if (Mathf.Abs(leftStick.magnitude) > 0.7f)
+        {
+            stickCanShotRange = true;
+        }
+        else
+        {
+            stickCanShotRange = false;
+        }
+
         //スティックの角度を求める
+
+
         float rad = Mathf.Atan2(leftStick.x, leftStick.y);
         float degree = rad * Mathf.Rad2Deg;
         if (degree < 0)//上方向を基準に時計回りに0~360の値に補正
@@ -241,9 +253,13 @@ public class PlayerMain : MonoBehaviour
         vec = vec.normalized;
 
         //分割処理
-        if (SplitStick)
+
+        if (stickCanShotRange)
         {
-            leftStick = vec;
+            if (SplitStick)
+            {
+                leftStick = vec;
+            }
         }
     }
 
