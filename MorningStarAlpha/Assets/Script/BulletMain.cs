@@ -94,32 +94,30 @@ public class BulletMain : MonoBehaviour
         }
     }
 
-    private IEnumerator AdjustColPoint(Aspect colAspect, Vector3 colPoint)
+    private void AdjustColPoint(Aspect colAspect, Vector3 colPoint)
     {
         Vector3 adjustPos = transform.position;
 
         switch (colAspect)
         {
             case Aspect.UP:
-                adjustPos.y = colPoint.y + GetComponent<Collider>().bounds.size.y;
+                adjustPos.y = colPoint.y;
                 break;
 
             case Aspect.DOWN:
-                adjustPos.y = colPoint.y - GetComponent<Collider>().bounds.size.y;
+                adjustPos.y = colPoint.y;
                 break;
 
             case Aspect.LEFT:
-                adjustPos.x = colPoint.x - GetComponent<Collider>().bounds.size.x;
+                adjustPos.x = colPoint.x;
                 break;
 
             case Aspect.RIGHT:
-                adjustPos.x = colPoint.x + GetComponent<Collider>().bounds.size.x;
+                adjustPos.x = colPoint.x;
                 break;
         }
-   
-        yield return new WaitForSeconds(0.3f);
 
-        transform.position = adjustPos * 1.2f;
+        transform.position = adjustPos;
 
     }
 
@@ -132,7 +130,7 @@ public class BulletMain : MonoBehaviour
 
             //•d‚ªh‚³‚éêŠ‚ğ•Çƒsƒbƒ^ƒŠ‚É‚·‚éˆ—
 
-             AdjustColPoint(colAspect, colPoint);
+             //AdjustColPoint(colAspect, colPoint);
 
 
             

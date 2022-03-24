@@ -18,7 +18,7 @@ public class RopeDisplay : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if(Player.refState == EnumPlayerState.SHOT || Player.refState == EnumPlayerState.SWING)
+        if (Player.refState == EnumPlayerState.SHOT || Player.refState == EnumPlayerState.SWING)
         {
             //始点をプレイヤーに、終点を弾にする
             lr.SetPosition(0, Player.transform.position);

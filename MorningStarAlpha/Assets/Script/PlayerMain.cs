@@ -11,10 +11,17 @@ public enum PlayerMoveDir
     RIGHT,
 }
 
+public enum OnGroundState {
+    NONE,
+    NORMAL, //通常時
+    SLIDE,  //滑っている
+}
+
+
 /// <summary>
-/// スイング時の状態
+/// スイング時の細かな状態
 /// </summary>
-public　enum SwingState
+public enum SwingState
 {
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
@@ -22,7 +29,7 @@ public　enum SwingState
 }
 
 /// <summary>
-/// 弾射出時の状態
+/// 弾射出時の細かな状態
 /// </summary>
 public enum ShotState
 {
@@ -79,6 +86,7 @@ public class PlayerMain : MonoBehaviour
     [ Header("[以下実行時変数確認用：変更不可]")]
 
     [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
+    [ReadOnly, Tooltip("地上時の細かなステート")] public OnGroundState onGroundState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
     [ReadOnly, Tooltip("ショット状態の細かなステート")] public ShotState shotState;
     [ReadOnly, Tooltip("swing状態の細かなstate")] public SwingState swingState;
     [ReadOnly, Tooltip("プレイヤーの向き")] public PlayerMoveDir dir;
@@ -112,8 +120,8 @@ public class PlayerMain : MonoBehaviour
 
     private void Start()
     {
-        mode = new PlayerStateOnGround(); //初期ステート
         refState = EnumPlayerState.ON_GROUND;
+        onGroundState = OnGroundState.NONE;
         shotState = ShotState.NONE;
         swingState = SwingState.NONE;
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
@@ -131,6 +139,8 @@ public class PlayerMain : MonoBehaviour
         forciblyReturnBulletFlag = false;
         forciblyReturnSaveVelocity = false;
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
+
+        mode = new PlayerStateOnGround(); //初期ステート
     }
 
     private void Update()

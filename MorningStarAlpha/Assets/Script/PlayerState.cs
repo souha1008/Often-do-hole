@@ -911,13 +911,13 @@ public class PlayerStateSwing_2 : PlayerState
 {
     private bool finishFlag;
     private bool shotButton;
-    private Vector3 ballPosition; //ボールの位置
+    private Vector3 BulletPosition; //ボールの位置
     private const float SWING_ANGLER_VELOCITY = 2.7f; //振り子角速度 ←const値ではなく前のstateのvelocityで可変が良さそう
     private const float SWING_REREASE_ANGLE = 140.0f; //振り子がのなす角が一定以上になったら強制解除
 
 
     private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
-    private Vector3 startPlayerVel;　　　　　　 //突入時
+    private Vector3 startPlayerVel;　　　　　　 //突入時velocity
     private float startAngle;    //開始時の二点間アングル
     private float endAngle;      //自動切り離しされる角度(start角度依存)
     private float minAnglerVel;  //最低角速度（自動切り離し地点にいる時）
@@ -925,6 +925,15 @@ public class PlayerStateSwing_2 : PlayerState
     private float nowAnglerVel;  //現在角速度
     public PlayerStateSwing_2()  //コンストラクタ
     {
+        BulletPosition = BulletScript.gameObject.transform.position;
+
+        //計算用情報格納
+        startPlayerVel = BulletScript.vel;
+        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
+        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
+        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+        startAngle = endAngle = degree;
+
         PlayerScript.refState = EnumPlayerState.SWING;
         PlayerScript.swingState = SwingState.TOUCHED;
         PlayerScript.canShotState = false;
@@ -932,7 +941,6 @@ public class PlayerStateSwing_2 : PlayerState
         finishFlag = false;
         shotButton = false;
         BulletScript.rb.isKinematic = true;
-        ballPosition = BulletScript.gameObject.transform.position;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
 
@@ -946,31 +954,49 @@ public class PlayerStateSwing_2 : PlayerState
 
     public void CalculateStartVariable()
     {
-        betweenLength = Vector3.Distance(Player.transform.position, ballPosition);
 
-        float degree = CalculationScript.TwoPointAngle360(ballPosition, Player.transform.position);
-        startAngle = endAngle = degree;
+        //紐の長さとスピードから角速度を計算
+        float angler_velocity;
+        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 6.0f);
+        angler_velocity /=  (betweenLength * 2.0f * Mathf.PI);
+
+        nowAnglerVel = maxAnglerVel = minAnglerVel = angler_velocity;
 
 
+        Debug.Log("AnglerVelocity: " + angler_velocity);
 
         //切り離しアングルの計算
-        float diff_down = Mathf.Abs(startAngle - 180.0f);
+        float diff_down = Mathf.Abs(startAngle - 180.0f); //真下と突入角の差
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
         {
-            endAngle -= diff_down + diff_down;
+            //終点自動切り離しポイントをy軸に対して対称にする
+            endAngle -= (diff_down + diff_down);
+            //開始点よりは高い位置にする
+            endAngle -= 10;
+
+            //範囲内に補正
             endAngle = Mathf.Clamp(endAngle, 90, 140);
+
+           
+            
+            //// デバッグ用固定
+            //endAngle = 90;
         }
         else if (PlayerScript.dir == PlayerMoveDir.LEFT)
         {
-            endAngle += diff_down + diff_down;
+            //終点自動切り離しポイントをy軸に対して対称にする
+            endAngle += (diff_down + diff_down);
+            //範囲内に補正
+            endAngle += 10;
 
             endAngle = Mathf.Clamp(endAngle, 220, 270);
+
+            //// デバッグ用固定
+            //endAngle = 270;
         }
 
-        //突入時角速度の計算
-        minAnglerVel = 2.0f;
-        maxAnglerVel = 4.5f;
-        nowAnglerVel = minAnglerVel;
+        maxAnglerVel = minAnglerVel = angler_velocity;
+        maxAnglerVel += (diff_down / 90) * 2.0f;
     }
 
     public override void UpdateState()
@@ -982,7 +1008,7 @@ public class PlayerStateSwing_2 : PlayerState
         //}
 
         //ボールプレイヤー間の角度を求める
-        float degree = CalculationScript.TwoPointAngle360(ballPosition, Player.transform.position);
+        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
 
         //一定角度以上で切り離し
         if (PlayerScript.swingState == SwingState.TOUCHED)
@@ -1005,7 +1031,7 @@ public class PlayerStateSwing_2 : PlayerState
 
                     //勢い追加
                     //弾とプレイヤー間のベクトルに直行するベクトル
-                    Vector3 addVec = ballPosition - Player.transform.position;
+                    Vector3 addVec = BulletPosition - Player.transform.position;
                     addVec = addVec.normalized;
                     addVec = Quaternion.Euler(0, 0, -110) * addVec;
                     PlayerScript.vel += addVec * 35.0f;
@@ -1021,7 +1047,7 @@ public class PlayerStateSwing_2 : PlayerState
 
                     //勢い追加
                     //弾とプレイヤー間のベクトルに直行するベクトル
-                    Vector3 addVec = ballPosition - Player.transform.position;
+                    Vector3 addVec = BulletPosition - Player.transform.position;
                     addVec = addVec.normalized;
                     addVec = Quaternion.Euler(0, 0, 110) * addVec;
                     PlayerScript.vel += addVec * 35.0f;
@@ -1032,7 +1058,7 @@ public class PlayerStateSwing_2 : PlayerState
 
     public override void Move()
     {
-        float degree = CalculationScript.TwoPointAngle360(ballPosition, Player.transform.position);
+        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
         float deg180dif = Mathf.Abs(degree - 180);
         switch (PlayerScript.swingState)
         {
@@ -1059,9 +1085,9 @@ public class PlayerStateSwing_2 : PlayerState
 
                 Vector3 pos = Player.transform.position;
 
-                pos -= ballPosition;
+                pos -= BulletPosition;
                 pos = angleAxis * pos;
-                pos += ballPosition;
+                pos += BulletPosition;
                 PlayerScript.transform.position = pos;
                 break;
 
