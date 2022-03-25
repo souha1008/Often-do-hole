@@ -21,7 +21,7 @@ public class VirtualCamera : CinemachineExtension
             return;
 
 
-        this.transform.position = new Vector3(transform.position.x, transform.position.y, CAMERA_DISTANCE);
+        //this.transform.position = new Vector3(transform.position.x, transform.position.y, CAMERA_DISTANCE);
         
     }
 

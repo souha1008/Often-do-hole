@@ -31,9 +31,16 @@ public class CameraMainShimokawara: MonoBehaviour
     //プレイヤーをカメラの中央に収め続ける
     void TracePlayer()
     {
-        Vector3 tempPos = CenterObj.transform.position;
+#if false
+Vector3 tempPos = CenterObj.transform.position;
 
         tempPos.z -= CAMERA_DISTANCE;
         transform.position = tempPos;
+#else
+        Vector3 tempPos = new Vector3(CenterObj.transform.position.x, CenterObj.transform.position.y, -CAMERA_DISTANCE);
+  
+        transform.position = tempPos;
+#endif
+
     }
 }
