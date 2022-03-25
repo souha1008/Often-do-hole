@@ -99,6 +99,7 @@ public class CameraCenterPos : MonoBehaviour
         }
 
 
+#if false
         //ï™äÚ
         if (!FreezeY)
         {
@@ -110,6 +111,26 @@ public class CameraCenterPos : MonoBehaviour
             transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
         }
+#else
+        //YÇ…ëŒÇµÇƒÉJÉÅÉâÇ…çáÇÌÇπÇÈÇÊÇ§èëÇ´ä∑Ç¶
+
+        float PosY = GameObject.Find("Main Camera").transform.position.y;
+
+        if (!FreezeY)
+        {
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+
+            transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+
+        }
+        else
+        {
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+
+            transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+        }
+#endif
+
     }
 
     void FixedUpdate()

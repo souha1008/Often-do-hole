@@ -141,11 +141,6 @@ public class Gimmick_MoveBlock : Gimmick_Main
         BulletObject = null;
     }
 
-    public override void UpdateMove()
-    {        
-        
-    }
-
     public override void FixedMove()
     {
         OldPos = this.gameObject.transform.position;

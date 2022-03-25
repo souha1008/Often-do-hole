@@ -28,6 +28,9 @@ public class Gimmick_CannonChild : Gimmick_Main
         //ChasePower = 0.1f;
         NowLifeTime = 0.0f;
 
+        // コライダー
+        //this.GetComponent<Collider>().isTrigger = false; // トリガーオフ
+
         // 弾に速度を与える
         Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(Rad.z)) * Speed;
         //Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(Rad.z)).normalized * Speed; // (ノーマライズ)
