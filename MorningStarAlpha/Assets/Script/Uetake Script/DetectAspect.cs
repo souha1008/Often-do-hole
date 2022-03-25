@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///　面向き
+/// </summary>
 public enum Aspect
 {
     UP,        //上面
@@ -15,16 +18,11 @@ public static class DetectAspect
 {
 
     /// <summary>
-    ///　面向き
-    /// </summary>
-
-
-    /// <summary>
     /// 法線ベクトルによって面の向きを取得
     /// </summary>
     /// <param name="vec">法線</param>
     /// <returns></returns>
-    public static Aspect DetetAspect(Vector3 vec)
+    public static Aspect DetectionAspect(Vector3 vec)
     {
         Aspect returnAspect = Aspect.INVALID;
         if (Mathf.Abs(vec.y) > 0.5f) //y成分が大きいので縦向き

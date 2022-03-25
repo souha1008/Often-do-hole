@@ -331,7 +331,7 @@ public class PlayerMain : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Aspect asp = DetectAspect.DetetAspect(collision.contacts[0].normal);
+        Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
         //‹ó’†‚Å•Ç‚É‚Ô‚Â‚©‚Á‚½‚Æ‚«‘¬“x‚ð‚È‚­‚·
         if (refState == EnumPlayerState.MIDAIR)
@@ -387,7 +387,7 @@ public class PlayerMain : MonoBehaviour
         {
             if (shotState == ShotState.FOLLOW)
             {
-                Aspect asp = DetectAspect.DetetAspect(collision.contacts[0].normal);
+                Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
                 if (asp == Aspect.LEFT || asp == Aspect.RIGHT)
                 {
