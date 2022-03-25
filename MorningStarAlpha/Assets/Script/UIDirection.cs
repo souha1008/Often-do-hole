@@ -23,7 +23,7 @@ public class UIDirection : MonoBehaviour
 
     private void LateUpdate()
     {
-        Vector3 vec = PlayerScript.leftStick.normalized;
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
 
         //打てる可能性があるステートなら表示

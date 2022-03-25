@@ -5,6 +5,7 @@ using UnityEngine;
 public class RopeDisplay : MonoBehaviour
 {
     [SerializeField] private PlayerMain Player;
+    [SerializeField] private BulletMain Bullet;
     private LineRenderer lr;
 
     void Start()
@@ -17,11 +18,11 @@ public class RopeDisplay : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (Player.Bullet != null)
+        if (Player.refState == EnumPlayerState.SHOT || Player.refState == EnumPlayerState.SWING)
         {
             //始点をプレイヤーに、終点を弾にする
             lr.SetPosition(0, Player.transform.position);
-            lr.SetPosition(1, Player.Bullet.transform.position);
+            lr.SetPosition(1, Bullet.transform.position);
         }
         else
         {
