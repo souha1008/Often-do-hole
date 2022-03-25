@@ -99,7 +99,7 @@ public class CameraCenterPos : MonoBehaviour
         }
 
 
-#if false
+#if true
         //•ªŠò
         if (!FreezeY)
         {
