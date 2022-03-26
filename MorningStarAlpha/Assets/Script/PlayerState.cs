@@ -680,13 +680,14 @@ public class PlayerStateMidair : PlayerState
     private bool shotButton;  
     private float countTimer; //再射出可能時間に使うタイマー
     private float recastTime; //再射出可能時間
-
+    private bool OnceFallDownFlag;//急降下フラグ
     private void Init()
     {
         PlayerScript.refState = EnumPlayerState.MIDAIR;
         shotButton = false;
         countTimer = 0.0f;
         PlayerScript.canShotState = false;
+        OnceFallDownFlag = false;
     }
 
     public PlayerStateMidair()//コンストラクタ
@@ -739,6 +740,14 @@ public class PlayerStateMidair : PlayerState
                 shotButton = true;
             }
         }
+
+        //急降下入力下？
+        if (PlayerScript.sourceLeftStick.y < -0.7f && Mathf.Abs(PlayerScript.sourceLeftStick.x) < 0.3f)
+        {
+            //一度でも入力されたら永久に
+            OnceFallDownFlag = true;
+        }
+
     }
 
     public override void Move()
@@ -756,9 +765,18 @@ public class PlayerStateMidair : PlayerState
             PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1;
         }
 
-
-        PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY;
-        PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+        //急降下中
+        if(OnceFallDownFlag)
+        {
+            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2;
+            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1 * 2);
+        }
+        //自由落下
+        else
+        {
+            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY;
+            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+        }
     }
 
 
