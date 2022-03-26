@@ -190,7 +190,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
             }
         }
 
-        // プレイヤーからレイ飛ばして真下にブロックがあったら
+        // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーの移動
         if (PlayerObject != null)
         {
             Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
@@ -208,11 +208,14 @@ public class Gimmick_MoveBlock : Gimmick_Main
             }
         }
 
-        // 錨オブジェクトが当たったら
+        // 錨オブジェクトの移動
         if (BulletObject != null)
         {
-            BulletObject.transform.position = BulletObject.transform.position +
+            if (PlayerObject.GetComponent<PlayerMain>().shotState != ShotState.RETURN)
+            {
+                BulletObject.transform.position = BulletObject.transform.position +
                         new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+            }
         }
     }
 
