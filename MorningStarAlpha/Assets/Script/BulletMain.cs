@@ -95,6 +95,7 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
+            isTouched = null;
             StopVelChange = true;
             rb.isKinematic = false;
             GetComponent<Collider>().isTrigger = true;
