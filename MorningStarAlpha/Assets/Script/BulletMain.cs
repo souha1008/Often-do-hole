@@ -95,7 +95,7 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            isTouched = null;
+            isTouched = false;
             StopVelChange = true;
             rb.isKinematic = false;
             GetComponent<Collider>().isTrigger = true;
@@ -109,6 +109,7 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
+            isTouched = false;
             StopVelChange = true;
             rb.isKinematic = true;
             GetComponent<Collider>().isTrigger = true;
