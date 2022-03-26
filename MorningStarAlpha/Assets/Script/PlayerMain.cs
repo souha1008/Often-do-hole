@@ -372,11 +372,12 @@ public class PlayerMain : MonoBehaviour
     }
 
     private void OnCollisionStay(Collision collision)
-    { 
+    {
+
         //ÚG“_‚Ì‚¤‚¿Aˆê‚Â‚Å‚à‘«Œ³‚ª‚ ‚ê‚Î’…’n”»’è
-        for (int i = 0; i < collision.contacts.Length; i++)
+        for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.contacts[i].point.y < transform.position.y - 0.6f)
+            if (collision.GetContact(i).point.y < transform.position.y - 0.6f)
             {
                 isOnGround = true;
             }
@@ -387,7 +388,7 @@ public class PlayerMain : MonoBehaviour
         {
             if (shotState == ShotState.FOLLOW)
             {
-                Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
+                Aspect asp = DetectAspect.DetectionAspect(collision.GetContact(0).normal);
 
                 if (asp == Aspect.LEFT || asp == Aspect.RIGHT)
                 {

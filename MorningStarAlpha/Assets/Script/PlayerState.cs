@@ -1287,6 +1287,7 @@ public class PlayerStateSwing_R_Release : PlayerState
 
     public override void Move()
     {
+        BulletPosition = BulletScript.rb.position;
         float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
         float deg180dif = Mathf.Abs(degree - 180);
         switch (PlayerScript.swingState)

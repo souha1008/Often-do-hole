@@ -6,7 +6,6 @@ public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
 
-    [System.NonSerialized] public Rigidbody rb_2;
     [SerializeField] private GameObject Player;
     private PlayerMain PlayerScript;
     public Vector3 vel;
@@ -154,9 +153,6 @@ public class BulletMain : MonoBehaviour
             //•d‚ªh‚³‚éêŠ‚ğ•Çƒsƒbƒ^ƒŠ‚É‚·‚éˆ—
 
              //AdjustColPoint(colAspect, colPoint);
-
-
-            
 
             if (onceFlag == false)
             {
