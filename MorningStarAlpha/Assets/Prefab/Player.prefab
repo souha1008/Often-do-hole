@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d26ce8bbe728e694eb364ebb101e4e06, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -129,25 +129,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BulletPrefab: {fileID: 0}
-  refState: 0
-  Bullet: {fileID: 0}
-  hinge: {fileID: 0}
-  dir: 0
-  vel: {x: 0, y: 0, z: 0}
-  addVel: {x: 0, y: 0, z: 0}
-  leftStick: {x: 0, y: 0}
-  canShot: 0
-  isOnGraund: 0
+  SplitStick: 0
   AdjustAngles: []
   LATERAL_MOVE_THRESHORD: 0
   MAX_RUN_SPEED: 10
   MIN_RUN_SPEED: 2
   ADD_RUN_SPEED: 0.8
   MAX_FALL_SPEED: 0
+  FALL_GRAVITY: 0
+  STRAINED_GRAVITY: 0
   RUN_FRICTION: 0.85
   ADD_MIDAIR_SPEED: 0
   MIDAIR_FRICTION: 0
   BULLET_RECAST_TIME: 0
+  refState: 0
+  shotState: 0
+  swingState: 0
+  Bullet: {fileID: 0}
+  dir: 0
+  vel: {x: 0, y: 0, z: 0}
+  addVel: {x: 0, y: 0, z: 0}
+  floorVel: {x: 0, y: 0, z: 0}
+  leftStick: {x: 0, y: 0}
+  isOnGround: 0
+  canShotState: 0
+  stickCanShotRange: 0
+  CanShotColBlock: 0
+  canShot: 0
+  useVelocity: 0
+  forciblyReturnBulletFlag: 0
+  forciblyReturnSaveVelocity: 0
+  endSwing: 0
 --- !u!1 &4224886100507855629
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da0167b29d16e540890638db3550cc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  PlayerScript: {fileID: 0}
   LINE_START_DISTANCE: 0
   LINE_LENGTH: 0
 --- !u!1 &6215000810310584046

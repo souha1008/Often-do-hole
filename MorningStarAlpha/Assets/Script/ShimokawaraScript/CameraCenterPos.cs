@@ -1,5 +1,19 @@
 using UnityEngine;
 
+
+// ① カメラ座標 = CameraCenterPosに一番近いパス上の点
+// ② CameraCenterPosのY = カメラ座標のY
+// ③ CameraCenterPosのX = プレイヤーのX準拠に計算
+
+
+//つぎVer?
+// ① カメラ座標X = CameraCenterPosのX
+// ② カメラ座標Y = PlayerY軸Obj
+// ③ PlayerY軸Obj = プレイヤーのX、カメラのY
+// ④ PlayerY軸Obj = パスに寄せる
+// ④ CameraCenterPos = プレイヤー準拠に計算
+
+
 public enum GO_POS_X
 {
     LEFT,
@@ -20,6 +34,7 @@ public class CameraCenterPos : MonoBehaviour
 {
     //[Header("プレイヤーとカメラの距離はMainCamera参照")]
 
+    public static CameraCenterPos instance;
 
     Vector3 PlayerPos = Vector3.zero;
     Vector3 OldPlayerPos = Vector3.zero;
@@ -74,16 +89,12 @@ public class CameraCenterPos : MonoBehaviour
     float DOWN_DIFERENCE_Y = 0;
 
 
-
-    
-
-
     void Start()
     {
+        instance = this;
+
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
-
-       
     }
 
 
@@ -99,6 +110,7 @@ public class CameraCenterPos : MonoBehaviour
         }
 
 
+#if true
         //分岐
         if (!FreezeY)
         {
@@ -110,6 +122,26 @@ public class CameraCenterPos : MonoBehaviour
             transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
         }
+#else
+        //Yに対してカメラに合わせるよう書き換え
+
+        float PosY = GameObject.Find("Main Camera").transform.position.y;
+
+        if (!FreezeY)
+        {
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+
+            transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+
+        }
+        else
+        {
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+
+            transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+        }
+#endif
+
     }
 
     void FixedUpdate()
