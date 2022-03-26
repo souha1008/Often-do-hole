@@ -211,8 +211,15 @@ public class Gimmick_MoveBlock : Gimmick_Main
         // 錨オブジェクトの移動
         if (BulletObject != null)
         {
+            if (BulletObject.GetComponent<BulletMain>().isTouched == true)
+            {
                 BulletObject.transform.position = BulletObject.transform.position +
                         new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+            }
+            else
+            {
+                BulletObject = null;
+            }
         }
     }
 
