@@ -319,6 +319,7 @@ public class PlayerStateShot_2 : PlayerState
             PlayerScript.shotState = ShotState.RETURN;
         }
 
+        //ついていく処理
         if (PlayerScript.shotState == ShotState.STRAINED)
         {
 #if false
@@ -327,10 +328,24 @@ public class PlayerStateShot_2 : PlayerState
             Player.transform.position = BulletScript.transform.position + diff;
 #else
             //弾からプレイヤー方向へBULLET_ROPE_LENGTHだけ離れた位置に常に補正
-            Vector3 diff = (PlayerScript.transform.position - BulletScript.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
-            Player.transform.position = BulletScript.transform.position + diff;
+            if(Vector3.Magnitude(Player.transform.position - BulletScript.transform.position) > BulletScript.BULLET_ROPE_LENGTH)
+            {
+                Vector3 diff = (PlayerScript.transform.position - BulletScript.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
+                Player.transform.position = BulletScript.transform.position + diff;
+                //弾がプレイヤーより強い勢いを持っているときのみ
+                if (PlayerScript.vel.magnitude < BulletScript.vel.magnitude * 0.8f)
+                {
+                    PlayerScript.vel = BulletScript.vel * 0.8f;
+                }
+            }
+            //STRAINEDだけど自由移動のタイミング
+            else
+            {
+                //弱めの重力
+                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 0.1f;
+                PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+            }
 #endif
-
         }
 
         if (BulletScript.isTouched)
@@ -345,6 +360,7 @@ public class PlayerStateShot_2 : PlayerState
                 PlayerScript.shotState = ShotState.FOLLOW;
             }
         }
+
     }
 
     public override void Move()
@@ -372,7 +388,7 @@ public class PlayerStateShot_2 : PlayerState
                     BulletScript.vel *= 0.84f;
 
                     PlayerScript.shotState = ShotState.STRAINED;
-                    PlayerScript.useVelocity = false;
+                    //PlayerScript.useVelocity = false;
                 }
                 break;
 
