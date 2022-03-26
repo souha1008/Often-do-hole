@@ -16,6 +16,11 @@ public class BulletMain : MonoBehaviour
     public bool swingEnd;
     public bool followEnd;
 
+    //下川原
+    private int ExitFlameCnt = 0;//存在し始めてからのカウント
+    public int STRAIGHT_FLAME_CNT;//まっすぐ進むフレーム数
+
+
    //弾関係定数
     [SerializeField] private float BULLET_SPEED; //弾の初速   
     [SerializeField] private float BULLET_START_DISTANCE; //弾の発射位置
@@ -31,6 +36,7 @@ public class BulletMain : MonoBehaviour
     private void Start()
     {
         PlayerScript = Player.GetComponent<PlayerMain>();
+        ExitFlameCnt = 0;
     }
 
     public void ShotBullet()
@@ -49,11 +55,12 @@ public class BulletMain : MonoBehaviour
 
         vel += vec * BULLET_SPEED;
 
+        //消させてもらいました
         //進行方向と同じ向きに投げる場合威力補正
-        if (Mathf.Sign(vec.x) == Mathf.Sign(PlayerScript.vel.x))
-        {
-            vel += PlayerScript.vel *= 0.6f;
-        }
+        //if (Mathf.Sign(vec.x) == Mathf.Sign(PlayerScript.vel.x))
+        //{
+        //    vel += PlayerScript.vel *= 0.6f;
+        //}
 
     }
 
@@ -63,8 +70,23 @@ public class BulletMain : MonoBehaviour
         {
             if (StopVelChange == false)
             {
-                vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
+                ExitFlameCnt++;
+                //定数秒以上経ってたら
+                if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
+                {
+                    //重力加算
+                    vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
+                }            
+                if(ExitFlameCnt == STRAIGHT_FLAME_CNT)
+                {
+                    Debug.Log(vel);
+                }
+
                 Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
+            }
+            else
+            {
+                ExitFlameCnt = 0;
             }
             rb.velocity = vel;
         }
@@ -79,6 +101,7 @@ public class BulletMain : MonoBehaviour
             GetComponent<Collider>().isTrigger = true;
             rb.velocity = Vector3.zero;
             vel = Vector3.zero;
+            //ExitFlameCnt = 0;
         }
     }
 

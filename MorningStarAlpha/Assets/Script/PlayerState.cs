@@ -158,11 +158,11 @@ public class PlayerStateOnGround : PlayerState
             {
                 if (PlayerScript.vel.x < -0.2f)//ƒ^[ƒ“‚µ‚Ä‚é‚Æ‚«‚Í‘‚¢
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * 2 * slide_Weaken;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * 2 * slide_Weaken;
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * slide_Weaken * 0.4f; 
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * slide_Weaken * 0.4f; 
                 }
 
                 //PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
@@ -172,11 +172,11 @@ public class PlayerStateOnGround : PlayerState
 
                 if (PlayerScript.vel.x > 0.2f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2 * slide_Weaken;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * 2 * slide_Weaken;
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * slide_Weaken * 0.4f;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * slide_Weaken * 0.4f;
                 }
                 //PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
@@ -201,11 +201,11 @@ public class PlayerStateOnGround : PlayerState
             {
                 if (PlayerScript.vel.x < -0.2f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * 2;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * 2;
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3);
                 }
 
                 PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
@@ -215,11 +215,11 @@ public class PlayerStateOnGround : PlayerState
 
                 if (PlayerScript.vel.x > 0.2f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * 2;
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1;
                 }
                 PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }

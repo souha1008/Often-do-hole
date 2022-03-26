@@ -192,7 +192,7 @@ PrefabInstance:
       objectReference: {fileID: 2907611852633609069, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: FALL_GRAVITY
-      value: 0.9
+      value: 2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: ADD_RUN_SPEED
@@ -208,7 +208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: MAX_FALL_SPEED
-      value: 35
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: MIDAIR_FRICTION
@@ -220,7 +220,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: STRAINED_GRAVITY
-      value: 0.7
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: BULLET_RECAST_TIME
@@ -228,7 +228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: LATERAL_MOVE_THRESHORD
-      value: 0.8
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467939, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: AdjustAngles.Array.size
@@ -288,11 +288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467940, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -47.62
+      value: 153.9
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467940, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1500015
+      value: 45.9
       objectReference: {fileID: 0}
     - target: {fileID: 4224886100132467940, guid: a509e3bd83070d44cb234d6b4157922b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7810,7 +7810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CenterObj: {fileID: 517096163}
-  CAMERA_DISTANCE: 45
+  CAMERA_DISTANCE: 65
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12108,8 +12108,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1230453025}
     - target: {fileID: 2907611852633609067, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
+      propertyPath: BULLET_SPEED
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2907611852633609067, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
       propertyPath: BULLET_ROPE_LENGTH
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2907611852633609067, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
+      propertyPath: STRAIGHT_FLAME_CNT
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2907611852633609069, guid: e0092b22d1cd0e24fb428b2adcab3954, type: 3}
       propertyPath: m_Name
