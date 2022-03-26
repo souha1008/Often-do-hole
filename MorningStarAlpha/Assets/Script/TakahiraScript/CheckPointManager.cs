@@ -32,13 +32,6 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
         }
     }
 
-    // チェックポイント使用処理
-    public void CheckPointAction()
-    {
-        // ゲームシーンのリセット
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
 
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
