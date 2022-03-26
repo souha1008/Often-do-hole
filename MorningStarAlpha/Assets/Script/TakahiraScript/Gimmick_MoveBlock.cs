@@ -110,7 +110,9 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
     private GameObject PlayerObject;            // プレイヤーオブジェクト
+    private PlayerMain PlayerMainScript;        // プレイヤーメインスクリプト
     private GameObject BulletObject;            // 錨オブジェクト
+    private BulletMain BulletMainScript;        // 錨メインスクリプト
 
     private Vector3 OldPos;
 
@@ -137,8 +139,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
         // プレイヤーオブジェクト発見
         PlayerObject = GameObject.Find("Player");
+        PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
         // 錨オブジェクトnull
         BulletObject = null;
+        BulletMainScript = null;
     }
 
     public override void FixedMove()
@@ -195,7 +199,6 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
             RaycastHit hit;
-            PlayerMain playermain = PlayerObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
             if (Physics.Raycast(ray, out hit, 1.5f))
             {
                 if (hit.collider.gameObject == this.gameObject)
@@ -211,7 +214,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
         // 錨オブジェクトの移動
         if (BulletObject != null)
         {
-            if (BulletObject.GetComponent<BulletMain>().isTouched == true)
+            if (BulletMainScript.isTouched == true)
             {
                 BulletObject.transform.position = BulletObject.transform.position +
                         new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
@@ -233,10 +236,12 @@ public class Gimmick_MoveBlock : Gimmick_Main
         if (collision.gameObject.tag == "Player")
         {
             PlayerObject = collision.gameObject;
+            PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
         }
         if (collision.gameObject.tag == "Bullet")
         {
             BulletObject = collision.gameObject;
+            BulletMainScript = BulletObject.GetComponent<BulletMain>();
         }
     }
 
