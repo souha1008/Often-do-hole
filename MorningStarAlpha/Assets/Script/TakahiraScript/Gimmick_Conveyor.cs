@@ -55,7 +55,6 @@ public class Gimmick_Conveyor : Gimmick_Main
                 if (hit.collider.gameObject == this.gameObject)
                 {
                     //Debug.Log("プレイヤーブロックの上移動中");
-                    //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
                     PlayerMainScript.addVel = new Vector3(MovePower * -Fugou, 0, 0);
                 }
             }
