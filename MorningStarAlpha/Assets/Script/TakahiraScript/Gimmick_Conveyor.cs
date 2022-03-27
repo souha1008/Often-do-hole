@@ -18,7 +18,6 @@ public class Gimmick_Conveyor : Gimmick_Main
     {
         // コンベアステート初期化
         conveyorState = new ConveyorStart(this);
-        Debug.Log(conveyorState);
 
         // 回転方向更新
         MoveRight = MoveDirectionBoolChangeX(MoveDirection_X);
@@ -62,20 +61,23 @@ public class Gimmick_Conveyor : Gimmick_Main
             foreach (ContactPoint contact in collision.contacts)
             {
                 // ヒットした面取得
-                if (contact.normal.y == 0) // 右か左の面
+                if (contact.normal.y == 0)
                 {
                     if (contact.normal.x == -1) // 右
                         conveyorState.TouchSide = TOUCH_SIDE.RIGHT;
                     else                        // 左
                         conveyorState.TouchSide = TOUCH_SIDE.LEFT;
                 }
-                else // 触れてない
+                else
                 {
                     if (contact.normal.y == -1) // 上
                         conveyorState.TouchSide = TOUCH_SIDE.UP;
                     else                        // 下
                         conveyorState.TouchSide = TOUCH_SIDE.DOWN;
                 }
+
+                //Debug.Log(conveyorState.TouchSide);
+
                 //============
                 // 自分用メモ
                 //============
@@ -166,6 +168,8 @@ public class ConveyorNone : ConveyorState
         {
             BulletMainScript.isTouched = false;
         }
+
+        TouchSide = TOUCH_SIDE.NONE;
     }
 
     public override void Move()
