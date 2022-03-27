@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class CameraCenterY : MonoBehaviour
 {
+    static public CameraCenterY instance;
+
     [SerializeField] private GameObject PlayerObj;
     [SerializeField] private GameObject CameraObj;
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         SeekPosition();
     }
 
     // Update is called once per frame
-    void Update()
+    public void ManualUpdate()
     {
         SeekPosition();
     }

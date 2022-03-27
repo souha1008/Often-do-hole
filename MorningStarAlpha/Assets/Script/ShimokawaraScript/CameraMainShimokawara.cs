@@ -19,7 +19,7 @@ public class CameraMainShimokawara: MonoBehaviour
         TraceObj();
     }
 
-    private void Update()
+    public void ManualUpdate()
     {
         TraceObj();
     }

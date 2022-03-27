@@ -75,19 +75,11 @@ public class CameraCenterPos : MonoBehaviour
     float UP_DIFFERENCE_Y = 10;
     float DOWN_DIFERENCE_Y = 0;
 
-
-
-    
-
-
     void Start()
     {
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
-
-       
     }
-
 
     void Update()
     {

@@ -5,6 +5,8 @@ public class VirtualCamera : CinemachineExtension
 {
     //public float CAMERA_DISTANCE = -100;
 
+    static public VirtualCamera instance;
+
     // ÉJÉÅÉâÉèÅ[ÉNèàóù
     protected override void PostPipelineStageCallback(
         CinemachineVirtualCameraBase vcam,
@@ -17,12 +19,11 @@ public class VirtualCamera : CinemachineExtension
         if (stage != CinemachineCore.Stage.Body)
             return;
 
-
         //this.transform.position = new Vector3(transform.position.x, transform.position.y, CAMERA_DISTANCE);
         
     }
 
-    private void Update()
+    public void ManualUpdate()
     {
         if (!CameraMainShimokawara.instance.isRail)
         {
@@ -34,6 +35,9 @@ public class VirtualCamera : CinemachineExtension
 
     private void Start()
     {
+        instance = this;
+
+
         if (!CameraMainShimokawara.instance.isRail)
         {
             this.gameObject.SetActive(false);

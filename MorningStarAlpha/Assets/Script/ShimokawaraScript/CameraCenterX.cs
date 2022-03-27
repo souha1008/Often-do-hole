@@ -4,6 +4,7 @@ public class CameraCenterX : MonoBehaviour
 {
     //[Header("プレイヤーとカメラの距離はMainCamera参照")]
 
+    static public CameraCenterX instance;
 
     [SerializeField] private GameObject PlayerObj;
     [SerializeField] private GameObject CameraObj;
@@ -69,14 +70,14 @@ public class CameraCenterX : MonoBehaviour
 
     void Start()
     {
+        instance = this;
+
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
-
-
     }
 
 
-    void Update()
+    public void ManualUpdate()
     {
         if (!isDraw)
         {
@@ -237,10 +238,7 @@ public class CameraCenterX : MonoBehaviour
     }
 
 
-    public void ManualUpdate()
-    {
-        Update();
-    }
+    
 
 
 
