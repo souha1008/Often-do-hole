@@ -15,6 +15,7 @@ public class Gimmick_FallBlock : Gimmick_Main
     private Vector3 StartPos;           // 初期座標
     private GameObject PlayerObject;    // プレイヤーオブジェクト
     private GameObject BulletObject;    // 錨オブジェクト
+    private BulletMain BulletMainScript;// 錨メインスクリプト
 
     public override void Init()
     {
@@ -24,6 +25,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         StartPos = this.gameObject.transform.position;
         PlayerObject = GameObject.Find("Player");
         BulletObject = null;
+        BulletMainScript = null;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
@@ -56,10 +58,13 @@ public class Gimmick_FallBlock : Gimmick_Main
                 }
             }
 
-            if (BulletObject != null)
+            if (BulletObject != null && BulletMainScript != null)
             {
-                BulletObject.gameObject.transform.position =
+                if (BulletMainScript.isTouched)
+                {
+                    BulletObject.gameObject.transform.position =
                             BulletObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                }
             }
         }
         if (NowTime > FallTime)
@@ -87,6 +92,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         {
             NowFall = true; // 落下中
             BulletObject = collision.gameObject;
+            BulletMainScript = collision.gameObject.GetComponent<BulletMain>();
         }
         else if (collision.gameObject.tag == "Player")
         {

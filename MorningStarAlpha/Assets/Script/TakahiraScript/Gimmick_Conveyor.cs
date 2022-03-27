@@ -63,19 +63,20 @@ public class Gimmick_Conveyor : Gimmick_Main
                 // ヒットした面取得
                 if (contact.normal.y == 0)
                 {
-                    if (contact.normal.x == -1) // 右
+                    if (contact.normal.x < 0) // 右
                         conveyorState.TouchSide = TOUCH_SIDE.RIGHT;
                     else                        // 左
                         conveyorState.TouchSide = TOUCH_SIDE.LEFT;
                 }
                 else
                 {
-                    if (contact.normal.y == -1) // 上
+                    if (contact.normal.y < 0) // 上
                         conveyorState.TouchSide = TOUCH_SIDE.UP;
                     else                        // 下
                         conveyorState.TouchSide = TOUCH_SIDE.DOWN;
                 }
 
+                //Debug.Log(contact.normal);
                 //Debug.Log(conveyorState.TouchSide);
 
                 //============
