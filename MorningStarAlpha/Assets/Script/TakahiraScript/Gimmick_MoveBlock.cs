@@ -80,12 +80,16 @@ public class Gimmick_MoveBlockEditor : Editor
 
 public enum MOVE_DIRECTION_X
 {
+    [EnumCName("‰E•ûŒü")]
     MoveRight,
+    [EnumCName("¶•ûŒü")]
     MoveLeft
 }
 public enum MOVE_DIRECTION_Y
 {
+    [EnumCName("ã•ûŒü")]
     MoveUp,
+    [EnumCName("‰º•ûŒü")]
     MoveDown
 }
 
