@@ -27,10 +27,12 @@ public class CameraCenterPos : MonoBehaviour
     //[Header("カメラ距離調整")]
     //[Range(-10, -60), SerializeField, Tooltip("カメラ距離調整")] private float cameraDistanceZ ;//Zの距離  
 
-    [Header("チェックが入っていたらY固定")]
-    [SerializeField, Tooltip("チェックが入っていたらY固定")] private bool FreezeY;        //これにチェックが入っていたら分割
+    //[Header("チェックが入っていたらY固定")]
+    //[SerializeField, Tooltip("チェックが入っていたらY固定")] private bool FreezeY;        //これにチェックが入っていたら分割
+    private bool FreezeY = true;
 
-    [Header("”Y固定時のみ”この値でカメラ高さ調整     プラスでカメラが上へ")]
+
+    [Header("この値でカメラ高さ調整     プラスでカメラが上へ")]
     [Range(-10, 20), SerializeField, Tooltip("”Y固定時のみ”この値でカメラ高さ調整 \nプラスでカメラが上へ")] private float cameraDistanceY;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
     [Header("描画の有無")]
@@ -99,38 +101,40 @@ public class CameraCenterPos : MonoBehaviour
         }
 
 
-#if true
-        //分岐
-        if (!FreezeY)
+        if(CameraMainShimokawara.instance.isRail)
         {
-            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+            //Yに対してカメラに合わせるよう書き換え
 
+            float PosY = GameObject.Find("Main Camera").transform.position.y;
+
+            if (!FreezeY)
+            {
+                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+
+                transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+
+            }
+            else
+            {
+                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+
+                transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+            }
         }
         else
         {
-            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+            //分岐
+            if (!FreezeY)
+            {
+                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
 
+            }
+            else
+            {
+                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+
+            }
         }
-#else
-        //Yに対してカメラに合わせるよう書き換え
-
-        float PosY = GameObject.Find("Main Camera").transform.position.y;
-
-        if (!FreezeY)
-        {
-            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
-
-            transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
-
-        }
-        else
-        {
-            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
-
-            transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
-        }
-#endif
-
     }
 
     void FixedUpdate()
