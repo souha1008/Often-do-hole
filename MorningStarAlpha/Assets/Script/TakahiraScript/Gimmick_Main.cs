@@ -29,6 +29,7 @@ public abstract class Gimmick_Main : MonoBehaviour
     protected Vector3 TotalMoveVel; // 自分の合計移動量
 
     protected Rigidbody Rb;         // リジッドボディ
+    protected Collider Cd;          // コライダー
 
     // 継承するもの
     public abstract void Init(); // スタート処理
@@ -60,7 +61,8 @@ public abstract class Gimmick_Main : MonoBehaviour
 
 
         // コライダー
-        this.GetComponent<Collider>().isTrigger = true; // トリガーオン
+        Cd = this.GetComponent<Collider>(); // コライダー取得
+        Cd.isTrigger = true;    // トリガーオン
 
         // スタート処理
         Init();

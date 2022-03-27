@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // フェードの状態
 public enum FADE_STATE
@@ -130,11 +131,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     }
 
 
-    // フェードインしたときの処理(ゲームオーバー)
+    // フェードインしたときの処理(ゲームオーバー)(ゲームリスタート)
     private void FadeIn_GameOver()
     {
-        // チェックポイントに復帰処理
-        CheckPointManager.Instance.CheckPointAction();
+        // ゲームシーンのリセット
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     // フェードインしたときの処理(シーン変更)
     private void FadeIn_SceneChange()
