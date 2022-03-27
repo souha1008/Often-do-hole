@@ -29,7 +29,7 @@ public class CameraCenterPos : MonoBehaviour
 
     //[Header("チェックが入っていたらY固定")]
     //[SerializeField, Tooltip("チェックが入っていたらY固定")] private bool FreezeY;        //これにチェックが入っていたら分割
-    private bool FreezeY = true;
+    //private bool FreezeY = true;
 
 
     [Header("この値でカメラ高さ調整     プラスでカメラが上へ")]
@@ -107,33 +107,33 @@ public class CameraCenterPos : MonoBehaviour
 
             float PosY = GameObject.Find("Main Camera").transform.position.y;
 
-            if (!FreezeY)
-            {
-                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+            //if (!FreezeY)
+            //{
+            //    transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
 
-                transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+            //    transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
                 transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
-            }
+            //}
         }
         else
         {
             //分岐
-            if (!FreezeY)
-            {
-                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+            //if (!FreezeY)
+            //{
+            //    transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
-            }
+            //}
         }
     }
 
@@ -144,10 +144,10 @@ public class CameraCenterPos : MonoBehaviour
 
         FixedX();
         //分岐
-        if(!FreezeY)
-        {
-            FixedY();
-        }
+        //if(!FreezeY)
+        //{
+        //    FixedY();
+        //}
         
         OldPlayerPos = PlayerMain.instance.transform.position;
 
