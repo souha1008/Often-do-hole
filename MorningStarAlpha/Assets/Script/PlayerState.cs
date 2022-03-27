@@ -147,8 +147,6 @@ public class PlayerStateOnGround : PlayerState
 
     public override void Move()
     {
-        Debug.Log(isSlide);
-
 
         if (isSlide)
         {
@@ -1086,7 +1084,6 @@ public class PlayerStateSwing_R_Release : PlayerState
         //ŒvZ—pî•ñŠi”[
         startPlayerVel = BulletScript.vel;
         betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
-        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
         float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
         startAngle = endAngle = degree;
 
@@ -1117,7 +1114,8 @@ public class PlayerStateSwing_R_Release : PlayerState
 
         //•R‚Ì’·‚³‚ÆƒXƒs[ƒh‚©‚çŠp‘¬“x‚ğŒvZ
         float angler_velocity;
-        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 6.0f);
+        float tempY = Mathf.Min(startPlayerVel.y, 0.0f);
+        angler_velocity = ((Mathf.Abs(startPlayerVel.x) + Mathf.Abs(tempY)) * 6.0f) ;
         angler_velocity /= (betweenLength * 2.0f * Mathf.PI);
 
         //”ÍˆÍ“à‚É•â³

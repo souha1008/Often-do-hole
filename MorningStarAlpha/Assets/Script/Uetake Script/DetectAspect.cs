@@ -25,7 +25,7 @@ public static class DetectAspect
     public static Aspect DetectionAspect(Vector3 vec)
     {
         Aspect returnAspect = Aspect.INVALID;
-        if (Mathf.Abs(vec.y) > 0.5f) //y¬•ª‚ª‘å‚«‚¢‚Ì‚ÅcŒü‚«
+        if (Mathf.Abs(vec.y) > 0.3f) //y¬•ª‚ª‘å‚«‚¢‚Ì‚ÅcŒü‚«
         {
             if (vec.y > 0)
             {
@@ -36,7 +36,7 @@ public static class DetectAspect
                 returnAspect = Aspect.DOWN;
             }
         }
-        else if (Mathf.Abs(vec.x) > 0.5f) //x¬•ª‚ª‘å‚«‚¢‚Ì‚Å‰¡Œü‚«
+        else if (Mathf.Abs(vec.x) > 0.3f) //x¬•ª‚ª‘å‚«‚¢‚Ì‚Å‰¡Œü‚«
         {
             if (vec.x > 0)
             {

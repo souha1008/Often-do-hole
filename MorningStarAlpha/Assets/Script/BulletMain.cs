@@ -30,6 +30,8 @@ public class BulletMain : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         PlayerState.BulletScript = this;
+
+        Time.timeScale = 0.1f;
     }
 
     private void Start()
@@ -149,12 +151,11 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            Aspect colAspect = DetectAspect.DetectionAspect(collision.contacts[0].normal); //接触点の法線ベクトル
-            Vector3 colPoint = collision.contacts[0].point;
+            Aspect colAspect = DetectAspect.DetectionAspect(collision.GetContact(0).normal); //接触点の法線ベクトル
+            Vector3 colPoint = collision.GetContact(0).point;
 
             //錨が刺さる場所を壁ピッタリにする処理
-
-             //AdjustColPoint(colAspect, colPoint);
+            //AdjustColPoint(colAspect, colPoint);
 
             if (onceFlag == false)
             {
@@ -192,11 +193,5 @@ public class BulletMain : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void OnDestroy()
-    {
-        Player = null;
-        PlayerScript = null;
     }
 }
