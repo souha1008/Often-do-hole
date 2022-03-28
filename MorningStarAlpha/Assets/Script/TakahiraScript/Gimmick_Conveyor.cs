@@ -10,8 +10,8 @@ public class Gimmick_Conveyor : Gimmick_Main
     public float MovePower = 30;                // ˆÚ“®—Ê
 
 
-    public ConveyorState conveyorState;
-    public bool MoveRight;                      // ‰ñ“]•ûŒü
+    [HideInInspector] public ConveyorState conveyorState;
+    [HideInInspector] public bool MoveRight;                      // ‰ñ“]•ûŒü
 
 
     public override void Init()
