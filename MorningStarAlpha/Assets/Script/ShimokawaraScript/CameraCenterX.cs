@@ -137,35 +137,77 @@ public class CameraCenterX : MonoBehaviour
 
     void FixedX()
     {
-        //進んだ量
-        float TempVel = PlayerPos.x - OldPlayerPos.x;
-
-        //カメラの移動量 
-        float TempCameraMove = Mathf.Min(TempVel * SpeedMultiX, MAX_CAMERA_MOVE_X);
-        TempCameraMove = Mathf.Max(TempVel * SpeedMultiX, -MAX_CAMERA_MOVE_X);
-
-        if (TempVel > 0.1f)
+        if(CameraMainShimokawara.instance.isRail)
         {
-            //進行に応じて保存
-            RightSavePos = PlayerMain.instance.transform.position.x;
+            //進んだ量
+            float TempVel = PlayerPos.x - OldPlayerPos.x;
 
-            //一定以上折り返したら
-            if (PlayerPos.x > LeftSavePos + ReturnMove_X)
+            //カメラの移動量 
+            float TempCameraMove = Mathf.Min(TempVel * SpeedMultiX, MAX_CAMERA_MOVE_X);
+            TempCameraMove = Mathf.Max(TempVel * SpeedMultiX, -MAX_CAMERA_MOVE_X);
+
+            if(PlayerMain.instance.refState != EnumPlayerState.SWING)
             {
-                DifferenceX = Mathf.Min(DifferenceX + TempCameraMove, MAX_DIFFERENCE_X);
+                if (TempVel > 0.1f)
+                {
+                    //進行に応じて保存
+                    RightSavePos = PlayerMain.instance.transform.position.x;
+
+                    //一定以上折り返したら
+                    if (PlayerPos.x > LeftSavePos + ReturnMove_X)
+                    {
+                        DifferenceX = Mathf.Min(DifferenceX + TempCameraMove, MAX_DIFFERENCE_X);
+                    }
+                }
+                if (TempVel < -0.1f)
+                {
+                    //進行に応じて保存
+                    LeftSavePos = PlayerMain.instance.transform.position.x;
+
+                    //一定以上折り返したら
+                    if (PlayerPos.x < RightSavePos - ReturnMove_X)
+                    {
+                        DifferenceX = Mathf.Max(DifferenceX + TempCameraMove, -MAX_DIFFERENCE_X);
+                    }
+                }
+            }
+
+            
+        }
+        else
+        {
+            //進んだ量
+            float TempVel = PlayerPos.x - OldPlayerPos.x;
+
+            //カメラの移動量 
+            float TempCameraMove = Mathf.Min(TempVel * SpeedMultiX, MAX_CAMERA_MOVE_X);
+            TempCameraMove = Mathf.Max(TempVel * SpeedMultiX, -MAX_CAMERA_MOVE_X);
+
+            if (TempVel > 0.1f)
+            {
+                //進行に応じて保存
+                RightSavePos = PlayerMain.instance.transform.position.x;
+
+                //一定以上折り返したら
+                if (PlayerPos.x > LeftSavePos + ReturnMove_X)
+                {
+                    DifferenceX = Mathf.Min(DifferenceX + TempCameraMove, MAX_DIFFERENCE_X);
+                }
+            }
+            if (TempVel < -0.1f)
+            {
+                //進行に応じて保存
+                LeftSavePos = PlayerMain.instance.transform.position.x;
+
+                //一定以上折り返したら
+                if (PlayerPos.x < RightSavePos - ReturnMove_X)
+                {
+                    DifferenceX = Mathf.Max(DifferenceX + TempCameraMove, -MAX_DIFFERENCE_X);
+                }
             }
         }
-        if (TempVel < -0.1f)
-        {
-            //進行に応じて保存
-            LeftSavePos = PlayerMain.instance.transform.position.x;
 
-            //一定以上折り返したら
-            if (PlayerPos.x < RightSavePos - ReturnMove_X)
-            {
-                DifferenceX = Mathf.Max(DifferenceX + TempCameraMove, -MAX_DIFFERENCE_X);
-            }
-        }
+        
 
     }
 
