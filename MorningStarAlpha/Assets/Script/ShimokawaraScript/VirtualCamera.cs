@@ -1,12 +1,11 @@
 using Cinemachine;
 using UnityEngine;
 
-/// <summary>
-/// マウスホイールによるズームを行えるようにする拡張
-/// </summary>
 public class VirtualCamera : CinemachineExtension
 {
-    public float CAMERA_DISTANCE = -100;
+    //public float CAMERA_DISTANCE = -100;
+
+    static public VirtualCamera instance;
 
     // カメラワーク処理
     protected override void PostPipelineStageCallback(
@@ -20,13 +19,28 @@ public class VirtualCamera : CinemachineExtension
         if (stage != CinemachineCore.Stage.Body)
             return;
 
-
-        this.transform.position = new Vector3(transform.position.x, transform.position.y, CAMERA_DISTANCE);
+        //this.transform.position = new Vector3(transform.position.x, transform.position.y, CAMERA_DISTANCE);
         
     }
 
-    private void Update()
+    public void ManualUpdate()
     {
+        if (!CameraMainShimokawara.instance.isRail)
+        {
+            this.gameObject.SetActive(false);
+        }
+
         //this.transform.position = new Vector3(transform.position.x, transform.position.y, CAMERA_DISTANCE);
+    }
+
+    private void Start()
+    {
+        instance = this;
+
+
+        if (!CameraMainShimokawara.instance.isRail)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 }

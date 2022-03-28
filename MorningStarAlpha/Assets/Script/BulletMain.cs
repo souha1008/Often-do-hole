@@ -77,10 +77,6 @@ public class BulletMain : MonoBehaviour
                     //èdóÕâ¡éZ
                     vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
                 }            
-                if(ExitFlameCnt == STRAIGHT_FLAME_CNT)
-                {
-                    Debug.Log(vel);
-                }
 
                 Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
             }

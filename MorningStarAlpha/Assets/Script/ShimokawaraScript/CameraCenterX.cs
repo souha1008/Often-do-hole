@@ -1,25 +1,13 @@
 using UnityEngine;
 
-public enum GO_POS_X
-{
-    LEFT,
-    RIGHT,
-    STAY
-}
-
-public enum GO_POS_Y
-{
-    UP,
-    DOWN,
-    STAY
-}
-
-
-
-public class CameraCenterPos : MonoBehaviour
+public class CameraCenterX : MonoBehaviour
 {
     //[Header("プレイヤーとカメラの距離はMainCamera参照")]
 
+    static public CameraCenterX instance;
+
+    [SerializeField] private GameObject PlayerObj;
+    [SerializeField] private GameObject CameraObj;
 
     Vector3 PlayerPos = Vector3.zero;
     Vector3 OldPlayerPos = Vector3.zero;
@@ -52,7 +40,7 @@ public class CameraCenterPos : MonoBehaviour
 
     //10
     [Header("焦点とプレイヤーの距離上限 横")]
-    [Range(1,15), SerializeField, Tooltip("焦点とプレイヤーの距離上限 横")] private float MAX_DIFFERENCE_X = 10;
+    [Range(1, 15), SerializeField, Tooltip("焦点とプレイヤーの距離上限 横")] private float MAX_DIFFERENCE_X = 10;
 
 
     [Header("1F当たりの移動距離上限 横")]
@@ -75,13 +63,21 @@ public class CameraCenterPos : MonoBehaviour
     float UP_DIFFERENCE_Y = 10;
     float DOWN_DIFERENCE_Y = 0;
 
+
+
+
+
+
     void Start()
     {
+        instance = this;
+
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
     }
 
-    void Update()
+
+    public void ManualUpdate()
     {
         if (!isDraw)
         {
@@ -89,29 +85,23 @@ public class CameraCenterPos : MonoBehaviour
         }
         else
         {
-            GetComponent<Renderer>().material.color = new Color(1,0,0,0.5f);
+            GetComponent<Renderer>().material.color = new Color(1, 0, 0, 0.5f);
         }
 
 
-        if(CameraMainShimokawara.instance.isRail)
+        if (CameraMainShimokawara.instance.isRail)
         {
-            //Yに対してカメラに合わせるよう書き換え
 
-            float PosY = GameObject.Find("Main Camera").transform.position.y;
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
-            //if (!FreezeY)
-            //{
-            //    transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, DifferenceY, 0);
+            ////Yに対してカメラに合わせるよう書き換え
 
-            //    transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+            //float PosY = GameObject.Find("Main Camera").transform.position.y;
 
-            //}
-            //else
-            //{
-                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+            //transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
-                transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
-            //}
+            //transform.position = new Vector3(transform.position.x, PosY, transform.position.z);
+
         }
         else
         {
@@ -123,7 +113,7 @@ public class CameraCenterPos : MonoBehaviour
             //}
             //else
             //{
-                transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
+            transform.position = PlayerMain.instance.transform.position + new Vector3(DifferenceX, cameraDistanceY, 0);
 
             //}
         }
@@ -132,7 +122,7 @@ public class CameraCenterPos : MonoBehaviour
     void FixedUpdate()
     {
         //プレイヤー座標
-        PlayerPos = PlayerMain.instance.transform.position;
+        PlayerPos = PlayerObj.transform.position;
 
         FixedX();
         //分岐
@@ -140,8 +130,8 @@ public class CameraCenterPos : MonoBehaviour
         //{
         //    FixedY();
         //}
-        
-        OldPlayerPos = PlayerMain.instance.transform.position;
+
+        OldPlayerPos = PlayerObj.transform.position;
 
     }
 
@@ -248,10 +238,7 @@ public class CameraCenterPos : MonoBehaviour
     }
 
 
-    public void ManualUpdate()
-    {
-        Update();
-    }
+    
 
 
 

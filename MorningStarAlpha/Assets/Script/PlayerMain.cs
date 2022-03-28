@@ -163,6 +163,7 @@ public class PlayerMain : MonoBehaviour
         {
             Debug.LogError("STATE == NULL");
         }
+
     }
 
     private void FixedUpdate()
@@ -314,7 +315,6 @@ public class PlayerMain : MonoBehaviour
             canShot = false;
         }
     } 
-
 
     /// <summary>
     /// ‹­§“I‚É’e‚ğˆø‚«–ß‚³‚¹‚é
