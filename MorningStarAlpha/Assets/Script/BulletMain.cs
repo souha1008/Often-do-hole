@@ -31,7 +31,6 @@ public class BulletMain : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         PlayerState.BulletScript = this;
 
-        Time.timeScale = 0.1f;
     }
 
     private void Start()
