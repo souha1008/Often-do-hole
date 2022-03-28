@@ -213,7 +213,7 @@ public class ConveyorNone : ConveyorState
                     {
                         StateChange(new ConveyorRight());
                     }
-                    else // 左回転なら右移動
+                    else // 左回転なら左移動
                     {
                         StateChange(new ConveyorLeft());
                     }
@@ -346,17 +346,6 @@ public class ConveyorRight : ConveyorState
             // 錨からレイ飛ばして真上にブロックが無かったらステート変更
             if (Conveyor.MoveRight)
             {
-                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
-                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
-                RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
-                {
-                    BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
-                    StateChange(new ConveyorUp());
-                }
-            }
-            else
-            {
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
                 RaycastHit hit;
@@ -364,6 +353,17 @@ public class ConveyorRight : ConveyorState
                 {
                     BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
                     StateChange(new ConveyorDown());
+                }
+            }
+            else
+            {
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
+                RaycastHit hit;
+                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                {
+                    BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
+                    StateChange(new ConveyorUp());
                 }
             }
         }
