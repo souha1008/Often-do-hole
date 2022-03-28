@@ -27,15 +27,14 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         if (PauseCanvas.gameObject.activeSelf)　//ポーズメニューがアクティブなら
         {
-            //現在選択中のオブジェクトを取得
-            nowButton = EventSystem.current.currentSelectedGameObject; 
+            nowButton = EventSystem.current.currentSelectedGameObject;
             Debug.Log(EventSystem.current.currentSelectedGameObject);
 
-            //前と違うボタンが選択されていたら
             if (Object.ReferenceEquals(nowButton, oldButton) == false)
             {
                 oldButton.GetComponent<Image>().color = Color.white;
                 nowButton.GetComponent<Image>().color = Color.red;
+                Debug.Log("change");
             }
 
             if (Input.GetButtonDown("Button_Select"))
@@ -43,7 +42,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                 EndPause();
             }
 
-            //書き換え
             oldButton = nowButton;
         }
         else //ポーズメニューが非アクティブなら
