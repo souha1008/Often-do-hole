@@ -80,7 +80,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     private void Start() { }
 
-    private void FixedUpdate()
+    private void Update()
     {
         // フェード処理中
         if (NowFadeState != FADE_STATE.FADE_NONE)
@@ -111,6 +111,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         // フェードイン時の処理
         if (OldFadeState == FADE_STATE.FADE_OUT && NowFadeState == FADE_STATE.FADE_IN)
         {
+            //シーン終了なので時間をもとに戻す
+            Time.timeScale = 1.0f;
             switch (NowFadeKind)
             {
                 case FADE_KIND.FADE_GAMOVER:
