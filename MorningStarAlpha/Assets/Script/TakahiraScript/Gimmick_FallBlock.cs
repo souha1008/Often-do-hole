@@ -65,6 +65,11 @@ public class Gimmick_FallBlock : Gimmick_Main
                     BulletObject.gameObject.transform.position =
                             BulletObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
                 }
+                else
+                {
+                    BulletObject = null;
+                    BulletMainScript = null;
+                }
             }
         }
         if (NowTime > FallTime)
