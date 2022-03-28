@@ -11,7 +11,7 @@ public class Gimmick_Conveyor : Gimmick_Main
 
 
     [HideInInspector] public ConveyorState conveyorState;
-    [HideInInspector] public bool MoveRight;                      // ‰ñ“]•ûŒü
+    [HideInInspector] public bool MoveRight;    // ‰ñ“]•ûŒü
 
 
     public override void Init()

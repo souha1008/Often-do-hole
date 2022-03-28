@@ -5,7 +5,7 @@ using UnityEngine;
 public class Gimmick_FallBlock : Gimmick_Main
 {
     [Label("—Ž‰º‹——£")]
-    public float FallLength = 15.0f;   // —Ž‚¿‚é‹——£
+    public float FallLength = 15.0f;    // —Ž‚¿‚é‹——£
 
     [Label("‰½•b‚©‚¯‚Ä—Ž‰º‚·‚é‚©")]
     public float FallTime = 3.0f;       // ‰½•b‚©‚¯‚Ä—Ž‰º‚·‚é‚©
