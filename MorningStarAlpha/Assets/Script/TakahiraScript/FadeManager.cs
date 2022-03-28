@@ -41,7 +41,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     private Texture2D FadeTexture;                    // フェードのテクスチャ
     private float FadeRate;                           // フェード係数
-    private FADE_STATE NowFadeState;                  // 現在のフェードの状態
+    static private FADE_STATE NowFadeState;                  // 現在のフェードの状態
     private FADE_STATE OldFadeState;                  // ひとつ前のフェードの状態
     private FADE_KIND NowFadeKind;                    // 現在のフェードの種類
     private Color FadeColor;                          // フェードのカラー
@@ -175,7 +175,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             }
         }
     }
-    public FADE_STATE GetNowState()
+
+    static public FADE_STATE GetNowState()
     {
         return NowFadeState;
     }

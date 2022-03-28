@@ -11,6 +11,7 @@ public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
 
     void Awake()
     {
+        Time.timeScale = 1.0f;
         if (this != Instance)
         {
             Destroy(this);
@@ -57,7 +58,4 @@ public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
 
         stopTime = StopTime;
     }
-
-
-    
 }

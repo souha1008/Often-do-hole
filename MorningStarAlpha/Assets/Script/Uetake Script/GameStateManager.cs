@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// ゲームの状態
 /// </summary>
-enum GAME_STATE {
+public enum GAME_STATE {
     PLAY,   //ゲームできる状態
     PAUSE,  //ポーズ中
 }
@@ -20,28 +20,31 @@ public class GameStateManager : SingletonMonoBehaviour<GameSpeedManager>
 
     private void Awake()
     {
-        GameState = GAME_STATE.PLAY;
+        SetGameState(GAME_STATE.PLAY);
 
         if (this != Instance)
         {
             Destroy(this);
+            SetGameState(GAME_STATE.PLAY);
             return;
         }
-
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
     }
 
 
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-       
+        Debug.Log(GetGameState());
     }
 
-    // Update is called once per frame
-    void Update()
+    public static GAME_STATE GetGameState()
     {
-        
+        return GameState;
+    }
+
+    public static void SetGameState(GAME_STATE game_state)
+    {
+        GameState = game_state;
     }
 
 }

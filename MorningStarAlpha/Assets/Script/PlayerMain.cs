@@ -150,53 +150,60 @@ public class PlayerMain : MonoBehaviour
 
     private void Update()
     {
-        InputStick();
-        CheckCanShot();
-        CheckMidAir();
-
-        if (mode != null)
+        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
-            mode.UpdateState();
-            mode.StateTransition();
-        }
-        else
-        {
-            Debug.LogError("STATE == NULL");
-        }
+            InputStick();
+            CheckCanShot();
+            CheckMidAir();
 
+            if (mode != null)
+            {
+                mode.UpdateState();
+                mode.StateTransition();
+            }
+            else
+            {
+                Debug.LogError("STATE == NULL");
+            }
+            
+        }
     }
 
     private void FixedUpdate()
     {
-        if (mode != null)
+        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
-            mode.Move();
-        }
-        else
-        {
-            Debug.LogError("STATE == NULL");
-        }
-        rb.velocity = Vector3.zero;
-        if (useVelocity)
-        {
-            rb.velocity = vel;
-        }
-        rb.velocity += addVel;
-        rb.velocity += floorVel;
+            if (mode != null)
+            {
+                mode.Move();
+            }
+            else
+            {
+                Debug.LogError("STATE == NULL");
+            }
+            rb.velocity = Vector3.zero;
+            if (useVelocity)
+            {
+                rb.velocity = vel;
+            }
+            rb.velocity += addVel;
+            rb.velocity += floorVel;
 
 
-        if (Mathf.Abs(addVel.magnitude) > 10.0f)
-        {
-            addVel *= 0.96f;
-        }
-        else
-        {
-            addVel = Vector3.zero;
-        }
+            if (Mathf.Abs(addVel.magnitude) > 10.0f)
+            {
+                addVel *= 0.96f;
+            }
+            else
+            {
+                addVel = Vector3.zero;
+            }
 
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
-        //mode.DebugMessage();
+                //mode.DebugMessage();
 #endif
+            
+        }
     }
 
     private void LateUpdate()

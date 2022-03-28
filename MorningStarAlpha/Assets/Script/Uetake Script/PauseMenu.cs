@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+
 /// <summary>
 /// ゲームシーン内のポーズメニュー管理のクラス
 /// 
@@ -56,6 +58,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     void EndPause()
     {
+        GameStateManager.SetGameState(GAME_STATE.PLAY);
         PauseCanvas.gameObject.SetActive(false);
         Time.timeScale = 1.0f;
         EventSystem.current.SetSelectedGameObject(null);
@@ -63,6 +66,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     void StartPause()
     {
+        GameStateManager.SetGameState(GAME_STATE.PAUSE);
         PauseCanvas.gameObject.SetActive(true);
         EventSystem.current.SetSelectedGameObject(FirstSelect.gameObject);
         Time.timeScale = 0.0f;
@@ -77,12 +81,13 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void ClickRetry()
     {
-        FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
         Time.timeScale = 1.0f;
+        FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
     }
 
     public void ClickBackStageSelect()
     {
         EndPause();
+        SceneManager.LoadScene("StageSelectScene");
     }
 }
