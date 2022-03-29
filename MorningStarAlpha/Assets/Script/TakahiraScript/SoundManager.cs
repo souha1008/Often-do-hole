@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 //#if UNITY_EDITOR
 //using UnityEditor;
 
@@ -36,13 +38,20 @@ using UnityEngine;
 
 public enum SOUND_TYPE
 {
-    BGM = 0,
+    NULL = 0,
+    BGM,
     SE
 }
 
 // サウンドのクリップ管理用
-public struct Audio_Clip
+public class SOUND
 {
+    public SOUND(string audioName, AudioClip audioClip, SOUND_TYPE soundType)
+    {
+        AudioName = audioName;
+        AudioClip = audioClip;
+        SoundType = soundType;
+    }
     public string AudioName;    // クリップに付ける名前
     public AudioClip AudioClip; // オーディオクリップ
     public SOUND_TYPE SoundType;// 音の種類
@@ -57,10 +66,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private static int AudioSource_SE_MAX;    // オーディオソースSEの最大数(static)
 
 
-    public List<Audio_Clip> AudioClipList = new List<Audio_Clip>(); // オーディオクリップのリスト
+    public List<SOUND> SoundList = new List<SOUND>(); // サウンドのクリップ管理用のリスト
     private AudioSource[] AudioSource_BGM;  // オーディオソースBGM
     private AudioSource[] AudioSource_SE;   // オーディオソースSE
-
 
 
     private void Awake()
@@ -78,29 +86,132 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         AudioSource_SE_MAX = AudioSource_SE_Max;
         AudioSource_BGM = new AudioSource[AudioSource_BGM_MAX];
         AudioSource_SE = new AudioSource[AudioSource_SE_MAX];
+
+        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        {
+            AudioSource_BGM[i] = this.gameObject.AddComponent<AudioSource>();
+        }
+        for (int i = 0; i < AudioSource_SE_MAX; i++)
+        {
+            AudioSource_SE[i] = this.gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SetSEData());
+        //StartCoroutine(SetBGMData());
+    }
+
+    private IEnumerator SetSEData()
+    {
+        IList<AudioClip> AudioClipIlist; // オーディオクリップ読み込み用
+
+        // SEデータ読み込み
+        var handleSE = Addressables.LoadAssetsAsync<AudioClip>("SE", null);
+
+        do
+        {
+            Debug.Log("読み込み中");
+            yield return null;
+        }
+        while (handleSE.Status != AsyncOperationStatus.Succeeded);
+
+        if (handleSE.Result != null)
+        {
+            AudioClipIlist = handleSE.Result;
+
+            for (int i = 0; i < AudioClipIlist.Count; i++)
+            {
+                SoundList.Add(new SOUND(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.SE));
+                //Debug.Log(AudioClipIlist[i].name);
+            }
+            AudioClipIlist.Clear();
+
+            Debug.Log("SEデータの読み込み成功");
+        }
+        else
+        {
+            Debug.Log("SEデータの読み込み失敗");
+        }
+    }
+
+    private IEnumerator SetBGMData()
+    {
+        IList<AudioClip> AudioClipIlist; // オーディオクリップ読み込み用
+
+
+        //BGMデータ読み込み
+        var handleBGM = Addressables.LoadAssetsAsync<AudioClip>("BGM", null);
+
+        do
+        {
+            yield return null;
+        }
+        while (handleBGM.Status != AsyncOperationStatus.Succeeded);
+
+        if (handleBGM.Result != null)
+        {
+            AudioClipIlist = handleBGM.Result;
+
+            for (int i = 0; i < AudioClipIlist.Count; i++)
+            {
+                SoundList.Add(new SOUND(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
+            }
+            AudioClipIlist.Clear();
+
+            Debug.Log("BGMデータの読み込み成功");
+        }
+        else
+        {
+            Debug.Log("BGMデータの読み込み失敗");
+        }
     }
 
 
     // 音の再生
     public void PlaySound(string AudioName, bool Loop)
     {
-        AudioClip audioClip = null;
-
+        SOUND Sound = new SOUND("", null, SOUND_TYPE.NULL);
 
         // オーディオの名前と合うもの取得
-        for (int i = 0; i < AudioClipList.Count; i++)
+        for (int i = 0; i < SoundList.Count; i++)
         {
-            if (AudioClipList[i].AudioName == AudioName)
+            if (SoundList[i].AudioName == AudioName)
             {
-                audioClip = AudioClipList[i].AudioClip;
+                Sound = SoundList[i];
             }
         }
 
-        if (audioClip == null)
+        if (Sound.AudioClip == null)
             return;
 
         // 再生
-        //AudioSourceList.PlayOneShot(audioClip, 1.0f);
+        switch (Sound.SoundType)
+        {
+            case SOUND_TYPE.NULL:
+                break;
+            case SOUND_TYPE.BGM:
+                for (int i = 0; i < AudioSource_BGM_MAX; i++)
+                {
+                    if (!AudioSource_BGM[i].isPlaying)
+                    {
+                        AudioSource_BGM[i].clip = Sound.AudioClip;
+                        AudioSource_BGM[i].Play();
+                    }
+                }
+                break;
+            case SOUND_TYPE.SE:
+                for (int i = 0; i < AudioSource_SE_MAX; i++)
+                {
+                    if (!AudioSource_SE[i].isPlaying)
+                    {
+                        AudioSource_SE[i].PlayOneShot(Sound.AudioClip);
+                    }
+                }
+                break;
+        }
+        
     }
 
     public void FixedUpdate()
