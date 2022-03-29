@@ -99,8 +99,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     private void Start()
     {
+        // サウンドデータ読み込み処理
         StartCoroutine(SetSEData());
-        //StartCoroutine(SetBGMData());
+        StartCoroutine(SetBGMData());
     }
 
     private IEnumerator SetSEData()
@@ -112,10 +113,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         do
         {
-            Debug.Log("読み込み中");
+            //Debug.Log("読み込み中");
             yield return null;
         }
-        while (handleSE.Status != AsyncOperationStatus.Succeeded);
+        while (handleSE.Status != AsyncOperationStatus.Succeeded && handleSE.Status != AsyncOperationStatus.Failed);
 
         if (handleSE.Result != null)
         {
@@ -146,9 +147,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         do
         {
+            //Debug.Log("読み込み中");
             yield return null;
         }
-        while (handleBGM.Status != AsyncOperationStatus.Succeeded);
+        while (handleBGM.Status != AsyncOperationStatus.Succeeded && handleBGM.Status != AsyncOperationStatus.Failed);
 
         if (handleBGM.Result != null)
         {
@@ -168,9 +170,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-
+    //===========================
     // 音の再生
-    public void PlaySound(string AudioName, bool Loop)
+    //===========================
+    public void PlaySound(string AudioName)
     {
         SOUND Sound = new SOUND("", null, SOUND_TYPE.NULL);
 
@@ -198,6 +201,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_BGM[i].clip = Sound.AudioClip;
                         AudioSource_BGM[i].Play();
+                        AudioSource_BGM[i].loop = true;
                     }
                 }
                 break;
@@ -207,6 +211,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     if (!AudioSource_SE[i].isPlaying)
                     {
                         AudioSource_SE[i].PlayOneShot(Sound.AudioClip);
+                        AudioSource_SE[i].loop = false;
                     }
                 }
                 break;
