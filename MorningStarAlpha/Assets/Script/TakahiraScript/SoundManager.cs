@@ -89,7 +89,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     // 内部データ用
-
     private static int AudioSource_BGM_MAX;   // オーディオソースBGMの最大数(static)
     private static int AudioSource_SE_MAX;    // オーディオソースSEの最大数(static)
 

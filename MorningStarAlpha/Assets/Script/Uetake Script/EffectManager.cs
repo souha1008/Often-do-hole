@@ -13,11 +13,17 @@ public class EffectManager : MonoBehaviour
         instance = this;
     }
 
-    public void StartShotEffect(Vector3 Pos)
+    public void StartShotEffect(Vector3 Pos, Quaternion rot)
     {
-        GameObject shot = Instantiate(ShotParticle, Pos, Quaternion.identity);
+        GameObject shot = Instantiate(ShotParticle, Pos, rot);
 
-        ParticleSystem child = shot.transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
-        child.Play();
+        ParticleSystem[] particles;
+        particles = shot.gameObject.GetComponentsInChildren<ParticleSystem>();
+
+
+        for (int i = 0; i < particles.Length; ++i)
+        {
+           particles[i].Play();
+        }
     }
 }

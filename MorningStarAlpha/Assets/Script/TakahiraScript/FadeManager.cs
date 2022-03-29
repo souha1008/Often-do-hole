@@ -63,6 +63,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         FadeColor = new Color(0, 0, 0, 0);
 
         //テクスチャ作成
+        Debug.Log("FadeManager作成");
+
         FadeTexture = new Texture2D(32, 32, TextureFormat.RGB24, false);
         FadeTexture.ReadPixels(new Rect(0, 0, 32, 32), 0, 0, false);
         FadeTexture.SetPixel(0, 0, Color.white);
