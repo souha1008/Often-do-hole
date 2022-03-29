@@ -180,7 +180,7 @@ public class BulletMain : MonoBehaviour
                 switch (tag)
                 {
                     case "Platform":
-                        EffectManager.instance.StartShotEffect(transform.position, rot);
+                        //EffectManager.instance.StartShotEffect(transform.position, rot);
                         isTouched = true;
                         rb.isKinematic = true;
                         rb.velocity = Vector3.zero;
