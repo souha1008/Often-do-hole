@@ -3,37 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-//#if UNITY_EDITOR
-//using UnityEditor;
+#if UNITY_EDITOR
+using UnityEditor;
 
 
-//// SoundManagerクラスを拡張
-//[CustomEditor(typeof(SoundManager))]
+// SoundManagerクラスを拡張
+[CustomEditor(typeof(SoundManager))]
 
-//public class SoundManagerEditor : Editor
-//{
-//    void OnEnable()
-//    {
+public class SoundManagerEditor : Editor
+{
+    void OnEnable()
+    {
 
-//    }
-//    public override void OnInspectorGUI()
-//    {
-//        SoundManager Sound = target as SoundManager;
+    }
+    public override void OnInspectorGUI()
+    {
+        SoundManager Sound = target as SoundManager;
 
-//        // エディターの変更確認
-//        EditorGUI.BeginChangeCheck();
+        // エディターの変更確認
+        EditorGUI.BeginChangeCheck();
 
-//        //Sound.AudioClipList = EditorGUILayout
+        Sound.AudioSource_BGM_Max = EditorGUILayout.IntField("BGMオーディオソース最大値", Sound.AudioSource_BGM_Max);
+        Sound.AudioSource_SE_Max = EditorGUILayout.IntField("SEオーディオソース最大値", Sound.AudioSource_SE_Max);
 
 
-//        // エディターの変更確認
-//        if (EditorGUI.EndChangeCheck())
-//        {
-//            EditorUtility.SetDirty(target); // 選択オブジェクト更新
-//        }
-//    }
-//}
-//#endif
+        Sound.SoundVolumeMaster = EditorGUILayout.Slider("マスターボリューム", (int)(Sound.SoundVolumeMaster * 100), 0, 100) / 100.0f;
+        Sound.SoundVolumeBGM = EditorGUILayout.Slider("BGMボリューム", (int)(Sound.SoundVolumeBGM * 100), 0, 100) / 100.0f;
+        Sound.SoundVolumeSE = EditorGUILayout.Slider("SEボリューム", (int)(Sound.SoundVolumeSE * 100), 0, 100) / 100.0f;
+
+
+        // エディターの変更確認
+        if (EditorGUI.EndChangeCheck())
+        {
+            EditorUtility.SetDirty(target); // 選択オブジェクト更新
+        }
+    }
+}
+#endif
 
 
 public enum SOUND_TYPE
@@ -57,10 +63,19 @@ public class SOUND
     public SOUND_TYPE SoundType;// 音の種類
 }
 
+
 public class SoundManager : SingletonMonoBehaviour<SoundManager>
 {
-    [SerializeField] private int AudioSource_BGM_Max = 3;   // オーディオソースBGMの最大数(インスペクターで表示)
-    [SerializeField] private int AudioSource_SE_Max = 10;   // オーディオソースSEの最大数(インスペクターで表示)
+    // インスペクターで表示用
+    public int AudioSource_BGM_Max = 3;   // オーディオソースBGMの最大数(インスペクターで表示)
+    public int AudioSource_SE_Max = 10;   // オーディオソースSEの最大数(インスペクターで表示)
+
+    public float SoundVolumeMaster = 1.0f; // ゲーム全体の音量
+    public float SoundVolumeSE = 1.0f;  // SEの音量
+    public float SoundVolumeBGM = 1.0f; // BGMの音量
+
+
+    // 内部データ用
 
     private static int AudioSource_BGM_MAX;   // オーディオソースBGMの最大数(static)
     private static int AudioSource_SE_MAX;    // オーディオソースSEの最大数(static)
@@ -102,6 +117,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         // サウンドデータ読み込み処理
         StartCoroutine(SetSEData());
         StartCoroutine(SetBGMData());
+
+        // 音量セット
+        SetVolume();
     }
 
     private IEnumerator SetSEData()
@@ -202,6 +220,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         AudioSource_BGM[i].clip = Sound.AudioClip;
                         AudioSource_BGM[i].Play();
                         AudioSource_BGM[i].loop = true;
+                        AudioSource_BGM[i].volume = SoundVolumeBGM;
                     }
                 }
                 break;
@@ -212,6 +231,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_SE[i].PlayOneShot(Sound.AudioClip);
                         AudioSource_SE[i].loop = false;
+                        AudioSource_SE[i].volume = SoundVolumeSE;
                     }
                 }
                 break;
@@ -219,15 +239,27 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         
     }
 
+    private void SetVolume()
+    {
+        Mathf.Clamp(SoundVolumeMaster, 0.0f, 1.0f);
+        Mathf.Clamp(SoundVolumeBGM, 0.0f, 1.0f);
+        Mathf.Clamp(SoundVolumeSE, 0.0f, 1.0f);
+
+        AudioListener.volume = SoundVolumeMaster;
+
+        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        {
+            AudioSource_BGM[i].volume = SoundVolumeBGM;
+        }
+        for (int i = 0; i < AudioSource_SE_MAX; i++)
+        {
+            AudioSource_SE[i].volume = SoundVolumeSE;
+        }
+    }
+
+
     public void FixedUpdate()
     {
-        //for (int i = 0; i < AudioSourceList.Count; i++)
-        //{
-        //    if (AudioSourceList[i].isPlaying)
-        //    {
-        //        AudioSourceList.RemoveAt(i);
-        //        Debug.Log("再生終了");
-        //    }
-        //}
+        SetVolume();
     }
 }
