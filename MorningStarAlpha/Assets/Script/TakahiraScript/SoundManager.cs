@@ -50,9 +50,9 @@ public enum SOUND_TYPE
 }
 
 // サウンドのクリップ管理用
-public class SOUND
+public class SOUND_CLIP
 {
-    public SOUND(string audioName, AudioClip audioClip, SOUND_TYPE soundType)
+    public SOUND_CLIP(string audioName, AudioClip audioClip, SOUND_TYPE soundType)
     {
         AudioName = audioName;
         AudioClip = audioClip;
@@ -61,6 +61,19 @@ public class SOUND
     public string AudioName;    // クリップに付ける名前
     public AudioClip AudioClip; // オーディオクリップ
     public SOUND_TYPE SoundType;// 音の種類
+}
+
+// サウンドのソース管理用
+public class SOUND_SOURCE
+{
+    public SOUND_SOURCE(AudioSource audioSource, float volume)
+    {
+        AudioSource = audioSource;
+        Volume = volume;
+        Mathf.Clamp(Volume, 0.0f, 1.0f);
+    }
+    public AudioSource AudioSource; // オーディオソース
+    public float Volume;            // オーディオソースのボリューム
 }
 
 
@@ -81,9 +94,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private static int AudioSource_SE_MAX;    // オーディオソースSEの最大数(static)
 
 
-    public List<SOUND> SoundList = new List<SOUND>(); // サウンドのクリップ管理用のリスト
-    private AudioSource[] AudioSource_BGM;  // オーディオソースBGM
-    private AudioSource[] AudioSource_SE;   // オーディオソースSE
+    public List<SOUND_CLIP> SoundList = new List<SOUND_CLIP>(); // サウンドのクリップ管理用のリスト
+    private SOUND_SOURCE[] AudioSource_BGM;  // オーディオソースBGM
+    private SOUND_SOURCE[] AudioSource_SE;   // オーディオソースSE
 
 
     private void Awake()
@@ -99,16 +112,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         // 初期化
         AudioSource_BGM_MAX = AudioSource_BGM_Max;
         AudioSource_SE_MAX = AudioSource_SE_Max;
-        AudioSource_BGM = new AudioSource[AudioSource_BGM_MAX];
-        AudioSource_SE = new AudioSource[AudioSource_SE_MAX];
+        AudioSource_BGM = new SOUND_SOURCE[AudioSource_BGM_MAX];
+        AudioSource_SE = new SOUND_SOURCE[AudioSource_SE_MAX];
 
         for (int i = 0; i < AudioSource_BGM_MAX; i++)
         {
-            AudioSource_BGM[i] = this.gameObject.AddComponent<AudioSource>();
+            AudioSource_BGM[i] = new SOUND_SOURCE(this.gameObject.AddComponent<AudioSource>(), 1.0f);
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
-            AudioSource_SE[i] = this.gameObject.AddComponent<AudioSource>();
+            AudioSource_SE[i] = new SOUND_SOURCE(this.gameObject.AddComponent<AudioSource>(), 1.0f);
         }
     }
 
@@ -142,7 +155,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
             for (int i = 0; i < AudioClipIlist.Count; i++)
             {
-                SoundList.Add(new SOUND(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.SE));
+                SoundList.Add(new SOUND_CLIP(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.SE));
                 //Debug.Log(AudioClipIlist[i].name);
             }
             AudioClipIlist.Clear();
@@ -176,7 +189,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
             for (int i = 0; i < AudioClipIlist.Count; i++)
             {
-                SoundList.Add(new SOUND(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
+                SoundList.Add(new SOUND_CLIP(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
             }
             AudioClipIlist.Clear();
 
@@ -193,7 +206,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================
     public void PlaySound(string AudioName)
     {
-        SOUND Sound = new SOUND("", null, SOUND_TYPE.NULL);
+        PlaySound(AudioName, 1.0f);
+    }
+
+    public void PlaySound(string AudioName, float Volume)
+    {
+        SOUND_CLIP Sound = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
         // オーディオの名前と合うもの取得
         for (int i = 0; i < SoundList.Count; i++)
@@ -201,6 +219,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             if (SoundList[i].AudioName == AudioName)
             {
                 Sound = SoundList[i];
+                Debug.Log("音見つけた");
             }
         }
 
@@ -215,28 +234,29 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             case SOUND_TYPE.BGM:
                 for (int i = 0; i < AudioSource_BGM_MAX; i++)
                 {
-                    if (!AudioSource_BGM[i].isPlaying)
+                    if (!AudioSource_BGM[i].AudioSource.isPlaying)
                     {
-                        AudioSource_BGM[i].clip = Sound.AudioClip;
-                        AudioSource_BGM[i].Play();
-                        AudioSource_BGM[i].loop = true;
-                        AudioSource_BGM[i].volume = SoundVolumeBGM;
+                        AudioSource_BGM[i].AudioSource.clip = Sound.AudioClip;
+                        AudioSource_BGM[i].AudioSource.Play();
+                        AudioSource_BGM[i].AudioSource.loop = true;
+                        AudioSource_BGM[i].Volume = Volume;
+                        AudioSource_BGM[i].AudioSource.volume = Volume * SoundVolumeBGM;
                     }
                 }
                 break;
             case SOUND_TYPE.SE:
                 for (int i = 0; i < AudioSource_SE_MAX; i++)
                 {
-                    if (!AudioSource_SE[i].isPlaying)
+                    if (!AudioSource_SE[i].AudioSource.isPlaying)
                     {
-                        AudioSource_SE[i].PlayOneShot(Sound.AudioClip);
-                        AudioSource_SE[i].loop = false;
-                        AudioSource_SE[i].volume = SoundVolumeSE;
+                        AudioSource_SE[i].AudioSource.PlayOneShot(Sound.AudioClip);
+                        AudioSource_SE[i].AudioSource.loop = false;
+                        AudioSource_SE[i].Volume = Volume;
+                        AudioSource_SE[i].AudioSource.volume = Volume * SoundVolumeSE;
                     }
                 }
                 break;
         }
-        
     }
 
     private void SetVolume()
@@ -249,17 +269,18 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         for (int i = 0; i < AudioSource_BGM_MAX; i++)
         {
-            AudioSource_BGM[i].volume = SoundVolumeBGM;
+            AudioSource_BGM[i].AudioSource.volume = AudioSource_BGM[i].Volume * SoundVolumeBGM;
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
-            AudioSource_SE[i].volume = SoundVolumeSE;
+            AudioSource_SE[i].AudioSource.volume = AudioSource_SE[i].Volume * SoundVolumeSE;
         }
     }
 
 
     public void FixedUpdate()
     {
+        // 音量セット
         SetVolume();
     }
 }

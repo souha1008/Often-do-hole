@@ -10,7 +10,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
     public override void Init()
     {
-
+        
     }
 
     public override void FixedMove()
@@ -43,7 +43,8 @@ public class Gimmick_SpringBoard : Gimmick_Main
             playermain.vel = Vector3.zero;
             playermain.addVel = VecPower;
 
-            SoundManager.Instance.PlaySound("Œˆ’è‰¹");
+            //SoundManager.Instance.PlaySound("Œˆ’è‰¹");
+            SoundManager.Instance.PlaySound("TestBGM", 0.05f);
         }
     }
 }
