@@ -50,6 +50,7 @@ public enum EnumPlayerState
     SHOT,      //’e‚ðŒ‚‚Á‚Ä‚¢‚éó‘Ô
     MIDAIR,@@//‹ó’†‚É‚¢‚Ä’e‚ðŒ‚‚Á‚Ä‚¢‚È‚¢
     SWING,     //U‚èŽqó‘Ô
+    RAILING,
     DEATH,     //Ž€–Só‘Ô
 }
 
