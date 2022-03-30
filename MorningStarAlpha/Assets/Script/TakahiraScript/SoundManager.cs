@@ -12,10 +12,6 @@ using UnityEditor;
 
 public class SoundManagerEditor : Editor
 {
-    void OnEnable()
-    {
-
-    }
     public override void OnInspectorGUI()
     {
         SoundManager Sound = target as SoundManager;
@@ -69,15 +65,16 @@ public class SOUND_SOURCE
     public SOUND_SOURCE(AudioSource audioSource)
     {
         AudioSource = audioSource;
+        StartVolume = 1.0f;
         Volume = 1.0f;
-        Mathf.Clamp(Volume, 0.0f, 1.0f);
         isPause = false;
         PauseTime = 0.0f;
         isUse = false;
         Sound_Clip = null;
     }
     public AudioSource AudioSource; // オーディオソース
-    public float Volume;            // オーディオソースのボリューム
+    public float StartVolume;       // 再生開始時のオーディオソースのボリューム
+    public float Volume;            // 再生中のオーディオソースのボリューム(開始時の音量を元にかける)
     public bool isPause;            // ポーズ中フラグ
     public float PauseTime;         // ポーズ中の再生位置
     public bool isUse;              // 使用中フラグ(ポーズ中も含める)
@@ -139,7 +136,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         StartCoroutine(SetBGMData());
 
         // 音量セット
-        SetVolume();
+        UpdateVolume();
     }
 
     private IEnumerator SetSEData()
@@ -260,7 +257,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         AudioSource_BGM[i].AudioSource.time = PlayTime;
                         AudioSource_BGM[i].AudioSource.Play();
                         AudioSource_BGM[i].AudioSource.loop = true;
-                        AudioSource_BGM[i].Volume = Volume;
+                        AudioSource_BGM[i].StartVolume = Volume;
                         AudioSource_BGM[i].AudioSource.volume = Volume * SoundVolumeBGM;
                         AudioSource_BGM[i].isPause = false;
                         AudioSource_BGM[i].isUse = true;
@@ -278,7 +275,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         AudioSource_SE[i].AudioSource.time = PlayTime;
                         AudioSource_SE[i].AudioSource.Play();
                         AudioSource_SE[i].AudioSource.loop = false;
-                        AudioSource_SE[i].Volume = Volume;
+                        AudioSource_SE[i].StartVolume = Volume;
                         AudioSource_SE[i].AudioSource.volume = Volume * SoundVolumeSE;
                         AudioSource_SE[i].isPause = false;
                         AudioSource_SE[i].isUse = true;
@@ -429,7 +426,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         bool EndFlag = false;
 
-        // オーディオの名前と合うもの取得して一時停止
+        // オーディオの名前と合うもの取得して一時停止解除
         for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
         {
             if (AudioSource_BGM[i].isUse && AudioSource_BGM[i].isPause)
@@ -456,10 +453,81 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+    //============================================================
+    // 再生中の全ての音量調節(内部処理で使える用)
+    // 
+    // 第一引数：音量(0.0f～1.0f)※再生開始時の音量とは別に設定化
+    //============================================================
+    public void SetVolumeALL(float Volume)
+    {
+        Mathf.Clamp(Volume, 0.0f, 1.0f);
+
+        // オーディオの名前と合うもの取得して音量調節
+        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        {
+            if (AudioSource_BGM[i].isUse)
+            {
+                AudioSource_BGM[i].Volume = Volume; // 再生中の音量セット
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX; i++)
+        {
+            if (AudioSource_SE[i].isUse)
+            {
+                AudioSource_SE[i].Volume = Volume; // 再生中の音量セット
+            }
+        }
+        UpdateVolume(); // 音量更新
+    }
+
+
+    //============================================================
+    // 再生中の個別の音量調節(内部処理で使える用)
+    // 
+    // 第一引数：Addressablesアセットで付けた名前
+    // 第二引数：音量(0.0f～1.0f)※再生開始時の音量とは別に設定化
+    //============================================================
+    public void SetVolume(string SoundName, float Volume)
+    {
+        Mathf.Clamp(Volume, 0.0f, 1.0f);
+
+        bool EndFlag = false;
+
+        // オーディオの名前と合うもの取得して音量調節
+        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_BGM[i].isUse)
+            {
+                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
+                {
+                    AudioSource_BGM[i].Volume = Volume; // 再生中の音量セット
+                    UpdateVolume(); // 音量更新
+
+                    EndFlag = true;
+                }
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_SE[i].isUse)
+            {
+                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
+                {
+                    AudioSource_SE[i].Volume = Volume; // 再生中の音量セット
+                    UpdateVolume(); // 音量更新
+
+                    EndFlag = true;
+                }
+            }
+        }
+    }
+
+
+
     //===========================================
     // 現在の音量を更新(音量を変更したときに使用)
     //===========================================
-    public void SetVolume()
+    public void UpdateVolume()
     {
         Mathf.Clamp(SoundVolumeMaster, 0.0f, 1.0f);
         Mathf.Clamp(SoundVolumeBGM, 0.0f, 1.0f);
@@ -469,13 +537,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         for (int i = 0; i < AudioSource_BGM_MAX; i++)
         {
-            AudioSource_BGM[i].AudioSource.volume = AudioSource_BGM[i].Volume * SoundVolumeBGM;
+            AudioSource_BGM[i].AudioSource.volume = AudioSource_BGM[i].StartVolume * AudioSource_BGM[i].Volume * SoundVolumeBGM;
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
-            AudioSource_SE[i].AudioSource.volume = AudioSource_SE[i].Volume * SoundVolumeSE;
+            AudioSource_SE[i].AudioSource.volume = AudioSource_SE[i].StartVolume * AudioSource_SE[i].Volume * SoundVolumeSE;
         }
     }
+
+
+
 
 
 
@@ -498,11 +569,14 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // サウンドソース情報の終了処理
     private void EndSoundSource(SOUND_SOURCE Sound_Source)
     {
-        Sound_Source.AudioSource.Stop();// 再生停止
-        Sound_Source.isPause = false;   // ポーズ中フラグオフ
-        Sound_Source.PauseTime = 0.0f;  // ポーズ中の時間リセット
-        Sound_Source.isUse = false;     // 使用フラグオフ
-        Sound_Source.Sound_Clip = null; // 現在使用中のクリップ情報をnullにする
+        Sound_Source.AudioSource.Stop();        // 再生停止
+        Sound_Source.AudioSource.clip = null;   // クリップにnull入れる
+        Sound_Source.isPause = false;           // ポーズ中フラグオフ
+        Sound_Source.PauseTime = 0.0f;          // ポーズ中の時間リセット
+        Sound_Source.isUse = false;             // 使用フラグオフ
+        Sound_Source.StartVolume = 1.0f;        // 開始時の音量リセット
+        Sound_Source.Volume = 1.0f;             // 使用中の音量リセット
+        Sound_Source.Sound_Clip = null;         // 現在使用中のクリップ情報をnullにする
     }
 
 
@@ -558,15 +632,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SoundManager.Instance.PlaySound("TestBGM", 0.1f);
         }
 
-        //if (Input.GetKeyDown(KeyCode.H))
-        //{
-        //    SoundManager.Instance.StopSound("TestBGM");
-        //}
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            SoundManager.Instance.SetVolume("TestBGM", 0.5f);
+        }
 
-        //if (Input.GetKeyDown(KeyCode.J))
-        //{
-        //    SoundManager.Instance.PauseSound("TestBGM");
-        //}
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SoundManager.Instance.SetVolume("TestBGM", 1.0f);
+        }
 
         //if (Input.GetKeyDown(KeyCode.K))
         //{
@@ -577,7 +651,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public void FixedUpdate()
     {
         // 音量セット
-        SetVolume();
+        UpdateVolume();
 
         // 現在使用中か判定処理
         SetNowUse();
