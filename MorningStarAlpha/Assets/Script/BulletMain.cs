@@ -26,17 +26,23 @@ public class BulletMain : MonoBehaviour
     [SerializeField] public float BULLET_ROPE_LENGTH; //ïRÇÃí∑Ç≥
     private float BULLET_MAXFALLSPEED = 35.0f;
 
+    private float fixedAdjust;
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         PlayerState.BulletScript = this;
 
+        
     }
 
     private void Start()
     {
         PlayerScript = Player.GetComponent<PlayerMain>();
         ExitFlameCnt = 0;
+
+        fixedAdjust = Time.fixedDeltaTime * 50; 
     }
 
     public void ShotBullet()
@@ -75,7 +81,7 @@ public class BulletMain : MonoBehaviour
                 if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
                 {
                     //èdóÕâ¡éZ
-                    vel += Vector3.down * PlayerScript.STRAINED_GRAVITY;
+                    vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * (fixedAdjust);
                 }            
 
                 Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);

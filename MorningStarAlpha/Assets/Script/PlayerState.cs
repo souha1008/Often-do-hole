@@ -10,6 +10,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerState
 {
+    protected float fixedAdjust = Time.fixedDeltaTime * 50; 
+
     virtual public void UpdateState() { }      //継承先でコントローラーの入力
     virtual public void Move() { }             //継承先で物理挙動（rigidbodyを使用したもの）overrideする
     virtual public void StateTransition() { }  //継承先でシーンの移動を決める
@@ -18,7 +20,6 @@ public class PlayerState
     static public GameObject Player;
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
-
     protected void BulletAdjust()
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
@@ -28,6 +29,8 @@ public class PlayerState
 
         BulletScript.transform.position = adjustPos;
     }
+
+
 
     protected void RotatePlayer()
     {
@@ -156,11 +159,11 @@ public class PlayerStateOnGround : PlayerState
             {
                 if (PlayerScript.vel.x < -0.2f)//ターンしてるときは早い
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * 2 * slide_Weaken;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * 2 * slide_Weaken * (fixedAdjust);
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * slide_Weaken * 0.4f; 
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * slide_Weaken * 0.4f * (fixedAdjust); 
                 }
 
                 //PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
@@ -170,11 +173,11 @@ public class PlayerStateOnGround : PlayerState
 
                 if (PlayerScript.vel.x > 0.2f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * 2 * slide_Weaken;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * 2 * slide_Weaken * (fixedAdjust);
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * slide_Weaken * 0.4f;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * slide_Weaken * 0.4f * (fixedAdjust);
                 }
                 //PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
@@ -182,7 +185,7 @@ public class PlayerStateOnGround : PlayerState
 
             //減衰
             {
-                PlayerScript.vel *= 0.92f;
+                PlayerScript.vel *= 0.92f * (fixedAdjust);
             }
 
             //スライド終了処理（時間によるもの
@@ -199,11 +202,11 @@ public class PlayerStateOnGround : PlayerState
             {
                 if (PlayerScript.vel.x < -0.2f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * 2;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * 2 * (fixedAdjust);
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3);
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * (fixedAdjust);
                 }
 
                 PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
@@ -213,17 +216,17 @@ public class PlayerStateOnGround : PlayerState
 
                 if (PlayerScript.vel.x > 0.2f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * 2;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * 2 * (fixedAdjust);
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1;
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x)  , 3) * -1 * (fixedAdjust);
                 }
                 PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
             else //減衰
             {
-                PlayerScript.vel *= PlayerScript.RUN_FRICTION;
+                PlayerScript.vel *= PlayerScript.RUN_FRICTION * (fixedAdjust);
             }
         }
     }
@@ -339,8 +342,8 @@ public class PlayerStateShot_2 : PlayerState
             //STRAINEDだけど自由移動のタイミング
             else
             {
-                //弱めの重力
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 0.1f;
+                //弱めの重力 
+                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 0.1f * (fixedAdjust);
                 PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
             }
 #endif
@@ -756,23 +759,23 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.vel.x *= PlayerScript.MIDAIR_FRICTION;
         if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED;
+            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * (fixedAdjust);
         }
         else if (PlayerScript.adjustLeftStick.x < -PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1;
+            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1 * (fixedAdjust);
         }
 
         //急降下中
         if(OnceFallDownFlag)
         {
-            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2;
+            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2 * (fixedAdjust);
             PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1 * 2);
         }
         //自由落下
         else
         {
-            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY;
+            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
             PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
         }
     }
@@ -800,301 +803,301 @@ public class PlayerStateMidair : PlayerState
 
 
 
-/// <summary>
-/// 弾が天井でスイングしている状態
-/// 移動速度等を保存
-/// </summary>
-public class PlayerStateSwing_leftstick : PlayerState
-{
-    private bool finishFlag;
-    private bool releaseButton;
-    private Vector3 BulletPosition; //ボールの位置
+///// <summary>
+///// 弾が天井でスイングしている状態
+///// 移動速度等を保存
+///// </summary>
+//public class PlayerStateSwing_leftstick : PlayerState
+//{
+//    private bool finishFlag;
+//    private bool releaseButton;
+//    private Vector3 BulletPosition; //ボールの位置
    
 
-    private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
-    private Vector3 startPlayerVel;　　　　　　 //突入時velocity
-    private float startAngle;    //開始時の二点間アングル
-    private float endAngle;      //自動切り離しされる角度(start角度依存)
-    private float minAnglerVel;  //最低角速度（自動切り離し地点にいる時）
-    private float maxAnglerVel;　//最高角速度 (真下にプレイヤーが居る時）
-    private float nowAnglerVel;  //現在角速度
+//    private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
+//    private Vector3 startPlayerVel;　　　　　　 //突入時velocity
+//    private float startAngle;    //開始時の二点間アングル
+//    private float endAngle;      //自動切り離しされる角度(start角度依存)
+//    private float minAnglerVel;  //最低角速度（自動切り離し地点にいる時）
+//    private float maxAnglerVel;　//最高角速度 (真下にプレイヤーが居る時）
+//    private float nowAnglerVel;  //現在角速度
 
-    private List<Vector2> leftSticks = new List<Vector2>(); //swing開始からのleftStickを保持
+//    private List<Vector2> leftSticks = new List<Vector2>(); //swing開始からのleftStickを保持
 
-    public PlayerStateSwing_leftstick()  //コンストラクタ
-    {
-        BulletPosition = BulletScript.gameObject.transform.position;
+//    public PlayerStateSwing_leftstick()  //コンストラクタ
+//    {
+//        BulletPosition = BulletScript.gameObject.transform.position;
 
-        //計算用情報格納
-        startPlayerVel = BulletScript.vel;
-        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
-        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
-        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
-        startAngle = endAngle = degree;
+//        //計算用情報格納
+//        startPlayerVel = BulletScript.vel;
+//        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
+//        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
+//        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+//        startAngle = endAngle = degree;
 
-        PlayerScript.refState = EnumPlayerState.SWING;
-        PlayerScript.swingState = SwingState.TOUCHED;
-        PlayerScript.canShotState = false;
-        PlayerScript.endSwing = false;
-        PlayerScript.counterSwing = false;
-        finishFlag = false;
-        releaseButton = false;
-        BulletScript.rb.isKinematic = true;
-        PlayerScript.rb.velocity = Vector3.zero;
-        PlayerScript.vel = Vector3.zero;
+//        PlayerScript.refState = EnumPlayerState.SWING;
+//        PlayerScript.swingState = SwingState.TOUCHED;
+//        PlayerScript.canShotState = false;
+//        PlayerScript.endSwing = false;
+//        PlayerScript.counterSwing = false;
+//        finishFlag = false;
+//        releaseButton = false;
+//        BulletScript.rb.isKinematic = true;
+//        PlayerScript.rb.velocity = Vector3.zero;
+//        PlayerScript.vel = Vector3.zero;
 
-        CalculateStartVariable();
-    }
+//        CalculateStartVariable();
+//    }
 
-    ~PlayerStateSwing_leftstick()
-    {
+//    ~PlayerStateSwing_leftstick()
+//    {
         
-    }
+//    }
 
-    /// <summary>
-    /// 振り子制御用の各種変数を計算
-    /// </summary>
-    public void CalculateStartVariable()
-    {
+//    /// <summary>
+//    /// 振り子制御用の各種変数を計算
+//    /// </summary>
+//    public void CalculateStartVariable()
+//    {
 
-        //紐の長さとスピードから角速度を計算
-        float angler_velocity;
-        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 6.0f);
-        angler_velocity /=  (betweenLength * 2.0f * Mathf.PI);
+//        //紐の長さとスピードから角速度を計算
+//        float angler_velocity;
+//        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 6.0f);
+//        angler_velocity /=  (betweenLength * 2.0f * Mathf.PI);
         
-        //範囲内に補正
-        angler_velocity = Mathf.Clamp(angler_velocity, 1.0f, 15.0f);
+//        //範囲内に補正
+//        angler_velocity = Mathf.Clamp(angler_velocity, 1.0f, 15.0f);
 
-        nowAnglerVel = maxAnglerVel = minAnglerVel = angler_velocity;
+//        nowAnglerVel = maxAnglerVel = minAnglerVel = angler_velocity;
 
-        Debug.Log("AnglerVelocity: " + angler_velocity);
+//        Debug.Log("AnglerVelocity: " + angler_velocity);
 
-        //切り離しアングルの計算
-        float diff_down = Mathf.Abs(startAngle - 180.0f); //真下と突入角の差
-        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-        {
-            //終点自動切り離しポイントをy軸に対して対称にする
-            endAngle -= (diff_down + diff_down);
-            //開始点よりは高い位置にする
-            endAngle -= 10;
+//        //切り離しアングルの計算
+//        float diff_down = Mathf.Abs(startAngle - 180.0f); //真下と突入角の差
+//        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+//        {
+//            //終点自動切り離しポイントをy軸に対して対称にする
+//            endAngle -= (diff_down + diff_down);
+//            //開始点よりは高い位置にする
+//            endAngle -= 10;
 
-            //範囲内に補正
-            endAngle = Mathf.Clamp(endAngle, 90, 140);
-        }
-        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-        {
-            //終点自動切り離しポイントをy軸に対して対称にする
-            endAngle += (diff_down + diff_down);
-            //開始点よりは高い位置にする
-            endAngle += 10;
+//            //範囲内に補正
+//            endAngle = Mathf.Clamp(endAngle, 90, 140);
+//        }
+//        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+//        {
+//            //終点自動切り離しポイントをy軸に対して対称にする
+//            endAngle += (diff_down + diff_down);
+//            //開始点よりは高い位置にする
+//            endAngle += 10;
 
-            //範囲内に補正
-            endAngle = Mathf.Clamp(endAngle, 220, 270);
-        }
-
-
-
-
-        //最低速は突入時プレイヤーvelocity
-        maxAnglerVel = minAnglerVel = angler_velocity;
-        //最高速度は突入角が大きいほど早い
-        maxAnglerVel += (diff_down / 90) * 2.0f; 
-    }
-
-    /// <summary>
-    /// 壁跳ね返り時の各種計算
-    /// </summary>
-    public void CalculateCounterVariable()
-    {
-        Debug.Log("counter:");
-
-        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-        {
-            //プレイヤー回転処理
-            PlayerScript.dir = PlayerMoveDir.LEFT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
-        }
-        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-        {
-            //プレイヤー回転処理
-            PlayerScript.dir = PlayerMoveDir.RIGHT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
-        }
-
-        //切り離しアングルの計算
-        float diff_down = Mathf.Abs(endAngle - 180.0f); //真下と終了角の差
-        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-        {
-            //終点自動切り離しポイントをy軸に対して対称にする
-            endAngle -= (diff_down + diff_down);
-            //開始点よりは高い位置にする
-            endAngle -= 20;
-
-            //範囲内に補正
-            endAngle = Mathf.Clamp(endAngle, 90, 140);
-        }
-        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-        {
-            //終点自動切り離しポイントをy軸に対して対称にする
-            endAngle += (diff_down + diff_down);
-            //開始点より高い位置にする
-            endAngle += 20;
-
-            //範囲内に補正
-            endAngle = Mathf.Clamp(endAngle, 220, 270);
-        }
-
-    }
+//            //範囲内に補正
+//            endAngle = Mathf.Clamp(endAngle, 220, 270);
+//        }
 
 
 
 
+//        //最低速は突入時プレイヤーvelocity
+//        maxAnglerVel = minAnglerVel = angler_velocity;
+//        //最高速度は突入角が大きいほど早い
+//        maxAnglerVel += (diff_down / 90) * 2.0f; 
+//    }
+
+//    /// <summary>
+//    /// 壁跳ね返り時の各種計算
+//    /// </summary>
+//    public void CalculateCounterVariable()
+//    {
+//        Debug.Log("counter:");
+
+//        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+//        {
+//            //プレイヤー回転処理
+//            PlayerScript.dir = PlayerMoveDir.LEFT;
+//            PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
+//        }
+//        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+//        {
+//            //プレイヤー回転処理
+//            PlayerScript.dir = PlayerMoveDir.RIGHT;
+//            PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
+//        }
+
+//        //切り離しアングルの計算
+//        float diff_down = Mathf.Abs(endAngle - 180.0f); //真下と終了角の差
+//        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+//        {
+//            //終点自動切り離しポイントをy軸に対して対称にする
+//            endAngle -= (diff_down + diff_down);
+//            //開始点よりは高い位置にする
+//            endAngle -= 20;
+
+//            //範囲内に補正
+//            endAngle = Mathf.Clamp(endAngle, 90, 140);
+//        }
+//        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+//        {
+//            //終点自動切り離しポイントをy軸に対して対称にする
+//            endAngle += (diff_down + diff_down);
+//            //開始点より高い位置にする
+//            endAngle += 20;
+
+//            //範囲内に補正
+//            endAngle = Mathf.Clamp(endAngle, 220, 270);
+//        }
+
+//    }
 
 
-    /// <summary>
-    /// swing時の左スティックによって切り離し点を調整
-    /// </summary>
-    public void ReleasePointAlternate()
-    {
-        leftSticks.Add(PlayerScript.sourceLeftStick);
 
 
-    }
 
-    public override void UpdateState()
-    {
-        ReleasePointAlternate();
 
-        //if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-        //{
-        //    BulletScript.rb.isKinematic = false;
-        //    shotButton = true;
-        //}
+//    /// <summary>
+//    /// swing時の左スティックによって切り離し点を調整
+//    /// </summary>
+//    public void ReleasePointAlternate()
+//    {
+//        leftSticks.Add(PlayerScript.sourceLeftStick);
 
-        //ボールプレイヤー間の角度を求める
-        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
 
-        //切り離し
-        if (PlayerScript.swingState == SwingState.TOUCHED)
-        {
-            if (PlayerScript.endSwing)
-            {
-                PlayerScript.endSwing = false;
-                PlayerScript.useVelocity = true;
-                BulletScript.ReturnBullet();
-                PlayerScript.swingState = SwingState.RELEASED;
-            }
+//    }
 
-            if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-            {
-                if (degree < endAngle)
-                {
-                    PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
-                    PlayerScript.swingState = SwingState.RELEASED;
+//    public override void UpdateState()
+//    {
+//        ReleasePointAlternate();
 
-                    //勢い追加
-                    //弾とプレイヤー間のベクトルに直行するベクトル
-                    Vector3 addVec = BulletPosition - Player.transform.position;
-                    addVec = addVec.normalized;
-                    addVec = Quaternion.Euler(0, 0, -90) * addVec;
-                    PlayerScript.vel += addVec * 35.0f;
-                }
-            }
-            else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-            {
-                if (degree > endAngle)
-                {
-                    PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
-                    PlayerScript.swingState = SwingState.RELEASED;
+//        //if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+//        //{
+//        //    BulletScript.rb.isKinematic = false;
+//        //    shotButton = true;
+//        //}
 
-                    //勢い追加
-                    //弾とプレイヤー間のベクトルに直行するベクトル
-                    Vector3 addVec = BulletPosition - Player.transform.position;
-                    addVec = addVec.normalized;
-                    addVec = Quaternion.Euler(0, 0, 90) * addVec;
-                    PlayerScript.vel += addVec * 35.0f;
-                }
-            }
-        }
+//        //ボールプレイヤー間の角度を求める
+//        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
 
-        if (PlayerScript.counterSwing)
-        {
-            PlayerScript.counterSwing = false;
-            CalculateCounterVariable();
-        }
-    }
+//        //切り離し
+//        if (PlayerScript.swingState == SwingState.TOUCHED)
+//        {
+//            if (PlayerScript.endSwing)
+//            {
+//                PlayerScript.endSwing = false;
+//                PlayerScript.useVelocity = true;
+//                BulletScript.ReturnBullet();
+//                PlayerScript.swingState = SwingState.RELEASED;
+//            }
 
-    public override void Move()
-    {
-        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
-        float deg180dif = Mathf.Abs(degree - 180);
-        switch (PlayerScript.swingState)
-        {
-            case SwingState.TOUCHED:
-                //角速度計算
-                float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
-                deg180Ratio = Mathf.Clamp01(deg180Ratio); //一応範囲内に補正
-                deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
+//            if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+//            {
+//                if (degree < endAngle)
+//                {
+//                    PlayerScript.useVelocity = true;
+//                    BulletScript.ReturnBullet();
+//                    PlayerScript.swingState = SwingState.RELEASED;
 
-                float easeDeg180Ratio = Easing.Linear(deg180Ratio, 1.0f, 0.0f, 1.0f);
+//                    //勢い追加
+//                    //弾とプレイヤー間のベクトルに直行するベクトル
+//                    Vector3 addVec = BulletPosition - Player.transform.position;
+//                    addVec = addVec.normalized;
+//                    addVec = Quaternion.Euler(0, 0, -90) * addVec;
+//                    PlayerScript.vel += addVec * 35.0f;
+//                }
+//            }
+//            else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+//            {
+//                if (degree > endAngle)
+//                {
+//                    PlayerScript.useVelocity = true;
+//                    BulletScript.ReturnBullet();
+//                    PlayerScript.swingState = SwingState.RELEASED;
 
-                nowAnglerVel = ((maxAnglerVel - minAnglerVel) * easeDeg180Ratio) + minAnglerVel;
+//                    //勢い追加
+//                    //弾とプレイヤー間のベクトルに直行するベクトル
+//                    Vector3 addVec = BulletPosition - Player.transform.position;
+//                    addVec = addVec.normalized;
+//                    addVec = Quaternion.Euler(0, 0, 90) * addVec;
+//                    PlayerScript.vel += addVec * 35.0f;
+//                }
+//            }
+//        }
 
-                //向きによって回転方向が違う
-                Quaternion angleAxis = Quaternion.Euler(Vector3.forward);
-                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-                {
-                    angleAxis = Quaternion.AngleAxis(nowAnglerVel, Vector3.forward);
-                }
-                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {
-                    angleAxis = Quaternion.AngleAxis(nowAnglerVel * -1, Vector3.forward);
-                }
+//        if (PlayerScript.counterSwing)
+//        {
+//            PlayerScript.counterSwing = false;
+//            CalculateCounterVariable();
+//        }
+//    }
 
-                Vector3 pos = Player.transform.position;
+//    public override void Move()
+//    {
+//        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+//        float deg180dif = Mathf.Abs(degree - 180);
+//        switch (PlayerScript.swingState)
+//        {
+//            case SwingState.TOUCHED:
+//                //角速度計算
+//                float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
+//                deg180Ratio = Mathf.Clamp01(deg180Ratio); //一応範囲内に補正
+//                deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
 
-                pos -= BulletPosition;
-                pos = angleAxis * pos;
-                pos += BulletPosition;
-                PlayerScript.transform.position = pos;
-                break;
+//                float easeDeg180Ratio = Easing.Linear(deg180Ratio, 1.0f, 0.0f, 1.0f);
 
-            case SwingState.RELEASED:
-                //自分へ弾を引き戻す
-                float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-                Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
-                vec = vec.normalized;
-                BulletScript.vel = vec * 100;
+//                nowAnglerVel = ((maxAnglerVel - minAnglerVel) * easeDeg180Ratio) + minAnglerVel;
 
-                //距離が一定以下になったら弾を非アクティブ
-                if (interval < 4.0f)
-                {
-                    finishFlag = true;
+//                //向きによって回転方向が違う
+//                Quaternion angleAxis = Quaternion.Euler(Vector3.forward);
+//                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+//                {
+//                    angleAxis = Quaternion.AngleAxis(nowAnglerVel, Vector3.forward);
+//                }
+//                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+//                {
+//                    angleAxis = Quaternion.AngleAxis(nowAnglerVel * -1, Vector3.forward);
+//                }
+
+//                Vector3 pos = Player.transform.position;
+
+//                pos -= BulletPosition;
+//                pos = angleAxis * pos;
+//                pos += BulletPosition;
+//                PlayerScript.transform.position = pos;
+//                break;
+
+//            case SwingState.RELEASED:
+//                //自分へ弾を引き戻す
+//                float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
+//                Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
+//                vec = vec.normalized;
+//                BulletScript.vel = vec * 100;
+
+//                //距離が一定以下になったら弾を非アクティブ
+//                if (interval < 4.0f)
+//                {
+//                    finishFlag = true;
                     
-                }
-                break;
+//                }
+//                break;
 
-            default:
-                break;
-        }
-    }
+//            default:
+//                break;
+//        }
+//    }
 
-    public override void StateTransition()
-    {
-        if (finishFlag)
-        {
-            PlayerScript.swingState = SwingState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(0.0f);
-        }
-    }
+//    public override void StateTransition()
+//    {
+//        if (finishFlag)
+//        {
+//            PlayerScript.swingState = SwingState.NONE;
+//            PlayerScript.mode = new PlayerStateMidair(0.0f);
+//        }
+//    }
 
-    public override void DebugMessage()
-    {
-        Debug.Log("PlayerState:Swing");
-    }
-}
+//    public override void DebugMessage()
+//    {
+//        Debug.Log("PlayerState:Swing");
+//    }
+//}
 
 
 
@@ -1159,7 +1162,7 @@ public class PlayerStateSwing_R_Release : PlayerState
         //紐の長さとスピードから角速度を計算
         float angler_velocity;
         float tempY = Mathf.Min(startPlayerVel.y, 0.0f);
-        angler_velocity = ((Mathf.Abs(startPlayerVel.x) + Mathf.Abs(tempY)) * 6.0f) ;
+        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 3.0f + Mathf.Abs(tempY) * 6.0f) ;
         angler_velocity /= (betweenLength * 2.0f * Mathf.PI);
 
         //範囲内に補正
