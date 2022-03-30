@@ -1407,6 +1407,12 @@ public class PlayerStateSwing_R_Release : PlayerState
 }
 
 
+public class PlayerStateRail : PlayerState
+{
+
+}
+
+
 
 /// <summary>
 /// 死亡時アニメーション等の制御クラス

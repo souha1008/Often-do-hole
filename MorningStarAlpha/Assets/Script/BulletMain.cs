@@ -153,24 +153,24 @@ public class BulletMain : MonoBehaviour
             //AdjustColPoint(colAspect, colPoint);
 
 
-            Quaternion rot = Quaternion.identity;
-            switch (colAspect) {
-                case Aspect.DOWN:
-                    rot = Quaternion.Euler(new Vector3(90, 0, 0));
-                    break;
+            //Quaternion rot = Quaternion.identity;
+            //switch (colAspect) {
+            //    case Aspect.DOWN:
+            //        rot = Quaternion.Euler(new Vector3(90, 0, 0));
+            //        break;
 
-                case Aspect.UP:
-                    rot = Quaternion.Euler(new Vector3(270, 0, 0));
-                    break;
+            //    case Aspect.UP:
+            //        rot = Quaternion.Euler(new Vector3(270, 0, 0));
+            //        break;
 
-                case Aspect.LEFT:
-                    rot = Quaternion.Euler(new Vector3(0, 270, 0));
-                    break;
+            //    case Aspect.LEFT:
+            //        rot = Quaternion.Euler(new Vector3(0, 270, 0));
+            //        break;
 
-                case Aspect.RIGHT:
-                    rot = Quaternion.Euler(new Vector3(0, 90, 0));
-                    break;
-            }
+            //    case Aspect.RIGHT:
+            //        rot = Quaternion.Euler(new Vector3(0, 90, 0));
+            //        break;
+            //}
 
             if (onceFlag == false)
             {
@@ -180,7 +180,7 @@ public class BulletMain : MonoBehaviour
                 switch (tag)
                 {
                     case "Platform":
-                        //EffectManager.instance.StartShotEffect(transform.position, rot);
+                        EffectManager.instance.StartShotEffect(transform.position, Quaternion.identity);
                         isTouched = true;
                         rb.isKinematic = true;
                         rb.velocity = Vector3.zero;
