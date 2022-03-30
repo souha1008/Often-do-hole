@@ -23,8 +23,8 @@ public class SoundManagerEditor : Editor
         // エディターの変更確認
         EditorGUI.BeginChangeCheck();
 
-        Sound.AudioSource_BGM_Max = EditorGUILayout.IntField("BGMオーディオソース最大値", Sound.AudioSource_BGM_Max);
-        Sound.AudioSource_SE_Max = EditorGUILayout.IntField("SEオーディオソース最大値", Sound.AudioSource_SE_Max);
+        Sound.AudioSource_BGM_Max = EditorGUILayout.IntField("BGM同時再生数MAX", Sound.AudioSource_BGM_Max);
+        Sound.AudioSource_SE_Max = EditorGUILayout.IntField("SE同時再生数MAX", Sound.AudioSource_SE_Max);
 
 
         Sound.SoundVolumeMaster = EditorGUILayout.Slider("マスターボリューム", (int)(Sound.SoundVolumeMaster * 100), 0, 100) / 100.0f;
@@ -52,13 +52,13 @@ public enum SOUND_TYPE
 // サウンドのクリップ管理用
 public class SOUND_CLIP
 {
-    public SOUND_CLIP(string audioName, AudioClip audioClip, SOUND_TYPE soundType)
+    public SOUND_CLIP(string soundName, AudioClip audioClip, SOUND_TYPE soundType)
     {
-        AudioName = audioName;
+        SoundName = soundName;
         AudioClip = audioClip;
         SoundType = soundType;
     }
-    public string AudioName;    // クリップに付ける名前
+    public string SoundName;    // クリップに付ける名前
     public AudioClip AudioClip; // オーディオクリップ
     public SOUND_TYPE SoundType;// 音の種類
 }
@@ -74,12 +74,14 @@ public class SOUND_SOURCE
         isPause = false;
         PauseTime = 0.0f;
         isUse = false;
+        Sound_Clip = null;
     }
     public AudioSource AudioSource; // オーディオソース
     public float Volume;            // オーディオソースのボリューム
     public bool isPause;            // ポーズ中フラグ
     public float PauseTime;         // ポーズ中の再生位置
     public bool isUse;              // 使用中フラグ(ポーズ中も含める)
+    public SOUND_CLIP Sound_Clip;   // 現在使用中のクリップ情報
 }
 
 
@@ -206,33 +208,46 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    //===========================
+    //========================================================
     // 音の再生
-    //===========================
-    public void PlaySound(string AudioName)
+    // 
+    // 第一引数：Addressablesアセットで付けた名前
+    // 第二引数：音量(0.0f～1.0f) ※音源個別に音量変えられます
+    // 第三引数：音の再生位置(再生時間を超えた場合 0.0f)
+    //========================================================
+    public void PlaySound(string SoundName)
     {
-        PlaySound(AudioName, 1.0f);
+        PlaySound(SoundName, 1.0f, 0.0f);
     }
 
-    public void PlaySound(string AudioName, float Volume)
+    public void PlaySound(string SoundName, float Volume)
     {
-        SOUND_CLIP Sound = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
+        PlaySound(SoundName, Volume, 0.0f);
+    }
+
+    public void PlaySound(string SoundName, float Volume, float PlayTime)
+    {
+        SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
         // オーディオの名前と合うもの取得
         for (int i = 0; i < SoundList.Count; i++)
         {
-            if (SoundList[i].AudioName == AudioName)
+            if (SoundList[i].SoundName == SoundName)
             {
-                Sound = SoundList[i];
-                Debug.Log("音見つけた");
+                Sound_Clip = SoundList[i];
+                //Debug.Log("音見つけた");
+                break;
             }
         }
 
-        if (Sound.AudioClip == null)
+        if (Sound_Clip.AudioClip == null)
             return;
 
+        // 音量の範囲指定
+        Mathf.Clamp(Volume, 0.0f, 1.0f);
+
         // 再生
-        switch (Sound.SoundType)
+        switch (Sound_Clip.SoundType)
         {
             case SOUND_TYPE.NULL:
                 break;
@@ -241,13 +256,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                 {
                     if (!AudioSource_BGM[i].isUse)
                     {
-                        AudioSource_BGM[i].AudioSource.clip = Sound.AudioClip;
+                        AudioSource_BGM[i].AudioSource.clip = Sound_Clip.AudioClip;
+                        AudioSource_BGM[i].AudioSource.time = PlayTime;
                         AudioSource_BGM[i].AudioSource.Play();
                         AudioSource_BGM[i].AudioSource.loop = true;
                         AudioSource_BGM[i].Volume = Volume;
                         AudioSource_BGM[i].AudioSource.volume = Volume * SoundVolumeBGM;
                         AudioSource_BGM[i].isPause = false;
                         AudioSource_BGM[i].isUse = true;
+                        AudioSource_BGM[i].Sound_Clip = Sound_Clip;
                         break;
                     }
                 }
@@ -257,13 +274,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                 {
                     if (!AudioSource_SE[i].isUse)
                     {
-                        AudioSource_SE[i].AudioSource.clip = Sound.AudioClip;
+                        AudioSource_SE[i].AudioSource.clip = Sound_Clip.AudioClip;
+                        AudioSource_SE[i].AudioSource.time = PlayTime;
                         AudioSource_SE[i].AudioSource.Play();
                         AudioSource_SE[i].AudioSource.loop = false;
                         AudioSource_SE[i].Volume = Volume;
                         AudioSource_SE[i].AudioSource.volume = Volume * SoundVolumeSE;
                         AudioSource_SE[i].isPause = false;
                         AudioSource_SE[i].isUse = true;
+                        AudioSource_SE[i].Sound_Clip = Sound_Clip;
                         break;
                     }
                 }
@@ -279,15 +298,11 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         for (int i = 0; i < AudioSource_BGM_MAX; i++)
         {
-            AudioSource_BGM[i].AudioSource.Stop();
-            AudioSource_BGM[i].isPause = false;
-            AudioSource_BGM[i].isUse = false;
+            EndSoundSource(AudioSource_BGM[i]); // サウンドソース情報の終了処理
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
-            AudioSource_SE[i].AudioSource.Stop();
-            AudioSource_SE[i].isPause = false;
-            AudioSource_SE[i].isUse = false;
+            EndSoundSource(AudioSource_SE[i]); // サウンドソース情報の終了処理
         }
     }
 
@@ -341,6 +356,41 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+    //===========================
+    // 個別の音の再生終了
+    //===========================
+    public void PauseSoundALL(string SoundName)
+    {
+        bool EndFlag = false;
+
+        // オーディオの名前と合うもの取得して停止
+        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_BGM[i].isUse)
+            {
+                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
+                {
+                    EndSoundSource(AudioSource_BGM[i]); // サウンドソース情報の終了処理
+
+                    EndFlag = true;
+                }
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_SE[i].isUse)
+            {
+                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
+                {
+                    EndSoundSource(AudioSource_SE[i]); // サウンドソース情報の終了処理
+
+                    EndFlag = true;
+                }
+            }
+        }
+    }
+
+
 
     //===========================================
     // 現在の音量を更新(音量を変更したときに使用)
@@ -364,6 +414,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
 
+    // サウンドソース情報の終了処理
+    private void EndSoundSource(SOUND_SOURCE Sound_Source)
+    {
+        Sound_Source.AudioSource.Stop(); // 再生停止
+        Sound_Source.isPause = false; // ポーズ終了
+        Sound_Source.isUse = false; // 使用フラグオフ
+        Sound_Source.Sound_Clip = null;// 現在使用中のクリップ情報をnullにする
+    }
+
+
     // 再生中判定処理
     private void SetNowUse()
     {
@@ -372,6 +432,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             if (AudioSource_BGM[i].isUse && !AudioSource_BGM[i].isPause && !AudioSource_BGM[i].AudioSource.isPlaying)
             {
                 AudioSource_BGM[i].isUse = false; // 再生終了
+                AudioSource_BGM[i].Sound_Clip = null; // 現在使用中のクリップ情報をnullにする
             }
             
         }
@@ -380,6 +441,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             if (AudioSource_SE[i].isUse && !AudioSource_SE[i].isPause && !AudioSource_SE[i].AudioSource.isPlaying)
             {
                 AudioSource_SE[i].isUse = false; // 再生終了
+                AudioSource_SE[i].Sound_Clip = null; // 現在使用中のクリップ情報をnullにする
             }  
         }
     }
@@ -406,10 +468,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            // 音の途中再生
-            //AudioSource_SE[0].AudioSource.time = 0.15f;
-            //AudioSource_SE[0].AudioSource.Play();
-            //AudioSource_SE[0].isUse = true;
+            SoundManager.Instance.PlaySound("決定音");
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SoundManager.Instance.PlaySound("TestBGM", 0.1f);
         }
     }
 
@@ -423,7 +487,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         //Debug.Log("ポーズ中：" + AudioSource_BGM[0].isPause);
         //Debug.Log("使っている：" + AudioSource_BGM[0].isUse);
-        Debug.Log("ポーズ中：" + AudioSource_SE[0].isPause);
-        Debug.Log("使っている：" + AudioSource_SE[0].isUse);
+        //Debug.Log("ポーズ中：" + AudioSource_SE[0].isPause);
+        //Debug.Log("使っている：" + AudioSource_SE[0].isUse);
     }
 }
