@@ -298,60 +298,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         for (int i = 0; i < AudioSource_BGM_MAX; i++)
         {
-            EndSoundSource(AudioSource_BGM[i]); // サウンドソース情報の終了処理
-        }
-        for (int i = 0; i < AudioSource_SE_MAX; i++)
-        {
-            EndSoundSource(AudioSource_SE[i]); // サウンドソース情報の終了処理
-        }
-    }
-
-    //===========================
-    // 全ての音の一時停止
-    //===========================
-    public void PauseSoundALL()
-    {
-        for (int i = 0; i < AudioSource_BGM_MAX; i++)
-        {
-            if (AudioSource_BGM[i].AudioSource.isPlaying)
+            if (AudioSource_BGM[i].isUse)
             {
-                AudioSource_BGM[i].PauseTime = AudioSource_BGM[i].AudioSource.time;
-                AudioSource_BGM[i].AudioSource.Stop();
-                AudioSource_BGM[i].isPause = true;
+                EndSoundSource(AudioSource_BGM[i]); // サウンドソース情報の終了処理
             }
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
-            if (AudioSource_SE[i].AudioSource.isPlaying)
+            if (AudioSource_SE[i].isUse)
             {
-                AudioSource_SE[i].PauseTime = AudioSource_SE[i].AudioSource.time;
-                AudioSource_SE[i].AudioSource.Stop();
-                AudioSource_SE[i].isPause = true;
-            }
-        }
-    }
-
-    //===========================
-    // 全ての音の一時停止解除
-    //===========================
-    public void UnPauseSoundALL()
-    {
-        for (int i = 0; i < AudioSource_BGM_MAX; i++)
-        {
-            if (AudioSource_BGM[i].isPause)
-            {
-                AudioSource_BGM[i].AudioSource.time = AudioSource_BGM[i].PauseTime;
-                AudioSource_BGM[i].AudioSource.Play();
-                AudioSource_BGM[i].isPause = false;
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX; i++)
-        {
-            if (AudioSource_SE[i].isPause)
-            {
-                AudioSource_SE[i].AudioSource.time = AudioSource_SE[i].PauseTime;
-                AudioSource_SE[i].AudioSource.Play();
-                AudioSource_SE[i].isPause = false;
+                EndSoundSource(AudioSource_SE[i]); // サウンドソース情報の終了処理
             }
         }
     }
@@ -359,7 +315,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================
     // 個別の音の再生終了
     //===========================
-    public void PauseSoundALL(string SoundName)
+    public void StopSound(string SoundName)
     {
         bool EndFlag = false;
 
@@ -390,7 +346,115 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+    //===========================
+    // 全ての音の一時停止
+    //===========================
+    public void PauseSoundALL()
+    {
+        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        {
+            if (AudioSource_BGM[i].isUse && !AudioSource_BGM[i].isPause)
+            {
+                PauseSoundSource(AudioSource_BGM[i]);
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX; i++)
+        {
+            if (AudioSource_SE[i].isUse && !AudioSource_SE[i].isPause)
+            {
+                PauseSoundSource(AudioSource_SE[i]);
+            }
+        }
+    }
 
+    //===========================
+    // 個別の音の一時停止
+    //===========================
+    public void PauseSound(string SoundName)
+    {
+        bool EndFlag = false;
+
+        // オーディオの名前と合うもの取得して一時停止
+        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_BGM[i].isUse && !AudioSource_BGM[i].isPause)
+            {
+                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
+                {
+                    PauseSoundSource(AudioSource_BGM[i]);
+
+                    EndFlag = true;
+                }
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_SE[i].isUse && !AudioSource_SE[i].isPause)
+            {
+                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
+                {
+                    PauseSoundSource(AudioSource_SE[i]);
+
+                    EndFlag = true;
+                }
+            }
+        }
+    }
+
+    //===========================
+    // 全ての音の一時停止解除
+    //===========================
+    public void UnPauseSoundALL()
+    {
+        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        {
+            if (AudioSource_BGM[i].isUse && AudioSource_BGM[i].isPause)
+            {
+                UnPauseSoundSource(AudioSource_BGM[i]);
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX; i++)
+        {
+            if (AudioSource_SE[i].isUse && AudioSource_SE[i].isPause)
+            {
+                UnPauseSoundSource(AudioSource_SE[i]);
+            }
+        }
+    }
+
+    //===========================
+    // 個別の音の一時停止解除
+    //===========================
+    public void UnPauseSound(string SoundName)
+    {
+        bool EndFlag = false;
+
+        // オーディオの名前と合うもの取得して一時停止
+        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_BGM[i].isUse && AudioSource_BGM[i].isPause)
+            {
+                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
+                {
+                    UnPauseSoundSource(AudioSource_BGM[i]);
+
+                    EndFlag = true;
+                }
+            }
+        }
+        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
+        {
+            if (AudioSource_SE[i].isUse && AudioSource_SE[i].isPause)
+            {
+                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
+                {
+                    UnPauseSoundSource(AudioSource_SE[i]);
+
+                    EndFlag = true;
+                }
+            }
+        }
+    }
 
     //===========================================
     // 現在の音量を更新(音量を変更したときに使用)
@@ -414,13 +478,31 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
 
+
+    // サウンドソース一時停止処理
+    private void PauseSoundSource(SOUND_SOURCE Sound_Source)
+    {
+        Sound_Source.PauseTime = Sound_Source.AudioSource.time; // ポーズ中の時間ゲット
+        Sound_Source.AudioSource.Stop();// 再生一時停止
+        Sound_Source.isPause = true;    // ポーズ中フラグオン
+    }
+
+    // サウンドソース一時停止解除処理
+    private void UnPauseSoundSource(SOUND_SOURCE Sound_Source)
+    {
+        Sound_Source.AudioSource.time = Sound_Source.PauseTime; // ポーズの時間セット
+        Sound_Source.AudioSource.Play();// 再生一時停止解除
+        Sound_Source.isPause = false;   // ポーズ中フラグオフ
+    }
+
     // サウンドソース情報の終了処理
     private void EndSoundSource(SOUND_SOURCE Sound_Source)
     {
-        Sound_Source.AudioSource.Stop(); // 再生停止
-        Sound_Source.isPause = false; // ポーズ終了
-        Sound_Source.isUse = false; // 使用フラグオフ
-        Sound_Source.Sound_Clip = null;// 現在使用中のクリップ情報をnullにする
+        Sound_Source.AudioSource.Stop();// 再生停止
+        Sound_Source.isPause = false;   // ポーズ中フラグオフ
+        Sound_Source.PauseTime = 0.0f;  // ポーズ中の時間リセット
+        Sound_Source.isUse = false;     // 使用フラグオフ
+        Sound_Source.Sound_Clip = null; // 現在使用中のクリップ情報をnullにする
     }
 
 
@@ -475,6 +557,21 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             SoundManager.Instance.PlaySound("TestBGM", 0.1f);
         }
+
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    SoundManager.Instance.StopSound("TestBGM");
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.J))
+        //{
+        //    SoundManager.Instance.PauseSound("TestBGM");
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    SoundManager.Instance.UnPauseSound("TestBGM");
+        //}
     }
 
     public void FixedUpdate()
