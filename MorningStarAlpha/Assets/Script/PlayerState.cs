@@ -122,7 +122,7 @@ public class PlayerStateOnGround : PlayerState
             if (PlayerScript.adjustLeftStick.x < -0.01f)
             {
                 PlayerScript.dir = PlayerMoveDir.LEFT;
-                PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
+                PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
             }
         }
         else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -130,7 +130,7 @@ public class PlayerStateOnGround : PlayerState
             if (PlayerScript.adjustLeftStick.x > 0.01f)
             {
                 PlayerScript.dir = PlayerMoveDir.RIGHT;
-                PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
+                PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
             }
         }
     }
@@ -267,8 +267,7 @@ public class PlayerStateShot_2 : PlayerState
     }
 
     /// <summary>
-    /// 引っ張られている時
-    /// プレイヤーを進行方向に対して回転
+    /// 引っ張られているとき、プレイヤーを進行方向に対して回転
     /// </summary>
     public void RotationPlayer()
     {
@@ -280,7 +279,7 @@ public class PlayerStateShot_2 : PlayerState
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
 
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
-                Quaternion adjustQua = Quaternion.Euler(0, 270, 270);
+                Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
                 quaternion *= adjustQua;
                 PlayerScript.rb.rotation = quaternion;
                 break;
@@ -289,13 +288,11 @@ public class PlayerStateShot_2 : PlayerState
             case ShotState.FOLLOW:
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    PlayerScript.dir = PlayerMoveDir.LEFT;
-                    PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);         
+                    PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);         
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {       
-                    PlayerScript.dir = PlayerMoveDir.RIGHT;
-                    PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);    
+                    PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);    
                 }
                 break;
         }
@@ -746,12 +743,12 @@ public class PlayerStateMidair : PlayerState
         if (PlayerScript.adjustLeftStick.x > 0.01f)
         {
             PlayerScript.dir = PlayerMoveDir.RIGHT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
+            PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
         }
         else if (PlayerScript.adjustLeftStick.x < -0.01f)
         {
             PlayerScript.dir = PlayerMoveDir.LEFT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
+            PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
         }
 
         if (countTimer > recastTime)
@@ -1241,16 +1238,22 @@ public class PlayerStateSwing_R_Release : PlayerState
         {
             //プレイヤー回転処理
             PlayerScript.dir = PlayerMoveDir.LEFT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);
+            PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
         }
         else if (PlayerScript.dir == PlayerMoveDir.LEFT)
         {
             //プレイヤー回転処理
             PlayerScript.dir = PlayerMoveDir.RIGHT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);
+            PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
         }
 
         //切り離しアングルの計算
+        ReleaseAngleCalculate();
+
+    }
+
+    private void ReleaseAngleCalculate()
+    {
         float diff_down = Mathf.Abs(endAngle - 180.0f); //真下と終了角の差
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
         {
@@ -1272,9 +1275,57 @@ public class PlayerStateSwing_R_Release : PlayerState
             //範囲内に補正
             endAngle = Mathf.Clamp(endAngle, 220, 270);
         }
-
     }
 
+    public void RotationPlayer()
+    {
+
+        switch (PlayerScript.swingState)
+        {
+            case SwingState.TOUCHED:
+                float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+
+                Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
+                Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+
+                Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
+
+                quaternion *= adjustQua;
+
+                if(PlayerScript.dir == PlayerMoveDir.RIGHT)
+                {
+                    if(degree < 180)
+                    {
+                        quaternion *= Quaternion.Euler(0, 180, 0);
+                    }
+                }
+                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                {
+                    if (degree > 180)
+                    {
+                        quaternion *= Quaternion.Euler(0, 180, 0);
+                    }
+                }
+
+
+
+                PlayerScript.rb.rotation = quaternion;
+                break;
+
+            case SwingState.RELEASED:
+                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                {
+                    PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
+                }
+                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                {
+                    PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
+                }
+                break;
+        }
+
+
+    }
 
     public void ReleaseInput()
     {
@@ -1283,6 +1334,8 @@ public class PlayerStateSwing_R_Release : PlayerState
             releaseButton = true;
         }
     }
+
+
 
 
 
@@ -1357,6 +1410,8 @@ public class PlayerStateSwing_R_Release : PlayerState
     {
         float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position); //バレットからプレイヤーベクトル
         float deg180dif = Mathf.Abs(degree - 180); //プレイヤーからベクトル
+
+        RotationPlayer();
 
         switch (PlayerScript.swingState)
         {

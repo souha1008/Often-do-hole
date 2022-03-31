@@ -127,6 +127,7 @@ public class PlayerMain : MonoBehaviour
         shotState = ShotState.NONE;
         swingState = SwingState.NONE;
         dir = PlayerMoveDir.RIGHT;        //Œü‚«‰ŠúˆÊ’u
+        rb.rotation = Quaternion.Euler(0, 90, 0);
         vel = Vector3.zero;
         addVel = Vector3.zero;
         floorVel = Vector3.zero;
