@@ -1202,7 +1202,7 @@ public class PlayerStateSwing_R_Release : PlayerState
         //最低速は突入時プレイヤーvelocity
         maxAnglerVel = minAnglerVel = angler_velocity;
         //最高速度は突入角が大きいほど早い
-        maxAnglerVel += (diff_down / 90) * 2.0f;
+        maxAnglerVel += (diff_down / 90) * 1.0f;
     }
 
     /// <summary>
@@ -1293,8 +1293,6 @@ public class PlayerStateSwing_R_Release : PlayerState
                     BulletScript.ReturnBullet();
                     PlayerScript.swingState = SwingState.RELEASED;
 
-
-
                     //勢い追加
                     //弾とプレイヤー間のベクトルに直行するベクトル
                     Vector3 addVec = BulletPosition - Player.transform.position;
@@ -1329,20 +1327,24 @@ public class PlayerStateSwing_R_Release : PlayerState
             }
         }
 
-        if (PlayerScript.counterSwing)
-        {
-            PlayerScript.counterSwing = false;
-            CalculateCounterVariable();
-        }
+       
     }
 
     public override void Move()
     {
         float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position); //バレットからプレイヤーベクトル
         float deg180dif = Mathf.Abs(degree - 180); //プレイヤーからベクトル
+
         switch (PlayerScript.swingState)
         {
             case SwingState.TOUCHED:
+                //反転処理
+                if (PlayerScript.counterSwing)
+                {
+                    CalculateCounterVariable();
+                    PlayerScript.counterSwing = false;
+                }
+
                 //角速度計算
                 float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
                 deg180Ratio = Mathf.Clamp01(deg180Ratio); //一応範囲内に補正

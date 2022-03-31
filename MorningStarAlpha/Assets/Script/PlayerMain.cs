@@ -337,28 +337,39 @@ public class PlayerMain : MonoBehaviour
         forciblyReturnSaveVelocity = saveVelocity;
     }
 
+
+    
+
+
+
     private void OnCollisionEnter(Collision collision)
     {
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
+        //
+
+
         //‹ó’†‚Å•Ç‚É‚Ô‚Â‚©‚Á‚½‚Æ‚«‘¬“x‚ğ‚È‚­‚·
         if (refState == EnumPlayerState.MIDAIR)
-        {
-            for (int i = 0; i < collision.contacts.Length; i++)
-            {
-                if (Mathf.Abs(collision.contacts[i].point.x - transform.position.x) > 0.3f)
-                {
-                    vel.x *= 0.2f;
-                    if(vel.y > 1.0f)
-                    {
-                        vel.y = 0;
-                    }
-                    Debug.Log("KILL");
+        {   
+                switch (asp) {
+                    case Aspect.LEFT:
+                    case Aspect.RIGHT:
+                        vel.x *= 0.2f;
+                        if (vel.y > 1.0f)
+                        {
+                            vel.y *= 0.2f;
+                        }
+                        break;
+
+                    case Aspect.DOWN:
+                        vel.x *= 0.2f;
+                        vel.y *= 0.2f;
+                        break;
                 }
-            }
         }
 
-        //swing’†‚É•Ç‚É‚Ô‚Â‚©‚Á‚½‚çÁ‚·
+        //swing’†‚É•Ç‚É‚Ô‚Â‚©‚Á‚½‚ç‚Æ‚«‚Ìˆ—
         if (refState == EnumPlayerState.SWING)
         {
             if (swingState == SwingState.TOUCHED)
