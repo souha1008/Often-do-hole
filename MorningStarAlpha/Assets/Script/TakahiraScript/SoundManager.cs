@@ -12,6 +12,8 @@ using UnityEditor;
 /// 1：音源に付けるタグ名は BGM, SE, OBJECT のひとつだけ
 /// 2：音源に付ける タグ名, 名前 は全て別々の名前にする
 /// 
+/// 3：音量の段階 [ Play時の音量(出力最大値) * SetVolumeの音量 * 各タイプの音量(BGM,SE...) * マスターの音量(ゲーム全体) ] ※全て 0.0f～1.0f
+/// 
 /// </summary>
 
 
@@ -117,7 +119,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private SOUND_SOURCE[] AudioSource_SE;   // オーディオソースSE
     private SOUND_SOURCE[] AudioSource_OBJECT; // オーディオソースOBJECT
 
-    private delegate void InForDelegate(); // for文内の分岐処理用
+    private delegate void InForDelegate(SOUND_SOURCE[] SoundSource, string SoundName, float Volume, int i); // for文内の分岐処理用
 
     private void Awake()
     {
@@ -306,6 +308,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public void PlaySound(string SoundName, float Volume, float PlayTime)
     {
         PlaySound(SoundName, Volume, PlayTime, null);
+    }
+
+    public void PlaySound(string SoundName, Vector3? SoundPos)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, SoundPos);
+    }
+
+    public void PlaySound(string SoundName, float Volume, Vector3? SoundPos)
+    {
+        PlaySound(SoundName, Volume, 0.0f, SoundPos);
     }
 
     public void PlaySound(string SoundName, float Volume, float PlayTime, Vector3? SoundPos)
@@ -644,46 +656,20 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         Mathf.Clamp(Volume, 0.0f, 1.0f);
 
-        bool EndFlag = false;
-
         // オーディオの名前と合うもの取得して音量調節
-        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_BGM[i].isUse)
-            {
-                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
-                {
-                    AudioSource_BGM[i].Volume = Volume; // 再生中の音量セット
-                    UpdateVolume(); // 音量更新
+        ForAudioSouce(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, Volume, SetVolumeDelegate);
+        ForAudioSouce(AudioSource_SE_MAX, AudioSource_SE, SoundName, Volume, SetVolumeDelegate);
+        ForAudioSouce(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, Volume, SetVolumeDelegate);
+    }
 
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
+    private void SetVolumeDelegate(SOUND_SOURCE[] SoundSource, string SoundName, float Volume, int i)
+    {
+        if (SoundSource[i].isUse)
         {
-            if (AudioSource_SE[i].isUse)
+            if (SoundSource[i].Sound_Clip.SoundName == SoundName)
             {
-                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
-                {
-                    AudioSource_SE[i].Volume = Volume; // 再生中の音量セット
-                    UpdateVolume(); // 音量更新
-
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse)
-            {
-                if (AudioSource_OBJECT[i].Sound_Clip.SoundName == SoundName)
-                {
-                    AudioSource_OBJECT[i].Volume = Volume; // 再生中の音量セット
-                    UpdateVolume(); // 音量更新
-
-                    EndFlag = true;
-                }
+                SoundSource[i].Volume = Volume; // 再生中の音量セット
+                UpdateVolume(); // 音量更新
             }
         }
     }
@@ -717,11 +703,11 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
     // for文のデリゲート処理
-    private void ForAudioSouce(int ForLoopNum, InForDelegate  Delegate)
+    private void ForAudioSouce(int ForLoopNum, SOUND_SOURCE[] SoundSource, string SoundName, float Volume, InForDelegate  Delegate)
     {
         for (int i = 0; i < ForLoopNum; i++)
         {
-            Delegate();
+            Delegate(SoundSource, SoundName, Volume, i);
         }
     }
 
@@ -834,7 +820,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.1f, 2.0f, new Vector3(10, 10, 0));
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, new Vector3(10, 10, 0));
         }
 
         if (Input.GetKeyDown(KeyCode.H))
@@ -842,15 +828,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f);
         }
 
-        //if (Input.GetKeyDown(KeyCode.J))
-        //{
-        //    SoundManager.Instance.SetVolume("TestBGM", 1.0f);
-        //}
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            SoundManager.Instance.SetVolume("TestBGM2", 0.5f);
+        }
 
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    SoundManager.Instance.UnPauseSound("TestBGM");
-        //}
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            SoundManager.Instance.SetVolume("TestBGM2", 0.2f);
+        }
     }
 
     public void FixedUpdate()
