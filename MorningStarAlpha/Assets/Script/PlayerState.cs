@@ -744,9 +744,7 @@ public class PlayerStateMidair : PlayerState
 
     public override void Move()
     {
-        //減衰
-
-
+        //減衰S
         PlayerScript.vel.x *= PlayerScript.MIDAIR_FRICTION;
         if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
@@ -1113,8 +1111,6 @@ public class PlayerStateSwing_R_Release : PlayerState
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
 
-    private List<Vector2> leftSticks = new List<Vector2>(); //swing開始からのleftStickを保持
-
     public PlayerStateSwing_R_Release()  //コンストラクタ
     {
         BulletPosition = BulletScript.gameObject.transform.position;
@@ -1153,7 +1149,7 @@ public class PlayerStateSwing_R_Release : PlayerState
         //紐の長さとスピードから角速度を計算
         float angler_velocity;
         float tempY = Mathf.Min(startPlayerVel.y, 0.0f);
-        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 2.0f + Mathf.Abs(tempY) * 2.0f);
+        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 2.5f + Mathf.Abs(tempY) * 1.5f);
         angler_velocity /= (betweenLength * 2.0f * Mathf.PI);
 
         //範囲内に補正

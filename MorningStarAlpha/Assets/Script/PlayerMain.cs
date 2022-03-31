@@ -155,7 +155,6 @@ public class PlayerMain : MonoBehaviour
         {
             InputStick();
             CheckCanShot();
-            CheckMidAir();
 
             if (mode != null)
             {
@@ -419,19 +418,21 @@ public class PlayerMain : MonoBehaviour
         Collider col = GetComponent<Collider>();
 
 
-        Debug.Log("size    :" + col.bounds.size.y);
-        Debug.Log("extents :" + col.bounds.extents.y);
-        Debug.Log("min     :" + col.bounds.min.y);
-        Debug.Log("max     :" + col.bounds.max.y);
+        //Debug.Log("size    :" + col.bounds.size.y);
+        //Debug.Log("extents :" + col.bounds.extents.y);
+        //Debug.Log("min     :" + col.bounds.min.y);
+        //Debug.Log("max     :" + col.bounds.max.y);
         //ÚG“_‚Ì‚¤‚¿Aˆê‚Â‚Å‚à‘«Œ³‚ª‚ ‚ê‚Î’…’n”»’è
         for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.GetContact(i).point.y < transform.position.y + (col.bounds.size.y - 0.5f))
+            if (collision.GetContact(i).point.y < transform.position.y - (col.bounds.extents.y - 0.01f))
             {
                 isOnGround = true;
             }
         }
 
+        Debug.Log(transform.position.y - (col.bounds.extents.y - 0.01f));
+        Debug.Log(collision.GetContact(0).point.y);
         //FOLLOW’†‚É•Ç‚É“–‚½‚é‚Æã‚É•â³
         if (refState == EnumPlayerState.SHOT)
         {
@@ -465,7 +466,7 @@ public class PlayerMain : MonoBehaviour
 
             Collider col = GetComponent<Collider>();
 
-            if (Physics.Raycast(downRay, col.bounds.size.y + 0.1f) == false)
+            if (Physics.Raycast(downRay, col.bounds.extents.y + 0.1f) == false)
             {
                 isOnGround = false;
             }

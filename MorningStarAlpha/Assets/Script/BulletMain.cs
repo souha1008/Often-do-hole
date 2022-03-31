@@ -58,7 +58,6 @@ public class BulletMain : MonoBehaviour
         rb.velocity = Vector3.zero;
         vel = Vector3.zero;
         isTouched = false;
-
         vel += vec * BULLET_SPEED;
 
         //è¡Ç≥ÇπÇƒÇ‡ÇÁÇ¢Ç‹ÇµÇΩ
