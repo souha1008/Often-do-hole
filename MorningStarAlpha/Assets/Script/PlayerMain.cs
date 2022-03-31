@@ -332,7 +332,6 @@ public class PlayerMain : MonoBehaviour
     /// </param>
     public void ForciblyReturnBullet(bool saveVelocity)
     {
-        
         forciblyReturnBulletFlag = true;
         forciblyReturnSaveVelocity = saveVelocity;
     }
@@ -371,6 +370,7 @@ public class PlayerMain : MonoBehaviour
         {
             switch (shotState) {
                 case ShotState.STRAINED: //•R’£‚è‹l‚ß
+                    ForciblyReturnBullet(true);
                     break;
 
                 case ShotState.FOLLOW: //•R‚Éˆø‚Á’£‚ç‚ê
