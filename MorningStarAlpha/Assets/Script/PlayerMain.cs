@@ -346,9 +346,6 @@ public class PlayerMain : MonoBehaviour
     {
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
-        //
-
-
         //空中で壁にぶつかったとき速度をなくす
         if (refState == EnumPlayerState.MIDAIR)
         {   
@@ -368,6 +365,28 @@ public class PlayerMain : MonoBehaviour
                         break;
                 }
         }
+
+        //ショット中に壁にあたったときの処理
+        if(refState == EnumPlayerState.SHOT)
+        {
+            switch (shotState) {
+                case ShotState.STRAINED: //紐張り詰め
+                    break;
+
+                case ShotState.FOLLOW: //紐に引っ張られ
+                    if(asp == Aspect.DOWN)
+                    {
+                        ForciblyReturnBullet(false);
+                    }
+                    break;
+
+                case ShotState.GO:
+                case ShotState.RETURN:
+                    //何もしない
+                    break;
+            }
+        }
+
 
         //swing中に壁にぶつかったらときの処理
         if (refState == EnumPlayerState.SWING)
