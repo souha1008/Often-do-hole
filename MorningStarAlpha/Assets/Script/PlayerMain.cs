@@ -425,14 +425,13 @@ public class PlayerMain : MonoBehaviour
         //接触点のうち、一つでも足元があれば着地判定
         for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.GetContact(i).point.y < transform.position.y - (col.bounds.extents.y - 0.01f))
+            if (collision.GetContact(i).point.y < transform.position.y - (col.bounds.extents.y - (col.bounds.size.y * 0.15f)))
             {
                 isOnGround = true;
             }
         }
 
-        Debug.Log(transform.position.y - (col.bounds.extents.y - 0.01f));
-        Debug.Log(collision.GetContact(0).point.y);
+
         //FOLLOW中に壁に当たると上に補正
         if (refState == EnumPlayerState.SHOT)
         {
@@ -456,23 +455,6 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    //空中にいるかを判定する
-    //斜めの床がなければ必要なさそう
-    private void CheckMidAir()
-    {
-        if (isOnGround)
-        {
-            Ray downRay = new Ray(rb.position, Vector3.down);
-
-            Collider col = GetComponent<Collider>();
-
-            if (Physics.Raycast(downRay, col.bounds.extents.y + 0.1f) == false)
-            {
-                isOnGround = false;
-            }
-        }
-    }
-
     private void OnCollisionExit(Collision collision)
     {
         if (isOnGround)
@@ -480,4 +462,23 @@ public class PlayerMain : MonoBehaviour
             isOnGround = false;
         }
     }
+
+
+    ////空中にいるかを判定する
+    ////斜めの床がなければ必要なさそう
+    //private void CheckMidAir()
+    //{
+    //    if (isOnGround)
+    //    {
+    //        Ray downRay = new Ray(rb.position, Vector3.down);
+
+    //        Collider col = GetComponent<Collider>();
+
+    //        if (Physics.Raycast(downRay, col.bounds.extents.y + 0.1f) == false)
+    //        {
+    //            isOnGround = false;
+    //        }
+    //    }
+    //}
+
 }

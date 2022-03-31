@@ -266,9 +266,41 @@ public class PlayerStateShot_2 : PlayerState
         //BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>(); //バレット情報のスナップ
     }
 
-    ~PlayerStateShot_2()
+    /// <summary>
+    /// 引っ張られている時
+    /// プレイヤーを進行方向に対して回転
+    /// </summary>
+    public void RotationPlayer()
     {
-    
+
+        switch (PlayerScript.shotState)
+        {
+            case ShotState.STRAINED:
+
+                Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
+
+                Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+                Quaternion adjustQua = Quaternion.Euler(0, 270, 270);
+                quaternion *= adjustQua;
+                PlayerScript.rb.rotation = quaternion;
+                break;
+
+            case ShotState.RETURN:
+            case ShotState.FOLLOW:
+                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                {
+                    PlayerScript.dir = PlayerMoveDir.LEFT;
+                    PlayerScript.rb.rotation = Quaternion.Euler(0, 180, 0);         
+                }
+                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                {       
+                    PlayerScript.dir = PlayerMoveDir.RIGHT;
+                    PlayerScript.rb.rotation = Quaternion.Euler(0, 0, 0);    
+                }
+                break;
+        }
+
+      
     }
 
     public override void UpdateState()
@@ -330,6 +362,7 @@ public class PlayerStateShot_2 : PlayerState
                     PlayerScript.vel = BulletScript.vel * 0.8f;
                 }
             }
+
             //STRAINEDだけど自由移動のタイミング
             else
             {
@@ -359,6 +392,9 @@ public class PlayerStateShot_2 : PlayerState
     {
         float interval;
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
+
+        RotationPlayer();
+
         switch (PlayerScript.shotState) {
 
             case ShotState.GO: 
@@ -385,6 +421,7 @@ public class PlayerStateShot_2 : PlayerState
                 break;
 
             case ShotState.STRAINED:
+               
                 bulletVecs.Enqueue(BulletScript.vel);
                 bulletVecs.Dequeue();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
@@ -1237,8 +1274,6 @@ public class PlayerStateSwing_R_Release : PlayerState
         }
 
     }
-
-
 
 
     public void ReleaseInput()
