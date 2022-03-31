@@ -370,7 +370,11 @@ public class PlayerMain : MonoBehaviour
         {
             switch (shotState) {
                 case ShotState.STRAINED: //•R’£‚è‹l‚ß
-                    ForciblyReturnBullet(true);
+                    if (isOnGround == false)
+                    {
+                        ForciblyReturnBullet(true);
+                    }
+                   
                     break;
 
                 case ShotState.FOLLOW: //•R‚Éˆø‚Á’£‚ç‚ê
@@ -412,10 +416,17 @@ public class PlayerMain : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
 
+        Collider col = GetComponent<Collider>();
+
+
+        Debug.Log("size    :" + col.bounds.size.y);
+        Debug.Log("extents :" + col.bounds.extents.y);
+        Debug.Log("min     :" + col.bounds.min.y);
+        Debug.Log("max     :" + col.bounds.max.y);
         //ÚG“_‚Ì‚¤‚¿Aˆê‚Â‚Å‚à‘«Œ³‚ª‚ ‚ê‚Î’…’n”»’è
         for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.GetContact(i).point.y < transform.position.y - 0.6f)
+            if (collision.GetContact(i).point.y < transform.position.y + (col.bounds.size.y - 0.5f))
             {
                 isOnGround = true;
             }
@@ -451,7 +462,10 @@ public class PlayerMain : MonoBehaviour
         if (isOnGround)
         {
             Ray downRay = new Ray(rb.position, Vector3.down);
-            if (Physics.Raycast(downRay, 1.2f) == false)
+
+            Collider col = GetComponent<Collider>();
+
+            if (Physics.Raycast(downRay, col.bounds.size.y + 0.1f) == false)
             {
                 isOnGround = false;
             }

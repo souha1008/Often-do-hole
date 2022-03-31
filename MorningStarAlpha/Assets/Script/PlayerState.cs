@@ -20,6 +20,10 @@ public class PlayerState
     static public GameObject Player;
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
+
+    /// <summary>
+    /// バレットの位置を常にスティック方向に調整
+    /// </summary>
     protected void BulletAdjust()
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
@@ -76,11 +80,8 @@ public class PlayerState
 public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
-    private bool isSlide; //横から素早く着地するとスライド
-    private const float SLIDE_END_TIME = 0.2f; 
+    private const float SLIDE_END_TIME = 0.3f; 
     private float slideEndTimer;
-    private const float shotRecastTime = 0.3f;
-    private float ShotTimer;
 
     public PlayerStateOnGround()//コンストラクタ
     {
@@ -88,33 +89,19 @@ public class PlayerStateOnGround : PlayerState
         shotButton = false;
         PlayerScript.vel.y = 0;
         PlayerScript.canShotState = true;
+        slideEndTimer = 0.0f;
 
         //ボール関連
         BulletScript.rb.isKinematic = true;
 
         if(Mathf.Abs(PlayerScript.vel.x) > 30.0f)
         {
-            isSlide = true;
+            PlayerScript.onGroundState = OnGroundState.SLIDE;
         }
         else
         {
-            isSlide = false;
-            PlayerScript.canShotState = true;
+            PlayerScript.onGroundState = OnGroundState.NORMAL;
         }
-    }
-
-    /// <summary>
-    /// バレットの位置を常にスティック方向に調整
-    /// </summary>
-
-    public PlayerStateOnGround(bool is_slide)//コンストラクタ
-    {
-        PlayerScript.refState = EnumPlayerState.ON_GROUND;
-        shotButton = false;
-        PlayerScript.vel.y = 0;
-        PlayerScript.canShotState = true;
-
-        isSlide = is_slide;
     }
 
     public override void UpdateState()
@@ -151,7 +138,7 @@ public class PlayerStateOnGround : PlayerState
     public override void Move()
     {
 
-        if (isSlide)
+        if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
             float slide_Weaken = 0.5f;
 
@@ -185,14 +172,14 @@ public class PlayerStateOnGround : PlayerState
 
             //減衰
             {
-                PlayerScript.vel *= 0.92f * (fixedAdjust);
+                PlayerScript.vel *= 0.97f;
             }
 
             //スライド終了処理（時間によるもの
-            slideEndTimer += Time.deltaTime;
+            slideEndTimer += Time.fixedDeltaTime;
             if(slideEndTimer > SLIDE_END_TIME)
             {
-                isSlide = false;
+                PlayerScript.onGroundState = OnGroundState.NORMAL;
                 PlayerScript.canShotState = true;
             }
         }
@@ -226,7 +213,9 @@ public class PlayerStateOnGround : PlayerState
             }
             else //減衰
             {
-                PlayerScript.vel *= PlayerScript.RUN_FRICTION * (fixedAdjust);
+                PlayerScript.vel *= PlayerScript.RUN_FRICTION;
+
+                
             }
         }
     }
@@ -236,11 +225,13 @@ public class PlayerStateOnGround : PlayerState
     {
         if (PlayerScript.isOnGround == false)
         {
+            PlayerScript.onGroundState = OnGroundState.NONE;
             PlayerScript.mode = new PlayerStateMidair(0.0f);
         }
 
         if (shotButton)
         {
+            PlayerScript.onGroundState = OnGroundState.NONE;
             PlayerScript.mode = new PlayerStateShot_2();
         }
     }
@@ -1162,7 +1153,7 @@ public class PlayerStateSwing_R_Release : PlayerState
         //紐の長さとスピードから角速度を計算
         float angler_velocity;
         float tempY = Mathf.Min(startPlayerVel.y, 0.0f);
-        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 3.0f + Mathf.Abs(tempY) * 2.0f);
+        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 2.0f + Mathf.Abs(tempY) * 2.0f);
         angler_velocity /= (betweenLength * 2.0f * Mathf.PI);
 
         //範囲内に補正
@@ -1182,7 +1173,7 @@ public class PlayerStateSwing_R_Release : PlayerState
             //終点自動切り離しポイントをy軸に対して対称にする
             endAngle -= (diff_down + diff_down);
             //開始点よりは高い位置にする
-            endAngle -= 20;
+            endAngle -= 30;
 
             //範囲内に補正
             endAngle = Mathf.Clamp(endAngle, 90, 140);
@@ -1192,7 +1183,7 @@ public class PlayerStateSwing_R_Release : PlayerState
             //終点自動切り離しポイントをy軸に対して対称にする
             endAngle += (diff_down + diff_down);
             //開始点よりは高い位置にする
-            endAngle += 20;
+            endAngle += 30;
 
             //範囲内に補正
             endAngle = Mathf.Clamp(endAngle, 220, 270);
@@ -1202,7 +1193,8 @@ public class PlayerStateSwing_R_Release : PlayerState
         //最低速は突入時プレイヤーvelocity
         maxAnglerVel = minAnglerVel = angler_velocity;
         //最高速度は突入角が大きいほど早い
-        maxAnglerVel += (diff_down / 90) * 1.0f;
+        float velDiff = Mathf.Clamp01((diff_down / 90));
+        maxAnglerVel += velDiff * 1.2f;
     }
 
     /// <summary>
