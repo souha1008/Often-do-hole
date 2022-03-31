@@ -1162,7 +1162,7 @@ public class PlayerStateSwing_R_Release : PlayerState
         //紐の長さとスピードから角速度を計算
         float angler_velocity;
         float tempY = Mathf.Min(startPlayerVel.y, 0.0f);
-        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 3.0f + Mathf.Abs(tempY) * 2.0f) ;
+        angler_velocity = (Mathf.Abs(startPlayerVel.x) * 3.0f + Mathf.Abs(tempY) * 2.0f);
         angler_velocity /= (betweenLength * 2.0f * Mathf.PI);
 
         //範囲内に補正
