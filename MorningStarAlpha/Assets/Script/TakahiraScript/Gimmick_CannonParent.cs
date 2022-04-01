@@ -131,7 +131,7 @@ public class Gimmick_CannonParent : Gimmick_Main
             if (!FixedRadFlag) // 砲台固定でないなら
             {
                 // プレイヤーの方向に向く
-                Rad.z = CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos);
+                this.gameObject.transform.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos));
             }
 
             // 弾発射処理
@@ -150,7 +150,7 @@ public class Gimmick_CannonParent : Gimmick_Main
     {
         if (CannonChild != null)
         {
-            GameObject Child = Instantiate(CannonChild, gameObject.transform.position, Quaternion.Euler(Rad)); // 弾生成
+            GameObject Child = Instantiate(CannonChild, gameObject.transform.position, this.gameObject.transform.rotation); // 弾生成
 
             Child.GetComponent<Gimmick_CannonChild>().SetCannonChild(PlayerObject, Speed, LifeTime, ChaseFlag); // 弾の値セット
         }

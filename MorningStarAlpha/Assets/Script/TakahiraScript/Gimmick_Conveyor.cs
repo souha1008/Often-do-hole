@@ -29,7 +29,7 @@ public class Gimmick_Conveyor : Gimmick_Main
         Cd.isTrigger = false; // トリガーオフ
 
         // 角度を0度固定
-        Rad = Vector3.zero;
+        transform.rotation = Quaternion.identity;
     }
 
     public override void FixedMove()
