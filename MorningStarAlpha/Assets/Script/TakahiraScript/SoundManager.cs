@@ -119,7 +119,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private SOUND_SOURCE[] AudioSource_SE;   // オーディオソースSE
     private SOUND_SOURCE[] AudioSource_OBJECT; // オーディオソースOBJECT
 
-    private delegate void InForDelegate(SOUND_SOURCE[] SoundSource, string SoundName, float Volume, int i); // for文内の分岐処理用
+    private delegate void SoundVolDelegate(SOUND_SOURCE[] SoundSource, string SoundName, float Volume, int i); // for文内の分岐処理用
+    private delegate void SoundVolALLDelegate(SOUND_SOURCE[] SoundSource, float Volume, int i); // for文内の分岐処理用
+    private delegate void SoundDelegate(SOUND_SOURCE[] SoundSource, string SoundName, int i); // for文内の分岐処理用
+    private delegate void SoundALLDelegate(SOUND_SOURCE[] SoundSource, int i); // for文内の分岐処理用
 
     private void Awake()
     {
@@ -394,26 +397,25 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================
     public void StopSoundALL()
     {
-        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        // 再生終了処理
+        ForSoundALL(AudioSource_BGM_MAX, AudioSource_BGM, StopSoundALLDelegate);
+        ForSoundALL(AudioSource_SE_MAX, AudioSource_SE, StopSoundALLDelegate);
+        ForSoundALL(AudioSource_OBJECT_MAX, AudioSource_OBJECT, StopSoundALLDelegate);
+    }
+
+    private void StopSoundALLDelegate(SOUND_SOURCE[] SoundSource, int i)
+    {
+        if (SoundSource[i].isUse)
         {
-            if (AudioSource_BGM[i].isUse)
-            {
-                EndSoundSource(AudioSource_BGM[i]); // サウンドソース情報の終了処理
-            }
+            EndSoundSource(SoundSource[i]); // サウンドソース情報の終了処理
         }
-        for (int i = 0; i < AudioSource_SE_MAX; i++)
+    }
+
+    private void ForSoundALL(int ForLoopNum, SOUND_SOURCE[] SoundSource, SoundALLDelegate Delegate)
+    {
+        for (int i = 0; i < ForLoopNum; i++)
         {
-            if (AudioSource_SE[i].isUse)
-            {
-                EndSoundSource(AudioSource_SE[i]); // サウンドソース情報の終了処理
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse)
-            {
-                EndSoundSource(AudioSource_OBJECT[i]); // サウンドソース情報の終了処理
-            }
+            Delegate(SoundSource, i);
         }
     }
 
@@ -422,44 +424,28 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================
     public void StopSound(string SoundName)
     {
-        bool EndFlag = false;
+        // オーディオの名前と合うもの取得して再生終了
+        ForSound(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, StopSoundDelegate);
+        ForSound(AudioSource_SE_MAX, AudioSource_SE, SoundName, StopSoundDelegate);
+        ForSound(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, StopSoundDelegate);
+    }
 
-        // オーディオの名前と合うもの取得して停止
-        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
+    private void StopSoundDelegate(SOUND_SOURCE[] SoundSource, string SoundName, int i)
+    {
+        if (AudioSource_OBJECT[i].isUse)
         {
-            if (AudioSource_BGM[i].isUse)
+            if (AudioSource_OBJECT[i].Sound_Clip.SoundName == SoundName)
             {
-                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
-                {
-                    EndSoundSource(AudioSource_BGM[i]); // サウンドソース情報の終了処理
-
-                    EndFlag = true;
-                }
+                EndSoundSource(AudioSource_OBJECT[i]); // サウンドソース情報の終了処理
             }
         }
-        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_SE[i].isUse)
-            {
-                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
-                {
-                    EndSoundSource(AudioSource_SE[i]); // サウンドソース情報の終了処理
+    }
 
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX && !EndFlag; i++)
+    private void ForSound(int ForLoopNum, SOUND_SOURCE[] SoundSource, string SoundName, SoundDelegate Delegate)
+    {
+        for (int i = 0; i < ForLoopNum; i++)
         {
-            if (AudioSource_OBJECT[i].isUse)
-            {
-                if (AudioSource_OBJECT[i].Sound_Clip.SoundName == SoundName)
-                {
-                    EndSoundSource(AudioSource_OBJECT[i]); // サウンドソース情報の終了処理
-
-                    EndFlag = true;
-                }
-            }
+            Delegate(SoundSource, SoundName, i);
         }
     }
 
@@ -468,71 +454,37 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================
     public void PauseSoundALL()
     {
-        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        // 一時停止処理
+        ForSoundALL(AudioSource_BGM_MAX, AudioSource_BGM, PauseSoundALLDelegate);
+        ForSoundALL(AudioSource_SE_MAX, AudioSource_SE, PauseSoundALLDelegate);
+        ForSoundALL(AudioSource_OBJECT_MAX, AudioSource_OBJECT, PauseSoundALLDelegate);
+    }
+    private void PauseSoundALLDelegate(SOUND_SOURCE[] SoundSource, int i)
+    {
+        if (SoundSource[i].isUse && !SoundSource[i].isPause)
         {
-            if (AudioSource_BGM[i].isUse && !AudioSource_BGM[i].isPause)
-            {
-                PauseSoundSource(AudioSource_BGM[i]);
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX; i++)
-        {
-            if (AudioSource_SE[i].isUse && !AudioSource_SE[i].isPause)
-            {
-                PauseSoundSource(AudioSource_SE[i]);
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse && !AudioSource_OBJECT[i].isPause)
-            {
-                PauseSoundSource(AudioSource_OBJECT[i]);
-            }
+            PauseSoundSource(SoundSource[i]);
         }
     }
+
 
     //===========================
     // 個別の音の一時停止
     //===========================
     public void PauseSound(string SoundName)
     {
-        bool EndFlag = false;
-
         // オーディオの名前と合うもの取得して一時停止
-        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
+        ForSound(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, PauseSoundDelegate);
+        ForSound(AudioSource_SE_MAX, AudioSource_SE, SoundName, PauseSoundDelegate);
+        ForSound(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, PauseSoundDelegate);
+    }
+    private void PauseSoundDelegate(SOUND_SOURCE[] SoundSource, string SoundName, int i)
+    {
+        if (SoundSource[i].isUse && !SoundSource[i].isPause)
         {
-            if (AudioSource_BGM[i].isUse && !AudioSource_BGM[i].isPause)
+            if (SoundSource[i].Sound_Clip.SoundName == SoundName)
             {
-                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
-                {
-                    PauseSoundSource(AudioSource_BGM[i]);
-
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_SE[i].isUse && !AudioSource_SE[i].isPause)
-            {
-                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
-                {
-                    PauseSoundSource(AudioSource_SE[i]);
-
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse && !AudioSource_OBJECT[i].isPause)
-            {
-                if (AudioSource_OBJECT[i].Sound_Clip.SoundName == SoundName)
-                {
-                    PauseSoundSource(AudioSource_OBJECT[i]);
-
-                    EndFlag = true;
-                }
+                PauseSoundSource(SoundSource[i]);
             }
         }
     }
@@ -542,71 +494,39 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================
     public void UnPauseSoundALL()
     {
-        for (int i = 0; i < AudioSource_BGM_MAX; i++)
+        // 一時停止解除処理
+        ForSoundALL(AudioSource_BGM_MAX, AudioSource_BGM, UnPauseSoundALLDelegate);
+        ForSoundALL(AudioSource_SE_MAX, AudioSource_SE, UnPauseSoundALLDelegate);
+        ForSoundALL(AudioSource_OBJECT_MAX, AudioSource_OBJECT, UnPauseSoundALLDelegate);
+    }
+
+    private void UnPauseSoundALLDelegate(SOUND_SOURCE[] SoundSource, int i)
+    {
+        if (SoundSource[i].isUse && SoundSource[i].isPause)
         {
-            if (AudioSource_BGM[i].isUse && AudioSource_BGM[i].isPause)
-            {
-                UnPauseSoundSource(AudioSource_BGM[i]);
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX; i++)
-        {
-            if (AudioSource_SE[i].isUse && AudioSource_SE[i].isPause)
-            {
-                UnPauseSoundSource(AudioSource_SE[i]);
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse && AudioSource_OBJECT[i].isPause)
-            {
-                UnPauseSoundSource(AudioSource_OBJECT[i]);
-            }
+            UnPauseSoundSource(SoundSource[i]);
         }
     }
+
 
     //===========================
     // 個別の音の一時停止解除
     //===========================
     public void UnPauseSound(string SoundName)
     {
-        bool EndFlag = false;
-
         // オーディオの名前と合うもの取得して一時停止解除
-        for (int i = 0; i < AudioSource_BGM_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_BGM[i].isUse && AudioSource_BGM[i].isPause)
-            {
-                if (AudioSource_BGM[i].Sound_Clip.SoundName == SoundName)
-                {
-                    UnPauseSoundSource(AudioSource_BGM[i]);
+        ForSound(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, UnPauseSoundDelegate);
+        ForSound(AudioSource_SE_MAX, AudioSource_SE, SoundName, UnPauseSoundDelegate);
+        ForSound(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, UnPauseSoundDelegate);
+    }
 
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX && !EndFlag; i++)
+    private void UnPauseSoundDelegate(SOUND_SOURCE[] SoundSource, string SoundName, int i)
+    {
+        if (SoundSource[i].isUse && SoundSource[i].isPause)
         {
-            if (AudioSource_SE[i].isUse && AudioSource_SE[i].isPause)
+            if (SoundSource[i].Sound_Clip.SoundName == SoundName)
             {
-                if (AudioSource_SE[i].Sound_Clip.SoundName == SoundName)
-                {
-                    UnPauseSoundSource(AudioSource_SE[i]);
-
-                    EndFlag = true;
-                }
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX && !EndFlag; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse && AudioSource_OBJECT[i].isPause)
-            {
-                if (AudioSource_OBJECT[i].Sound_Clip.SoundName == SoundName)
-                {
-                    UnPauseSoundSource(AudioSource_OBJECT[i]);
-
-                    EndFlag = true;
-                }
+                UnPauseSoundSource(SoundSource[i]);
             }
         }
     }
@@ -621,28 +541,25 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         Mathf.Clamp(Volume, 0.0f, 1.0f);
 
         // オーディオの名前と合うもの取得して音量調節
-        for (int i = 0; i < AudioSource_BGM_MAX; i++)
-        {
-            if (AudioSource_BGM[i].isUse)
-            {
-                AudioSource_BGM[i].Volume = Volume; // 再生中の音量セット
-            }
-        }
-        for (int i = 0; i < AudioSource_SE_MAX; i++)
-        {
-            if (AudioSource_SE[i].isUse)
-            {
-                AudioSource_SE[i].Volume = Volume; // 再生中の音量セット
-            }
-        }
-        for (int i = 0; i < AudioSource_OBJECT_MAX; i++)
-        {
-            if (AudioSource_OBJECT[i].isUse)
-            {
-                AudioSource_OBJECT[i].Volume = Volume; // 再生中の音量セット
-            }
-        }
+        ForSetVolumeALL(AudioSource_BGM_MAX, AudioSource_BGM, Volume, SetVolumeALL);
+        ForSetVolumeALL(AudioSource_SE_MAX, AudioSource_SE, Volume, SetVolumeALL); 
+        ForSetVolumeALL(AudioSource_OBJECT_MAX, AudioSource_OBJECT, Volume, SetVolumeALL);
         UpdateVolume(); // 音量更新
+    }
+
+    private void SetVolumeALL(SOUND_SOURCE[] SoundSource, float Volume, int i)
+    {
+        if (SoundSource[i].isUse)
+        {
+            SoundSource[i].Volume = Volume; // 再生中の音量セット
+        }
+    }
+    private void ForSetVolumeALL(int ForLoopNum, SOUND_SOURCE[] SoundSource, float Volume, SoundVolALLDelegate Delegate)
+    {
+        for (int i = 0; i < ForLoopNum; i++)
+        {
+            Delegate(SoundSource, Volume, i);
+        }
     }
 
 
@@ -657,9 +574,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         Mathf.Clamp(Volume, 0.0f, 1.0f);
 
         // オーディオの名前と合うもの取得して音量調節
-        ForAudioSouce(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, Volume, SetVolumeDelegate);
-        ForAudioSouce(AudioSource_SE_MAX, AudioSource_SE, SoundName, Volume, SetVolumeDelegate);
-        ForAudioSouce(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, Volume, SetVolumeDelegate);
+        ForSetVolume(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, Volume, SetVolumeDelegate);
+        ForSetVolume(AudioSource_SE_MAX, AudioSource_SE, SoundName, Volume, SetVolumeDelegate);
+        ForSetVolume(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, Volume, SetVolumeDelegate);
     }
 
     private void SetVolumeDelegate(SOUND_SOURCE[] SoundSource, string SoundName, float Volume, int i)
@@ -673,7 +590,14 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             }
         }
     }
-
+    // for文のデリゲート処理
+    private void ForSetVolume(int ForLoopNum, SOUND_SOURCE[] SoundSource, string SoundName, float Volume, SoundVolDelegate Delegate)
+    {
+        for (int i = 0; i < ForLoopNum; i++)
+        {
+            Delegate(SoundSource, SoundName, Volume, i);
+        }
+    }
 
 
     //===========================================
@@ -702,14 +626,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    // for文のデリゲート処理
-    private void ForAudioSouce(int ForLoopNum, SOUND_SOURCE[] SoundSource, string SoundName, float Volume, InForDelegate  Delegate)
-    {
-        for (int i = 0; i < ForLoopNum; i++)
-        {
-            Delegate(SoundSource, SoundName, Volume, i);
-        }
-    }
 
 
     // サウンドソース一時停止処理
