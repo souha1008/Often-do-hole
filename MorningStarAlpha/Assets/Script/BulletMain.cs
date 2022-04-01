@@ -185,7 +185,7 @@ public class BulletMain : MonoBehaviour
                 switch (tag)
                 {
                     case "Platform":
-                        EffectManager.instance.StartShotEffect(transform.position, Quaternion.identity);
+                        //EffectManager.instance.StartShotEffect(transform.position, Quaternion.identity);
                         isTouched = true;
                         rb.isKinematic = true;
                         rb.velocity = Vector3.zero;
@@ -207,6 +207,7 @@ public class BulletMain : MonoBehaviour
                         break;
 
                     case "Player":
+                        onceFlag = false;
                         break;
 
                     default:
