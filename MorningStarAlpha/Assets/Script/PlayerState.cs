@@ -28,7 +28,8 @@ public class PlayerState
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
         vec = vec * 3;
-        vec.y += 1.0f;
+        //vec.y += 1.0f;
+        vec.y += 4.0f;
         Vector3 adjustPos = PlayerScript.transform.position + vec;
 
         BulletScript.transform.position = adjustPos;

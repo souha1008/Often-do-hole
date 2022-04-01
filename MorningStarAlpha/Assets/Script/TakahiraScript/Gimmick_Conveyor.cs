@@ -38,7 +38,7 @@ public class Gimmick_Conveyor : Gimmick_Main
 
         // コンベアの動き処理
         conveyorState.Move();
-        //Debug.Log(conveyorState); // 現在のコンベアのステート
+        Debug.Log(conveyorState); // 現在のコンベアのステート
     }
 
 
@@ -90,6 +90,15 @@ public class Gimmick_Conveyor : Gimmick_Main
             // 錨オブジェクト取得
             ConveyorState.Bullet = collision.gameObject;
             ConveyorState.BulletMainScript = collision.gameObject.GetComponent<BulletMain>();
+        }
+    }
+
+    public void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            // プレイヤーオブジェクト取得
+            ConveyorState.Player = collision.gameObject;
         }
     }
 
@@ -147,7 +156,6 @@ public class ConveyorStart : ConveyorState
 
         // プレイヤーオブジェクトnull
         Player = null;
-        PlayerMainScript = null;
 
         // 錨オブジェクトnull
         Bullet = null;
@@ -178,8 +186,8 @@ public class ConveyorNone : ConveyorState
         if (Player != null && PlayerMainScript != null)
         {
             // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーオブジェクト取得
-            Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
-            Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-Player.gameObject.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+            Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
             RaycastHit hit;
             float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
             if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
@@ -199,7 +207,6 @@ public class ConveyorNone : ConveyorState
             else // レイが当たらなかったらnull入れる
             {
                 Player = null;
-                PlayerMainScript = null;
             }
         }
 
@@ -430,8 +437,8 @@ public class ConveyorPlayerMoveRight : ConveyorState
     public override void Move()
     {
         // プレイヤーからレイ飛ばして真下にブロックが無かったらステート変更
-        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
-        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-Player.gameObject.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
         RaycastHit hit;
         float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
         if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
@@ -460,8 +467,8 @@ public class ConveyorPlayerMoveLeft : ConveyorState
     public override void Move()
     {
         // プレイヤーからレイ飛ばして真下にブロックが無かったらステート変更
-        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
-        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-Player.gameObject.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
         RaycastHit hit;
         float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
         if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))

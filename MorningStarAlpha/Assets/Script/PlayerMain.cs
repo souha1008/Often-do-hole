@@ -343,6 +343,7 @@ public class PlayerMain : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
         //空中で壁にぶつかったとき速度をなくす
@@ -424,9 +425,13 @@ public class PlayerMain : MonoBehaviour
         //Debug.Log("min     :" + col.bounds.min.y);
         //Debug.Log("max     :" + col.bounds.max.y);
         //接触点のうち、一つでも足元があれば着地判定
+        //Debug.Log("trans" + transform.position.y);
+        //Debug.Log("colis" + collision.GetContact(0).point.y);
+
+
         for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.GetContact(i).point.y < transform.position.y - (col.bounds.extents.y - (col.bounds.size.y * 0.15f)))
+            if (collision.GetContact(i).point.y < transform.position.y + 0.4f)
             {
                 isOnGround = true;
             }

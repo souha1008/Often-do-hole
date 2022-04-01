@@ -322,27 +322,22 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off);
     }
-
     public void PlaySound(string SoundName, float Volume)
     {
         PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off);
     }
-
     public void PlaySound(string SoundName, float Volume, float PlayTime)
     {
         PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off);
     }
-
     public void PlaySound(string SoundName, Vector3? SoundPos)
     {
         PlaySound(SoundName, 1.0f, 0.0f, SoundPos, AudioReverbPreset.Off);
     }
-
     public void PlaySound(string SoundName, float Volume, Vector3? SoundPos)
     {
         PlaySound(SoundName, Volume, 0.0f, SoundPos, AudioReverbPreset.Off);
     }
-
     public void PlaySound(string SoundName, float Volume, float PlayTime, Vector3? SoundPos)
     {
         PlaySound(SoundName, Volume, PlayTime, SoundPos, AudioReverbPreset.Off);
