@@ -29,15 +29,27 @@ public class SoundManagerEditor : Editor
         // エディターの変更確認
         EditorGUI.BeginChangeCheck();
 
-        Sound.AudioSource_BGM_Max = EditorGUILayout.IntField("BGM同時再生数MAX", Sound.AudioSource_BGM_Max);
-        Sound.AudioSource_SE_Max = EditorGUILayout.IntField("SE同時再生数MAX", Sound.AudioSource_SE_Max);
-        Sound.AudioSource_OBJECT_Max = EditorGUILayout.IntField("OBJECT同時再生数MAX", Sound.AudioSource_OBJECT_Max);
+
+        EditorGUILayout.LabelField("[音の同時再生数MAX]");
+        EditorGUILayout.Space(3);
+        Sound.AudioSource_BGM_Max = EditorGUILayout.IntField("BGM同時再生数", Sound.AudioSource_BGM_Max);
+        Sound.AudioSource_SE_Max = EditorGUILayout.IntField("SE同時再生数", Sound.AudioSource_SE_Max);
+        Sound.AudioSource_OBJECT_Max = EditorGUILayout.IntField("OBJECT同時再生数", Sound.AudioSource_OBJECT_Max);
+        EditorGUILayout.Space(15);
 
 
+        EditorGUILayout.LabelField("[音のボリューム]");
+        EditorGUILayout.Space(3);
         Sound.SoundVolumeMaster = EditorGUILayout.Slider("マスターボリューム", (int)(Sound.SoundVolumeMaster * 100), 0, 100) / 100.0f;
         Sound.SoundVolumeBGM = EditorGUILayout.Slider("BGMボリューム", (int)(Sound.SoundVolumeBGM * 100), 0, 100) / 100.0f;
         Sound.SoundVolumeSE = EditorGUILayout.Slider("SEボリューム", (int)(Sound.SoundVolumeSE * 100), 0, 100) / 100.0f;
         Sound.SoundVolumeOBJECT = EditorGUILayout.Slider("OBJECTボリューム", (int)(Sound.SoundVolumeOBJECT * 100), 0, 100) / 100.0f;
+        EditorGUILayout.Space(15);
+
+
+        EditorGUILayout.LabelField("[3Dサウンド]");
+        EditorGUILayout.Space(3);
+        Sound.SoundMaxDistance3D = EditorGUILayout.FloatField("3Dサウンドの聞こえる最大距離", Sound.SoundMaxDistance3D);
 
 
         // エディターの変更確認
@@ -100,12 +112,14 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // インスペクターで表示用
     public int AudioSource_BGM_Max = 3;     // オーディオソースBGMの最大数(インスペクターで表示)
     public int AudioSource_SE_Max = 10;     // オーディオソースSEの最大数(インスペクターで表示)
-    public int AudioSource_OBJECT_Max = 10; // オーディオソースOBJECTの最大数(インスペクターで表示)
+    public int AudioSource_OBJECT_Max = 100; // オーディオソースOBJECTの最大数(インスペクターで表示)
 
     public float SoundVolumeMaster = 1.0f;  // ゲーム全体の音量
     public float SoundVolumeBGM = 1.0f;     // BGMの音量
     public float SoundVolumeSE = 1.0f;      // SEの音量   
     public float SoundVolumeOBJECT = 1.0f;  // OBJECTの音量
+
+    public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
 
 
     // 内部データ用
@@ -154,6 +168,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 3D音響の設定
             AudioSource_BGM[i].AudioSource.dopplerLevel = 0.0f; // ドップラー効果無し
             AudioSource_BGM[i].AudioSource.rolloffMode = AudioRolloffMode.Linear; // 音の減衰を直線にする
+            AudioSource_BGM[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
@@ -166,6 +181,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 3D音響の設定
             AudioSource_SE[i].AudioSource.dopplerLevel = 0.0f; // ドップラー効果無し
             AudioSource_SE[i].AudioSource.rolloffMode = AudioRolloffMode.Linear; // 音の減衰を直線にする
+            AudioSource_SE[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離
         }
         for (int i = 0; i < AudioSource_OBJECT_MAX; i++)
         {
@@ -178,6 +194,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 3D音響の設定
             AudioSource_OBJECT[i].AudioSource.dopplerLevel = 0.0f; // ドップラー効果無し
             AudioSource_OBJECT[i].AudioSource.rolloffMode = AudioRolloffMode.Linear; // 音の減衰を直線にする
+            AudioSource_OBJECT[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離
         }
     }
 
@@ -297,33 +314,53 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // 第二引数：音量(0.0f～1.0f) ※音源個別に音量変えられます
     // 第三引数：音の再生時間指定(再生時間を超えた場合 0.0f)
     // 第四引数：音の再生座標(指定しない場合2D,した場合3D)
+    // 第五引数：音の反響設定(AudioReverbPreset.○○○で指定出来る)
+    // 
+    // いくつかオーバーロード
     //========================================================
     public void PlaySound(string SoundName)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null);
+        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off);
     }
 
     public void PlaySound(string SoundName, float Volume)
     {
-        PlaySound(SoundName, Volume, 0.0f, null);
+        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off);
     }
 
     public void PlaySound(string SoundName, float Volume, float PlayTime)
     {
-        PlaySound(SoundName, Volume, PlayTime, null);
+        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off);
     }
 
     public void PlaySound(string SoundName, Vector3? SoundPos)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundPos);
+        PlaySound(SoundName, 1.0f, 0.0f, SoundPos, AudioReverbPreset.Off);
     }
 
     public void PlaySound(string SoundName, float Volume, Vector3? SoundPos)
     {
-        PlaySound(SoundName, Volume, 0.0f, SoundPos);
+        PlaySound(SoundName, Volume, 0.0f, SoundPos, AudioReverbPreset.Off);
     }
 
     public void PlaySound(string SoundName, float Volume, float PlayTime, Vector3? SoundPos)
+    {
+        PlaySound(SoundName, Volume, PlayTime, SoundPos, AudioReverbPreset.Off);
+    }
+    public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset);
+    }
+    public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset);
+    }
+    public void PlaySound(string SoundName, float Volume, float PlayTime, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset);
+    }
+
+    public void PlaySound(string SoundName, float Volume, float PlayTime, Vector3? SoundPos, AudioReverbPreset ReverbPreset)
     {
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
@@ -356,7 +393,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_BGM[i].Sound_Clip = Sound_Clip;
 
-                        StartSoundSource(AudioSource_BGM[i], Volume, PlayTime, SoundPos, true);                       
+                        StartSoundSource(AudioSource_BGM[i], Volume, PlayTime, SoundPos, ReverbPreset, true);                       
                         
                         break;
                     }
@@ -369,7 +406,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_SE[i].Sound_Clip = Sound_Clip;
 
-                        StartSoundSource(AudioSource_SE[i], Volume, PlayTime, SoundPos, false);
+                        StartSoundSource(AudioSource_SE[i], Volume, PlayTime, SoundPos, ReverbPreset, false);
                         
                         break;
                     }
@@ -382,7 +419,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_OBJECT[i].Sound_Clip = Sound_Clip;
 
-                        StartSoundSource(AudioSource_OBJECT[i], Volume, PlayTime, SoundPos, true);
+                        StartSoundSource(AudioSource_OBJECT[i], Volume, PlayTime, SoundPos, ReverbPreset, true);
 
                         break;
                     }
@@ -577,6 +614,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         ForSetVolume(AudioSource_BGM_MAX, AudioSource_BGM, SoundName, Volume, SetVolumeDelegate);
         ForSetVolume(AudioSource_SE_MAX, AudioSource_SE, SoundName, Volume, SetVolumeDelegate);
         ForSetVolume(AudioSource_OBJECT_MAX, AudioSource_OBJECT, SoundName, Volume, SetVolumeDelegate);
+        UpdateVolume(); // 音量更新
     }
 
     private void SetVolumeDelegate(SOUND_SOURCE[] SoundSource, string SoundName, float Volume, int i)
@@ -585,8 +623,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             if (SoundSource[i].Sound_Clip.SoundName == SoundName)
             {
-                SoundSource[i].Volume = Volume; // 再生中の音量セット
-                UpdateVolume(); // 音量更新
+                SoundSource[i].Volume = Volume; // 再生中の音量セット               
             }
         }
     }
@@ -615,14 +652,17 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         for (int i = 0; i < AudioSource_BGM_MAX; i++)
         {
             AudioSource_BGM[i].AudioSource.volume = AudioSource_BGM[i].StartVolume * AudioSource_BGM[i].Volume * SoundVolumeBGM;
+            AudioSource_BGM[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離更新
         }
         for (int i = 0; i < AudioSource_SE_MAX; i++)
         {
             AudioSource_SE[i].AudioSource.volume = AudioSource_SE[i].StartVolume * AudioSource_SE[i].Volume * SoundVolumeSE;
+            AudioSource_SE[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離更新
         }
         for (int i = 0; i < AudioSource_OBJECT_MAX; i++)
         {
             AudioSource_OBJECT[i].AudioSource.volume = AudioSource_OBJECT[i].StartVolume * AudioSource_OBJECT[i].Volume * SoundVolumeOBJECT;
+            AudioSource_OBJECT[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離更新
         }
     }
 
@@ -645,7 +685,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
     // サウンドソース情報の開始処理
-    private void StartSoundSource(SOUND_SOURCE Sound_Source, float Volume, float PlayTime, Vector3? SoundPos, bool Loop)
+    private void StartSoundSource(SOUND_SOURCE Sound_Source, float Volume, float PlayTime, Vector3? SoundPos, AudioReverbPreset ReverbPreset, bool Loop)
     {
         if (SoundPos != null)
         {
@@ -653,6 +693,14 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             Sound_Source.AudioSource.gameObject.transform.position = (Vector3)SoundPos; // 座標変更
             Sound_Source.AudioSource.spatialBlend = 1.0f; // 3Dの音響に切り替え
         }
+        if (ReverbPreset != AudioReverbPreset.Off)
+        {
+            // サウンドフィルターの追加
+            AudioReverbFilter Filter =
+                Sound_Source.AudioSource.gameObject.AddComponent<AudioReverbFilter>();
+            Filter.reverbPreset = ReverbPreset;
+        }
+
         Sound_Source.AudioSource.clip = Sound_Source.Sound_Clip.AudioClip;
         Sound_Source.AudioSource.time = PlayTime;
         Sound_Source.AudioSource.Play();
@@ -666,8 +714,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // サウンドソース情報の終了処理
     private void EndSoundSource(SOUND_SOURCE Sound_Source)
     {
+        AudioReverbFilter Filter = null;
+
         Sound_Source.AudioSource.gameObject.transform.position = Vector3.zero;  // 座標変更
         Sound_Source.AudioSource.spatialBlend = 0.0f;   // 2Dの音響に切り替え
+        if ((Filter = Sound_Source.AudioSource.gameObject.GetComponent<AudioReverbFilter>()) != null)
+        {
+            // サウンドフィルターの破棄
+            Destroy(Filter);
+        }
+
         Sound_Source.AudioSource.Stop();        // 再生停止
         Sound_Source.AudioSource.clip = null;   // クリップにnull入れる
         Sound_Source.AudioSource.time = 0.0f;   // 再生時間リセット
@@ -736,23 +792,28 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, new Vector3(10, 10, 0));
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f);
         }
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f);
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, new Vector3(10, 10, 0));
         }
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            SoundManager.Instance.SetVolume("TestBGM2", 0.5f);
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, AudioReverbPreset.Bathroom);
         }
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SoundManager.Instance.SetVolume("TestBGM2", 0.2f);
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    SoundManager.Instance.SetVolume("TestBGM2", 0.2f);
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    AudioSource_BGM[0].AudioSource.
+        //}
     }
 
     public void FixedUpdate()
