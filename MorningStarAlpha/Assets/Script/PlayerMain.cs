@@ -191,6 +191,11 @@ public class PlayerMain : MonoBehaviour
             rb.velocity += floorVel;
 
 
+            Vector3 resetZo = rb.position;
+            resetZo.z = 0.0f;
+            rb.position = resetZo;
+
+
             if (Mathf.Abs(addVel.magnitude) > 10.0f)
             {
                 addVel *= 0.96f;
@@ -337,10 +342,6 @@ public class PlayerMain : MonoBehaviour
     }
 
 
-    
-
-
-
     private void OnCollisionEnter(Collision collision)
     {
         
@@ -425,13 +426,13 @@ public class PlayerMain : MonoBehaviour
         //Debug.Log("min     :" + col.bounds.min.y);
         //Debug.Log("max     :" + col.bounds.max.y);
         //ÚG“_‚Ì‚¤‚¿Aˆê‚Â‚Å‚à‘«Œ³‚ª‚ ‚ê‚Î’…’n”»’è
-        //Debug.Log("trans" + transform.position.y);
+        //Debug.Log("trans" + rb.position.y);
         //Debug.Log("colis" + collision.GetContact(0).point.y);
 
 
         for (int i = 0; i < collision.contactCount; i++)
         {
-            if (collision.GetContact(i).point.y < transform.position.y + 0.4f)
+            if (collision.GetContact(i).point.y < rb.position.y - (col.bounds.extents.y * 0.88f))
             {
                 isOnGround = true;
             }

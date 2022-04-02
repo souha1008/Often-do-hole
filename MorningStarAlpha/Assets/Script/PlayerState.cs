@@ -28,8 +28,7 @@ public class PlayerState
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
         vec = vec * 3;
-        //vec.y += 1.0f;
-        vec.y += 4.0f;
+        vec.y += 1.0f;
         Vector3 adjustPos = PlayerScript.transform.position + vec;
 
         BulletScript.transform.position = adjustPos;
@@ -236,7 +235,6 @@ public class PlayerStateOnGround : PlayerState
             PlayerScript.mode = new PlayerStateShot_2();
         }
     }
-
 }
 
 /// <summary>
@@ -289,11 +287,11 @@ public class PlayerStateShot_2 : PlayerState
             case ShotState.FOLLOW:
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);         
+                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));         
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {       
-                    PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);    
+                {
+                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -90, 0));
                 }
                 break;
         }
@@ -724,7 +722,7 @@ public class PlayerStateMidair : PlayerState
     }
 
     //再射出可能時間を指定
-    public PlayerStateMidair(float　recast_time)
+    public PlayerStateMidair(float recast_time)
     {
         Init();
         recastTime = recast_time;
@@ -1316,11 +1314,11 @@ public class PlayerStateSwing_R_Release : PlayerState
             case SwingState.RELEASED:
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
+                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {
-                    PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
+                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -90, 0));
                 }
                 break;
         }
@@ -1461,7 +1459,6 @@ public class PlayerStateSwing_R_Release : PlayerState
                 Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
                 vec = vec.normalized;
                 BulletScript.vel = vec * 100;
-
                 //距離が一定以下になったら弾を非アクティブ
                 if (interval < 4.0f)
                 {

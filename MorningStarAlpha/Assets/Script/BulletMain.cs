@@ -33,8 +33,6 @@ public class BulletMain : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         PlayerState.BulletScript = this;
-
-        
     }
 
     private void Start()
