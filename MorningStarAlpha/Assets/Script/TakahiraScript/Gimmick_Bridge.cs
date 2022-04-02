@@ -22,6 +22,9 @@ public class Gimmick_Bridge : Gimmick_Main
         NowTime = 0.0f;
         OldRad = 0.0f;
 
+        // タグ変更
+        this.gameObject.tag = "Iron";
+
         // リジッドボディ
         Rb.isKinematic = true;
 
@@ -67,6 +70,7 @@ public class Gimmick_Bridge : Gimmick_Main
             {
                 NowTime = MoveTime;
                 Endflag = true;
+                this.gameObject.tag = "Platform";
             }
 
             Rotate();

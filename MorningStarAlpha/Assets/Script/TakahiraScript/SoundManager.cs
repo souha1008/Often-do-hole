@@ -96,6 +96,7 @@ public class SOUND_SOURCE
         PauseTime = 0.0f;
         isUse = false;
         Sound_Clip = null;
+        SoundObject = null;
     }
     public AudioSource AudioSource; // オーディオソース
     public float StartVolume;       // 再生開始時のオーディオソースのボリューム
@@ -104,6 +105,7 @@ public class SOUND_SOURCE
     public float PauseTime;         // ポーズ中の再生位置
     public bool isUse;              // 使用中フラグ(ポーズ中も含める)
     public SOUND_CLIP Sound_Clip;   // 現在使用中のクリップ情報
+    public GameObject SoundObject;  // 音を鳴らすオブジェクト(3Dサウンドの場合使用)
 }
 
 
@@ -313,7 +315,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // 第一引数：Addressablesアセットで付けた名前
     // 第二引数：音量(0.0f～1.0f) ※音源個別に音量変えられます
     // 第三引数：音の再生時間指定(再生時間を超えた場合 0.0f)
-    // 第四引数：音の再生座標(指定しない場合2D,した場合3D)
+    // 第四引数：音の再生オブジェクト(指定しない場合2D,した場合3D)
     // 第五引数：音の反響設定(AudioReverbPreset.○○○で指定出来る)
     // 
     // いくつかオーバーロード
@@ -330,17 +332,17 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off);
     }
-    public void PlaySound(string SoundName, Vector3? SoundPos)
+    public void PlaySound(string SoundName, GameObject SoundObject)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundPos, AudioReverbPreset.Off);
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off);
     }
-    public void PlaySound(string SoundName, float Volume, Vector3? SoundPos)
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject)
     {
-        PlaySound(SoundName, Volume, 0.0f, SoundPos, AudioReverbPreset.Off);
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off);
     }
-    public void PlaySound(string SoundName, float Volume, float PlayTime, Vector3? SoundPos)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject)
     {
-        PlaySound(SoundName, Volume, PlayTime, SoundPos, AudioReverbPreset.Off);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off);
     }
     public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset)
     {
@@ -355,7 +357,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset);
     }
 
-    public void PlaySound(string SoundName, float Volume, float PlayTime, Vector3? SoundPos, AudioReverbPreset ReverbPreset)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset)
     {
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
@@ -388,7 +390,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_BGM[i].Sound_Clip = Sound_Clip;
 
-                        StartSoundSource(AudioSource_BGM[i], Volume, PlayTime, SoundPos, ReverbPreset, true);                       
+                        StartSoundSource(AudioSource_BGM[i], Volume, PlayTime, SoundObject, ReverbPreset, true);                       
                         
                         break;
                     }
@@ -401,7 +403,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_SE[i].Sound_Clip = Sound_Clip;
 
-                        StartSoundSource(AudioSource_SE[i], Volume, PlayTime, SoundPos, ReverbPreset, false);
+                        StartSoundSource(AudioSource_SE[i], Volume, PlayTime, SoundObject, ReverbPreset, false);
                         
                         break;
                     }
@@ -414,7 +416,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         AudioSource_OBJECT[i].Sound_Clip = Sound_Clip;
 
-                        StartSoundSource(AudioSource_OBJECT[i], Volume, PlayTime, SoundPos, ReverbPreset, true);
+                        StartSoundSource(AudioSource_OBJECT[i], Volume, PlayTime, SoundObject, ReverbPreset, true);
 
                         break;
                     }
@@ -680,12 +682,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
     // サウンドソース情報の開始処理
-    private void StartSoundSource(SOUND_SOURCE Sound_Source, float Volume, float PlayTime, Vector3? SoundPos, AudioReverbPreset ReverbPreset, bool Loop)
+    private void StartSoundSource(SOUND_SOURCE Sound_Source, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, bool Loop)
     {
-        if (SoundPos != null)
+        if (SoundObject != null)
         {
             // 3D音響
-            Sound_Source.AudioSource.gameObject.transform.position = (Vector3)SoundPos; // 座標変更
+            Sound_Source.AudioSource.gameObject.transform.position = SoundObject.transform.position; // 座標変更
+            Sound_Source.SoundObject = SoundObject; // オブジェクトセット
             Sound_Source.AudioSource.spatialBlend = 1.0f; // 3Dの音響に切り替え
         }
         if (ReverbPreset != AudioReverbPreset.Off)
@@ -712,6 +715,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         AudioReverbFilter Filter = null;
 
         Sound_Source.AudioSource.gameObject.transform.position = Vector3.zero;  // 座標変更
+        Sound_Source.SoundObject = null;    // オブジェクトnull
         Sound_Source.AudioSource.spatialBlend = 0.0f;   // 2Dの音響に切り替え
         if ((Filter = Sound_Source.AudioSource.gameObject.GetComponent<AudioReverbFilter>()) != null)
         {
@@ -732,7 +736,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     // 再生中判定処理
-    private void SetNowUse()
+    private void UpdateNowUse()
     {
         // ループしている奴は判定しなくてもいい
 
@@ -758,6 +762,22 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         //        EndSoundSource(AudioSource_OBJECT[i]);
         //    }
         //}
+    }
+
+    // 3Dサウンドの音発生座標更新処理
+    public void Update3DPos()
+    {
+        ForSoundALL(AudioSource_BGM_MAX, AudioSource_BGM, Update3DPosDelegate);
+        ForSoundALL(AudioSource_SE_MAX, AudioSource_SE, Update3DPosDelegate);
+        ForSoundALL(AudioSource_OBJECT_MAX, AudioSource_OBJECT, Update3DPosDelegate);
+    }
+
+    private void Update3DPosDelegate(SOUND_SOURCE[] SoundSource, int i)
+    {
+        if(SoundSource[i].isUse && SoundSource[i].SoundObject != null)
+        {
+            SoundSource[i].AudioSource.gameObject.transform.position = SoundSource[i].SoundObject.transform.position; // 座標更新
+        }
     }
 
 
@@ -792,7 +812,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.H))
         {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, new Vector3(10, 10, 0));
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, this.gameObject);
         }
 
         if (Input.GetKeyDown(KeyCode.J))
@@ -817,7 +837,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         UpdateVolume();
 
         // 現在使用中か判定処理
-        SetNowUse();
+        UpdateNowUse();
+
+        // 3Dの音発生座標更新
+        Update3DPos();
 
         //Debug.Log("ポーズ中：" + AudioSource_BGM[0].isPause);
         //Debug.Log("使っている：" + AudioSource_BGM[0].isUse);
