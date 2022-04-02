@@ -14,7 +14,7 @@ public class BulletMain : MonoBehaviour
     public bool StopVelChange; //弾が戻されて引っ張られている状態
     public bool swingEnd;
     public bool followEnd;
-
+    private Renderer rd;
     //下川原
     private int ExitFlameCnt = 0;//存在し始めてからのカウント
     public int STRAIGHT_FLAME_CNT;//まっすぐ進むフレーム数
@@ -32,6 +32,7 @@ public class BulletMain : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        rd = GetComponent<Renderer>();
         PlayerState.BulletScript = this;
     }
 
@@ -41,6 +42,18 @@ public class BulletMain : MonoBehaviour
         ExitFlameCnt = 0;
 
         fixedAdjust = Time.fixedDeltaTime * 50; 
+    }
+
+    public void InvisibleBullet()
+    {
+        rb.isKinematic = true;
+        rd.enabled = false;
+    }
+
+    public void VisibleBullet()
+    {
+        rb.isKinematic = false;
+        rd.enabled = true;
     }
 
     public void ShotBullet()

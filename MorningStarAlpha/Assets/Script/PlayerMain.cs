@@ -59,7 +59,7 @@ public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
-    public GameObject Bullet_2;
+    public GameObject Bullet;
     public PlayerState mode;                         // ステート
 
 
@@ -280,7 +280,6 @@ public class PlayerMain : MonoBehaviour
         vec = vec.normalized;
 
         //分割処理
-
         if (SplitStick)
         {
             if (stickCanShotRange)

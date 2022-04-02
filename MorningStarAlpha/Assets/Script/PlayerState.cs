@@ -42,37 +42,6 @@ public class PlayerState
     }
 }
 
-
-//public class PlayerStateTest : PlayerState
-//{
-//    Vector3 sPos, ePos;
-//    float time = 0;
-
-//    public PlayerStateTest()//コンストラクタ
-//    {
-//        PlayerScript.vel = Vector3.zero;
-//        PlayerScript.canShot = true;
-
-//        time = 0;
-//        sPos = ePos = Player.transform.position;
-//        ePos.y += 10.0f;
-//    }
-
-//    public override void UpdateState()
-//    {
-//        if (Input.GetKey(KeyCode.Space))
-//        {
-//            if (time < 1)
-//            {
-//                time += Time.deltaTime;
-
-//            }
-//        }
-//    }
-//}
-
-
-
 /// <summary>
 /// プレイヤーが地上にいる状態
 /// スティックで移動、弾の発射ができる
@@ -92,9 +61,11 @@ public class PlayerStateOnGround : PlayerState
         slideEndTimer = 0.0f;
 
         //ボール関連
-        BulletScript.rb.isKinematic = true;
+        BulletScript.InvisibleBullet();
 
-        if(Mathf.Abs(PlayerScript.vel.x) > 30.0f)
+
+        //スライド発射処理
+        if (Mathf.Abs(PlayerScript.vel.x) > 30.0f)
         {
             PlayerScript.onGroundState = OnGroundState.SLIDE;
         }
@@ -256,9 +227,8 @@ public class PlayerStateShot_2 : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
         //弾の発射
-        BulletScript.GetComponent<Collider>().isTrigger = false;    
-
-        BulletScript = PlayerScript.Bullet_2.GetComponent<BulletMain>();
+        BulletScript.GetComponent<Collider>().isTrigger = false;
+        BulletScript.VisibleBullet();
         BulletScript.ShotBullet();
 
         //PlayerScript.Bullet = Object.Instantiate(PlayerScript.BulletPrefab, popPos, Quaternion.identity);
@@ -713,6 +683,8 @@ public class PlayerStateMidair : PlayerState
         countTimer = 0.0f;
         PlayerScript.canShotState = false;
         OnceFallDownFlag = false;
+
+        BulletScript.InvisibleBullet();
     }
 
     public PlayerStateMidair()//コンストラクタ
