@@ -7,12 +7,20 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEditor;
 
 /// <summary>
-/// ※注意事項※
+/// 
+///  ※ 注意事項 ※
 /// 
 /// 1：音源に付けるタグ名は BGM, SE, OBJECT のひとつだけ
 /// 2：音源に付ける タグ名, 名前 は全て別々の名前にする
 /// 
 /// 3：音量の段階 [ Play時の音量(出力最大値) * SetVolumeの音量 * 各タイプの音量(BGM,SE...) * マスターの音量(ゲーム全体) ] ※全て 0.0f～1.0f
+/// 
+/// 
+/// ++++使用方法++++
+/// 
+/// SoundManager.Instance.○○();
+/// 
+/// (例) SoundManager.Instance.PlaySound("効果音1");
 /// 
 /// </summary>
 
@@ -520,12 +528,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         // オーディオの名前と合うもの取得して一時停止
         for (int i = 0; i < NowPlaySoundList.Count; i++)
         {
-            if (!NowPlaySoundList[i].Sound_Source.isPause)
+            if (!NowPlaySoundList[i].Sound_Source.isPause && NowPlaySoundList[i].Sound_Clip.SoundName == SoundName)
             {
-                if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName)
-                {
-                    PauseSoundSource(NowPlaySoundList[i].Sound_Source);
-                }
+                PauseSoundSource(NowPlaySoundList[i].Sound_Source);
             }
         }
     }
@@ -555,12 +560,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         // オーディオの名前と合うもの取得して一時停止解除
         for (int i = 0; i < NowPlaySoundList.Count; i++)
         {
-            if (NowPlaySoundList[i].Sound_Source.isPause)
+            if (NowPlaySoundList[i].Sound_Source.isPause && NowPlaySoundList[i].Sound_Clip.SoundName == SoundName)
             {
-                if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName)
-                {
-                    UnPauseSoundSource(NowPlaySoundList[i].Sound_Source);
-                }
+                UnPauseSoundSource(NowPlaySoundList[i].Sound_Source);
             }
         }
     }
@@ -680,6 +682,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         Sound_Source.isPause = true;    // ポーズ中フラグオン
     }
 
+
     // サウンドソース一時停止解除処理
     private void UnPauseSoundSource(SOUND_SOURCE Sound_Source)
     {
@@ -687,6 +690,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         Sound_Source.AudioSource.Play();// 再生一時停止解除
         Sound_Source.isPause = false;   // ポーズ中フラグオフ
     }
+
 
     // サウンドソース情報の開始処理
     private void StartSoundSource(NOW_PLAY_SOUND NowPlaySound, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, bool Loop)
@@ -717,6 +721,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         UpdateVolume(); // 音量更新
     }
+
 
     // サウンドソース情報の終了処理
     private void EndSoundSource(NOW_PLAY_SOUND NowPlaySound)
@@ -757,6 +762,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
+
     // 3Dサウンドの音発生座標更新処理
     private void Update3DPos()
     {
@@ -776,37 +782,37 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         // テスト用入力キー
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A)) // 一時停止
         {
             PauseSoundALL();
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S)) // 一時停止解除
         {
             UnPauseSoundALL();
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D)) // 停止
         {
             StopSoundALL();
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.F)) // 効果音再生
         {
             SoundManager.Instance.PlaySound("決定音");
         }
 
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G)) // BGM再生
         {
             SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f);
         }
 
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.H)) // BGM再生(3D)
         {
             SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, this.gameObject);
         }
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J)) // BGM再生(フィルターあり, お風呂場みたいなの)
         {
             SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, AudioReverbPreset.Bathroom);
         }
