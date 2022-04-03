@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gimmick_Wind : Gimmick_Main
+public class Gimmick_Hole : Gimmick_Main
 {
-    // 変数
-    public float WindPower = 5.0f;
-
     public override void Init()
     {
 
@@ -24,15 +21,11 @@ public class Gimmick_Wind : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-
-    }
-
-    public void OnTriggerStay(Collider collider)
-    {
         if (collider.gameObject.tag == "Player")
         {
-            // プレイヤーに風を与える(風係数を渡す)
-
+            // プレイヤーを死亡状態に変更
+            PlayerMain.instance.mode = new PlayerStateDeath();
+            // プレイヤーにダメージエフェクト
         }
     }
 }

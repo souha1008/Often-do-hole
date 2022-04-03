@@ -80,8 +80,7 @@ public enum SOUND_TYPE
 
 public enum SOUND_FADE_TYPE
 {
-    NULL = 0,
-    IN,
+    IN = 0,
     OUT,
     OUT_IN
 }
@@ -111,9 +110,11 @@ public class NOW_PLAY_SOUND
     {
         Sound_Clip = sound_Clip;
         Sound_Source = sound_Source;
+        Sound_Fade = null;
     }
     public SOUND_CLIP Sound_Clip;
     public SOUND_SOURCE Sound_Source;
+    public SOUND_FADE Sound_Fade;
 }
 
 
@@ -182,7 +183,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     private List<NOW_PLAY_SOUND> NowPlaySoundList = new List<NOW_PLAY_SOUND>(); // 再生中のサウンド管理用リスト
-    private List<SOUND_FADE> FadeList = new List<SOUND_FADE>(); // サウンドのフェード用リスト
+    //private List<SOUND_FADE> FadeList = new List<SOUND_FADE>(); // サウンドのフェード用リスト
 
 
     
@@ -618,16 +619,45 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================================
     public void SoundFade(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
     {
-        for (int i = 0; i < FadeList.Count; i++)
-        {
-            if (FadeList[i].SoundName == SoundName)
-                return;
-        }
+        if (FadeTime <= 0)
+            return;
 
-        FadeList.Add(new SOUND_FADE(SoundName, FadeType, FadeTime, SoundStop));
+        // 再生中の音で名前が一致してフェード中でないならフェードセット
+        for (int i = 0; i < NowPlaySoundList.Count; i++)
+        {
+            if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName && NowPlaySoundList[i].Sound_Fade == null)
+            {
+                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(SoundName, FadeType, FadeTime, SoundStop);
+            }
+        }
     }
 
     private void UpdateSoundFade()
+    {
+        for (int i = 0; i < NowPlaySoundList.Count; i++)
+        {
+            if (NowPlaySoundList[i].Sound_Fade != null && !NowPlaySoundList[i].Sound_Source.isPause)
+            {
+                switch (NowPlaySoundList[i].Sound_Fade.FadeType)
+                {
+                    case SOUND_FADE_TYPE.IN:
+                        SoundFadeIN(NowPlaySoundList[i]);
+                        break;
+                    case SOUND_FADE_TYPE.OUT:
+                        break;
+                    case SOUND_FADE_TYPE.OUT_IN:
+                        break;
+                }
+            }
+        }
+    }
+
+    private void SoundFadeIN(NOW_PLAY_SOUND NowPlaySound)
+    {
+        float Volume = NowPlaySound.Sound_Fade.NowTime;
+    }
+
+    private void SoundFadeOUT(NOW_PLAY_SOUND NowPlaySound)
     {
 
     }
@@ -710,8 +740,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             Filter.reverbPreset = ReverbPreset;
         }
 
-        NowPlaySound.Sound_Source.AudioSource.clip = NowPlaySound.Sound_Clip.AudioClip;
-        NowPlaySound.Sound_Source.AudioSource.time = PlayTime;
+        NowPlaySound.Sound_Source.AudioSource.clip = NowPlaySound.Sound_Clip.AudioClip; // オーディオクリップセット
+        NowPlaySound.Sound_Source.AudioSource.time = PlayTime;  // 再生時間セット
         NowPlaySound.Sound_Source.AudioSource.Play();
         NowPlaySound.Sound_Source.AudioSource.loop = Loop;
         NowPlaySound.Sound_Source.StartVolume = Volume;
