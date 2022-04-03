@@ -34,12 +34,6 @@ public class PlayerState
         BulletScript.transform.position = adjustPos;
     }
 
-
-
-    protected void RotatePlayer()
-    {
-
-    }
 }
 
 /// <summary>
@@ -197,7 +191,7 @@ public class PlayerStateOnGround : PlayerState
         if (PlayerScript.isOnGround == false)
         {
             PlayerScript.onGroundState = OnGroundState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(0.0f);
+            PlayerScript.mode = new PlayerStateMidair(true);
         }
 
         if (shotButton)
@@ -437,7 +431,7 @@ public class PlayerStateShot_2 : PlayerState
             }
             else //そうでないなら空中
             {
-                PlayerScript.mode = new PlayerStateMidair(999.0f);
+                PlayerScript.mode = new PlayerStateMidair(false);
             }
         } 
    
@@ -673,43 +667,45 @@ public class PlayerStateShot_2 : PlayerState
 public class PlayerStateMidair : PlayerState
 {
     private bool shotButton;  
-    private float countTimer; //再射出可能時間に使うタイマー
-    private float recastTime; //再射出可能時間
     private bool OnceFallDownFlag;//急降下フラグ
     private void Init()
     {
         PlayerScript.refState = EnumPlayerState.MIDAIR;
         shotButton = false;
-        countTimer = 0.0f;
         PlayerScript.canShotState = false;
         OnceFallDownFlag = false;
 
         BulletScript.InvisibleBullet();
     }
 
-    public PlayerStateMidair()//コンストラクタ
+    //public PlayerStateMidair()//コンストラクタ
+    //{
+    //    Init();
+    //    recastTime = PlayerScript.BULLET_RECAST_TIME;
+    //}
+
+
+    public PlayerStateMidair(bool can_shot)//コンストラクタ
     {
         Init();
-        recastTime = PlayerScript.BULLET_RECAST_TIME;
+        PlayerScript.canShotState = can_shot;
     }
 
-    //再射出可能時間を指定
-    public PlayerStateMidair(float recast_time)
-    {
-        Init();
-        recastTime = recast_time;
-        if(recastTime < 0.0001f)
-        {
-            PlayerScript.canShotState = true; 
-        }
-    }
+    ////再射出可能時間を指定
+    //public PlayerStateMidair(float recast_time)
+    //{
+    //    Init();
+    //    recastTime = recast_time;
+    //    if(recastTime < 0.0001f)
+    //    {
+    //        PlayerScript.canShotState = true; 
+    //    }
+    //}
 
     
     public override void UpdateState()
     {
         BulletAdjust();
-
-        countTimer += Time.deltaTime;
 
         if (PlayerScript.adjustLeftStick.x > 0.01f)
         {
@@ -720,14 +716,6 @@ public class PlayerStateMidair : PlayerState
         {
             PlayerScript.dir = PlayerMoveDir.LEFT;
             PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
-        }
-
-        if (countTimer > recastTime)
-        {
-            if(PlayerScript.canShotState == false)
-            {
-                PlayerScript.canShotState = true;
-            }
         }
 
         if (Input.GetButtonDown("Button_R"))
@@ -1449,7 +1437,7 @@ public class PlayerStateSwing_R_Release : PlayerState
         if (finishFlag)
         {
             PlayerScript.swingState = SwingState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(0.0f);
+            PlayerScript.mode = new PlayerStateMidair(true);
         }
     }
 
