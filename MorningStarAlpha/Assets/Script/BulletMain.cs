@@ -50,6 +50,10 @@ public class BulletMain : MonoBehaviour
         for(int i = 0; i < Part.Length; i++)
         {
             Part[i].enabled = false;
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+            vel = Vector3.zero;
+            StopVelChange = true;
         }
     }
 
@@ -214,8 +218,7 @@ public class BulletMain : MonoBehaviour
                 string tag = collision.gameObject.tag;
                 switch (tag)
                 {
-                    case "Platform":
-                        
+                    case "Platform": 
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
                         GetComponent<Collider>().isTrigger = true;

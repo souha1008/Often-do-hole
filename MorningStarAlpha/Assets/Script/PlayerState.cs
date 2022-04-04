@@ -228,9 +228,6 @@ public class PlayerStateShot_2 : PlayerState
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
         BulletScript.ShotBullet();
-
-        //PlayerScript.Bullet = Object.Instantiate(PlayerScript.BulletPrefab, popPos, Quaternion.identity);
-        //BulletScript = PlayerScript.Bullet.GetComponent<BulletMain>(); //バレット情報のスナップ
     }
 
     /// <summary>
@@ -1290,8 +1287,6 @@ public class PlayerStateSwing_R_Release : PlayerState
                     }
                 }
 
-
-
                 PlayerScript.rb.rotation = quaternion;
                 break;
 
@@ -1326,7 +1321,7 @@ public class PlayerStateSwing_R_Release : PlayerState
     {
         //切り離し入力
         ReleaseInput();
-
+        
         //弾の場所更新
         BulletPosition = BulletScript.rb.position;
 
@@ -1404,6 +1399,13 @@ public class PlayerStateSwing_R_Release : PlayerState
                 {
                     CalculateCounterVariable();
                     PlayerScript.counterSwing = false;
+                }
+
+                //短くする処理
+                if (PlayerScript.shortSwing.isShort)
+                {
+                    betweenLength = PlayerScript.shortSwing.length;
+                    PlayerScript.shortSwing.isShort = false;
                 }
 
                 //角速度計算
@@ -1486,10 +1488,6 @@ public class PlayerStateRail : PlayerState
         BulletScript.rb.velocity = Vector3.zero;
         BulletScript.vel = Vector3.zero;
         BulletScript.StopVelChange = true;
-
-
-
-
     }
 
     public override void UpdateState()
@@ -1524,7 +1522,6 @@ public class PlayerStateDeath : PlayerState
         BulletScript.rb.velocity = Vector3.zero;
         BulletScript.vel = Vector3.zero;
         BulletScript.StopVelChange = true;
-        
     }
 
     public override void UpdateState()

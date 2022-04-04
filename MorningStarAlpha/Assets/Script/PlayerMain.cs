@@ -54,6 +54,11 @@ public enum EnumPlayerState
     DEATH,     //死亡状態
 }
 
+public struct ShortenSwing {
+    public bool isShort;
+    public float length;
+}
+
 
 public class PlayerMain : MonoBehaviour
 {
@@ -109,7 +114,10 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
+    [ReadOnly, Tooltip("スイング短くする用")] public ShortenSwing shortSwing;
     [ReadOnly, Tooltip("スイング跳ね返り用")] public bool counterSwing;
+
+
     void Awake()
     {
         instance = this;
@@ -147,6 +155,9 @@ public class PlayerMain : MonoBehaviour
         forciblyReturnSaveVelocity = false;
 
         endSwing = false;
+        shortSwing.isShort = false;
+        shortSwing.length = 0.0f;
+
         counterSwing = false;
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
@@ -352,9 +363,7 @@ public class PlayerMain : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
-
     
         //Debug.Log("size    :" + col.bounds.size.y);
         //Debug.Log("extents :" + col.bounds.extents.y);
@@ -388,30 +397,66 @@ public class PlayerMain : MonoBehaviour
         //ショット中に壁にあたったときの処理
         if(refState == EnumPlayerState.SHOT)
         {
-            switch (shotState) {
-                case ShotState.STRAINED: //紐張り詰め
-                    //RAYに移行
-                    //if (isOnGround == false)
-                    //{
-                    //    ForciblyReturnBullet(true);
-                    //}
-                   
-                    break;
+            if (collision.gameObject.CompareTag("Platform"))
+            {
+                switch (shotState)
+                {
+                    case ShotState.STRAINED: //紐張り詰め
+                        //RAYに移行
+                        //if (isOnGround == false)
+                        //{
+                        //    ForciblyReturnBullet(true);
+                        //}
 
-                case ShotState.FOLLOW: //紐に引っ張られ
-                    if(asp == Aspect.DOWN)
-                    {
-                        ForciblyReturnBullet(false);
-                    }
-                    break;
+                        break;
 
-                case ShotState.GO:
-                case ShotState.RETURN:
-                    //何もしない
-                    break;
+                    case ShotState.FOLLOW: //紐に引っ張られ
+                        if (asp == Aspect.DOWN)
+                        {
+                            ForciblyReturnBullet(false);
+                        }
+                        break;
+
+                    case ShotState.GO:
+                    case ShotState.RETURN:
+                        //何もしない
+                        break;
+                }
             }
         }
 
+
+        
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
+        Collider col = GetComponent<Collider>();
+
+        //着地判定
+        if(isOnGround == false)
+        {
+            Ray ray = new Ray(rb.position, Vector3.down);
+            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
+            {
+                isOnGround = true;
+            }
+        }
+
+        //FOLLOW中に壁に当たると上に補正
+        if (refState == EnumPlayerState.SHOT)
+        {
+            if (shotState == ShotState.FOLLOW)
+            {
+                if (asp == Aspect.LEFT || asp == Aspect.RIGHT)
+                {
+                    Vector3 tempPos = transform.position;
+                    tempPos.y += 0.7f;
+                    transform.position = tempPos;
+                }
+            }
+        }
 
         //swing中に壁にぶつかったらときの処理
         if (refState == EnumPlayerState.SWING)
@@ -428,43 +473,30 @@ public class PlayerMain : MonoBehaviour
                     {
                         counterSwing = true;
                     }
+
                     else
                     {
-                        endSwing = true;
-                        Debug.Log("collision Platform : swing end");
+                        Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
+                        vecToPlayerR = vecToPlayerR.normalized;
+                        Ray footRay = new Ray(rb.position, vecToPlayerR);
+
+                        if (Physics.SphereCast(footRay, HcolliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
+                        {
+                            Debug.Log("collision Platform : slide continue");
+                            shortSwing.isShort = true;
+
+                            //短くした後の紐長さ計算
+                            float tempLength = Vector3.Distance(BulletScript.rb.position, collision.GetContact(0).point);
+                            tempLength -= 2.5f;
+
+                            shortSwing.length = tempLength;
+                        }
+                        else
+                        {
+                            Debug.Log("collision Platform : swing end");
+                            endSwing = true;
+                        }
                     }
-                }
-            }
-        }
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        Collider col = GetComponent<Collider>();
-
-        //着地判定
-        if(isOnGround == false)
-        {
-            Ray ray = new Ray(rb.position, Vector3.down);
-            
-            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
-            {
-                isOnGround = true;
-            }
-        }
-
-        //FOLLOW中に壁に当たると上に補正
-        if (refState == EnumPlayerState.SHOT)
-        {
-            if (shotState == ShotState.FOLLOW)
-            {
-                Aspect asp = DetectAspect.DetectionAspect(collision.GetContact(0).normal);
-
-                if (asp == Aspect.LEFT || asp == Aspect.RIGHT)
-                {
-                    Vector3 tempPos = transform.position;
-                    tempPos.y += 0.7f;
-                    transform.position = tempPos;
                 }
             }
         }
@@ -521,7 +553,6 @@ public class PlayerMain : MonoBehaviour
         {
             if(swingState == SwingState.TOUCHED) 
             {
-                
                 Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
                 vecToPlayerR = vecToPlayerR.normalized;
 
@@ -530,10 +561,7 @@ public class PlayerMain : MonoBehaviour
                 Gizmos.color = Color.black;
                 Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * (coliderDistance)), colliderRadius);
             }
-        }
-
-
-       
+        }   
     }
 
 }
