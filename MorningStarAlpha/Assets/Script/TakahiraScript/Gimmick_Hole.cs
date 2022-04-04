@@ -6,7 +6,8 @@ public class Gimmick_Hole : Gimmick_Main
 {
     public override void Init()
     {
-
+        // ƒƒbƒVƒ…‚ğŒ©‚¦‚È‚­‚·‚é
+        this.gameObject.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public override void FixedMove()
