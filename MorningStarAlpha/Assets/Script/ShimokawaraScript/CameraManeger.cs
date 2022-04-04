@@ -11,7 +11,7 @@ public class CameraManeger : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         CameraCenterY.instance.ManualUpdate();
         VirtualCamera.instance.ManualUpdate();

@@ -9,10 +9,6 @@ public abstract class Gimmick_Main : MonoBehaviour
     [System.Serializable]
     public class NowMoveInfo
     {
-        [SerializeField, Label("Šp“x")]
-        [Tooltip("0`360“x‚Å•\¦‚µ‚Ä‚¢‚Ü‚·")]
-        public Vector3 Rad;          // Šp“x
-
         [SerializeField, Label("Œ»İ‚ÌˆÚ“®—Ê")]
         public Vector3 Vel;          // ˆÚ“®—Ê
 
@@ -24,7 +20,6 @@ public abstract class Gimmick_Main : MonoBehaviour
 
 
     // •Ï”
-    protected Vector3 Rad;          // Šp“x
     protected Vector3 Vel;          // ˆÚ“®—Ê
     protected Vector3 TotalMoveVel; // ©•ª‚Ì‡ŒvˆÚ“®—Ê
 
@@ -44,7 +39,6 @@ public abstract class Gimmick_Main : MonoBehaviour
     protected void Start() 
     {
         // ‰Šú‰»
-        Rad = this.gameObject.transform.rotation.eulerAngles;
         Vel = Vector3.zero;
         TotalMoveVel = Vector3.zero;
         Rb = null;
@@ -77,21 +71,7 @@ public abstract class Gimmick_Main : MonoBehaviour
         TotalMoveVel += Vel;    // ‡ŒvˆÚ“®—Ê•ÏX
         Rb.velocity = Vel;      // ˆÚ“®—Ê•ÏX
 
-        // 0`360“x‚É•ÏX
-        if (Rad.x > 360 || Rad.x < 0 ||
-            Rad.y > 360 || Rad.y < 0 ||
-            Rad.z > 360 || Rad.z < 0)
-        {
-            if (Rad.x > 360) Rad.x -= 360;
-            if (Rad.x < 0) Rad.x += 360;
-            if (Rad.y > 360) Rad.y -= 360;
-            if (Rad.y < 0) Rad.y += 360;
-            if (Rad.z > 360) Rad.z -= 360;
-            if (Rad.z < 0) Rad.z += 360;
-        }
-        Rb.rotation = Quaternion.Euler(Rad);    // Šp“x•ÏX
 
-        MoveInfo.Rad = Rad;
         MoveInfo.Vel = Vel;
         MoveInfo.TotalMoveVel = TotalMoveVel;
     }

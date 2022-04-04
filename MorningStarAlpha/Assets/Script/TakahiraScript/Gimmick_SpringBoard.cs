@@ -10,7 +10,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
     public override void Init()
     {
-
+        
     }
 
     public override void FixedMove()

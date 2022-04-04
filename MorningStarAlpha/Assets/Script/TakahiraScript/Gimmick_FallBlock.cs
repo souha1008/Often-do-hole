@@ -14,6 +14,7 @@ public class Gimmick_FallBlock : Gimmick_Main
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
     private GameObject PlayerObject;    // プレイヤーオブジェクト
+    private PlayerMain PlayerMainScript;// プレイヤーメインスクリプト
     private GameObject BulletObject;    // 錨オブジェクト
     private BulletMain BulletMainScript;// 錨メインスクリプト
 
@@ -24,6 +25,7 @@ public class Gimmick_FallBlock : Gimmick_Main
         NowTime = 0.0f;
         StartPos = this.gameObject.transform.position;
         PlayerObject = GameObject.Find("Player");
+        PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
         BulletObject = null;
         BulletMainScript = null;
 
@@ -41,20 +43,32 @@ public class Gimmick_FallBlock : Gimmick_Main
         {
             Vector3 OldPos = this.gameObject.transform.position;
             this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
-            NowTime += Time.deltaTime;
+            NowTime += Time.fixedDeltaTime;
 
             // プレイヤーからレイ飛ばして真下にブロックがあったら
             if (PlayerObject != null)
             {
-                Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
+                Ray ray_1 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+                Ray ray_2 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(-(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1.5f))
+                float RayLength = PlayerObject.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
                 {
                     if (hit.collider.gameObject == this.gameObject)
                     {
                         PlayerObject.gameObject.transform.position =
                             PlayerObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+
+                        //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
                     }
+                    else
+                    {
+                        PlayerObject = null;
+                    }
+                }
+                else
+                {
+                    PlayerObject = null;
                 }
             }
 
@@ -99,12 +113,34 @@ public class Gimmick_FallBlock : Gimmick_Main
             BulletObject = collision.gameObject;
             BulletMainScript = collision.gameObject.GetComponent<BulletMain>();
         }
-        else if (collision.gameObject.tag == "Player")
+        
+        if (collision.gameObject.tag == "Player")
+        {
+            //Debug.Log("プレイヤー当たった");
+            // プレイヤーからレイ飛ばして真下にブロックがあったら落下
+            Ray ray_1 = new Ray(collision.gameObject.transform.position + new Vector3(collision.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(collision.gameObject.transform.position + new Vector3(-(collision.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+            RaycastHit hit;
+            float RayLength = collision.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
+            {
+                NowFall = true; // 落下中
+                PlayerObject = collision.gameObject;
+                PlayerMainScript = collision.gameObject.GetComponent<PlayerMain>();
+            }
+        }
+    }
+
+    public void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
         {
             // プレイヤーからレイ飛ばして真下にブロックがあったら落下
-            Ray ray_1 = new Ray(collision.gameObject.transform.position, Vector3.down);
+            Ray ray_1 = new Ray(collision.gameObject.transform.position + new Vector3(collision.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(collision.gameObject.transform.position + new Vector3(-(collision.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray_1, out hit, 1.5f))
+            float RayLength = collision.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
                 NowFall = true; // 落下中
                 PlayerObject = collision.gameObject;

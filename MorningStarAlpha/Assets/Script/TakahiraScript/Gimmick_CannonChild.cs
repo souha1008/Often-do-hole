@@ -32,7 +32,7 @@ public class Gimmick_CannonChild : Gimmick_Main
         //this.GetComponent<Collider>().isTrigger = false; // トリガーオフ
 
         // 弾に速度を与える
-        Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(Rad.z)) * Speed;
+        Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(transform.rotation.eulerAngles.z)) * Speed;
         //Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(Rad.z)).normalized * Speed; // (ノーマライズ)
 
         // プレイヤーオブジェクト取得
@@ -47,9 +47,9 @@ public class Gimmick_CannonChild : Gimmick_Main
             Vector3 PlayerPos = PlayerObject.transform.position;    // プレイヤー座標
             Vector3 ThisPos = this.gameObject.transform.position;   // 自身の座標
 
-            Rad.z = CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos);    // 回転角
+            transform.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos));    // 回転角
 
-            Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(Rad.z)) * Speed; // 追尾
+            Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(transform.rotation.eulerAngles.z)) * Speed; // 追尾
             //Vel = (PlayerPos - ThisPos).normalized * Speed; // 追尾(ノーマライズ)
         }
 
