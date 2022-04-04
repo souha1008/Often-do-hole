@@ -66,7 +66,8 @@ public class PlayerMain : MonoBehaviour
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
-
+    private const float colliderRadius = 1.4f;   //接地判定用ray半径
+    private const float coliderDistance = 1.78f; //接地判定用ray中心点から足元までのオフセット
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
     [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
@@ -136,7 +137,7 @@ public class PlayerMain : MonoBehaviour
         stickCanShotRange = false;
         CanShotColBlock = false;
         canShot = false;
-        isOnGround = false;
+        isOnGround = true;
         useVelocity = true;
 
         forciblyReturnBulletFlag = false;
@@ -156,6 +157,7 @@ public class PlayerMain : MonoBehaviour
         {
             InputStick();
             CheckCanShot();
+            CheckMidAir();
 
             if (mode != null)
             {
@@ -433,16 +435,23 @@ public class PlayerMain : MonoBehaviour
         Collider col = GetComponent<Collider>();
 
 
-        Ray ray = new Ray(rb.position, Vector3.down);
+        //Ray ray = new Ray(rb.position, Vector3.down);
+        //int layerMask = LayerMask.GetMask(new string[] { "Player" });
+        //layerMask = ~layerMask; //プレイヤー以外
+        //if (Physics.Raycast(ray, col.bounds.extents.y + 1.0f, layerMask))
+        //{
+        //    Debug.DrawRay(ray.origin, ray.direction * (col.bounds.extents.y + 1.0f), Color.blue, 10.0f);
+        //    isOnGround = true;
+        //}
 
-        int layerMask = LayerMask.GetMask(new string[] { "Player" });
-        layerMask = ~layerMask; //プレイヤー以外
-
-
-        if (Physics.Raycast(ray, col.bounds.extents.y + 1.0f, layerMask))
+        if(isOnGround == false)
         {
-            Debug.DrawRay(ray.origin, ray.direction * (col.bounds.extents.y + 1.0f), Color.blue, 10.0f);
-            isOnGround = true;
+            Ray ray = new Ray(rb.position, Vector3.down);
+            
+            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
+            {
+                isOnGround = true;
+            }
         }
 
         //for (int i = 0; i < collision.contactCount; i++)
@@ -479,27 +488,40 @@ public class PlayerMain : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (isOnGround)
-        {
-            isOnGround = false;
-        }
+        //if (isOnGround)
+        //{
+        //    isOnGround = false;
+        //}
     }
 
 
     //接地判定を計算
     private void CheckMidAir()
     {
+        Ray ray = new Ray(rb.position, Vector3.down);
         if (isOnGround)
         {
-            Ray downRay = new Ray(rb.position, Vector3.down);
-
-            Collider col = GetComponent<Collider>();
-
-            if (Physics.Raycast(downRay, col.bounds.extents.y + 0.1f) == false)
+            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")) == false)
             {
                 isOnGround = false;
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Ray ray = new Ray(rb.position, Vector3.down);
+
+        if (isOnGround)
+        {
+            Gizmos.color = Color.magenta;
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+        }
+        
+        Gizmos.DrawWireSphere(ray.origin + (Vector3.down * (coliderDistance)), colliderRadius);
     }
 
 }
