@@ -270,13 +270,13 @@ public class PlayerStateShot_2 : PlayerState
     private void StrainedStop()
     {
         Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
-    
         Ray ray = new Ray(PlayerScript.rb.position, vecToPlayer.normalized);
 
         if (Physics.SphereCast(ray, PlayerMain.HcolliderRadius, PlayerMain.HcoliderDistance, ~LayerMask.GetMask("Player")))
         { 
             if(BulletScript.isTouched == false)
             {
+                Debug.Log("collision PlayerHead : Forcibly return");
                 PlayerScript.ForciblyReturnBullet(true);
             }
         }
@@ -446,6 +446,7 @@ public class PlayerStateShot_2 : PlayerState
         //ボールが触れたらスイング状態
         if (BulletScript.isTouched)
         {
+            PlayerScript.shotState = ShotState.NONE;
             if (BulletScript.swingEnd)
             {
                 BulletScript.swingEnd = false;
@@ -455,6 +456,7 @@ public class PlayerStateShot_2 : PlayerState
 
         if (finishFlag)
         {
+            PlayerScript.shotState = ShotState.NONE;
             //着地したら立っている状態に移行
             if (PlayerScript.isOnGround)
             {
