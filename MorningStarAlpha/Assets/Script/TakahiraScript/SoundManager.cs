@@ -5,26 +5,47 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.AddressableAssets;
+#endif
 
 /// <summary>
 /// 
 ///  ※ 注意事項 ※
 /// 
-/// 1：音源に付けるタグ名は BGM, SE, OBJECT のひとつだけ
-/// 2：音源に付ける タグ名, 名前 は全て別々の名前にする
 /// 
-/// 3：音量の段階 [ Play時の音量(出力最大値) * SetVolumeの音量 * 各タイプの音量(BGM,SE...) * マスターの音量(ゲーム全体) ] ※全て 0.0f～1.0f
+/// 音量の段階 [ Play時の音量(出力最大値) * SetVolumeの音量 * 各タイプの音量(BGM,SE...) * マスターの音量(ゲーム全体) ] ※全て 0.0f～1.0f
 /// 
 /// 
 /// ++++使用方法++++
+/// 
 /// 
 /// SoundManager.Instance.○○();
 /// 
 /// (例) SoundManager.Instance.PlaySound("効果音1");
 /// 
+/// 
+/// "　"に入れる名前はファイル名から拡張子を除いたもの
+/// 
+/// (例) Sound1.wav →　Sound1
+/// 
+/// 
+/// ++++機能一覧++++
+/// 
+/// PlaySound()         ：   再生
+/// StopSound()         ：   停止
+/// PauseSound()        ：   一時停止
+/// UnPauseSound()      ：   一時停止解除
+/// SetVolume()         ：   音量変更
+/// FadeSound()         ：   音のフェード
+/// 
+/// 
+/// 名前を指定　→　個別
+/// 指定しない　→　全体
+/// 
 /// </summary>
 
 
+#if UNITY_EDITOR
 // SoundManagerクラスを拡張
 [CustomEditor(typeof(SoundManager))]
 
@@ -69,6 +90,40 @@ public class SoundManagerEditor : Editor
 }
 #endif
 
+#if UNITY_EDITOR
+// アセットインポート時に自動で設定する
+public class AssetPostProcessorSound : AssetPostprocessor
+{
+    public void OnPostprocessAudio(AudioClip audioClip)
+    {
+        AudioImporter audioImporter = assetImporter as AudioImporter;
+        string Path = assetImporter.assetPath;
+
+        // BGM, OBJECTサウンドはバックグラウンド読み込みする
+        audioImporter.loadInBackground |= Path.Contains("BGM");
+        audioImporter.loadInBackground |= Path.Contains("OBJECT");
+
+        // タグセット
+        var settings = AddressableAssetSettingsDefaultObject.Settings;
+        var group = settings.DefaultGroup;
+        var AssetData = AssetDatabase.AssetPathToGUID(audioImporter.assetPath);
+        var entry = group.GetAssetEntry(AssetData);
+        if (Path.Contains("BGM"))
+        {           
+            entry.SetLabel("BGM", true, true);
+        }
+        else if (Path.Contains("SE"))
+        {
+            entry.SetLabel("SE", true, true);
+        }
+        else if (Path.Contains("OBJECT"))
+        {
+            entry.SetLabel("OBJECT", true, true);
+        }
+    }
+}
+#endif
+
 
 public enum SOUND_TYPE
 {
@@ -80,7 +135,8 @@ public enum SOUND_TYPE
 
 public enum SOUND_FADE_TYPE
 {
-    IN = 0,
+    NULL = 0,
+    IN,
     OUT,
     OUT_IN
 }
@@ -88,15 +144,13 @@ public enum SOUND_FADE_TYPE
 // サウンドのフェード用クラス
 public class SOUND_FADE
 {
-    public SOUND_FADE(string soundName, SOUND_FADE_TYPE fadeType, float fadeTime, bool soundStop)
+    public SOUND_FADE(SOUND_FADE_TYPE fadeType, float fadeTime, bool soundStop)
     {
-        SoundName = soundName;
         FadeType = fadeType;
         FadeTime = fadeTime;
         NowTime = 0.0f;
         SoundStop = soundStop;
     }
-    public string SoundName;
     public SOUND_FADE_TYPE FadeType; // フェードの種類
     public float FadeTime;  // フェードする時間
     public float NowTime;   // 経過時間
@@ -183,8 +237,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     private List<NOW_PLAY_SOUND> NowPlaySoundList = new List<NOW_PLAY_SOUND>(); // 再生中のサウンド管理用リスト
-    //private List<SOUND_FADE> FadeList = new List<SOUND_FADE>(); // サウンドのフェード用リスト
-
 
     
     private void Awake()
@@ -213,6 +265,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 子を親に設定
             child.SetParent(this.gameObject.transform);
             AudioSource_BGM[i] = new SOUND_SOURCE(child.gameObject.AddComponent<AudioSource>());
+
+            // 優先度セット
+            AudioSource_BGM[i].AudioSource.priority = 1;
 
             // 3D音響の設定
             AudioSource_BGM[i].AudioSource.dopplerLevel = 0.0f; // ドップラー効果無し
@@ -313,6 +368,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             for (int i = 0; i < AudioClipIlist.Count; i++)
             {
                 SoundList.Add(new SOUND_CLIP(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
+                Debug.Log(AudioClipIlist[i].name);
             }
             AudioClipIlist.Clear();
 
@@ -356,55 +412,124 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
     }
 
-    //========================================================
+    //=====================================================================
     // 音の再生
+    //=====================================================================
     // 
-    // 第一引数：Addressablesアセットで付けた名前
+    // 第一引数：サウンドのデータ名　(例) Sound1.wav　→　Sound1
+    // 
     // 第二引数：音量(0.0f～1.0f) ※音源個別に音量変えられます
-    // 第三引数：音の再生時間指定(再生時間を超えた場合 0.0f)
-    // 第四引数：音の再生オブジェクト(指定しない場合2D,した場合3D)
-    // 第五引数：音の反響設定(AudioReverbPreset.○○○で指定出来る)
     // 
-    // いくつかオーバーロード
-    //========================================================
+    // 第三引数：音の再生時間指定(再生時間を超えた場合 0.0f)
+    // 
+    // 第四引数：音の再生オブジェクト(指定しない場合2D,した場合3D)
+    // 
+    // 第五引数：音の反響設定(AudioReverbPreset.○○○で指定出来る)
+    //
+    // 第六引数～：再生時の音のフェード機能(引数はSoundFade参照)
+    // 
+    //
+    // ※いくつかオーバーロードした為、使いたい引数だけ使う事も可能
+    //=====================================================================
+
+    #region +++  PlaySoundのオーバーロード  +++
+
     public void PlaySound(string SoundName)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off);
+        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
     }
     public void PlaySound(string SoundName, float Volume)
     {
-        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off);
+        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime)
     {
-        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off);
-    }
-    public void PlaySound(string SoundName, GameObject SoundObject)
-    {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off);
-    }
-    public void PlaySound(string SoundName, float Volume, GameObject SoundObject)
-    {
-        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off);
+        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject)
     {
-        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
     }
-    public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
     }
-    public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset);
+        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, float Volume, float PlayTime, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, float Volume, float PlayTime, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject)
+    {
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, ReverbPreset, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, float Volume, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, GameObject SoundObject)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, GameObject SoundObject, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, ReverbPreset, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+    }
+    public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset, FadeType, FadeTime, SoundStop);
+    }
+    public void PlaySound(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
     }
 
-    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset)
+    #endregion
+
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
     {
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
@@ -431,13 +556,23 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             case SOUND_TYPE.NULL:
                 break;
             case SOUND_TYPE.BGM:
+                // 再生中のBGMと同じBGMを流そうとした場合の再生中止処理
+                //for (int i = 0; i < NowPlaySoundList.Count; i++)
+                //{
+                //    if (NowPlaySoundList[i].Sound_Clip.SoundName == Sound_Clip.SoundName)
+                //    {
+                //        Debug.LogWarning("再生中のBGMと同じものを再生しようとしたため再生中止");
+                //        return;
+                //    }
+                //}
                 for (int i = 0; i < AudioSource_BGM_MAX; i++)
                 {
                     if (!AudioSource_BGM[i].isUse)
                     {
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));                     
 
-                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true);
+                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
+                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, SoundStop);
 
                         return;
                     }
@@ -451,7 +586,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_SE[i]));
 
-                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, false);
+                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, false, FadeType);
+                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, SoundStop);
 
                         return;
                     }
@@ -465,7 +601,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_OBJECT[i]));
 
-                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true);
+                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
+                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, SoundStop);
 
                         return;
                     }
@@ -477,9 +614,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     //===========================
-    // 全ての音の再生終了
+    // 音の再生終了
     //===========================
-    public void StopSoundALL()
+    public void StopSound()
     {
         // 再生終了処理
         for (int i = 0; i < NowPlaySoundList.Count; i++)
@@ -487,11 +624,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             EndSoundSource(NowPlaySoundList[i]);
         }
     }
-
-
-    //===========================
-    // 個別の音の再生終了
-    //===========================
     public void StopSound(string SoundName)
     {
         // オーディオの名前と合うもの取得して再生終了
@@ -506,9 +638,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     //===========================
-    // 全ての音の一時停止
+    // 音の一時停止
     //===========================
-    public void PauseSoundALL()
+    public void PauseSound()
     {
         // 一時停止処理
         for (int i = 0; i < NowPlaySoundList.Count; i++)
@@ -519,11 +651,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             }            
         }
     }
-
-
-    //===========================
-    // 個別の音の一時停止
-    //===========================
     public void PauseSound(string SoundName)
     {
         // オーディオの名前と合うもの取得して一時停止
@@ -538,9 +665,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     //===========================
-    // 全ての音の一時停止解除
+    // 音の一時停止解除
     //===========================
-    public void UnPauseSoundALL()
+    public void UnPauseSound()
     {
         // 一時停止解除処理
         for (int i = 0; i < NowPlaySoundList.Count; i++)
@@ -551,11 +678,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             }
         }
     }
-
-
-    //===========================
-    // 個別の音の一時停止解除
-    //===========================
     public void UnPauseSound(string SoundName)
     {
         // オーディオの名前と合うもの取得して一時停止解除
@@ -572,9 +694,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //============================================================
     // 再生中の全ての音量調節(内部処理で使える用)
     // 
-    // 第一引数：音量(0.0f～1.0f)※再生開始時の音量とは別に設定化
+    // 音量(0.0f～1.0f)※再生開始時の音量とは別に設定化
     //============================================================
-    public void SetVolumeALL(float Volume)
+    public void SetVolume(float Volume)
     {
         Mathf.Clamp(Volume, 0.0f, 1.0f);
 
@@ -585,14 +707,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
         UpdateVolume(); // 音量更新
     }
-
-
-    //============================================================
-    // 再生中の個別の音量調節(内部処理で使える用)
-    // 
-    // 第一引数：Addressablesアセットで付けた名前
-    // 第二引数：音量(0.0f～1.0f)※再生開始時の音量とは別に設定化
-    //============================================================
     public void SetVolume(string SoundName, float Volume)
     {
         Mathf.Clamp(Volume, 0.0f, 1.0f);
@@ -612,14 +726,28 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================================
     // 音のフェード機能(再生中の音)
     //
-    // 第一引数：フェードする音の名前
+    // 第一引数：フェードする音のデータ名　(例) Sound1.wav　→　Sound1
     // 第二引数：フェードの種類
     // 第三引数：フェードする時間
     // 第四引数：フェード後音を止めるか
     //===========================================
-    public void SoundFade(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void FadeSound(SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
     {
-        if (FadeTime <= 0)
+        if (FadeType == SOUND_FADE_TYPE.NULL || FadeTime < 0.01f) // フェード時間が小さすぎたらフェードしない
+            return;
+
+        // 再生中の音でフェード中でないならフェードセット
+        for (int i = 0; i < NowPlaySoundList.Count; i++)
+        {
+            if (NowPlaySoundList[i].Sound_Fade == null)
+            {
+                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(FadeType, FadeTime, SoundStop);
+            }
+        }
+    }
+    public void FadeSound(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    {
+        if (FadeType == SOUND_FADE_TYPE.NULL || FadeTime < 0.01f) // フェード時間が小さすぎたらフェードしない
             return;
 
         // 再生中の音で名前が一致してフェード中でないならフェードセット
@@ -627,16 +755,18 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName && NowPlaySoundList[i].Sound_Fade == null)
             {
-                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(SoundName, FadeType, FadeTime, SoundStop);
+                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(FadeType, FadeTime, SoundStop);
             }
         }
     }
 
-    private void UpdateSoundFade()
+
+    // サウンドフェード更新処理
+    private void UpdateFadeSound()
     {
         for (int i = 0; i < NowPlaySoundList.Count; i++)
         {
-            if (NowPlaySoundList[i].Sound_Fade != null && !NowPlaySoundList[i].Sound_Source.isPause)
+            if (NowPlaySoundList[i].Sound_Fade != null && !NowPlaySoundList[i].Sound_Source.isPause) // フェードしててポーズ中ではない
             {
                 switch (NowPlaySoundList[i].Sound_Fade.FadeType)
                 {
@@ -644,22 +774,85 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         SoundFadeIN(NowPlaySoundList[i]);
                         break;
                     case SOUND_FADE_TYPE.OUT:
+                        SoundFadeOUT(NowPlaySoundList[i]);
                         break;
                     case SOUND_FADE_TYPE.OUT_IN:
+                        SoundFadeOUT(NowPlaySoundList[i]);
                         break;
                 }
             }
         }
     }
 
+
+    // フェードIN処理
     private void SoundFadeIN(NOW_PLAY_SOUND NowPlaySound)
     {
-        float Volume = NowPlaySound.Sound_Fade.NowTime;
+        if (NowPlaySound.Sound_Fade.NowTime <= NowPlaySound.Sound_Fade.FadeTime)
+        {
+            float Volume = NowPlaySound.Sound_Fade.NowTime / NowPlaySound.Sound_Fade.FadeTime; // 音量
+
+            SetVolume(NowPlaySound.Sound_Clip.SoundName, Volume); // 音量セット
+
+            NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
+        }
+        else
+        {
+            switch (NowPlaySound.Sound_Fade.FadeType)
+            {
+                case SOUND_FADE_TYPE.IN:
+
+                    if (NowPlaySound.Sound_Fade.SoundStop)
+                    {
+                        StopSound(NowPlaySound.Sound_Clip.SoundName); // サウンド停止
+                        return;
+                    }
+
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, 1.0f); // 音量設定
+                    NowPlaySound.Sound_Fade = null; // フェード終了
+
+                    break;
+            }
+        }
     }
 
+
+    // フェードアウト処理
     private void SoundFadeOUT(NOW_PLAY_SOUND NowPlaySound)
     {
+        if (NowPlaySound.Sound_Fade.NowTime <= NowPlaySound.Sound_Fade.FadeTime)
+        {
+            float Volume = 1.0f - (NowPlaySound.Sound_Fade.NowTime / NowPlaySound.Sound_Fade.FadeTime); // 音量
 
+            SetVolume(NowPlaySound.Sound_Clip.SoundName, Volume);   // 音量セット
+
+            NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
+        }
+        else
+        {
+            switch (NowPlaySound.Sound_Fade.FadeType)
+            {
+                case SOUND_FADE_TYPE.OUT:
+
+                    if (NowPlaySound.Sound_Fade.SoundStop)
+                    {
+                        StopSound(NowPlaySound.Sound_Clip.SoundName); // サウンド停止
+                        return;
+                    }
+
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, 0.0f); // 音量設定
+                    NowPlaySound.Sound_Fade = null; // フェード終了
+
+                    break;
+                case SOUND_FADE_TYPE.OUT_IN:
+
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, 0.0f); // 音量設定
+                    NowPlaySound.Sound_Fade.NowTime = 0.0f; // 経過時間初期化
+                    NowPlaySound.Sound_Fade.FadeType = SOUND_FADE_TYPE.IN; // フェードをINに変更
+
+                    break;
+            }
+        }
     }
 
 
@@ -723,7 +916,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     // サウンドソース情報の開始処理
-    private void StartSoundSource(NOW_PLAY_SOUND NowPlaySound, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, bool Loop)
+    private void StartSoundSource(NOW_PLAY_SOUND NowPlaySound, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, bool Loop, SOUND_FADE_TYPE FadeType)
     {
         if (SoundObject != null)
         {
@@ -742,10 +935,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         NowPlaySound.Sound_Source.AudioSource.clip = NowPlaySound.Sound_Clip.AudioClip; // オーディオクリップセット
         NowPlaySound.Sound_Source.AudioSource.time = PlayTime;  // 再生時間セット
-        NowPlaySound.Sound_Source.AudioSource.Play();
-        NowPlaySound.Sound_Source.AudioSource.loop = Loop;
         NowPlaySound.Sound_Source.StartVolume = Volume;
-        NowPlaySound.Sound_Source.Volume = 1.0f;
+        if (FadeType == SOUND_FADE_TYPE.IN)
+            NowPlaySound.Sound_Source.Volume = 0.0f;
+        else
+            NowPlaySound.Sound_Source.Volume = 1.0f;
+        NowPlaySound.Sound_Source.AudioSource.Play();
+        NowPlaySound.Sound_Source.AudioSource.loop = Loop;       
         NowPlaySound.Sound_Source.isPause = false;
         NowPlaySound.Sound_Source.isUse = true;
 
@@ -814,17 +1010,17 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.A)) // 一時停止
         {
-            PauseSoundALL();
+            PauseSound();
         }
 
         if (Input.GetKeyDown(KeyCode.S)) // 一時停止解除
         {
-            UnPauseSoundALL();
+            UnPauseSound();
         }
 
         if (Input.GetKeyDown(KeyCode.D)) // 停止
         {
-            StopSoundALL();
+            StopSound();
         }
 
         if (Input.GetKeyDown(KeyCode.F)) // 効果音再生
@@ -834,7 +1030,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.G)) // BGM再生
         {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f);
+            SoundManager.Instance.PlaySound("Test2コピー", 0.2f, 2.0f);
         }
 
         if (Input.GetKeyDown(KeyCode.H)) // BGM再生(3D)
@@ -847,15 +1043,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, AudioReverbPreset.Bathroom);
         }
 
-        //if (Input.GetKeyDown(KeyCode.K))
-        //{
-        //    SoundManager.Instance.SetVolume("TestBGM2", 0.2f);
-        //}
+        if (Input.GetKeyDown(KeyCode.K)) // BGMのフェードイン再生
+        {
+            //SoundManager.Instance.SoundFade("TestBGM2", SOUND_FADE_TYPE.OUT_IN, 3.0f, false);
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 6.0f, AudioReverbPreset.Bathroom, SOUND_FADE_TYPE.IN, 10.0f, false);
+        }
 
-        //if (Input.GetKeyDown(KeyCode.L))
-        //{
-        //    AudioSource_BGM[0].AudioSource.
-        //}
+        if (Input.GetKeyDown(KeyCode.L)) // BGMのフェードアウト停止
+        {
+            SoundManager.Instance.FadeSound("TestBGM2", SOUND_FADE_TYPE.OUT, 5.0f, true);
+        }
     }
 
     public void FixedUpdate()
@@ -870,7 +1067,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         Update3DPos();
 
         // サウンドのフェード更新
-        UpdateSoundFade();
+        UpdateFadeSound();
 
         //Debug.Log("ポーズ中：" + AudioSource_BGM[0].isPause);
         //Debug.Log("使っている：" + AudioSource_BGM[0].isUse);

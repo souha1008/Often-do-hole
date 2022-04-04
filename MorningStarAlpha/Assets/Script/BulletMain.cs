@@ -7,14 +7,16 @@ public class BulletMain : MonoBehaviour
     [System.NonSerialized]public Rigidbody rb;
 
     [SerializeField] private GameObject Player;
+    [SerializeField] private Renderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
+
     private PlayerMain PlayerScript;
-    public Vector3 vel;
-    public bool isTouched; //弾がなにかに触れたか
-    public bool onceFlag; //一回の発射に付き接触が起こるのは一回
-    public bool StopVelChange; //弾が戻されて引っ張られている状態
-    public bool swingEnd;
-    public bool followEnd;
-    private Renderer rd;
+    [ReadOnly] public Vector3 vel;
+    [ReadOnly] public bool isTouched; //弾がなにかに触れたか
+    [ReadOnly] public bool onceFlag; //一回の発射に付き接触が起こるのは一回
+    [ReadOnly] public bool StopVelChange; //弾が戻されて引っ張られている状態
+    [ReadOnly] public bool swingEnd;
+    [ReadOnly] public bool followEnd;
+
     //下川原
     private int ExitFlameCnt = 0;//存在し始めてからのカウント
     public int STRAIGHT_FLAME_CNT;//まっすぐ進むフレーム数
@@ -25,14 +27,12 @@ public class BulletMain : MonoBehaviour
     [SerializeField] private float BULLET_START_DISTANCE; //弾の発射位置
     [SerializeField] public float BULLET_ROPE_LENGTH; //紐の長さ
     private float BULLET_MAXFALLSPEED = 35.0f;
-
     private float fixedAdjust;
 
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        rd = GetComponent<Renderer>();
         PlayerState.BulletScript = this;
     }
 
@@ -47,14 +47,27 @@ public class BulletMain : MonoBehaviour
     public void InvisibleBullet()
     {
         rb.isKinematic = true;
-        rd.enabled = false;
+        for(int i = 0; i < Part.Length; i++)
+        {
+            Part[i].enabled = false;
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+            vel = Vector3.zero;
+            StopVelChange = true;
+        }
     }
 
     public void VisibleBullet()
     {
         rb.isKinematic = false;
-        rd.enabled = true;
+        for (int i = 0; i < Part.Length; i++)
+        {
+            Part[i].enabled = true;
+        }
     }
+
+
+
 
     public void ShotBullet()
     {
@@ -86,6 +99,7 @@ public class BulletMain : MonoBehaviour
         {
             if (StopVelChange == false)
             {
+                RotateBullet();
                 ExitFlameCnt++;
                 //定数秒以上経ってたら
                 if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
@@ -130,6 +144,15 @@ public class BulletMain : MonoBehaviour
             vel = Vector3.zero;
         }
     }
+
+    void RotateBullet()
+    {
+        Quaternion quaternion = Quaternion.LookRotation(vel.normalized);
+        Quaternion adjustQua = Quaternion.Euler(0, 90, -90); //補正用クオータニオン
+        quaternion = quaternion * adjustQua;
+        rb.MoveRotation(quaternion);
+    }
+
 
     private void AdjustColPoint(Aspect colAspect, Vector3 colPoint)
     {
@@ -195,11 +218,15 @@ public class BulletMain : MonoBehaviour
                 string tag = collision.gameObject.tag;
                 switch (tag)
                 {
-                    case "Platform":
-                        //EffectManager.instance.StartShotEffect(transform.position, Quaternion.identity);
+                    case "Platform": 
+                        EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
+                        GetComponent<Collider>().isTrigger = true;
                         rb.isKinematic = true;
                         rb.velocity = Vector3.zero;
+                        StopVelChange = true;
+
+
                         if (colAspect == Aspect.UP)
                         {
                             //FOLLOW状態に移行

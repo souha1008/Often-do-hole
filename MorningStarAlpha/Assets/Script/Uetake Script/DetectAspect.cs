@@ -50,7 +50,7 @@ public static class DetectAspect
         else
         {
             returnAspect = Aspect.INVALID;
-            Debug.LogError("接触面の法線が斜めの可能性があります");
+            Debug.LogWarning("接触面の法線が斜めの可能性があります");
         }
 
         return returnAspect;
