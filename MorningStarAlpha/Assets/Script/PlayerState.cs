@@ -215,6 +215,10 @@ public class PlayerStateShot_2 : PlayerState
 
     public PlayerStateShot_2()//コンストラクタ
     {
+        countTime = 0.0f;
+        bulletVecs = new Queue<Vector3>();
+        finishFlag = false;
+
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
         PlayerScript.canShotState = false;
@@ -263,11 +267,29 @@ public class PlayerStateShot_2 : PlayerState
       
     }
 
+    /// <summary>
+    /// 引っ張られている時間にオブジェクトがあったら切り離し
+    /// </summary>
+    private void StrainedStop()
+    {
+        Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
+    
+        Ray ray = new Ray(PlayerScript.rb.position, vecToPlayer.normalized);
+
+        if (Physics.SphereCast(ray, PlayerMain.HcolliderRadius, PlayerMain.HcoliderDistance, ~LayerMask.GetMask("Player")))
+        { 
+            if(BulletScript.isTouched == false)
+            {
+                PlayerScript.ForciblyReturnBullet(true);
+            }
+        }
+    }
+
     public override void UpdateState()
     {
         countTime += Time.deltaTime;
 
-        if (countTime > 0.3)
+        if (countTime > 0.2)
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
@@ -277,6 +299,7 @@ public class PlayerStateShot_2 : PlayerState
                     BulletScript.ReturnBullet();
                     
                     PlayerScript.vel = bulletVecs.Dequeue();
+                    
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;           
                 }
@@ -358,7 +381,7 @@ public class PlayerStateShot_2 : PlayerState
         switch (PlayerScript.shotState) {
 
             case ShotState.GO: 
-                bulletVecs.Enqueue(BulletScript.vel);
+                bulletVecs.Enqueue(BulletScript.vel * 0.6f);
 
                 //紐の長さを超えたら引っ張られている状態にする
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
@@ -384,6 +407,7 @@ public class PlayerStateShot_2 : PlayerState
                
                 bulletVecs.Enqueue(BulletScript.vel);
                 bulletVecs.Dequeue();
+                StrainedStop();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
                 break;
@@ -422,6 +446,16 @@ public class PlayerStateShot_2 : PlayerState
 
     public override void StateTransition()
     {
+        //ボールが触れたらスイング状態
+        if (BulletScript.isTouched)
+        {
+            if (BulletScript.swingEnd)
+            {
+                BulletScript.swingEnd = false;
+                PlayerScript.mode = new PlayerStateSwing_R_Release();
+            }
+        }
+
         if (finishFlag)
         {
             //着地したら立っている状態に移行
@@ -434,16 +468,7 @@ public class PlayerStateShot_2 : PlayerState
                 PlayerScript.mode = new PlayerStateMidair(false);
             }
         } 
-   
-        //ボールが触れたらスイング状態
-        if (BulletScript.isTouched)
-        {
-            if (BulletScript.swingEnd)
-            {
-                BulletScript.swingEnd = false;
-                PlayerScript.mode = new PlayerStateSwing_R_Release();
-            }
-        }
+  
     }
     public override void DebugMessage()
     {
@@ -1208,7 +1233,6 @@ public class PlayerStateSwing_R_Release : PlayerState
 
         //切り離しアングルの計算
         ReleaseAngleCalculate();
-
     }
 
     private void ReleaseAngleCalculate()

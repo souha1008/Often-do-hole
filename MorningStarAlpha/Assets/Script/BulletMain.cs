@@ -215,8 +215,10 @@ public class BulletMain : MonoBehaviour
                 switch (tag)
                 {
                     case "Platform":
+                        
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
+                        GetComponent<Collider>().isTrigger = true;
                         rb.isKinematic = true;
                         rb.velocity = Vector3.zero;
                         StopVelChange = true;

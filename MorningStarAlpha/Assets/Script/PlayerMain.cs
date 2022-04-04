@@ -59,15 +59,18 @@ public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
-    public GameObject Bullet;
+    public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
 
 
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
-    private const float colliderRadius = 1.4f;   //接地判定用ray半径
-    private const float coliderDistance = 1.78f; //接地判定用ray中心点から足元までのオフセット
+    [SerializeField] public const float colliderRadius = 1.4f;   //接地判定用ray半径
+    [SerializeField] public const float coliderDistance = 1.78f; //
+                                                                 //
+    [SerializeField] public const float HcolliderRadius = 1.6f;   //頭判定用ray半径
+    [SerializeField] public const float HcoliderDistance = 0.8f; //頭判定用ray中心点から頭までのオフセット
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
     [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
@@ -387,10 +390,11 @@ public class PlayerMain : MonoBehaviour
         {
             switch (shotState) {
                 case ShotState.STRAINED: //紐張り詰め
-                    if (isOnGround == false)
-                    {
-                        ForciblyReturnBullet(true);
-                    }
+                    //RAYに移行
+                    //if (isOnGround == false)
+                    //{
+                    //    ForciblyReturnBullet(true);
+                    //}
                    
                     break;
 
@@ -414,17 +418,21 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                if(dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
+                if (collision.gameObject.CompareTag("Platform"))
                 {
-                    counterSwing = true;
-                }
-                else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
-                {
-                    counterSwing = true;
-                }
-                else
-                {
-                    endSwing = true;
+                    if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
+                    {
+                        counterSwing = true;
+                    }
+                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
+                    {
+                        counterSwing = true;
+                    }
+                    else
+                    {
+                        endSwing = true;
+                        Debug.Log("collision Platform : swing end");
+                    }
                 }
             }
         }
@@ -434,16 +442,7 @@ public class PlayerMain : MonoBehaviour
     {
         Collider col = GetComponent<Collider>();
 
-
-        //Ray ray = new Ray(rb.position, Vector3.down);
-        //int layerMask = LayerMask.GetMask(new string[] { "Player" });
-        //layerMask = ~layerMask; //プレイヤー以外
-        //if (Physics.Raycast(ray, col.bounds.extents.y + 1.0f, layerMask))
-        //{
-        //    Debug.DrawRay(ray.origin, ray.direction * (col.bounds.extents.y + 1.0f), Color.blue, 10.0f);
-        //    isOnGround = true;
-        //}
-
+        //着地判定
         if(isOnGround == false)
         {
             Ray ray = new Ray(rb.position, Vector3.down);
@@ -453,15 +452,6 @@ public class PlayerMain : MonoBehaviour
                 isOnGround = true;
             }
         }
-
-        //for (int i = 0; i < collision.contactCount; i++)
-        //{
-        //    if (collision.GetContact(i).point.y < rb.position.y - (col.bounds.extents.y * 0.88f))
-        //    {
-        //        isOnGround = true;
-        //    }
-        //}
-
 
         //FOLLOW中に壁に当たると上に補正
         if (refState == EnumPlayerState.SHOT)
@@ -478,21 +468,9 @@ public class PlayerMain : MonoBehaviour
                 }
             }
         }
-
-        //swing中に壁にぶつかったら消す
-        if (refState == EnumPlayerState.SWING)
-        {
-            endSwing = true;
-        }
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        //if (isOnGround)
-        //{
-        //    isOnGround = false;
-        //}
-    }
+   
 
 
     //接地判定を計算
@@ -510,18 +488,52 @@ public class PlayerMain : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Ray ray = new Ray(rb.position, Vector3.down);
-
+        //接地ray
+        Ray footRay = new Ray(rb.position, Vector3.down);
         if (isOnGround)
         {
             Gizmos.color = Color.magenta;
         }
         else
         {
-            Gizmos.color = Color.green;
+            Gizmos.color = Color.cyan;
         }
-        
-        Gizmos.DrawWireSphere(ray.origin + (Vector3.down * (coliderDistance)), colliderRadius);
+        Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
+
+
+        //頭
+        if (refState == EnumPlayerState.SHOT)
+        {
+            if (shotState == ShotState.STRAINED)
+            {
+                Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
+                vecToPlayer = vecToPlayer.normalized;        
+
+
+                Ray headRay = new Ray(rb.position, vecToPlayer);
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
+            }
+        }
+
+        //スイングスライド足元
+        if(refState == EnumPlayerState.SWING)
+        {
+            if(swingState == SwingState.TOUCHED) 
+            {
+                
+                Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
+                vecToPlayerR = vecToPlayerR.normalized;
+
+
+                Ray Ray = new Ray(rb.position, vecToPlayerR);
+                Gizmos.color = Color.black;
+                Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * (coliderDistance)), colliderRadius);
+            }
+        }
+
+
+       
     }
 
 }
