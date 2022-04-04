@@ -5,17 +5,15 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.AddressableAssets;
+#endif
 
 /// <summary>
 /// 
 ///  ※ 注意事項 ※
 /// 
 /// 
-/// 1：音源に付けるタグ名は BGM, SE, OBJECT のひとつだけ
-/// 
-/// 2：音源に付ける タグ名, 名前 は全て別々の名前にする
-/// 
-/// 3：音量の段階 [ Play時の音量(出力最大値) * SetVolumeの音量 * 各タイプの音量(BGM,SE...) * マスターの音量(ゲーム全体) ] ※全て 0.0f～1.0f
+/// 音量の段階 [ Play時の音量(出力最大値) * SetVolumeの音量 * 各タイプの音量(BGM,SE...) * マスターの音量(ゲーム全体) ] ※全て 0.0f～1.0f
 /// 
 /// 
 /// ++++使用方法++++
@@ -24,6 +22,11 @@ using UnityEditor;
 /// SoundManager.Instance.○○();
 /// 
 /// (例) SoundManager.Instance.PlaySound("効果音1");
+/// 
+/// 
+/// "　"に入れる名前はファイル名から拡張子を除いたもの
+/// 
+/// (例) Sound1.wav →　Sound1
 /// 
 /// 
 /// ++++機能一覧++++
@@ -42,6 +45,7 @@ using UnityEditor;
 /// </summary>
 
 
+#if UNITY_EDITOR
 // SoundManagerクラスを拡張
 [CustomEditor(typeof(SoundManager))]
 
@@ -81,6 +85,40 @@ public class SoundManagerEditor : Editor
         if (EditorGUI.EndChangeCheck())
         {
             EditorUtility.SetDirty(target); // 選択オブジェクト更新
+        }
+    }
+}
+#endif
+
+#if UNITY_EDITOR
+// アセットインポート時に自動で設定する
+public class AssetPostProcessorSound : AssetPostprocessor
+{
+    public void OnPostprocessAudio(AudioClip audioClip)
+    {
+        AudioImporter audioImporter = assetImporter as AudioImporter;
+        string Path = assetImporter.assetPath;
+
+        // BGM, OBJECTサウンドはバックグラウンド読み込みする
+        audioImporter.loadInBackground |= Path.Contains("BGM");
+        audioImporter.loadInBackground |= Path.Contains("OBJECT");
+
+        // タグセット
+        var settings = AddressableAssetSettingsDefaultObject.Settings;
+        var group = settings.DefaultGroup;
+        var AssetData = AssetDatabase.AssetPathToGUID(audioImporter.assetPath);
+        var entry = group.GetAssetEntry(AssetData);
+        if (Path.Contains("BGM"))
+        {           
+            entry.SetLabel("BGM", true, true);
+        }
+        else if (Path.Contains("SE"))
+        {
+            entry.SetLabel("SE", true, true);
+        }
+        else if (Path.Contains("OBJECT"))
+        {
+            entry.SetLabel("OBJECT", true, true);
         }
     }
 }
@@ -200,7 +238,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     private List<NOW_PLAY_SOUND> NowPlaySoundList = new List<NOW_PLAY_SOUND>(); // 再生中のサウンド管理用リスト
 
-
     
     private void Awake()
     {
@@ -228,6 +265,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 子を親に設定
             child.SetParent(this.gameObject.transform);
             AudioSource_BGM[i] = new SOUND_SOURCE(child.gameObject.AddComponent<AudioSource>());
+
+            // 優先度セット
+            AudioSource_BGM[i].AudioSource.priority = 1;
 
             // 3D音響の設定
             AudioSource_BGM[i].AudioSource.dopplerLevel = 0.0f; // ドップラー効果無し
@@ -328,6 +368,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             for (int i = 0; i < AudioClipIlist.Count; i++)
             {
                 SoundList.Add(new SOUND_CLIP(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
+                Debug.Log(AudioClipIlist[i].name);
             }
             AudioClipIlist.Clear();
 
@@ -375,7 +416,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // 音の再生
     //=====================================================================
     // 
-    // 第一引数：サウンドの名前
+    // 第一引数：サウンドのデータ名　(例) Sound1.wav　→　Sound1
     // 
     // 第二引数：音量(0.0f～1.0f) ※音源個別に音量変えられます
     // 
@@ -515,6 +556,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             case SOUND_TYPE.NULL:
                 break;
             case SOUND_TYPE.BGM:
+                // 再生中のBGMと同じBGMを流そうとした場合の再生中止処理
+                //for (int i = 0; i < NowPlaySoundList.Count; i++)
+                //{
+                //    if (NowPlaySoundList[i].Sound_Clip.SoundName == Sound_Clip.SoundName)
+                //    {
+                //        Debug.LogWarning("再生中のBGMと同じものを再生しようとしたため再生中止");
+                //        return;
+                //    }
+                //}
                 for (int i = 0; i < AudioSource_BGM_MAX; i++)
                 {
                     if (!AudioSource_BGM[i].isUse)
@@ -676,7 +726,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================================
     // 音のフェード機能(再生中の音)
     //
-    // 第一引数：フェードする音の名前
+    // 第一引数：フェードする音のデータ名　(例) Sound1.wav　→　Sound1
     // 第二引数：フェードの種類
     // 第三引数：フェードする時間
     // 第四引数：フェード後音を止めるか
@@ -975,12 +1025,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Input.GetKeyDown(KeyCode.F)) // 効果音再生
         {
-            SoundManager.Instance.PlaySound("決定音", SOUND_FADE_TYPE.OUT, 0.2f, true);
+            SoundManager.Instance.PlaySound("決定音");
         }
 
         if (Input.GetKeyDown(KeyCode.G)) // BGM再生
         {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f);
+            SoundManager.Instance.PlaySound("Test2コピー", 0.2f, 2.0f);
         }
 
         if (Input.GetKeyDown(KeyCode.H)) // BGM再生(3D)

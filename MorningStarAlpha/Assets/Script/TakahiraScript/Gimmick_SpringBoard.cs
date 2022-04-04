@@ -42,6 +42,8 @@ public class Gimmick_SpringBoard : Gimmick_Main
             playermain.ForciblyReturnBullet(false);
             playermain.vel = Vector3.zero;
             playermain.addVel = VecPower;
+
+            SoundManager.Instance.PlaySound("Œˆ’è‰¹");
         }
     }
 }
