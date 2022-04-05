@@ -91,6 +91,25 @@ public class BulletMain : MonoBehaviour
 
     }
 
+    public void ShotSlideJumpBullet()
+    {
+        rb.isKinematic = false;
+        onceFlag = false;
+        StopVelChange = false;
+        swingEnd = false;
+        followEnd = false;
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+
+        //íeÇÃèâä˙âª
+        rb.velocity = Vector3.zero;
+        vel = Vector3.zero;
+        isTouched = false;
+        vel += vec * BULLET_SPEED * 0.8f;
+
+       
+         vel += PlayerScript.vel *= 0.6f;
+    }
+
     void FixedUpdate()
     {
         if (ReferenceEquals(Player, null) == false)

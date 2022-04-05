@@ -196,8 +196,18 @@ public class PlayerStateOnGround : PlayerState
 
         if (shotButton)
         {
-            PlayerScript.onGroundState = OnGroundState.NONE;
-            PlayerScript.mode = new PlayerStateShot_2();
+            //スライド中で投げる方向が進行方向と同じなら
+            if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
+            {
+                PlayerScript.onGroundState = OnGroundState.NONE;
+                PlayerScript.mode = new PlayerStateShot_2(true);
+            }
+            else
+            {
+                PlayerScript.onGroundState = OnGroundState.NONE;
+                PlayerScript.mode = new PlayerStateShot_2(false);
+            }
+          
         }
     }
 }
@@ -213,7 +223,7 @@ public class PlayerStateShot_2 : PlayerState
     Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
     bool finishFlag;
 
-    public PlayerStateShot_2()//コンストラクタ
+    private void Init()
     {
         countTime = 0.0f;
         bulletVecs = new Queue<Vector3>();
@@ -224,10 +234,26 @@ public class PlayerStateShot_2 : PlayerState
         PlayerScript.canShotState = false;
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
+        
+    }
+
+    public PlayerStateShot_2(bool is_slide_jump)//コンストラクタ
+    {
+        Init();
         //弾の発射
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
-        BulletScript.ShotBullet();
+
+        if (is_slide_jump)
+        {
+            BulletScript.ShotSlideJumpBullet();
+            Debug.Log("Slide Shot");
+        }
+        else
+        {
+            BulletScript.ShotBullet();
+            Debug.Log("Normal Shot");
+        }
     }
 
     /// <summary>
@@ -791,7 +817,7 @@ public class PlayerStateMidair : PlayerState
     { 
         if (shotButton)
         {
-            PlayerScript.mode = new PlayerStateShot_2();
+            PlayerScript.mode = new PlayerStateShot_2(false);
         }
 
         //着地したら立っている状態に移行

@@ -16,7 +16,6 @@ public enum Aspect
 
 public static class DetectAspect
 {
-
     /// <summary>
     /// 法線ベクトルによって面の向きを取得
     /// </summary>

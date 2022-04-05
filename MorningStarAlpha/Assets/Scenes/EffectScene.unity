@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.12177559, g: 0.31609428, b: 0.5672734, a: 1}
+  m_IndirectSpecularColor: {r: 0.8740134, g: 1.1406562, b: 1.4690545, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -292,6 +292,75 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5375930749010809110, guid: 23ab3a9fa968c4645a81e65f98fdbde7, type: 3}
   m_PrefabInstance: {fileID: 493141292}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &25631140
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 543450653238733951}
+    m_Modifications:
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1592682876754421797, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892436942793273687, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
+      propertyPath: m_Name
+      value: 05_furiko_effect_01
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 086617e9fc9bfda4b8db55b6d82ff987, type: 3}
 --- !u!1 &25842639
 GameObject:
   m_ObjectHideFlags: 0
@@ -19534,6 +19603,14 @@ PrefabInstance:
     - target: {fileID: 1218151100213451357, guid: 1fa41be0a8c48a44899de96005ad6706, type: 3}
       propertyPath: coliderDistance
       value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218151100213451357, guid: 1fa41be0a8c48a44899de96005ad6706, type: 3}
+      propertyPath: SwingcolliderRadius
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1218151100213451357, guid: 1fa41be0a8c48a44899de96005ad6706, type: 3}
+      propertyPath: SwingcoliderDistance
+      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 1233683409564357028, guid: 1fa41be0a8c48a44899de96005ad6706, type: 3}
       propertyPath: m_Layer
