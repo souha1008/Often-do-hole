@@ -79,6 +79,18 @@ public class SoundManagerEditor : Editor
         EditorGUILayout.LabelField("[3Dサウンド]");
         EditorGUILayout.Space(3);
         Sound.SoundMaxDistance3D = EditorGUILayout.FloatField("3Dサウンドの聞こえる最大距離", Sound.SoundMaxDistance3D);
+        EditorGUILayout.Space(15);
+
+
+        EditorGUILayout.LabelField("[サウンド詳細情報]");
+        EditorGUILayout.Space(3);
+        GUI.enabled = false;  // 入力不可
+        EditorGUILayout.IntField("現在再生中のBGM数", Sound.NowPlaySoundBGM);
+        EditorGUILayout.IntField("現在再生中のSE数", Sound.NowPlaySoundSE);
+        EditorGUILayout.IntField("現在再生中のOBJECT数", Sound.NowPlaySoundOBJECT);
+        GUI.enabled = true;  // 入力可能
+
+
 
 
         // エディターの変更確認
@@ -144,17 +156,21 @@ public enum SOUND_FADE_TYPE
 // サウンドのフェード用クラス
 public class SOUND_FADE
 {
-    public SOUND_FADE(SOUND_FADE_TYPE fadeType, float fadeTime, bool soundStop)
+    public SOUND_FADE(SOUND_FADE_TYPE fadeType, float fadeTime, float startVolume, float endVolume, bool soundStop)
     {
         FadeType = fadeType;
         FadeTime = fadeTime;
         NowTime = 0.0f;
+        StartVolume = startVolume;
+        EndVolume = endVolume;
         SoundStop = soundStop;
     }
     public SOUND_FADE_TYPE FadeType; // フェードの種類
-    public float FadeTime;  // フェードする時間
-    public float NowTime;   // 経過時間
-    public bool SoundStop;  // フェード後に音止めるか
+    public float FadeTime;      // フェードする時間
+    public float NowTime;       // 経過時間
+    public float StartVolume;   // 開始時の音量
+    public float EndVolume;     // 終了時の音量
+    public bool SoundStop;      // フェード後に音止めるか
 }
 
 // 現在再生中のサウンド管理用
@@ -222,6 +238,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public float SoundVolumeOBJECT = 1.0f;  // OBJECTの音量
 
     public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
+
+    public int NowPlaySoundBGM = 0;     // 現在再生中のBGM
+    public int NowPlaySoundSE = 0;      // 現在再生中のSE
+    public int NowPlaySoundOBJECT = 0;  // 現在再生中のOBJECT
 
 
     // 内部データ用
@@ -436,100 +456,100 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void PlaySound(string SoundName)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
     public void PlaySound(string SoundName, float Volume)
     {
-        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime)
     {
-        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject)
     {
-        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, Volume, PlayTime, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
-    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, PlayTime, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
     public void PlaySound(string SoundName, float Volume, float PlayTime, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
-    public void PlaySound(string SoundName, float Volume, float PlayTime, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, PlayTime, null, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
-    public void PlaySound(string SoundName, float Volume, float PlayTime, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, PlayTime, null, AudioReverbPreset.Off, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
     public void PlaySound(string SoundName, float Volume, GameObject SoundObject)
     {
-        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
     public void PlaySound(string SoundName, float Volume, GameObject SoundObject, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, Volume, 0.0f, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
-    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, 0.0f, SoundObject, ReverbPreset, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
-    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, 0.0f, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
     public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
-    public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, 0.0f, null, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
-    public void PlaySound(string SoundName, float Volume, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, Volume, 0.0f, null, AudioReverbPreset.Off, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
     public void PlaySound(string SoundName, GameObject SoundObject)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
     public void PlaySound(string SoundName, GameObject SoundObject, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
-    public void PlaySound(string SoundName, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, ReverbPreset, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
-    public void PlaySound(string SoundName, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, GameObject SoundObject, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, 1.0f, 0.0f, SoundObject, AudioReverbPreset.Off, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
     public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, false);
+        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset, SOUND_FADE_TYPE.NULL, 0.0f, 1.0f, false);
     }
-    public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, 1.0f, 0.0f, null, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
-    public void PlaySound(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
-        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off, FadeType, FadeTime, SoundStop);
+        PlaySound(SoundName, 1.0f, 0.0f, null, AudioReverbPreset.Off, FadeType, FadeTime, FadeEndVolume, SoundStop);
     }
 
     #endregion
 
-    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
@@ -572,7 +592,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));                     
 
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
-                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, SoundStop);
+                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
                         return;
                     }
@@ -587,7 +607,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_SE[i]));
 
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, false, FadeType);
-                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, SoundStop);
+                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
                         return;
                     }
@@ -602,7 +622,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_OBJECT[i]));
 
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
-                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, SoundStop);
+                        FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
                         return;
                     }
@@ -619,7 +639,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public void StopSound()
     {
         // 再生終了処理
-        for (int i = 0; i < NowPlaySoundList.Count; i++)
+        for (int i = 0; i < NowPlaySoundList.Count;)
         {
             EndSoundSource(NowPlaySoundList[i]);
         }
@@ -632,6 +652,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName)
             {
                 EndSoundSource(NowPlaySoundList[i]);
+                i -= 1;
             }
         }
     }
@@ -729,33 +750,60 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // 第一引数：フェードする音のデータ名　(例) Sound1.wav　→　Sound1
     // 第二引数：フェードの種類
     // 第三引数：フェードする時間
-    // 第四引数：フェード後音を止めるか
+    // 第四引数：フェード後音のボリューム
+    // 第五引数：フェード後音を止めるか
     //===========================================
-    public void FadeSound(SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void FadeSound(SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
         if (FadeType == SOUND_FADE_TYPE.NULL || FadeTime < 0.01f) // フェード時間が小さすぎたらフェードしない
             return;
+
+        Mathf.Clamp(FadeEndVolume, 0.0f, 1.0f);
 
         // 再生中の音でフェード中でないならフェードセット
         for (int i = 0; i < NowPlaySoundList.Count; i++)
         {
             if (NowPlaySoundList[i].Sound_Fade == null)
             {
-                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(FadeType, FadeTime, SoundStop);
+                switch (FadeType)
+                {
+                    case SOUND_FADE_TYPE.IN:
+                        if (NowPlaySoundList[i].Sound_Source.Volume >= FadeEndVolume)
+                            continue;
+                        break;
+                    case SOUND_FADE_TYPE.OUT:
+                        if (NowPlaySoundList[i].Sound_Source.Volume <= FadeEndVolume)
+                            continue;
+                        break;
+                }
+                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(FadeType, FadeTime, NowPlaySoundList[i].Sound_Source.Volume, FadeEndVolume, SoundStop);
             }
         }
     }
-    public void FadeSound(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, bool SoundStop)
+    public void FadeSound(string SoundName, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
         if (FadeType == SOUND_FADE_TYPE.NULL || FadeTime < 0.01f) // フェード時間が小さすぎたらフェードしない
             return;
+
+        Mathf.Clamp(FadeEndVolume, 0.0f, 1.0f);
 
         // 再生中の音で名前が一致してフェード中でないならフェードセット
         for (int i = 0; i < NowPlaySoundList.Count; i++)
         {
             if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName && NowPlaySoundList[i].Sound_Fade == null)
             {
-                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(FadeType, FadeTime, SoundStop);
+                switch (FadeType)
+                {
+                    case SOUND_FADE_TYPE.IN:
+                        if (NowPlaySoundList[i].Sound_Source.Volume >= FadeEndVolume)
+                            continue;
+                        break;
+                    case SOUND_FADE_TYPE.OUT:
+                        if (NowPlaySoundList[i].Sound_Source.Volume <= FadeEndVolume)
+                            continue;
+                        break;
+                }
+                NowPlaySoundList[i].Sound_Fade = new SOUND_FADE(FadeType, FadeTime, NowPlaySoundList[i].Sound_Source.Volume, FadeEndVolume, SoundStop);
             }
         }
     }
@@ -771,13 +819,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                 switch (NowPlaySoundList[i].Sound_Fade.FadeType)
                 {
                     case SOUND_FADE_TYPE.IN:
-                        SoundFadeIN(NowPlaySoundList[i]);
+                        if (SoundFadeIN(NowPlaySoundList[i]))
+                            i -= 1;
                         break;
                     case SOUND_FADE_TYPE.OUT:
-                        SoundFadeOUT(NowPlaySoundList[i]);
+                        if (SoundFadeOUT(NowPlaySoundList[i]))
+                            i -= 1;
                         break;
                     case SOUND_FADE_TYPE.OUT_IN:
-                        SoundFadeOUT(NowPlaySoundList[i]);
+                        if (SoundFadeOUT(NowPlaySoundList[i]))
+                            i -= 1;
                         break;
                 }
             }
@@ -785,14 +836,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
 
-    // フェードIN処理
-    private void SoundFadeIN(NOW_PLAY_SOUND NowPlaySound)
+    // フェードIN処理(戻り値：サウンドが再生終了したか)
+    private bool SoundFadeIN(NOW_PLAY_SOUND NowPlaySound)
     {
         if (NowPlaySound.Sound_Fade.NowTime <= NowPlaySound.Sound_Fade.FadeTime)
         {
             float Volume = NowPlaySound.Sound_Fade.NowTime / NowPlaySound.Sound_Fade.FadeTime; // 音量
 
-            SetVolume(NowPlaySound.Sound_Clip.SoundName, Volume); // 音量セット
+            SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.StartVolume + 
+                (NowPlaySound.Sound_Fade.EndVolume - NowPlaySound.Sound_Fade.StartVolume) * Volume); // 音量セット
 
             NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
         }
@@ -805,26 +857,40 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     if (NowPlaySound.Sound_Fade.SoundStop)
                     {
                         StopSound(NowPlaySound.Sound_Clip.SoundName); // サウンド停止
-                        return;
+                        return true;
                     }
 
-                    SetVolume(NowPlaySound.Sound_Clip.SoundName, 1.0f); // 音量設定
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.EndVolume); // 音量セット
                     NowPlaySound.Sound_Fade = null; // フェード終了
 
                     break;
             }
         }
+        return false;
     }
 
 
-    // フェードアウト処理
-    private void SoundFadeOUT(NOW_PLAY_SOUND NowPlaySound)
+    // フェードアウト処理(戻り値：サウンドが再生終了したか)
+    private bool SoundFadeOUT(NOW_PLAY_SOUND NowPlaySound)
     {
         if (NowPlaySound.Sound_Fade.NowTime <= NowPlaySound.Sound_Fade.FadeTime)
         {
             float Volume = 1.0f - (NowPlaySound.Sound_Fade.NowTime / NowPlaySound.Sound_Fade.FadeTime); // 音量
 
-            SetVolume(NowPlaySound.Sound_Clip.SoundName, Volume);   // 音量セット
+            switch (NowPlaySound.Sound_Fade.FadeType)
+            {
+                case SOUND_FADE_TYPE.OUT:
+
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.EndVolume +
+                        (NowPlaySound.Sound_Fade.StartVolume - NowPlaySound.Sound_Fade.EndVolume) * Volume);   // 音量セット
+
+                    break;
+                case SOUND_FADE_TYPE.OUT_IN:
+
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.StartVolume * Volume);   // 音量セット
+
+                    break;
+            }           
 
             NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
         }
@@ -837,22 +903,21 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     if (NowPlaySound.Sound_Fade.SoundStop)
                     {
                         StopSound(NowPlaySound.Sound_Clip.SoundName); // サウンド停止
-                        return;
+                        return true;
                     }
 
-                    SetVolume(NowPlaySound.Sound_Clip.SoundName, 0.0f); // 音量設定
+                    SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.EndVolume); // 音量セット
                     NowPlaySound.Sound_Fade = null; // フェード終了
 
                     break;
                 case SOUND_FADE_TYPE.OUT_IN:
-
                     SetVolume(NowPlaySound.Sound_Clip.SoundName, 0.0f); // 音量設定
-                    NowPlaySound.Sound_Fade.NowTime = 0.0f; // 経過時間初期化
-                    NowPlaySound.Sound_Fade.FadeType = SOUND_FADE_TYPE.IN; // フェードをINに変更
+                    NowPlaySound.Sound_Fade = new SOUND_FADE(SOUND_FADE_TYPE.IN, NowPlaySound.Sound_Fade.FadeTime, 0.0f, NowPlaySound.Sound_Fade.EndVolume, NowPlaySound.Sound_Fade.SoundStop);
 
                     break;
             }
         }
+        return false;
     }
 
 
@@ -984,6 +1049,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             if (!NowPlaySoundList[i].Sound_Source.isPause && !NowPlaySoundList[i].Sound_Source.AudioSource.isPlaying)
             {
                 EndSoundSource(NowPlaySoundList[i]);
+                i -= 1;
             }
         }
     }
@@ -1001,6 +1067,33 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     NowPlaySoundList[i].Sound_Source.SoundObject.transform.position;
             }
         }
+    }
+
+    // インスペクターのサウンド詳細情報更新処理
+    private void UpdateSoundInspector()
+    {
+        int BGMNum = 0;
+        int SENum = 0;
+        int OBJECTNum = 0;
+
+        for (int i = 0; i < NowPlaySoundList.Count; i++)
+        {
+            switch (NowPlaySoundList[i].Sound_Clip.SoundType)
+            {
+                case SOUND_TYPE.BGM:
+                    BGMNum++;
+                    break;
+                case SOUND_TYPE.SE:
+                    SENum++;
+                    break;
+                case SOUND_TYPE.OBJECT:
+                    OBJECTNum++;
+                    break;
+            }
+        }
+        NowPlaySoundBGM = BGMNum;
+        NowPlaySoundSE = SENum;
+        NowPlaySoundOBJECT = OBJECTNum;
     }
 
 
@@ -1046,12 +1139,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         if (Input.GetKeyDown(KeyCode.K)) // BGMのフェードイン再生
         {
             //SoundManager.Instance.SoundFade("TestBGM2", SOUND_FADE_TYPE.OUT_IN, 3.0f, false);
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 6.0f, AudioReverbPreset.Bathroom, SOUND_FADE_TYPE.IN, 10.0f, false);
+            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 6.0f, AudioReverbPreset.Bathroom, SOUND_FADE_TYPE.IN, 5.0f, 1.0f, false);
         }
 
         if (Input.GetKeyDown(KeyCode.L)) // BGMのフェードアウト停止
         {
-            SoundManager.Instance.FadeSound("TestBGM2", SOUND_FADE_TYPE.OUT, 5.0f, true);
+            SoundManager.Instance.FadeSound("TestBGM2", SOUND_FADE_TYPE.OUT, 5.0f, 0.0f, true);
         }
     }
 
@@ -1068,6 +1161,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         // サウンドのフェード更新
         UpdateFadeSound();
+
+#if UNITY_EDITOR
+        // サウンドのインスペクター用詳細情報更新
+        UpdateSoundInspector();
+#endif
+
 
         //Debug.Log("ポーズ中：" + AudioSource_BGM[0].isPause);
         //Debug.Log("使っている：" + AudioSource_BGM[0].isUse);
