@@ -253,7 +253,7 @@ public class Gimmick_Enemy : Gimmick_Main
             }
         }
 
-        Rad += new Vector3(0.0f, 0.0f, 10.0f);  // ‰ñ“]
+        transform.rotation *= Quaternion.Euler(0, 0, 10);  // ‰ñ“]
     }
 
     // “G€–Sˆ—

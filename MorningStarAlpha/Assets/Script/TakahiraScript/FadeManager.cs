@@ -41,7 +41,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     private Texture2D FadeTexture;                    // フェードのテクスチャ
     private float FadeRate;                           // フェード係数
-    static private FADE_STATE NowFadeState;                  // 現在のフェードの状態
+    static private FADE_STATE NowFadeState;           // 現在のフェードの状態
     private FADE_STATE OldFadeState;                  // ひとつ前のフェードの状態
     private FADE_KIND NowFadeKind;                    // 現在のフェードの種類
     private Color FadeColor;                          // フェードのカラー
@@ -57,13 +57,17 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
 
         // 初期化
+        FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
+        FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
+        FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+
         NowFadeState = OldFadeState = FADE_STATE.FADE_NONE;
         NowFadeKind = FADE_KIND.FADE_GAMOVER;
         FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
         FadeColor = new Color(0, 0, 0, 0);
 
         //テクスチャ作成
-        Debug.Log("FadeManager作成");
+        //Debug.Log("FadeManager作成");
 
         FadeTexture = new Texture2D(32, 32, TextureFormat.RGB24, false);
         FadeTexture.ReadPixels(new Rect(0, 0, 32, 32), 0, 0, false);
@@ -163,7 +167,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             NowFadeState = NextFadeState;
             NowFadeKind = FadeKind;
 
-            switch(NowFadeKind)
+            FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
+            FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
+            FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+
+            switch (NowFadeKind)
             {
                 case FADE_KIND.FADE_GAMOVER:
                     FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;

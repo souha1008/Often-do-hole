@@ -201,9 +201,11 @@ public class Gimmick_MoveBlock : Gimmick_Main
         // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーの移動
         if (PlayerObject != null)
         {
-            Ray ray = new Ray(PlayerObject.transform.position, Vector3.down);
+            Ray ray_1 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(-(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1.5f))
+            float RayLength = PlayerObject.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
                 if (hit.collider.gameObject == this.gameObject)
                 {
@@ -211,7 +213,17 @@ public class Gimmick_MoveBlock : Gimmick_Main
                     //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
                     PlayerObject.transform.position = PlayerObject.transform.position +
                         new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+
+                    //PlayerMainScript.addVel = new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
                 }
+                else
+                {
+                    PlayerObject = null;
+                }
+            }
+            else
+            {
+                PlayerObject = null;
             }
         }
 
@@ -246,6 +258,17 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             BulletObject = collision.gameObject;
             BulletMainScript = BulletObject.GetComponent<BulletMain>();
+        }
+    }
+    public void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            PlayerObject = collision.gameObject;
+        }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            BulletObject = collision.gameObject;
         }
     }
 

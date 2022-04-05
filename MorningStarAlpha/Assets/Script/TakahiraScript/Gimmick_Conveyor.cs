@@ -29,7 +29,7 @@ public class Gimmick_Conveyor : Gimmick_Main
         Cd.isTrigger = false; // トリガーオフ
 
         // 角度を0度固定
-        Rad = Vector3.zero;
+        transform.rotation = Quaternion.identity;
     }
 
     public override void FixedMove()
@@ -93,6 +93,15 @@ public class Gimmick_Conveyor : Gimmick_Main
         }
     }
 
+    public void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            // プレイヤーオブジェクト取得
+            ConveyorState.Player = collision.gameObject;
+        }
+    }
+
     public bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
     {
         if (MoveDirection_X == MOVE_DIRECTION_X.MoveRight)
@@ -147,7 +156,6 @@ public class ConveyorStart : ConveyorState
 
         // プレイヤーオブジェクトnull
         Player = null;
-        PlayerMainScript = null;
 
         // 錨オブジェクトnull
         Bullet = null;
@@ -178,10 +186,11 @@ public class ConveyorNone : ConveyorState
         if (Player != null && PlayerMainScript != null)
         {
             // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーオブジェクト取得
-            Ray ray1 = new Ray(Player.gameObject.transform.position + new Vector3(-Player.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
-            Ray ray2 = new Ray(Player.gameObject.transform.position + new Vector3(Player.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+            Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
             RaycastHit hit;
-            if (Physics.Raycast(ray1, out hit, 1.5f) || Physics.Raycast(ray2, out hit, 1.5f))
+            float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
                 if (hit.collider.gameObject == Conveyor.gameObject)
                 {
@@ -198,7 +207,6 @@ public class ConveyorNone : ConveyorState
             else // レイが当たらなかったらnull入れる
             {
                 Player = null;
-                PlayerMainScript = null;
             }
         }
 
@@ -268,7 +276,8 @@ public class ConveyorUp : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
                     StateChange(new ConveyorRight());
@@ -278,8 +287,9 @@ public class ConveyorUp : ConveyorState
             {
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
                     StateChange(new ConveyorLeft());
@@ -308,7 +318,8 @@ public class ConveyorDown : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
                     StateChange(new ConveyorLeft());
@@ -319,7 +330,8 @@ public class ConveyorDown : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
                     StateChange(new ConveyorRight());
@@ -349,7 +361,8 @@ public class ConveyorRight : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
                     StateChange(new ConveyorDown());
@@ -360,7 +373,8 @@ public class ConveyorRight : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
                     StateChange(new ConveyorUp());
@@ -390,7 +404,8 @@ public class ConveyorLeft : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {              
                     BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
                     StateChange(new ConveyorUp());
@@ -401,7 +416,8 @@ public class ConveyorLeft : ConveyorState
                 Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
                 Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
                 RaycastHit hit;
-                if (!Physics.Raycast(ray1, out hit, 1.5f) && !Physics.Raycast(ray2, out hit, 1.5f))
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
                 {
                     BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
                     StateChange(new ConveyorDown());
@@ -421,9 +437,11 @@ public class ConveyorPlayerMoveRight : ConveyorState
     public override void Move()
     {
         // プレイヤーからレイ飛ばして真下にブロックが無かったらステート変更
-        Ray ray = new Ray(PlayerMainScript.transform.position, Vector3.down);
+        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1.5f))
+        float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
+        if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
         {
             if (hit.collider.gameObject == Conveyor.gameObject)
             {
@@ -449,9 +467,11 @@ public class ConveyorPlayerMoveLeft : ConveyorState
     public override void Move()
     {
         // プレイヤーからレイ飛ばして真下にブロックが無かったらステート変更
-        Ray ray = new Ray(PlayerMainScript.transform.position, Vector3.down);
+        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1.5f))
+        float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
+        if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
         {
             if (hit.collider.gameObject == Conveyor.gameObject)
             {
