@@ -226,8 +226,18 @@ public class BulletMain : MonoBehaviour
                         rb.velocity = Vector3.zero;
                         StopVelChange = true;
 
-
+                       
                         if (colAspect == Aspect_8.UP)
+                        {
+                            //FOLLOW状態に移行
+                            followEnd = true;
+                        }
+                        else if(colAspect == Aspect_8.UP_RIGHT && this.vel.x >= 0) //右に進んでいるのに右上に当たったとき
+                        {
+                            //FOLLOW状態に移行
+                            followEnd = true;
+                        }
+                        else if (colAspect == Aspect_8.UP_LEFT && this.vel.x <= 0) //逆
                         {
                             //FOLLOW状態に移行
                             followEnd = true;
@@ -237,6 +247,7 @@ public class BulletMain : MonoBehaviour
                             //SWING状態に移行
                             swingEnd = true;
                         }
+                     
 
                         break;
 
