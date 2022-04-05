@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletMain : MonoBehaviour
@@ -93,6 +91,25 @@ public class BulletMain : MonoBehaviour
 
     }
 
+    public void ShotSlideJumpBullet()
+    {
+        rb.isKinematic = false;
+        onceFlag = false;
+        StopVelChange = false;
+        swingEnd = false;
+        followEnd = false;
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+
+        //弾の初期化
+        rb.velocity = Vector3.zero;
+        vel = Vector3.zero;
+        isTouched = false;
+        vel += vec * BULLET_SPEED * 0.8f;
+
+       
+         vel += PlayerScript.vel *= 0.6f;
+    }
+
     void FixedUpdate()
     {
         if (ReferenceEquals(Player, null) == false)
@@ -122,6 +139,7 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
+            onceFlag = false;
             isTouched = false;
             StopVelChange = true;
             rb.isKinematic = false;
@@ -136,6 +154,7 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
+            onceFlag = false;
             isTouched = false;
             StopVelChange = true;
             rb.isKinematic = true;
@@ -185,31 +204,9 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            Aspect colAspect = DetectAspect.DetectionAspect(collision.GetContact(0).normal); //接触点の法線ベクトル
-            Vector3 colPoint = collision.GetContact(0).point;
-
             //錨が刺さる場所を壁ピッタリにする処理
             //AdjustColPoint(colAspect, colPoint);
 
-
-            //Quaternion rot = Quaternion.identity;
-            //switch (colAspect) {
-            //    case Aspect.DOWN:
-            //        rot = Quaternion.Euler(new Vector3(90, 0, 0));
-            //        break;
-
-            //    case Aspect.UP:
-            //        rot = Quaternion.Euler(new Vector3(270, 0, 0));
-            //        break;
-
-            //    case Aspect.LEFT:
-            //        rot = Quaternion.Euler(new Vector3(0, 270, 0));
-            //        break;
-
-            //    case Aspect.RIGHT:
-            //        rot = Quaternion.Euler(new Vector3(0, 90, 0));
-            //        break;
-            //}
 
             if (onceFlag == false)
             {
@@ -218,7 +215,10 @@ public class BulletMain : MonoBehaviour
                 string tag = collision.gameObject.tag;
                 switch (tag)
                 {
-                    case "Platform": 
+                    case "Platform":
+                        Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+                        Vector3 colPoint = collision.GetContact(0).point;
+
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
                         GetComponent<Collider>().isTrigger = true;
@@ -226,8 +226,18 @@ public class BulletMain : MonoBehaviour
                         rb.velocity = Vector3.zero;
                         StopVelChange = true;
 
-
-                        if (colAspect == Aspect.UP)
+                       
+                        if (colAspect == Aspect_8.UP)
+                        {
+                            //FOLLOW状態に移行
+                            followEnd = true;
+                        }
+                        else if(colAspect == Aspect_8.UP_RIGHT && this.vel.x >= 0) //右に進んでいるのに右上に当たったとき
+                        {
+                            //FOLLOW状態に移行
+                            followEnd = true;
+                        }
+                        else if (colAspect == Aspect_8.UP_LEFT && this.vel.x <= 0) //逆
                         {
                             //FOLLOW状態に移行
                             followEnd = true;
@@ -237,6 +247,7 @@ public class BulletMain : MonoBehaviour
                             //SWING状態に移行
                             swingEnd = true;
                         }
+                     
 
                         break;
 

@@ -17,6 +17,16 @@ public enum OnGroundState {
     SLIDE,  //滑っている
 }
 
+/// <summary>
+/// 空中時の細かな状態
+/// </summary>
+public enum MidairState
+{
+    NONE,      //空中状態ではない
+    NORMAL,   //通常時
+    FALL, 　  //急降下
+}
+
 
 /// <summary>
 /// スイング時の細かな状態
@@ -77,6 +87,9 @@ public class PlayerMain : MonoBehaviour
     [SerializeField] public const float HcolliderRadius = 1.6f;   //頭判定用ray半径
     [SerializeField] public const float HcoliderDistance = 0.8f; //頭判定用ray中心点から頭までのオフセット
 
+    [SerializeField] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
+    [SerializeField] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット
+
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
     [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
     [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
@@ -97,6 +110,7 @@ public class PlayerMain : MonoBehaviour
 
     [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
     [ReadOnly, Tooltip("地上時の細かなステート")] public OnGroundState onGroundState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
+    [ReadOnly, Tooltip("空中時の細かなステート")] public MidairState midairState;
     [ReadOnly, Tooltip("ショット状態の細かなステート")] public ShotState shotState;
     [ReadOnly, Tooltip("swing状態の細かなstate")] public SwingState swingState;
     [ReadOnly, Tooltip("プレイヤーの向き")] public PlayerMoveDir dir;
@@ -136,6 +150,7 @@ public class PlayerMain : MonoBehaviour
     {
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
+        midairState = MidairState.NONE;
         shotState = ShotState.NONE;
         swingState = SwingState.NONE;
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
@@ -163,6 +178,13 @@ public class PlayerMain : MonoBehaviour
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
 
         mode = new PlayerStateOnGround(); //初期ステート
+
+        if (mode != null)
+        {
+            mode.UpdateState();
+            mode.StateTransition();
+            mode.Move();
+        }
     }
 
     private void Update()
@@ -426,7 +448,54 @@ public class PlayerMain : MonoBehaviour
         }
 
 
-        
+        //swing中に壁にぶつかったらときの処理
+        if (refState == EnumPlayerState.SWING)
+        {
+            if (swingState == SwingState.TOUCHED)
+            {
+                if (collision.gameObject.CompareTag("Platform"))
+                {
+                    if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
+                    {
+                        counterSwing = true;
+                    }
+                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
+                    {
+                        counterSwing = true;
+                    }
+                    else 
+                    {
+                        Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
+                        vecToPlayerR = vecToPlayerR.normalized;
+                        Ray footRay = new Ray(rb.position, vecToPlayerR);
+                        if(asp == Aspect.UP)
+                        {
+                            if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, ~LayerMask.GetMask("Player")))
+                            {
+                                Debug.Log("collision Platform : slide continue");
+                                shortSwing.isShort = true;
+
+                                //短くした後の紐長さ計算
+                                float tempLength = Vector3.Distance(BulletScript.rb.position, collision.GetContact(0).point);
+                                tempLength -= 3.5f;
+
+                                shortSwing.length = tempLength;
+                            }
+                            else
+                            {
+                                Debug.Log("collision Platform : swing end");
+                                endSwing = true;
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("collision Platform : swing end");
+                            endSwing = true;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void OnCollisionStay(Collision collision)
@@ -458,48 +527,7 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-        //swing中に壁にぶつかったらときの処理
-        if (refState == EnumPlayerState.SWING)
-        {
-            if (swingState == SwingState.TOUCHED)
-            {
-                if (collision.gameObject.CompareTag("Platform"))
-                {
-                    if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
-                    {
-                        counterSwing = true;
-                    }
-                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
-                    {
-                        counterSwing = true;
-                    }
-
-                    else
-                    {
-                        Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
-                        vecToPlayerR = vecToPlayerR.normalized;
-                        Ray footRay = new Ray(rb.position, vecToPlayerR);
-
-                        if (Physics.SphereCast(footRay, HcolliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
-                        {
-                            Debug.Log("collision Platform : slide continue");
-                            shortSwing.isShort = true;
-
-                            //短くした後の紐長さ計算
-                            float tempLength = Vector3.Distance(BulletScript.rb.position, collision.GetContact(0).point);
-                            tempLength -= 2.5f;
-
-                            shortSwing.length = tempLength;
-                        }
-                        else
-                        {
-                            Debug.Log("collision Platform : swing end");
-                            endSwing = true;
-                        }
-                    }
-                }
-            }
-        }
+        
     }
 
    
@@ -549,19 +577,18 @@ public class PlayerMain : MonoBehaviour
         }
 
         //スイングスライド足元
-        if(refState == EnumPlayerState.SWING)
-        {
-            if(swingState == SwingState.TOUCHED) 
-            {
+        //if(refState == EnumPlayerState.SWING)
+        //{
+        //    if(swingState == SwingState.TOUCHED) 
+        //    {
                 Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
                 vecToPlayerR = vecToPlayerR.normalized;
 
-
                 Ray Ray = new Ray(rb.position, vecToPlayerR);
                 Gizmos.color = Color.black;
-                Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * (coliderDistance)), colliderRadius);
-            }
-        }   
+                Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
+        //    }
+        //}   
     }
 
 }
