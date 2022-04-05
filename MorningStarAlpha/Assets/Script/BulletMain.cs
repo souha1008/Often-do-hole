@@ -204,31 +204,9 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            Aspect colAspect = DetectAspect.DetectionAspect(collision.GetContact(0).normal); //接触点の法線ベクトル
-            Vector3 colPoint = collision.GetContact(0).point;
-
             //錨が刺さる場所を壁ピッタリにする処理
             //AdjustColPoint(colAspect, colPoint);
 
-
-            //Quaternion rot = Quaternion.identity;
-            //switch (colAspect) {
-            //    case Aspect.DOWN:
-            //        rot = Quaternion.Euler(new Vector3(90, 0, 0));
-            //        break;
-
-            //    case Aspect.UP:
-            //        rot = Quaternion.Euler(new Vector3(270, 0, 0));
-            //        break;
-
-            //    case Aspect.LEFT:
-            //        rot = Quaternion.Euler(new Vector3(0, 270, 0));
-            //        break;
-
-            //    case Aspect.RIGHT:
-            //        rot = Quaternion.Euler(new Vector3(0, 90, 0));
-            //        break;
-            //}
 
             if (onceFlag == false)
             {
@@ -237,7 +215,10 @@ public class BulletMain : MonoBehaviour
                 string tag = collision.gameObject.tag;
                 switch (tag)
                 {
-                    case "Platform": 
+                    case "Platform":
+                        Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+                        Vector3 colPoint = collision.GetContact(0).point;
+
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
                         GetComponent<Collider>().isTrigger = true;
@@ -246,7 +227,7 @@ public class BulletMain : MonoBehaviour
                         StopVelChange = true;
 
 
-                        if (colAspect == Aspect.UP)
+                        if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
                             followEnd = true;

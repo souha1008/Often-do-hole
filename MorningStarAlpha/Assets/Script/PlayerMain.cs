@@ -87,8 +87,8 @@ public class PlayerMain : MonoBehaviour
     [SerializeField] public const float HcolliderRadius = 1.6f;   //頭判定用ray半径
     [SerializeField] public const float HcoliderDistance = 0.8f; //頭判定用ray中心点から頭までのオフセット
 
-    [SerializeField] public  float SwingcolliderRadius = 1.6f;   //スイングスライド判定用ray半径
-    [SerializeField] public  float SwingcoliderDistance = 0.8f; //頭判定用ray中心点から頭までのオフセット
+    [SerializeField] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
+    [SerializeField] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
     [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
