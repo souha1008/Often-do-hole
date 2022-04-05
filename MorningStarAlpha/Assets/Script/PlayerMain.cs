@@ -17,6 +17,16 @@ public enum OnGroundState {
     SLIDE,  //滑っている
 }
 
+/// <summary>
+/// 空中時の細かな状態
+/// </summary>
+public enum MidairState
+{
+    NONE,      //空中状態ではない
+    NORMAL,   //通常時
+    FALL, 　  //急降下
+}
+
 
 /// <summary>
 /// スイング時の細かな状態
@@ -100,6 +110,7 @@ public class PlayerMain : MonoBehaviour
 
     [ReadOnly, Tooltip("現在のステート")] public EnumPlayerState refState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
     [ReadOnly, Tooltip("地上時の細かなステート")] public OnGroundState onGroundState;                //ステート確認用(modeの中に入っている派生クラスで値が変わる)
+    [ReadOnly, Tooltip("空中時の細かなステート")] public MidairState midairState;
     [ReadOnly, Tooltip("ショット状態の細かなステート")] public ShotState shotState;
     [ReadOnly, Tooltip("swing状態の細かなstate")] public SwingState swingState;
     [ReadOnly, Tooltip("プレイヤーの向き")] public PlayerMoveDir dir;
@@ -139,6 +150,7 @@ public class PlayerMain : MonoBehaviour
     {
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
+        midairState = MidairState.NONE;
         shotState = ShotState.NONE;
         swingState = SwingState.NONE;
         dir = PlayerMoveDir.RIGHT;        //向き初期位置

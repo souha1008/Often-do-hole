@@ -721,8 +721,9 @@ public class PlayerStateMidair : PlayerState
     private bool shotButton;  
     private bool OnceFallDownFlag;//急降下フラグ
     private void Init()
-    {
+    {     
         PlayerScript.refState = EnumPlayerState.MIDAIR;
+        PlayerScript.midairState = MidairState.NORMAL;
         shotButton = false;
         PlayerScript.canShotState = false;
         OnceFallDownFlag = false;
@@ -730,31 +731,12 @@ public class PlayerStateMidair : PlayerState
         BulletScript.InvisibleBullet();
     }
 
-    //public PlayerStateMidair()//コンストラクタ
-    //{
-    //    Init();
-    //    recastTime = PlayerScript.BULLET_RECAST_TIME;
-    //}
-
-
     public PlayerStateMidair(bool can_shot)//コンストラクタ
     {
         Init();
         PlayerScript.canShotState = can_shot;
     }
 
-    ////再射出可能時間を指定
-    //public PlayerStateMidair(float recast_time)
-    //{
-    //    Init();
-    //    recastTime = recast_time;
-    //    if(recastTime < 0.0001f)
-    //    {
-    //        PlayerScript.canShotState = true; 
-    //    }
-    //}
-
-    
     public override void UpdateState()
     {
         BulletAdjust();
@@ -782,7 +764,7 @@ public class PlayerStateMidair : PlayerState
         if (PlayerScript.sourceLeftStick.y < -0.7f && Mathf.Abs(PlayerScript.sourceLeftStick.x) < 0.3f)
         {
             //一度でも入力されたら永久に
-            OnceFallDownFlag = true;
+            PlayerScript.midairState = MidairState.FALL;
         }
 
     }
@@ -801,13 +783,22 @@ public class PlayerStateMidair : PlayerState
         }
 
         //急降下中
-        if(OnceFallDownFlag)
+        if(PlayerScript.midairState == MidairState.FALL)
         {
-            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2 * (fixedAdjust);
-            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1 * 2);
+            //プレイヤーが上に向かっているときは早い
+            if(PlayerScript.vel.y > 0.0f)
+            {
+                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2.0f * (fixedAdjust);
+            }
+            else　//下のときも少し早い
+            {
+                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 1.5f * (fixedAdjust);
+            }
+            
+            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1 * 1.3f);
         }
         //自由落下
-        else
+        else if(PlayerScript.midairState == MidairState.NORMAL)
         {
             PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
             PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
@@ -819,12 +810,14 @@ public class PlayerStateMidair : PlayerState
     { 
         if (shotButton)
         {
+            PlayerScript.midairState = MidairState.NONE;
             PlayerScript.mode = new PlayerStateShot_2(false);
         }
 
         //着地したら立っている状態に移行
         if (PlayerScript.isOnGround)
         {
+            PlayerScript.midairState = MidairState.NONE;
             PlayerScript.mode = new PlayerStateOnGround();
         }
     }

@@ -18,7 +18,7 @@ public class TrailEffectOnOff : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if(pa.isEmitting == false)
+        if(pa.isEmitting == false) //パーティクル再生していない
         {
             if (PlayerMain.instance.refState == EnumPlayerState.SWING)
             {
@@ -34,16 +34,36 @@ public class TrailEffectOnOff : MonoBehaviour
                     pa.Play();
                 }
             }
+            else if(PlayerMain.instance.refState == EnumPlayerState.MIDAIR)
+            {
+                if (PlayerMain.instance.midairState == MidairState.FALL)
+                {
+                    pa.Play();
+                }
+            }
+            else if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND)
+            {
+                if(PlayerMain.instance.onGroundState == OnGroundState.SLIDE)
+                {
+                    pa.Play();
+                }
+            }
         }
         else
         {
             if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND)
             {
-                pa.Stop();
+                if (PlayerMain.instance.onGroundState == OnGroundState.NORMAL)
+                {
+                    pa.Stop();
+                }
             }
             else if(PlayerMain.instance.refState == EnumPlayerState.MIDAIR)
             {
-                pa.Stop();
+                if (PlayerMain.instance.midairState == MidairState.NORMAL)
+                {
+                    pa.Stop();
+                }
             }
         }
        
