@@ -76,7 +76,7 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public static PlayerMain instance;
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
-
+    private RaycastHit footHit;                      // GetHit
 
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
@@ -102,8 +102,8 @@ public class PlayerMain : MonoBehaviour
 
 
     [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
-    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float  MIDAIR_FRICTION;         // 空中の速度減衰率
-    [Tooltip("空中で再び球が打てるようになる時間")]public float                      BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
+    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION;         // 空中の速度減衰率
+    [Tooltip("空中で再び球が打てるようになる時間")]public float                   BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
     //----------プレイヤー物理挙動関連の定数終わり----------------------
 
     [ Header("[以下実行時変数確認用：変更不可]")]
@@ -174,6 +174,11 @@ public class PlayerMain : MonoBehaviour
         shortSwing.length = 0.0f;
 
         counterSwing = false;
+
+        Ray footray = new Ray(rb.position, Vector3.down);
+        Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, ~LayerMask.GetMask("Player"));
+
+
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
 
@@ -250,9 +255,9 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
+    public RaycastHit getFootHit()
     {
-        
+        return footHit;
     }
 
     private void InputStick()
@@ -498,6 +503,8 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+
+
     private void OnCollisionStay(Collision collision)
     {
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
@@ -511,6 +518,13 @@ public class PlayerMain : MonoBehaviour
             {
                 isOnGround = true;
             }
+        }
+
+
+        Ray footray = new Ray(rb.position, Vector3.down);
+        if (Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, ~LayerMask.GetMask("Player")))
+        {
+            // foothit格納用
         }
 
         //FOLLOW中に壁に当たると上に補正
@@ -529,8 +543,6 @@ public class PlayerMain : MonoBehaviour
 
         
     }
-
-   
 
 
     //接地判定を計算
@@ -567,8 +579,7 @@ public class PlayerMain : MonoBehaviour
             if (shotState == ShotState.STRAINED)
             {
                 Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
-                vecToPlayer = vecToPlayer.normalized;        
-
+                vecToPlayer = vecToPlayer.normalized;
 
                 Ray headRay = new Ray(rb.position, vecToPlayer);
                 Gizmos.color = Color.yellow;

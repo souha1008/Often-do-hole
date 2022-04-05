@@ -38,12 +38,12 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.x < 1 && VecPower.x > -1) VecPower.x = 0;  // ¬‚³‚¢’l‚ÍŒë·‚Æ‚µ‚Ä0‚É‚·‚é
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
-      
-            playermain.ForciblyReturnBullet(false);
-            playermain.vel = Vector3.zero;
-            playermain.addVel = VecPower;
 
-            SoundManager.Instance.PlaySound("Œˆ’è‰¹");
+            PlayerMain.instance.ForciblyReturnBullet(false);
+            PlayerMain.instance.vel = Vector3.zero;
+            PlayerMain.instance.addVel = VecPower;
+
+            //SoundManager.Instance.PlaySound("Œˆ’è‰¹");
         }
     }
 }
