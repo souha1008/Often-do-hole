@@ -1226,7 +1226,6 @@ public class PlayerStateSwing_R_Release : PlayerState
             endAngle = Mathf.Clamp(endAngle, 220, 270);
         }
 
-
         //最低速は突入時プレイヤーvelocity
         maxAnglerVel = minAnglerVel = angler_velocity;
         //最高速度は突入角が大きいほど早い
