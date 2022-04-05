@@ -223,6 +223,8 @@ public class PlayerStateShot_2 : PlayerState
     Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
     bool finishFlag;
 
+    const float STRAINED_END_RATIO = 1.0f;
+
     private void Init()
     {
         countTime = 0.0f;
@@ -321,7 +323,7 @@ public class PlayerStateShot_2 : PlayerState
                    
                     BulletScript.ReturnBullet();
                     
-                    PlayerScript.vel = bulletVecs.Dequeue();
+                    PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
                     
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;           
@@ -336,7 +338,7 @@ public class PlayerStateShot_2 : PlayerState
            
             if (PlayerScript.forciblyReturnSaveVelocity)
             {
-                PlayerScript.vel = bulletVecs.Dequeue();
+                PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
             }
             else
             {
@@ -1154,6 +1156,9 @@ public class PlayerStateSwing_R_Release : PlayerState
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
 
+
+    const float SWING_END_RATIO = 1.4f;
+
     public PlayerStateSwing_R_Release()  //コンストラクタ
     {
         BulletPosition = BulletScript.gameObject.transform.position;
@@ -1384,7 +1389,7 @@ public class PlayerStateSwing_R_Release : PlayerState
 
                     float mutipleVec = (nowAnglerVel / 20.0f) + 1.0f;
 
-                    PlayerScript.vel += addVec * mutipleVec * 40.0f;
+                    PlayerScript.vel += addVec * mutipleVec * 40.0f * SWING_END_RATIO;
                 }
             }
             else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -1404,7 +1409,7 @@ public class PlayerStateSwing_R_Release : PlayerState
 
                     float mutipleVec = (nowAnglerVel / 20.0f) + 1.0f;
 
-                    PlayerScript.vel += addVec * mutipleVec * 40.0f;
+                    PlayerScript.vel += addVec * mutipleVec * 40.0f * SWING_END_RATIO;
                 }
             }
         }

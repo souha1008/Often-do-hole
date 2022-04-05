@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーの速度エフェクトを早いときだけ
+/// </summary>
 public class TrailEffectOnOff : MonoBehaviour
 {
     private ParticleSystem pa;

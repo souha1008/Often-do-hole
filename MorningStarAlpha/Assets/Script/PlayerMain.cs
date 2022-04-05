@@ -166,6 +166,13 @@ public class PlayerMain : MonoBehaviour
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
 
         mode = new PlayerStateOnGround(); //初期ステート
+
+        if (mode != null)
+        {
+            mode.UpdateState();
+            mode.StateTransition();
+            mode.Move();
+        }
     }
 
     private void Update()
