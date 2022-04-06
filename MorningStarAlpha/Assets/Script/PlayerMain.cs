@@ -76,7 +76,7 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public static PlayerMain instance;
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
-    private RaycastHit footHit;                      // GetHit
+    private RaycastHit footHit;                      // Ge
 
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
@@ -176,7 +176,7 @@ public class PlayerMain : MonoBehaviour
         counterSwing = false;
 
         Ray footray = new Ray(rb.position, Vector3.down);
-        Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, ~LayerMask.GetMask("Player"));
+        Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
 
 
 
@@ -475,7 +475,7 @@ public class PlayerMain : MonoBehaviour
                         Ray footRay = new Ray(rb.position, vecToPlayerR);
                         if(asp == Aspect.UP)
                         {
-                            if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, ~LayerMask.GetMask("Player")))
+                            if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, LayerMask.GetMask("Platform")))
                             {
                                 Debug.Log("collision Platform : slide continue");
                                 shortSwing.isShort = true;
@@ -514,7 +514,7 @@ public class PlayerMain : MonoBehaviour
         if(isOnGround == false)
         {
             Ray ray = new Ray(rb.position, Vector3.down);
-            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
+            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
             {
                 isOnGround = true;
             }
@@ -522,7 +522,7 @@ public class PlayerMain : MonoBehaviour
 
 
         Ray footray = new Ray(rb.position, Vector3.down);
-        if (Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, ~LayerMask.GetMask("Player")))
+        if (Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform")))
         {
             // foothit格納用
         }
@@ -551,7 +551,7 @@ public class PlayerMain : MonoBehaviour
         Ray ray = new Ray(rb.position, Vector3.down);
         if (isOnGround)
         {
-            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")) == false)
+            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")) == false)
             {
                 isOnGround = false;
             }
