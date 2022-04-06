@@ -78,8 +78,7 @@ public static class DetectAspect
     public static Aspect_8 Detection8Pos(BoxCollider collider ,Vector3 pos)
     {
         Aspect_8 returnAsp = Aspect_8.UP;
-        const float ASOBI = 1.0f;
-
+      
         if (collider.bounds.max.y < pos.y) //ã‘¤
         {
             if (collider.bounds.max.x < pos.x)@//‰E‘¤
