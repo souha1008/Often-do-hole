@@ -22,7 +22,7 @@ public class Gimmick_Hole : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Player")
+        if (collider.gameObject.CompareTag("Player"))
         {
             // プレイヤーを死亡状態に変更
             PlayerMain.instance.mode = new PlayerStateDeath();

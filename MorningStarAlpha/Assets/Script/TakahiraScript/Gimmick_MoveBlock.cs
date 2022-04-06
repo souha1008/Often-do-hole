@@ -113,10 +113,6 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private float NowTime_X, NowTime_Y;         // 経過時間
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
-    //private GameObject PlayerObject;            // プレイヤーオブジェクト
-    //private PlayerMain PlayerMainScript;        // プレイヤーメインスクリプト
-    //private GameObject BulletObject;            // 錨オブジェクト
-    //private BulletMain BulletMainScript;        // 錨メインスクリプト
 
     private bool PlayerMoveFlag;
     private bool BulletMoveFlag;
@@ -146,13 +142,6 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
         // リジッドボディ
         Rb.isKinematic = true;
-
-        // プレイヤーオブジェクト発見
-        //PlayerObject = GameObject.Find("Player");
-        //PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
-        // 錨オブジェクトnull
-        //BulletObject = null;
-        //BulletMainScript = null;
     }
 
     public override void FixedMove()
@@ -237,20 +226,20 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player" &&
+        if (collision.gameObject.CompareTag("Player") &&
                 PlayerMain.instance.getFootHit().collider != null &&
                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
         {
             PlayerMoveFlag = true;
         }
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             BulletMoveFlag = true;
         }
     }
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             if (PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
@@ -258,7 +247,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             BulletMoveFlag = true;
         }
@@ -266,11 +255,11 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     public void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             PlayerMoveFlag = false;
         }
-        //if (collision.gameObject.tag == "Bullet")
+        //if (collision.gameObject.CompareTag("Bullet"))
         //{
         //    BulletMoveFlag = false;
         //}

@@ -78,13 +78,13 @@ public class Gimmick_FallBlock : Gimmick_Main
     public override void OnCollisionEnter(Collision collision)
     {
         // プレイヤーか錨と接触
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             NowFall = true; // 落下中
             BulletMoveFlag = true;
         }
         
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             //Debug.Log("プレイヤー当たった");
             // プレイヤーからレイ飛ばして真下にブロックがあったら落下
@@ -99,7 +99,7 @@ public class Gimmick_FallBlock : Gimmick_Main
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             if (PlayerMain.instance.getFootHit().collider != null &&
                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
@@ -112,7 +112,7 @@ public class Gimmick_FallBlock : Gimmick_Main
 
     public void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             PlayerMoveFlag = false;
         }

@@ -25,7 +25,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Player")
+        if (collider.gameObject.CompareTag("Player"))
         {
             float Rad;           // ‰ñ“]Šp
             Vector3 VecPower = Vector3.zero;    // ‰Á‚¦‚éƒxƒNƒgƒ‹—Ê
@@ -43,7 +43,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
-            //SoundManager.Instance.PlaySound("Œˆ’è‰¹");
+            SoundManager.Instance.PlaySound("Œˆ’è‰¹");
         }
     }
 }
