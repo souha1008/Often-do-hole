@@ -113,10 +113,13 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private float NowTime_X, NowTime_Y;         // 経過時間
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
-    private GameObject PlayerObject;            // プレイヤーオブジェクト
-    private PlayerMain PlayerMainScript;        // プレイヤーメインスクリプト
-    private GameObject BulletObject;            // 錨オブジェクト
-    private BulletMain BulletMainScript;        // 錨メインスクリプト
+    //private GameObject PlayerObject;            // プレイヤーオブジェクト
+    //private PlayerMain PlayerMainScript;        // プレイヤーメインスクリプト
+    //private GameObject BulletObject;            // 錨オブジェクト
+    //private BulletMain BulletMainScript;        // 錨メインスクリプト
+
+    private bool PlayerMoveFlag;
+    private bool BulletMoveFlag;
 
     private Vector3 OldPos;
 
@@ -135,6 +138,9 @@ public class Gimmick_MoveBlock : Gimmick_Main
         Fugou_Y = CalculationScript.FugouChange(MoveUp);
         OldPos = this.gameObject.transform.position;
 
+        PlayerMoveFlag = false;
+        BulletMoveFlag = false;
+
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
 
@@ -142,11 +148,11 @@ public class Gimmick_MoveBlock : Gimmick_Main
         Rb.isKinematic = true;
 
         // プレイヤーオブジェクト発見
-        PlayerObject = GameObject.Find("Player");
-        PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
+        //PlayerObject = GameObject.Find("Player");
+        //PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
         // 錨オブジェクトnull
-        BulletObject = null;
-        BulletMainScript = null;
+        //BulletObject = null;
+        //BulletMainScript = null;
     }
 
     public override void FixedMove()
@@ -198,46 +204,28 @@ public class Gimmick_MoveBlock : Gimmick_Main
             }
         }
 
-        // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーの移動
-        if (PlayerObject != null)
+        // プレイヤーの移動
+        if (PlayerMoveFlag)
         {
-            Ray ray_1 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
-            Ray ray_2 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(-(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
-            RaycastHit hit;
-            float RayLength = PlayerObject.gameObject.transform.localScale.y * 0.5f + 1.0f;
-            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
-            {
-                if (hit.collider.gameObject == this.gameObject)
-                {
-                    //Debug.Log("プレイヤーブロックの上移動中");
-                    //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
-                    PlayerObject.transform.position = PlayerObject.transform.position +
-                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+            //Debug.Log("プレイヤーブロックの上移動中");
+            //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
+            PlayerMain.instance.transform.position += 
+                new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
 
-                    //PlayerMainScript.addVel = new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
-                }
-                else
-                {
-                    PlayerObject = null;
-                }
-            }
-            else
-            {
-                PlayerObject = null;
-            }
+            //PlayerMainScript.addVel = new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
         }
 
         // 錨オブジェクトの移動
-        if (BulletObject != null)
+        if (BulletMoveFlag)
         {
-            if (BulletMainScript.isTouched == true)
+            if (PlayerMain.instance.BulletScript.isTouched)
             {
-                BulletObject.transform.position = BulletObject.transform.position +
-                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+                PlayerMain.instance.BulletScript.transform.position +=
+                    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
             }
             else
             {
-                BulletObject = null;
+                BulletMoveFlag = false;
             }
         }
     }
@@ -249,27 +237,43 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" &&
+                PlayerMain.instance.getFootHit().collider != null &&
+                PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
         {
-            PlayerObject = collision.gameObject;
-            PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
+            PlayerMoveFlag = true;
         }
         if (collision.gameObject.tag == "Bullet")
         {
-            BulletObject = collision.gameObject;
-            BulletMainScript = BulletObject.GetComponent<BulletMain>();
+            BulletMoveFlag = true;
         }
     }
     public void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            PlayerObject = collision.gameObject;
+            if (PlayerMain.instance.getFootHit().collider != null &&
+                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+            {
+                PlayerMoveFlag = true;
+            }
         }
         if (collision.gameObject.tag == "Bullet")
         {
-            BulletObject = collision.gameObject;
+            BulletMoveFlag = true;
         }
+    }
+
+    public void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            PlayerMoveFlag = false;
+        }
+        //if (collision.gameObject.tag == "Bullet")
+        //{
+        //    BulletMoveFlag = false;
+        //}
     }
 
     private bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
