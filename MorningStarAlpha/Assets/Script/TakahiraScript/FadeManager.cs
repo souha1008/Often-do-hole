@@ -63,7 +63,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
         NowFadeState = OldFadeState = FADE_STATE.FADE_NONE;
         NowFadeKind = FADE_KIND.FADE_GAMOVER;
-        FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
+        FadeRate = Time.deltaTime / FadeTime_GameOver;
         FadeColor = new Color(0, 0, 0, 0);
 
         //テクスチャ作成
@@ -174,13 +174,13 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             switch (NowFadeKind)
             {
                 case FADE_KIND.FADE_GAMOVER:
-                    FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
+                    FadeRate = Time.deltaTime / FadeTime_GameOver;
                     break;
                 case FADE_KIND.FADE_SCENECHANGE:
-                    FadeRate = Time.fixedDeltaTime / FadeTime_SceneChange;
+                    FadeRate = Time.deltaTime / FadeTime_SceneChange;
                     break;
                 case FADE_KIND.FADE_STAGECHANGE:
-                    FadeRate = Time.fixedDeltaTime / FadeTime_StageChange;
+                    FadeRate = Time.deltaTime / FadeTime_StageChange;
                     break;
                 default:
                     break;
