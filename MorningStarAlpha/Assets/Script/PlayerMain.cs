@@ -96,6 +96,7 @@ public class PlayerMain : MonoBehaviour
     [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
     [Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
     [Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED;           // 走り一フレームで上がるスピード
+    [Tooltip("ジャンプ力")] public float 　　　　　　　　　　　 JUMP_FORCE;
     [Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED;          // 重力による最低速度
     [Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
     [Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度

@@ -756,7 +756,7 @@ public class PlayerStateMidair : PlayerState
         if (Jump_start)
         {
             PlayerScript.isOnGround = false;
-            PlayerScript.vel.y += 80;
+            PlayerScript.vel.y += PlayerScript.JUMP_FORCE;
         }
     }
 
