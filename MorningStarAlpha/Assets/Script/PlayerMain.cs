@@ -61,7 +61,8 @@ public enum EnumPlayerState
     SHOT,      //弾を撃っている状態
     MIDAIR,　　//空中にいて弾を撃っていない
     SWING,     //振り子状態
-    RAILING,
+    RAILING,   //レール状態
+    NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
 }
 
