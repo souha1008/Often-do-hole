@@ -36,6 +36,7 @@ public enum SwingState
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
     RELEASED,  //切り離した状態
+    HANGING,   //ぶら下がり状態
 }
 
 /// <summary>
@@ -129,7 +130,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public ShortenSwing shortSwing;
-    [ReadOnly, Tooltip("スイング跳ね返り用")] public bool counterSwing;
+    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
 
 
     void Awake()
@@ -173,7 +174,7 @@ public class PlayerMain : MonoBehaviour
         shortSwing.isShort = false;
         shortSwing.length = 0.0f;
 
-        counterSwing = false;
+        hangingSwing = false;
 
         Ray footray = new Ray(rb.position, Vector3.down);
         Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
@@ -462,11 +463,19 @@ public class PlayerMain : MonoBehaviour
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
-                        counterSwing = true;
+                        hangingSwing = true;
                     }
                     else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
                     {
-                        counterSwing = true;
+                        hangingSwing = true;
+                    }
+                    else if(dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
+                    {
+                        Debug.Log("collision Platform : Wall Jump");
+                    }
+                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.LEFT)
+                    {
+                        Debug.Log("collision Platform : Wall Jump");
                     }
                     else 
                     {
@@ -513,19 +522,20 @@ public class PlayerMain : MonoBehaviour
         //着地判定
         if(isOnGround == false)
         {
-            Ray ray = new Ray(rb.position, Vector3.down);
-            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
-            {
-                isOnGround = true;
-            }
+            //if (vel.y < 0)
+            //{
+                Ray ray = new Ray(rb.position, Vector3.down);
+                if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
+                {
+                    isOnGround = true;
+                }
+            //}
         }
 
-
+        //footHit格納用
         Ray footray = new Ray(rb.position, Vector3.down);
-        if (Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform")))
-        {
-            // foothit格納用
-        }
+        Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
+
 
         //FOLLOW中に壁に当たると上に補正
         if (refState == EnumPlayerState.SHOT)
