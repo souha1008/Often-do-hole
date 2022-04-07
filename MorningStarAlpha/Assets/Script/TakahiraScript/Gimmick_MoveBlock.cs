@@ -113,9 +113,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
     private float NowTime_X, NowTime_Y;         // 経過時間
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
-
-    private bool PlayerMoveFlag;
-    private bool BulletMoveFlag;
+    private GameObject PlayerObject;            // プレイヤーオブジェクト
+    private PlayerMain PlayerMainScript;        // プレイヤーメインスクリプト
+    private GameObject BulletObject;            // 錨オブジェクト
+    private BulletMain BulletMainScript;        // 錨メインスクリプト
 
     private Vector3 OldPos;
 
@@ -134,14 +135,18 @@ public class Gimmick_MoveBlock : Gimmick_Main
         Fugou_Y = CalculationScript.FugouChange(MoveUp);
         OldPos = this.gameObject.transform.position;
 
-        PlayerMoveFlag = false;
-        BulletMoveFlag = false;
-
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
 
         // リジッドボディ
         Rb.isKinematic = true;
+
+        // プレイヤーオブジェクト発見
+        PlayerObject = GameObject.Find("Player");
+        PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
+        // 錨オブジェクトnull
+        BulletObject = null;
+        BulletMainScript = null;
     }
 
     public override void FixedMove()
@@ -193,28 +198,46 @@ public class Gimmick_MoveBlock : Gimmick_Main
             }
         }
 
-        // プレイヤーの移動
-        if (PlayerMoveFlag)
+        // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーの移動
+        if (PlayerObject != null)
         {
-            //Debug.Log("プレイヤーブロックの上移動中");
-            //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
-            PlayerMain.instance.transform.position += 
-                new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
-
-            //PlayerMainScript.addVel = new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
-        }
-
-        // 錨オブジェクトの移動
-        if (BulletMoveFlag)
-        {
-            if (PlayerMain.instance.BulletScript.isTouched)
+            Ray ray_1 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(-(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+            RaycastHit hit;
+            float RayLength = PlayerObject.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
-                PlayerMain.instance.BulletScript.transform.position +=
-                    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+                if (hit.collider.gameObject == this.gameObject)
+                {
+                    //Debug.Log("プレイヤーブロックの上移動中");
+                    //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
+                    PlayerObject.transform.position = PlayerObject.transform.position +
+                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+
+                    //PlayerMainScript.addVel = new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
+                }
+                else
+                {
+                    PlayerObject = null;
+                }
             }
             else
             {
-                BulletMoveFlag = false;
+                PlayerObject = null;
+            }
+        }
+
+        // 錨オブジェクトの移動
+        if (BulletObject != null)
+        {
+            if (BulletMainScript.isTouched == true)
+            {
+                BulletObject.transform.position = BulletObject.transform.position +
+                        new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+            }
+            else
+            {
+                BulletObject = null;
             }
         }
     }
@@ -226,43 +249,27 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") &&
-                PlayerMain.instance.getFootHit().collider != null &&
-                PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+        if (collision.gameObject.tag == "Player")
         {
-            PlayerMoveFlag = true;
+            PlayerObject = collision.gameObject;
+            PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
         }
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.tag == "Bullet")
         {
-            BulletMoveFlag = true;
+            BulletObject = collision.gameObject;
+            BulletMainScript = BulletObject.GetComponent<BulletMain>();
         }
     }
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.tag == "Player")
         {
-            if (PlayerMain.instance.getFootHit().collider != null &&
-                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
-            {
-                PlayerMoveFlag = true;
-            }
+            PlayerObject = collision.gameObject;
         }
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.tag == "Bullet")
         {
-            BulletMoveFlag = true;
+            BulletObject = collision.gameObject;
         }
-    }
-
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerMoveFlag = false;
-        }
-        //if (collision.gameObject.CompareTag("Bullet"))
-        //{
-        //    BulletMoveFlag = false;
-        //}
     }
 
     private bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)

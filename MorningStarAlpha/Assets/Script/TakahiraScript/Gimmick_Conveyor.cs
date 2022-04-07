@@ -1,9 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Gimmick_Conveyor : Gimmick_Main
 {
     [EnumPName("回転方向", typeof(MOVE_DIRECTION_X))]
-    public MOVE_DIRECTION_X MoveDirection_X;   // 回転方向
+    public MOVE_DIRECTION_X MoveDirection_X ;   // 回転方向
     [Label("移動量")]
     public float MovePower = 30;                // 移動量
 
@@ -36,28 +38,25 @@ public class Gimmick_Conveyor : Gimmick_Main
 
         // コンベアの動き処理
         conveyorState.Move();
-        //Debug.LogWarning(conveyorState); // 現在のコンベアのステート
+        //Debug.Log(conveyorState); // 現在のコンベアのステート
     }
 
 
     public override void Death()
     {
-
+        
     }
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.tag == "Player")
         {
-            if (PlayerMain.instance.getFootHit().collider != null &&
-                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
-            {
-                conveyorState.PlayerMoveFlag = true;
-            }
+            // プレイヤーオブジェクト取得
+            ConveyorState.Player = collision.gameObject;
+            ConveyorState.PlayerMainScript = collision.gameObject.GetComponent<PlayerMain>();
         }
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.tag == "Bullet")
         {
-            conveyorState.BulletMoveFlag = true;
             // 衝突点取得
             foreach (ContactPoint contact in collision.contacts)
             {
@@ -87,31 +86,20 @@ public class Gimmick_Conveyor : Gimmick_Main
                 //Debug.Log(contact.normal); // 法線
                 //Debug.DrawRay(contact.point, contact.normal, Color.white); // 当たった点でレイを可視化
             }
+
+            // 錨オブジェクト取得
+            ConveyorState.Bullet = collision.gameObject;
+            ConveyorState.BulletMainScript = collision.gameObject.GetComponent<BulletMain>();
         }
     }
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.tag == "Player")
         {
-            if (PlayerMain.instance.getFootHit().collider != null &&
-                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
-            {
-                conveyorState.PlayerMoveFlag = true;
-            }
+            // プレイヤーオブジェクト取得
+            ConveyorState.Player = collision.gameObject;
         }
-    }
-
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            conveyorState.PlayerMoveFlag = false;
-        }
-        //if (collision.gameObject.CompareTag("Bullet"))
-        //{
-        //    conveyorState.BulletMoveFlag = false;
-        //}
     }
 
     public bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
@@ -151,8 +139,10 @@ public abstract class ConveyorState
 
     public TOUCH_SIDE TouchSide;
     static public Gimmick_Conveyor Conveyor;
-    public bool PlayerMoveFlag;
-    public bool BulletMoveFlag;
+    static public GameObject Player;
+    static public PlayerMain PlayerMainScript;
+    static public GameObject Bullet;
+    static public BulletMain BulletMainScript;
 }
 
 // スタート処理(ここから始める)
@@ -163,8 +153,13 @@ public class ConveyorStart : ConveyorState
         // 初期化
         Conveyor = conveyor;
         TouchSide = TOUCH_SIDE.NONE;
-        PlayerMoveFlag = false;
-        BulletMoveFlag = false;
+
+        // プレイヤーオブジェクトnull
+        Player = null;
+
+        // 錨オブジェクトnull
+        Bullet = null;
+        BulletMainScript = null;
     }
 
     public override void Move()
@@ -178,25 +173,44 @@ public class ConveyorNone : ConveyorState
 {
     public ConveyorNone() // コンストラクタ
     {
+        if (Bullet != null && BulletMainScript != null)
+        {
+            BulletMainScript.isTouched = false;
+        }
+
         TouchSide = TOUCH_SIDE.NONE;
-        PlayerMoveFlag = false;
-        BulletMoveFlag = false;
     }
 
     public override void Move()
     {
-        if (PlayerMoveFlag)
+        if (Player != null && PlayerMainScript != null)
         {
-            if (Conveyor.MoveRight)
+            // プレイヤーからレイ飛ばして真下にブロックがあったらプレイヤーオブジェクト取得
+            Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+            RaycastHit hit;
+            float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
-                StateChange(new ConveyorPlayerMoveRight()); // プレイヤー右移動
+                if (hit.collider.gameObject == Conveyor.gameObject)
+                {
+                    if (Conveyor.MoveRight)
+                    {
+                        StateChange(new ConveyorPlayerMoveRight()); // プレイヤー右移動
+                    }
+                    else
+                    {
+                        StateChange(new ConveyorPlayerMoveLeft()); // プレイヤー左移動
+                    }
+                }
             }
-            else
+            else // レイが当たらなかったらnull入れる
             {
-                StateChange(new ConveyorPlayerMoveLeft()); // プレイヤー左移動
+                Player = null;
             }
         }
-        if (BulletMoveFlag)
+
+        if (Bullet != null && BulletMainScript != null)
         {
             switch (TouchSide)
             {
@@ -223,26 +237,24 @@ public class ConveyorNone : ConveyorState
                     }
                     break;
                 case TOUCH_SIDE.RIGHT:
-                    //if (Conveyor.MoveRight)
-                    //{
-                    //    StateChange(new ConveyorDown());
-                    //}
-                    //else
-                    //{
-                    //    StateChange(new ConveyorUp());
-                    //}
-                    PlayerMain.instance.endSwing = true;
+                    if (Conveyor.MoveRight)
+                    {
+                        StateChange(new ConveyorDown());
+                    }
+                    else
+                    {
+                        StateChange(new ConveyorUp());
+                    }
                     break;
                 case TOUCH_SIDE.LEFT:
-                    //if (Conveyor.MoveRight)
-                    //{
-                    //    StateChange(new ConveyorUp());
-                    //}
-                    //else
-                    //{
-                    //    StateChange(new ConveyorDown());
-                    //}
-                    PlayerMain.instance.endSwing = true;
+                    if (Conveyor.MoveRight)
+                    {
+                        StateChange(new ConveyorUp());
+                    }
+                    else
+                    {
+                        StateChange(new ConveyorDown());
+                    }
                     break;
             }
         }
@@ -254,17 +266,34 @@ public class ConveyorUp : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMainScript.isTouched == true)
         {
-            PlayerMain.instance.BulletScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
+            BulletMainScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
 
-            if (!BulletMoveFlag)
+            // 錨からレイ飛ばして真横にブロックが無かったらステート変更
+            if (Conveyor.MoveRight)
             {
-                PlayerMain.instance.BulletScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
-                if (Conveyor.MoveRight)
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
                     StateChange(new ConveyorRight());
-                else
+                }
+            }
+            else
+            {
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                RaycastHit hit;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
                     StateChange(new ConveyorLeft());
+                }
             }
         }
         else
@@ -279,17 +308,34 @@ public class ConveyorDown : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMainScript.isTouched == true)
         {
-            PlayerMain.instance.BulletScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
+            BulletMainScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
 
-            if (!BulletMoveFlag)
+            // 錨からレイ飛ばして真横にブロックが無かったらステート変更
+            if (Conveyor.MoveRight)
             {
-                PlayerMain.instance.BulletScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
-                if (Conveyor.MoveRight)
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.left);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
                     StateChange(new ConveyorLeft());
-                else
+                }
+            }
+            else
+            {
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(0, -Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(0, Bullet.transform.localScale.y * 0.5f, 0), Vector3.right);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.x * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
                     StateChange(new ConveyorRight());
+                }
             }
         }
         else
@@ -304,19 +350,35 @@ public class ConveyorRight : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMainScript.isTouched == true)
         {
             //Debug.Log("錨右移動中");
-            PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
+            BulletMainScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
 
-            if (!BulletMoveFlag)
+            // 錨からレイ飛ばして真上にブロックが無かったらステート変更
+            if (Conveyor.MoveRight)
             {
-                PlayerMain.instance.BulletScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
-                //if (Conveyor.MoveRight)
-                //    StateChange(new ConveyorDown());
-                //else
-                //    StateChange(new ConveyorUp());
-                StateChange(new ConveyorNone());
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
+                    StateChange(new ConveyorDown());
+                }
+            }
+            else
+            {
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
+                    StateChange(new ConveyorUp());
+                }
             }
         }
         else
@@ -331,19 +393,35 @@ public class ConveyorLeft : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if(BulletMainScript.isTouched == true)
         {
-            //Debug.LogWarning("錨左移動中");
-            PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
+            //Debug.Log("錨左移動中");
+            BulletMainScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
 
-            if (!BulletMoveFlag)
+            // 錨からレイ飛ばして真上にブロックが無かったらステート変更
+            if (Conveyor.MoveRight)
             {
-                PlayerMain.instance.BulletScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
-                //if (Conveyor.MoveRight)
-                //    StateChange(new ConveyorUp());
-                //else
-                //    StateChange(new ConveyorDown());
-                StateChange(new ConveyorNone());
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.up);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {              
+                    BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
+                    StateChange(new ConveyorUp());
+                }
+            }
+            else
+            {
+                Ray ray1 = new Ray(BulletMainScript.transform.position + new Vector3(-Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+                Ray ray2 = new Ray(BulletMainScript.transform.position + new Vector3(Bullet.transform.localScale.x * 0.5f, 0, 0), Vector3.down);
+                RaycastHit hit;
+                float RayLength = BulletMainScript.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (!Physics.Raycast(ray1, out hit, RayLength) && !Physics.Raycast(ray2, out hit, RayLength))
+                {
+                    BulletMainScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
+                    StateChange(new ConveyorDown());
+                }
             }
         }
         else
@@ -358,9 +436,22 @@ public class ConveyorPlayerMoveRight : ConveyorState
 {
     public override void Move()
     {
-        if(PlayerMoveFlag)
+        // プレイヤーからレイ飛ばして真下にブロックが無かったらステート変更
+        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+        RaycastHit hit;
+        float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
+        if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower, 0, 0);
+            if (hit.collider.gameObject == Conveyor.gameObject)
+            {
+                //Debug.Log("プレイヤー右に移動中");
+                PlayerMainScript.addVel = new Vector3(Conveyor.MovePower, 0, 0);
+            }
+            else
+            {
+                StateChange(new ConveyorNone());
+            }
         }
         else
         {
@@ -375,9 +466,22 @@ public class ConveyorPlayerMoveLeft : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMoveFlag)
+        // プレイヤーからレイ飛ばして真下にブロックが無かったらステート変更
+        Ray ray_1 = new Ray(Player.gameObject.transform.position + new Vector3(Player.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+        Ray ray_2 = new Ray(Player.gameObject.transform.position + new Vector3(-(Player.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+        RaycastHit hit;
+        float RayLength = Player.gameObject.transform.localScale.y * 0.5f + 1.0f;
+        if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
+            if (hit.collider.gameObject == Conveyor.gameObject)
+            {
+                //Debug.Log("プレイヤー左に移動中");
+                PlayerMainScript.addVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
+            }
+            else
+            {
+                StateChange(new ConveyorNone());
+            }
         }
         else
         {

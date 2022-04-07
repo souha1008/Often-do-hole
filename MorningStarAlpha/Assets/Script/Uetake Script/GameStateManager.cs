@@ -16,7 +16,7 @@ public enum GAME_STATE {
 /// </summary>
 public class GameStateManager : SingletonMonoBehaviour<GameSpeedManager>
 {
-    public static GAME_STATE GameState;
+    static GAME_STATE GameState;
 
     private void Awake()
     {

@@ -40,16 +40,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
 
     private Texture2D FadeTexture;                    // フェードのテクスチャ
+    private float FadeRate;                           // フェード係数
     static private FADE_STATE NowFadeState;           // 現在のフェードの状態
     private FADE_STATE OldFadeState;                  // ひとつ前のフェードの状態
     private FADE_KIND NowFadeKind;                    // 現在のフェードの種類
     private Color FadeColor;                          // フェードのカラー
-
-    private float NowTime;
-
-    private float TimeGameOver;
-    private float TimeSceneChange;
-    private float TimeStageChange;
 
     private void Awake()
     {
@@ -66,14 +61,9 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
         FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
 
-        TimeGameOver = FadeTime_GameOver;
-        TimeSceneChange = FadeTime_SceneChange;
-        TimeStageChange = FadeTime_StageChange;
-
-        NowTime = 0.0f;
-
         NowFadeState = OldFadeState = FADE_STATE.FADE_NONE;
         NowFadeKind = FADE_KIND.FADE_GAMOVER;
+        FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
         FadeColor = new Color(0, 0, 0, 0);
 
         //テクスチャ作成
@@ -103,53 +93,22 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         {
             if (NowFadeState == FADE_STATE.FADE_OUT)
             {// フェードアウト処理
-                switch (NowFadeKind)// α値を加算して画面を消していく
-                {
-                    case FADE_KIND.FADE_GAMOVER:
-                        FadeColor.a = NowTime / TimeGameOver;
-                        break;
-                    case FADE_KIND.FADE_SCENECHANGE:
-                        FadeColor.a = NowTime / TimeSceneChange;
-                        break;
-                    case FADE_KIND.FADE_STAGECHANGE:
-                        FadeColor.a = NowTime / TimeStageChange;
-                        break;
-                    default:
-                        break;
-                }
-                NowTime += Time.deltaTime; // 時間加算
+                FadeColor.a += FadeRate;     // α値を加算して画面を消していく
 
                 if (FadeColor.a >= 1.0f)
                 {
                     // フェードイン処理に切り替え
                     FadeColor.a = 1.0f;
-                    NowTime = 0.0f;
                     NowFadeState = FADE_STATE.FADE_IN;
                 }
             }
             else if (NowFadeState == FADE_STATE.FADE_IN)
             {// フェードイン処理
-                switch (NowFadeKind)// α値を減算して画面を浮き上がらせる
-                {
-                    case FADE_KIND.FADE_GAMOVER:
-                        FadeColor.a = 1.0f - NowTime / TimeGameOver;
-                        break;
-                    case FADE_KIND.FADE_SCENECHANGE:
-                        FadeColor.a = 1.0f - NowTime / TimeSceneChange;
-                        break;
-                    case FADE_KIND.FADE_STAGECHANGE:
-                        FadeColor.a = 1.0f - NowTime / TimeStageChange;
-                        break;
-                    default:
-                        break;
-                }
-                NowTime += Time.deltaTime; // 時間加算
-
+                FadeColor.a -= FadeRate;     // α値を減算して画面を浮き上がらせる
                 if (FadeColor.a <= 0.0f)
                 {
                     // フェード処理終了
                     FadeColor.a = 0.0f;
-                    NowTime = 0.0f;
                     NowFadeState = FADE_STATE.FADE_NONE;
                 }
             }
@@ -208,11 +167,24 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             NowFadeState = NextFadeState;
             NowFadeKind = FadeKind;
 
-            NowTime = 0.0f;
+            FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
+            FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
+            FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
 
-            TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
-            TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
-            TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+            switch (NowFadeKind)
+            {
+                case FADE_KIND.FADE_GAMOVER:
+                    FadeRate = Time.fixedDeltaTime / FadeTime_GameOver;
+                    break;
+                case FADE_KIND.FADE_SCENECHANGE:
+                    FadeRate = Time.fixedDeltaTime / FadeTime_SceneChange;
+                    break;
+                case FADE_KIND.FADE_STAGECHANGE:
+                    FadeRate = Time.fixedDeltaTime / FadeTime_StageChange;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

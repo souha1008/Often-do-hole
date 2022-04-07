@@ -32,7 +32,7 @@ public class CheckPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (collider.gameObject.tag == "Player")
         {
             // チェックポイントのHitBoxに触れたらチェックポイント更新
             CheckPointManager.Instance.SetCheckPoint(this);

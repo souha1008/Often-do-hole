@@ -107,12 +107,6 @@ public class Gimmick_CannonParent : Gimmick_Main
         StartFlag = false;
         NowShootTime = ShootTime; // 最初に1回弾発射
 
-        // コライダー
-        Cd.isTrigger = false;
-
-        // リジッドボディ
-        Rb.isKinematic = true;
-
         // プレイヤーオブジェクト取得
         PlayerObject = GameObject.Find("Player");
     }

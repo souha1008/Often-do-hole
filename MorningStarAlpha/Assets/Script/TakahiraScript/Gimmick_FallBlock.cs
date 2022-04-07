@@ -13,9 +13,10 @@ public class Gimmick_FallBlock : Gimmick_Main
     private bool NowFall;               // 落下中か
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
-
-    private bool PlayerMoveFlag = false;
-    private bool BulletMoveFlag = false;
+    private GameObject PlayerObject;    // プレイヤーオブジェクト
+    private PlayerMain PlayerMainScript;// プレイヤーメインスクリプト
+    private GameObject BulletObject;    // 錨オブジェクト
+    private BulletMain BulletMainScript;// 錨メインスクリプト
 
     public override void Init()
     {
@@ -23,8 +24,10 @@ public class Gimmick_FallBlock : Gimmick_Main
         NowFall = false;
         NowTime = 0.0f;
         StartPos = this.gameObject.transform.position;
-        PlayerMoveFlag = false;
-        BulletMoveFlag = false;
+        PlayerObject = GameObject.Find("Player");
+        PlayerMainScript = PlayerObject.GetComponent<PlayerMain>();
+        BulletObject = null;
+        BulletMainScript = null;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
@@ -35,28 +38,51 @@ public class Gimmick_FallBlock : Gimmick_Main
 
     public override void FixedMove()
     {
-        // 床移動
+        // ポジション変更
         if (NowFall)
         {
             Vector3 OldPos = this.gameObject.transform.position;
             this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
             NowTime += Time.fixedDeltaTime;
 
-            // プレイヤー移動
-            if (PlayerMoveFlag)
+            // プレイヤーからレイ飛ばして真下にブロックがあったら
+            if (PlayerObject != null)
             {
-                PlayerMain.instance.transform.position +=
-                            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
-                //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
+                Ray ray_1 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+                Ray ray_2 = new Ray(PlayerObject.gameObject.transform.position + new Vector3(-(PlayerObject.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+                RaycastHit hit;
+                float RayLength = PlayerObject.gameObject.transform.localScale.y * 0.5f + 1.0f;
+                if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
+                {
+                    if (hit.collider.gameObject == this.gameObject)
+                    {
+                        PlayerObject.gameObject.transform.position =
+                            PlayerObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+
+                        //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
+                    }
+                    else
+                    {
+                        PlayerObject = null;
+                    }
+                }
+                else
+                {
+                    PlayerObject = null;
+                }
             }
 
-            // 錨移動
-            if (BulletMoveFlag)
+            if (BulletObject != null && BulletMainScript != null)
             {
-                if (PlayerMain.instance.BulletScript.isTouched)
+                if (BulletMainScript.isTouched)
                 {
-                    PlayerMain.instance.BulletScript.transform.position +=
-                        new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                    BulletObject.gameObject.transform.position =
+                            BulletObject.gameObject.transform.position + new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                }
+                else
+                {
+                    BulletObject = null;
+                    BulletMainScript = null;
                 }
             }
         }
@@ -69,7 +95,10 @@ public class Gimmick_FallBlock : Gimmick_Main
     public override void Death()
     {
         // プレイヤーの錨引き戻し
-        PlayerMain.instance.endSwing = true;
+        if(PlayerObject != null)
+        {
+            PlayerObject.GetComponent<PlayerMain>().endSwing = true;
+        }
 
         // 自分自身を消す
         Destroy(this.gameObject);
@@ -78,43 +107,44 @@ public class Gimmick_FallBlock : Gimmick_Main
     public override void OnCollisionEnter(Collision collision)
     {
         // プレイヤーか錨と接触
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.tag == "Bullet")
         {
             NowFall = true; // 落下中
-            BulletMoveFlag = true;
+            BulletObject = collision.gameObject;
+            BulletMainScript = collision.gameObject.GetComponent<BulletMain>();
         }
         
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.tag == "Player")
         {
             //Debug.Log("プレイヤー当たった");
             // プレイヤーからレイ飛ばして真下にブロックがあったら落下
-            if (PlayerMain.instance.getFootHit().collider != null &&
-                PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+            Ray ray_1 = new Ray(collision.gameObject.transform.position + new Vector3(collision.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(collision.gameObject.transform.position + new Vector3(-(collision.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+            RaycastHit hit;
+            float RayLength = collision.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
                 NowFall = true; // 落下中
-                PlayerMoveFlag = true;
+                PlayerObject = collision.gameObject;
+                PlayerMainScript = collision.gameObject.GetComponent<PlayerMain>();
             }
         }
     }
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.tag == "Player")
         {
-            if (PlayerMain.instance.getFootHit().collider != null &&
-                PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+            // プレイヤーからレイ飛ばして真下にブロックがあったら落下
+            Ray ray_1 = new Ray(collision.gameObject.transform.position + new Vector3(collision.gameObject.transform.localScale.x * 0.5f - 0.1f, 0, 0), Vector3.down);
+            Ray ray_2 = new Ray(collision.gameObject.transform.position + new Vector3(-(collision.gameObject.transform.localScale.x * 0.5f - 0.1f), 0, 0), Vector3.down);
+            RaycastHit hit;
+            float RayLength = collision.gameObject.transform.localScale.y * 0.5f + 1.0f;
+            if (Physics.Raycast(ray_1, out hit, RayLength) || Physics.Raycast(ray_2, out hit, RayLength))
             {
                 NowFall = true; // 落下中
-                PlayerMoveFlag = true;
+                PlayerObject = collision.gameObject;
             }
-        }
-    }
-
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerMoveFlag = false;
         }
     }
 }

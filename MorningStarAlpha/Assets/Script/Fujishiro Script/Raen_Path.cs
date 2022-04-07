@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Raen_Path : MonoBehaviour
 {
-    public Vector3[] Path; // ウェイポイント配列
-
-    void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        Path_cart.waypoints = this;
+        
     }
 
-    
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }

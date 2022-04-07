@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
 {
     // Start is called before the first frame update
-    private float TimeCounter;
+    private int FrameCounter;
     private bool isHitStop;
-    private float stopTime;
+    private int stopTime;
 
     void Awake()
     {
@@ -21,46 +21,41 @@ public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
 
         //ヒットストップ
-        TimeCounter = 0;
+        FrameCounter = 0;
         isHitStop = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GameStateManager.GameState == GAME_STATE.PLAY)
+        if (isHitStop)
         {
-            if (isHitStop)
-            {
-                TimeCounter += 1.0f / 60;
-                Debug.Log("F" + Time.fixedDeltaTime);
-                Debug.Log("N" + Time.deltaTime);
+            FrameCounter += 1;
 
-                if (TimeCounter > stopTime)
-                {
-                    isHitStop = false;
-                    Time.timeScale = 1;
-                    TimeCounter = 0;
-                }
+            if(FrameCounter > stopTime)
+            {
+                isHitStop = false;
+                Time.timeScale = 1;
+                FrameCounter = 0;
             }
-        }
+        } 
     }
 
     public void StartHitStop()
     {
         isHitStop = true;
-        TimeCounter = 0;
+        FrameCounter = 0;
         Time.timeScale = 0;
 
-        stopTime = 0.2f;
+        stopTime = 30;
     }
 
-    public void StartHitStop(float StopSecond)
+    public void StartHitStop(int StopTime)
     {
         isHitStop = true;
-        TimeCounter = 0;
+        FrameCounter = 0;
         Time.timeScale = 0;
 
-        stopTime = StopSecond;
+        stopTime = StopTime;
     }
 }
