@@ -64,4 +64,21 @@ static public class CalculationScript
         else
             return -1.0f;
     }
+
+
+    // <summary>
+    /// ‹…‚Ì“à‘¤‚©
+    /// (x - a)^2 + (y - b)^2 + (z - c)^2 <= r^2
+    /// </summary>
+    /// <param name="p">‹…‚Ì’†SÀ•W</param>
+    /// <param name="r">”¼Œa</param>
+    /// <param name="c">‘ÎÛ‚Æ‚È‚é“_</param>
+    /// <returns></returns>
+    public static bool InSphere(Vector3 p, float r, Vector3 c)
+    {
+        var sum = 0f;
+        for (var i = 0; i < 3; i++)
+            sum += Mathf.Pow(p[i] - c[i], 2);
+        return sum <= Mathf.Pow(r, 2f);
+    }
 }

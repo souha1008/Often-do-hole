@@ -268,7 +268,7 @@ public class Gimmick_Enemy : Gimmick_Main
     // 何かと衝突処理(トリガー)
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Bullet")
+        if (collider.gameObject.CompareTag("Bullet"))
         {
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop();
@@ -277,7 +277,7 @@ public class Gimmick_Enemy : Gimmick_Main
             Death(); // 死亡処理   
         }
 
-        if (collider.gameObject.tag == "Player")
+        if (collider.gameObject.CompareTag("Player"))
         {
             // プレイヤーノックバックステートに移行
 
