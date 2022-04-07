@@ -43,6 +43,8 @@ public class Gimmick_SpringBoard : Gimmick_Main
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
+            //PlayerMain.instance.mode = new PlayerStateMidair(true);
+
             SoundManager.Instance.PlaySound("Œˆ’è‰¹");
         }
     }

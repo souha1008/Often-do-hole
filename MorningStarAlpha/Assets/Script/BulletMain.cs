@@ -25,12 +25,26 @@ public class BulletMain : MonoBehaviour
     [SerializeField] private float BULLET_SPEED; //弾の初速   
     [SerializeField] private float BULLET_START_DISTANCE; //弾の発射位置
     [SerializeField] public float BULLET_ROPE_LENGTH; //紐の長さ
-    private float BULLET_MAXFALLSPEED = 35.0f;
-    private float fixedAdjust;
+    public static float BULLET_MAXFALLSPEED = 35.0f;
+    public static float fixedAdjust;
+
+
+    // 高平追加
+    [System.NonSerialized] public static BulletMain instance;
+    public EnumBulletState NowBulletState;
+    public BulletState mode;
+    
 
 
     void Awake()
     {
+        // 高平追加
+        instance = this;
+        BulletState.BulletScript = this;
+        BulletState.Bullet = gameObject;
+
+
+
         rb = GetComponent<Rigidbody>();
         co = GetComponent<Collider>();
         PlayerState.BulletScript = this;
@@ -38,6 +52,12 @@ public class BulletMain : MonoBehaviour
 
     private void Start()
     {
+        // 高平追加
+        BulletState.PlayerScript = PlayerMain.instance; // PlayerMainのAwakeに変更予定
+        mode = new BulletReady(); // 初期ステート
+
+
+
         PlayerScript = Player.GetComponent<PlayerMain>();
         ExitFlameCnt = 0;
 
@@ -115,27 +135,36 @@ public class BulletMain : MonoBehaviour
          vel += PlayerScript.vel *= 0.6f;
     }
 
+    private void Update()
+    {
+        // 高平追加
+        mode.Update();
+    }
+
     void FixedUpdate()
     {
+        // 高平追加
+        mode.FixedUpdate();
+
         if (ReferenceEquals(Player, null) == false)
         {
-            if (StopVelChange == false)
-            {
-                RotateBullet();
-                ExitFlameCnt++;
-                //定数秒以上経ってたら
-                if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
-                {
-                    //重力加算
-                    vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * (fixedAdjust);
-                }            
+            //if (StopVelChange == false)
+            //{
+            //    RotateBullet();
+            //    ExitFlameCnt++;
+            //    //定数秒以上経ってたら
+            //    if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
+            //    {
+            //        //重力加算
+            //        vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * (fixedAdjust);
+            //    }            
 
-                Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
-            }
-            else
-            {
-                ExitFlameCnt = 0;
-            }
+            //    Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
+            //}
+            //else
+            //{
+            //    ExitFlameCnt = 0;
+            //}
             rb.velocity = vel;
         }
     }
@@ -169,7 +198,7 @@ public class BulletMain : MonoBehaviour
         }
     }
 
-    void RotateBullet()
+    public void RotateBullet()
     {
         Quaternion quaternion = Quaternion.LookRotation(vel.normalized);
         Quaternion adjustQua = Quaternion.Euler(0, 90, -90); //補正用クオータニオン

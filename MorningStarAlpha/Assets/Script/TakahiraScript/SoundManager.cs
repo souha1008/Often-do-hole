@@ -388,7 +388,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             for (int i = 0; i < AudioClipIlist.Count; i++)
             {
                 SoundList.Add(new SOUND_CLIP(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
-                Debug.Log(AudioClipIlist[i].name);
+                //Debug.Log(AudioClipIlist[i].name);
             }
             AudioClipIlist.Clear();
 
