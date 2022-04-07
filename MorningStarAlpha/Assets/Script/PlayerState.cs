@@ -43,6 +43,7 @@ public class PlayerState
 public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
+    private bool jumpButton;
     private const float SLIDE_END_TIME = 0.3f; 
     private float slideEndTimer;
 
@@ -50,6 +51,7 @@ public class PlayerStateOnGround : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
+        jumpButton = false;
         PlayerScript.vel.y = 0;
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
@@ -79,6 +81,11 @@ public class PlayerStateOnGround : PlayerState
             {
                 shotButton = true;
             }
+        }
+        else if (Input.GetButtonDown("Jump"))
+        {
+            jumpButton = true;
+            Debug.Log("Press Jump Button");
         }
 
         //プレイヤー向き回転処理
@@ -178,9 +185,7 @@ public class PlayerStateOnGround : PlayerState
             }
             else //減衰
             {
-                PlayerScript.vel *= PlayerScript.RUN_FRICTION;
-
-                
+                PlayerScript.vel *= PlayerScript.RUN_FRICTION; 
             }
         }
     }
@@ -207,7 +212,13 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.onGroundState = OnGroundState.NONE;
                 PlayerScript.mode = new PlayerStateShot_2(false);
             }
-          
+        }
+
+        if (jumpButton)
+        {
+            Debug.Log("Jump!!!!");
+            PlayerScript.onGroundState = OnGroundState.NONE;
+            PlayerScript.mode = new PlayerStateMidair(true, true);
         }
     }
 }
@@ -737,6 +748,18 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.canShotState = can_shot;
     }
 
+    public PlayerStateMidair(bool Jump_start, bool can_shot)//コンストラクタ
+    {
+        Init();
+        PlayerScript.canShotState = can_shot;
+
+        if (Jump_start)
+        {
+            PlayerScript.isOnGround = false;
+            PlayerScript.vel.y += PlayerScript.JUMP_FORCE;
+        }
+    }
+
     public override void UpdateState()
     {
         BulletAdjust();
@@ -1136,6 +1159,7 @@ public class PlayerStateSwing_R_Release : PlayerState
 {
     private bool finishFlag;
     private bool releaseButton;
+    private bool countreButton;
     private Vector3 BulletPosition; //ボールの位置
    
     private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
@@ -1166,9 +1190,10 @@ public class PlayerStateSwing_R_Release : PlayerState
         PlayerScript.swingState = SwingState.TOUCHED;
         PlayerScript.canShotState = false;
         PlayerScript.endSwing = false;
-        PlayerScript.counterSwing = false;
+        PlayerScript.hangingSwing = false;
         finishFlag = false;
         releaseButton = false;
+        countreButton = false;
         BulletScript.rb.isKinematic = true;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
@@ -1330,12 +1355,27 @@ public class PlayerStateSwing_R_Release : PlayerState
 
     }
 
-    public void ReleaseInput()
+    public void InputButton()
     {
-        if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+        if(PlayerScript.swingState != SwingState.RELEASED)
         {
-            releaseButton = true;
+            if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+            {
+
+                releaseButton = true;
+            }
+
         }
+
+        if (PlayerScript.swingState == SwingState.HANGING)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                countreButton = true;
+                Debug.Log("Press Jump");
+            }
+        }
+        
     }
 
 
@@ -1345,7 +1385,7 @@ public class PlayerStateSwing_R_Release : PlayerState
     public override void UpdateState()
     {
         //切り離し入力
-        ReleaseInput();
+        InputButton();
         
         //弾の場所更新
         BulletPosition = BulletScript.rb.position;
@@ -1419,13 +1459,13 @@ public class PlayerStateSwing_R_Release : PlayerState
         switch (PlayerScript.swingState)
         {
             case SwingState.TOUCHED:
-                //反転処理
-                if (PlayerScript.counterSwing)
+                //ぶら下がり処理
+                if (PlayerScript.hangingSwing)
                 {
-                    CalculateCounterVariable();
-                    PlayerScript.counterSwing = false;
+                    PlayerScript.swingState = SwingState.HANGING;
+                    PlayerScript.hangingSwing = false;
                 }
-
+               
                 //短くする処理
                 if (PlayerScript.shortSwing.isShort)
                 {
@@ -1476,6 +1516,27 @@ public class PlayerStateSwing_R_Release : PlayerState
                     finishFlag = true;
 
                 }
+                break;
+
+            case SwingState.HANGING:
+                //反転処理
+                if (countreButton)
+                { 
+
+                    PlayerScript.swingState = SwingState.TOUCHED;
+                    CalculateCounterVariable();
+                    countreButton = false;
+                }
+
+                if (releaseButton)
+                {
+                    PlayerScript.useVelocity = true;
+                    BulletScript.ReturnBullet();
+                    PlayerScript.swingState = SwingState.RELEASED;
+
+                    PlayerScript.vel = Vector3.zero;
+                }
+
                 break;
 
             default:
