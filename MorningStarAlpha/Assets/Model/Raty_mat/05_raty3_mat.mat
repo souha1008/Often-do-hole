@@ -9,15 +9,15 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: 05_raty3_mat
   m_Shader: {fileID: 4800000, guid: 766736548846cdf459a9766614dcccab, type: 3}
-  m_ShaderKeywords: _ _EMISSIVE_SIMPLE _IS_ANGELRING_OFF _IS_CLIPPING_OFF _IS_OUTLINE_CLIPPING_NO
-    _MatCap _OUTLINE_NML
+  m_ShaderKeywords: UTS_USE_RAYTRACING_SHADOW _ _EMISSIVE_SIMPLE _IS_ANGELRING_OFF
+    _IS_CLIPPING_MODE _IS_OUTLINE_CLIPPING_YES _OUTLINE_NML
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 2450
   stringTagMap:
     IgnoreProjection: False
-    RenderType: Opaque
+    RenderType: TransparentCutout
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -47,7 +47,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ClippingMask:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 06414bd0324a5ff4abe5873f23b57241, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -103,7 +103,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Outline_Sampler:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 96efb9dc3171f964ea058d9c0a16fbfa, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
@@ -119,7 +119,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Set_HighColorMask:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: de96c3a592656f2499be6062a0eddd66, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Set_MatcapMask:
@@ -152,10 +152,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _1st2nd_Shades_Feather: 0.0001
-    - _1st_ShadeColor_Feather: 0.0001
-    - _1st_ShadeColor_Step: 0.769
+    - _1st_ShadeColor_Feather: 0.034
+    - _1st_ShadeColor_Step: 0.755
     - _2nd_ShadeColor_Feather: 0.0001
-    - _2nd_ShadeColor_Step: 0.413
+    - _2nd_ShadeColor_Step: 0.39
     - _ARSampler_AlphaOn: 0
     - _AR_OffsetU: 0
     - _AR_OffsetV: 0.3
@@ -165,8 +165,8 @@ Material:
     - _Ap_RimLight_FeatherOff: 0
     - _Ap_RimLight_Power: 0.1
     - _AutoRenderQueue: 1
-    - _BaseColor_Step: 0.769
-    - _BaseShade_Feather: 0.0001
+    - _BaseColor_Step: 0.755
+    - _BaseShade_Feather: 0.034
     - _Base_Speed: 0
     - _Blend: 0
     - _BlurLevelMatcap: 0
@@ -176,7 +176,7 @@ Material:
     - _CameraRolling_Stabilizer: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ClippingMode: 0
+    - _ClippingMode: 1
     - _Clipping_Level: 0
     - _ColorShift_Speed: 0
     - _Cull: 2
@@ -187,12 +187,12 @@ Material:
     - _DstBlend: 0
     - _EMISSIVE: 0
     - _EnvironmentReflections: 1
-    - _Farthest_Distance: 460.9
+    - _Farthest_Distance: 0
     - _GI_Intensity: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _HighColor_Power: 0.21
+    - _HighColor_Power: 0.249
     - _Inverse_Clipping: 0
     - _Inverse_MatcapMask: 0
     - _Inverse_Z_Axis_BLD: 1
@@ -221,7 +221,7 @@ Material:
     - _Is_Ortho: 0
     - _Is_OutlineTex: 0
     - _Is_PingPong_Base: 0
-    - _Is_SpecularToHighColor: 1
+    - _Is_SpecularToHighColor: 0
     - _Is_UseTweakHighColorOnShadow: 0
     - _Is_UseTweakMatCapOnShadow: 0
     - _Is_ViewCoord_Scroll: 0
@@ -229,13 +229,13 @@ Material:
     - _LightDirection_MaskOn: 0
     - _MatCap: 1
     - _Metallic: 0
-    - _Nearest_Distance: -259.9
+    - _Nearest_Distance: 0
     - _OUTLINE: 0
     - _OcclusionStrength: 1
     - _Offset_X_Axis_BLD: -0.05
     - _Offset_Y_Axis_BLD: 0.09
-    - _Offset_Z: -0.1
-    - _Outline_Width: 0.32
+    - _Offset_Z: -0.001
+    - _Outline_Width: 134.4
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -250,21 +250,21 @@ Material:
     - _SRPDefaultUnlitColMode: 1
     - _Scroll_EmissiveU: 0
     - _Scroll_EmissiveV: 0
-    - _Set_SystemShadowsToBase: 0
-    - _ShadeColor_Step: 0.413
+    - _Set_SystemShadowsToBase: 1
+    - _ShadeColor_Step: 0.39
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StencilComp: 0
-    - _StencilMode: 0
+    - _StencilComp: 6
+    - _StencilMode: 1
     - _StencilNo: 1
     - _StencilOpFail: 0
     - _StencilOpPass: 0
     - _StepOffset: 0
     - _Surface: 0
     - _TransparentEnabled: 0
-    - _TweakHighColorOnShadow: 0
+    - _TweakHighColorOnShadow: 1
     - _TweakMatCapOnShadow: 0
     - _Tweak_HighColorMaskLevel: 0
     - _Tweak_LightDirection_MaskLevel: 0
@@ -272,7 +272,7 @@ Material:
     - _Tweak_MatcapMaskLevel: 0
     - _Tweak_RimLightMaskLevel: 0
     - _Tweak_ShadingGradeMapLevel: 0
-    - _Tweak_SystemShadowsLevel: 0
+    - _Tweak_SystemShadowsLevel: 0.088
     - _Tweak_transparency: 0
     - _Unlit_Intensity: 1
     - _Use_1stAs2nd: 1
@@ -287,8 +287,8 @@ Material:
     - _utsVersionY: 4
     - _utsVersionZ: 0
     m_Colors:
-    - _1st_ShadeColor: {r: 0.8773585, g: 0.6083571, b: 0.72804415, a: 1}
-    - _2nd_ShadeColor: {r: 0.6886792, g: 0.46453363, b: 0.48694816, a: 1}
+    - _1st_ShadeColor: {r: 1, g: 0.6650944, b: 0.6650944, a: 1}
+    - _2nd_ShadeColor: {r: 0.95294124, g: 0.6156863, b: 0.6156863, a: 1}
     - _AngelRing_Color: {r: 1, g: 1, b: 1, a: 1}
     - _Ap_RimLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 0.9386792, b: 0.9386792, a: 1}
@@ -296,9 +296,9 @@ Material:
     - _ColorShift: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Emissive_Color: {r: 0, g: 0, b: 0, a: 1}
-    - _HighColor: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
+    - _HighColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Outline_Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Outline_Color: {r: 0.1764706, g: 0.20784315, b: 0.37647063, a: 1}
     - _RimLightColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _ViewShift: {r: 0, g: 0, b: 0, a: 1}
