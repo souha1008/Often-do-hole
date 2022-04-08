@@ -36,6 +36,7 @@ public enum SwingState
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
     RELEASED,  //切り離した状態
+    HANGING,   //ぶら下がり状態
 }
 
 /// <summary>
@@ -60,7 +61,8 @@ public enum EnumPlayerState
     SHOT,      //弾を撃っている状態
     MIDAIR,　　//空中にいて弾を撃っていない
     SWING,     //振り子状態
-    RAILING,
+    RAILING,   //レール状態
+    NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
 }
 
@@ -76,7 +78,7 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public static PlayerMain instance;
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
-
+    private RaycastHit footHit;                      // Ge
 
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
@@ -95,6 +97,7 @@ public class PlayerMain : MonoBehaviour
     [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
     [Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
     [Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED;           // 走り一フレームで上がるスピード
+    [Tooltip("ジャンプ力")] public float 　　　　　　　　　　　 JUMP_FORCE;
     [Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED;          // 重力による最低速度
     [Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
     [Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
@@ -102,8 +105,8 @@ public class PlayerMain : MonoBehaviour
 
 
     [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
-    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float  MIDAIR_FRICTION;         // 空中の速度減衰率
-    [Tooltip("空中で再び球が打てるようになる時間")]public float                      BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
+    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION;         // 空中の速度減衰率
+    [Tooltip("空中で再び球が打てるようになる時間")]public float                   BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
     //----------プレイヤー物理挙動関連の定数終わり----------------------
 
     [ Header("[以下実行時変数確認用：変更不可]")]
@@ -129,7 +132,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public ShortenSwing shortSwing;
-    [ReadOnly, Tooltip("スイング跳ね返り用")] public bool counterSwing;
+    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
 
 
     void Awake()
@@ -173,7 +176,12 @@ public class PlayerMain : MonoBehaviour
         shortSwing.isShort = false;
         shortSwing.length = 0.0f;
 
-        counterSwing = false;
+        hangingSwing = false;
+
+        Ray footray = new Ray(rb.position, Vector3.down);
+        Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
+
+
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
 
@@ -250,9 +258,9 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
+    public RaycastHit getFootHit()
     {
-        
+        return footHit;
     }
 
     private void InputStick()
@@ -457,11 +465,19 @@ public class PlayerMain : MonoBehaviour
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
-                        counterSwing = true;
+                        hangingSwing = true;
                     }
                     else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
                     {
-                        counterSwing = true;
+                        hangingSwing = true;
+                    }
+                    else if(dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
+                    {
+                        Debug.Log("collision Platform : Wall Jump");
+                    }
+                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.LEFT)
+                    {
+                        Debug.Log("collision Platform : Wall Jump");
                     }
                     else 
                     {
@@ -470,7 +486,7 @@ public class PlayerMain : MonoBehaviour
                         Ray footRay = new Ray(rb.position, vecToPlayerR);
                         if(asp == Aspect.UP)
                         {
-                            if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, ~LayerMask.GetMask("Player")))
+                            if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, LayerMask.GetMask("Platform")))
                             {
                                 Debug.Log("collision Platform : slide continue");
                                 shortSwing.isShort = true;
@@ -498,6 +514,8 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+
+
     private void OnCollisionStay(Collision collision)
     {
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
@@ -506,12 +524,20 @@ public class PlayerMain : MonoBehaviour
         //着地判定
         if(isOnGround == false)
         {
-            Ray ray = new Ray(rb.position, Vector3.down);
-            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")))
-            {
-                isOnGround = true;
-            }
+            //if (vel.y < 0)
+            //{
+                Ray ray = new Ray(rb.position, Vector3.down);
+                if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
+                {
+                    isOnGround = true;
+                }
+            //}
         }
+
+        //footHit格納用
+        Ray footray = new Ray(rb.position, Vector3.down);
+        Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
+
 
         //FOLLOW中に壁に当たると上に補正
         if (refState == EnumPlayerState.SHOT)
@@ -530,8 +556,6 @@ public class PlayerMain : MonoBehaviour
         
     }
 
-   
-
 
     //接地判定を計算
     private void CheckMidAir()
@@ -539,7 +563,7 @@ public class PlayerMain : MonoBehaviour
         Ray ray = new Ray(rb.position, Vector3.down);
         if (isOnGround)
         {
-            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, ~LayerMask.GetMask("Player")) == false)
+            if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")) == false)
             {
                 isOnGround = false;
             }
@@ -567,8 +591,7 @@ public class PlayerMain : MonoBehaviour
             if (shotState == ShotState.STRAINED)
             {
                 Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
-                vecToPlayer = vecToPlayer.normalized;        
-
+                vecToPlayer = vecToPlayer.normalized;
 
                 Ray headRay = new Ray(rb.position, vecToPlayer);
                 Gizmos.color = Color.yellow;

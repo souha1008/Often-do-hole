@@ -68,7 +68,7 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "Player")
+        if (collider.gameObject.CompareTag("Player"))
         {
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop();
@@ -80,7 +80,7 @@ public class Gimmick_CannonChild : Gimmick_Main
             Death();
         }
 
-        if (collider.gameObject.tag == "Bullet")
+        if (collider.gameObject.CompareTag("Bullet"))
         {
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop();

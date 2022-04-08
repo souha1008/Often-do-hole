@@ -3,6 +3,7 @@ using UnityEngine;
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
+    [System.NonSerialized] public Collider co;
 
     [SerializeField] private GameObject Player;
     [SerializeField] private Renderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
@@ -31,6 +32,7 @@ public class BulletMain : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        co = GetComponent<Collider>();
         PlayerState.BulletScript = this;
     }
 
@@ -39,13 +41,15 @@ public class BulletMain : MonoBehaviour
         PlayerScript = Player.GetComponent<PlayerMain>();
         ExitFlameCnt = 0;
 
-        fixedAdjust = Time.fixedDeltaTime * 50; 
+        fixedAdjust = Time.fixedDeltaTime * 50;
+        InvisibleBullet();
     }
 
     public void InvisibleBullet()
     {
         rb.isKinematic = true;
-        for(int i = 0; i < Part.Length; i++)
+        co.enabled = false;
+        for (int i = 0; i < Part.Length; i++)
         {
             Part[i].enabled = false;
             rb.isKinematic = true;
@@ -58,6 +62,7 @@ public class BulletMain : MonoBehaviour
     public void VisibleBullet()
     {
         rb.isKinematic = false;
+        co.enabled = true;
         for (int i = 0; i < Part.Length; i++)
         {
             Part[i].enabled = true;
