@@ -10,8 +10,6 @@ public class BulletMain : MonoBehaviour
 
     private PlayerMain PlayerScript;
     [ReadOnly] public Vector3 vel;
-    [ReadOnly] public bool swingEnd;
-    [ReadOnly] public bool followEnd;
 
     //下川原
     public int STRAIGHT_FLAME_CNT;//まっすぐ進むフレーム数
@@ -29,6 +27,7 @@ public class BulletMain : MonoBehaviour
     [System.NonSerialized] public static BulletMain instance;
     [ReadOnly] public EnumBulletState NowBulletState;
     private BulletState mode;
+    public bool CanShotFlag;    // 撃てるフラグ
     
 
 
@@ -51,13 +50,12 @@ public class BulletMain : MonoBehaviour
         // 高平追加
         BulletState.PlayerScript = PlayerMain.instance; // PlayerMainのAwakeに変更予定
         mode = new BulletReady(); // 初期ステート
-
+        CanShotFlag = true;
 
 
         PlayerScript = Player.GetComponent<PlayerMain>();
 
         fixedAdjust = Time.fixedDeltaTime * 50;
-        InvisibleBullet();
     }
 
     // 錨のステート変更
@@ -150,8 +148,6 @@ public class BulletMain : MonoBehaviour
     public void ShotBullet()
     {
         rb.isKinematic = false;
-        swingEnd = false;
-        followEnd = false;
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
         //弾の初期化
@@ -171,8 +167,6 @@ public class BulletMain : MonoBehaviour
     public void ShotSlideJumpBullet()
     {
         rb.isKinematic = false;
-        swingEnd = false;
-        followEnd = false;
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
         //弾の初期化
@@ -275,21 +269,18 @@ public class BulletMain : MonoBehaviour
                        
                         if (colAspect == Aspect_8.UP)
                         {
-                            SetBulletState(EnumBulletState.BulletReturnFollow);
-                            //FOLLOW状態に移行
-                            followEnd = true;
+                            if (PlayerScript.isOnGround)
+                                SetBulletState(EnumBulletState.BulletReturnFollow);
+                            else
+                                SetBulletState(EnumBulletState.BulletReturn);
                         }
                         else if(colAspect == Aspect_8.UP_RIGHT && this.vel.x >= 0) //右に進んでいるのに右上に当たったとき
                         {
                             SetBulletState(EnumBulletState.BulletReturn);
-                            //FOLLOW状態に移行
-                            followEnd = true;
                         }
                         else if (colAspect == Aspect_8.UP_LEFT && this.vel.x <= 0) //逆
                         {
                             SetBulletState(EnumBulletState.BulletReturn);
-                            //FOLLOW状態に移行
-                            followEnd = true;
                         }
                         else
                         {

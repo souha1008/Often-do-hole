@@ -30,7 +30,8 @@ public class UIDirection : MonoBehaviour
         if (PlayerScript.refState == EnumPlayerState.ON_GROUND || PlayerScript.refState == EnumPlayerState.MIDAIR)
         {
             //クールタイム回復したら色つける
-            if (BulletMain.instance.NowBulletState == EnumBulletState.BulletReady)
+            if (BulletMain.instance.NowBulletState == EnumBulletState.BulletReady && 
+                BulletMain.instance.CanShotFlag)
             {
                 lr.startColor = activeScol;
                 lr.endColor = activeEcol;

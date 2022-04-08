@@ -44,11 +44,8 @@ public enum SwingState
 /// </summary>
 public enum ShotState
 {
-    NONE,       //弾射出されていない
-    GO,         //引っ張られずに飛んでいる
+    GO = 0,         //引っ張られずに飛んでいる
     STRAINED,   //プレイヤーを引っ張りながら飛んでいる
-    RETURN,     //弾がプレイヤーに戻って終了
-    FOLLOW,     //弾に勢いよく飛んでいき終了
 }
 
 /// <summary>
@@ -124,11 +121,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
     [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
-    [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
-    [ReadOnly, Tooltip("最終的に打てるかどうか")] public bool canShot;                             // 打てる状態か
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
-    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
-    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public ShortenSwing shortSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
@@ -153,7 +146,6 @@ public class PlayerMain : MonoBehaviour
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
         midairState = MidairState.NONE;
-        shotState = ShotState.NONE;
         swingState = SwingState.NONE;
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
         rb.rotation = Quaternion.Euler(0, 90, 0);
@@ -162,13 +154,8 @@ public class PlayerMain : MonoBehaviour
         floorVel = Vector3.zero;
         sourceLeftStick = adjustLeftStick = new Vector2(0.0f, 0.0f);
         stickCanShotRange = false;
-        CanShotColBlock = false;
-        canShot = false;
         isOnGround = true;
         useVelocity = true;
-
-        forciblyReturnBulletFlag = false;
-        forciblyReturnSaveVelocity = false;
 
         endSwing = false;
         shortSwing.isShort = false;
@@ -350,16 +337,8 @@ public class PlayerMain : MonoBehaviour
         {
             if (hit.collider.CompareTag("Platform"))
             {
-                CanShotColBlock = false;
+                adjustLeftStick = Vector2.zero;
             }
-            else
-            {
-                CanShotColBlock = true;
-            }
-        }
-        else
-        {
-            CanShotColBlock = true;
         }
         StartPos.z += 2.0f;
         Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
@@ -371,11 +350,12 @@ public class PlayerMain : MonoBehaviour
     /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
     ///　false:引き戻し時にもとのベロシティを殺す
     /// </param>
-    public void ForciblyReturnBullet(bool saveVelocity)
-    {
-        forciblyReturnBulletFlag = true;
-        forciblyReturnSaveVelocity = saveVelocity;
-    }
+    
+    //public void ForciblyReturnBullet(bool saveVelocity)
+    //{
+    //    forciblyReturnBulletFlag = true;
+    //    forciblyReturnSaveVelocity = saveVelocity;
+    //}
 
 
     private void OnCollisionEnter(Collision collision)
@@ -410,38 +390,6 @@ public class PlayerMain : MonoBehaviour
                         break;
                 }
         }
-
-        //ショット中に壁にあたったときの処理
-        if(refState == EnumPlayerState.SHOT)
-        {
-            if (collision.gameObject.CompareTag("Platform"))
-            {
-                switch (shotState)
-                {
-                    case ShotState.STRAINED: //紐張り詰め
-                        //RAYに移行
-                        //if (isOnGround == false)
-                        //{
-                        //    ForciblyReturnBullet(true);
-                        //}
-
-                        break;
-
-                    case ShotState.FOLLOW: //紐に引っ張られ
-                        if (asp == Aspect.DOWN)
-                        {
-                            ForciblyReturnBullet(false);
-                        }
-                        break;
-
-                    case ShotState.GO:
-                    case ShotState.RETURN:
-                        //何もしない
-                        break;
-                }
-            }
-        }
-
 
         //swing中に壁にぶつかったらときの処理
         if (refState == EnumPlayerState.SWING)
@@ -529,7 +477,7 @@ public class PlayerMain : MonoBehaviour
         //FOLLOW中に壁に当たると上に補正
         if (refState == EnumPlayerState.SHOT)
         {
-            if (shotState == ShotState.FOLLOW)
+            if (BulletScript.NowBulletState == EnumBulletState.BulletReturnFollow)
             {
                 if (asp == Aspect.LEFT || asp == Aspect.RIGHT)
                 {

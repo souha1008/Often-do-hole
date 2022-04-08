@@ -41,9 +41,14 @@ public class BulletReady : BulletState
 
     public override void Update()
     {
-        if (Input.GetButtonDown("Button_R"))
+        // 撃つ
+        if (BulletScript.CanShotFlag &&
+            Input.GetButtonDown("Button_R") && 
+            Mathf.Abs(PlayerScript.adjustLeftStick.x) > 0 &&
+            Mathf.Abs(PlayerScript.adjustLeftStick.y) > 0)
         {
             BulletScript.SetBulletState(EnumBulletState.BulletGo);
+            BulletScript.CanShotFlag = false;
         }
 
         // バレットの位置を常にスティック方向に調整
@@ -117,6 +122,7 @@ public class BulletStop : BulletState
         BulletScript.NowBulletState = EnumBulletState.BulletStop;
         BulletScript.vel = Vector3.zero;
         BulletScript.rb.isKinematic = true;
+        BulletScript.CanShotFlag = true;
     }
 
     public override void FixedUpdate()

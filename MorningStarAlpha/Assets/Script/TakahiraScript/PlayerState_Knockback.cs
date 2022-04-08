@@ -27,7 +27,6 @@ public class PlayerState_Knockback : PlayerState
         // 錨引き戻し
         BulletScript.ReturnBullet();
         PlayerScript.useVelocity = true;
-        PlayerScript.shotState = ShotState.RETURN;
 
 
         Knockback(); // ノックバック処理
@@ -55,7 +54,6 @@ public class PlayerState_Knockback : PlayerState
             if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
             {
                 AnchorGetFlag = true;
-                PlayerScript.shotState = ShotState.NONE;
                 BulletScript.InvisibleBullet();
             }
         }      

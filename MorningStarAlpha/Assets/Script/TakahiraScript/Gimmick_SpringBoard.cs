@@ -39,7 +39,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
 
-            PlayerMain.instance.ForciblyReturnBullet(false);
+            BulletMain.instance.SetBulletState(EnumBulletState.BulletReturn);
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
