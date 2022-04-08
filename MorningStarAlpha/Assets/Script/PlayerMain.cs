@@ -121,6 +121,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
     [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
+    [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public ShortenSwing shortSwing;
@@ -154,6 +155,7 @@ public class PlayerMain : MonoBehaviour
         floorVel = Vector3.zero;
         sourceLeftStick = adjustLeftStick = new Vector2(0.0f, 0.0f);
         stickCanShotRange = false;
+        CanShotColBlock = false;
         isOnGround = true;
         useVelocity = true;
 
@@ -337,8 +339,16 @@ public class PlayerMain : MonoBehaviour
         {
             if (hit.collider.CompareTag("Platform"))
             {
-                adjustLeftStick = Vector2.zero;
+                CanShotColBlock = false;
             }
+            else
+            {
+                CanShotColBlock = true;
+            }
+        }
+        else
+        {
+            CanShotColBlock = true;
         }
         StartPos.z += 2.0f;
         Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);

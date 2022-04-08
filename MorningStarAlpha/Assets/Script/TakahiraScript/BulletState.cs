@@ -43,9 +43,9 @@ public class BulletReady : BulletState
     {
         // 撃つ
         if (BulletScript.CanShotFlag &&
-            Input.GetButtonDown("Button_R") && 
-            Mathf.Abs(PlayerScript.adjustLeftStick.x) > 0 &&
-            Mathf.Abs(PlayerScript.adjustLeftStick.y) > 0)
+            Input.GetButtonDown("Button_R") &&
+            PlayerScript.CanShotColBlock &&
+            PlayerScript.stickCanShotRange)
         {
             BulletScript.SetBulletState(EnumBulletState.BulletGo);
             BulletScript.CanShotFlag = false;
@@ -76,14 +76,14 @@ public class BulletGo : BulletState
 
 
         // プレイヤーの移動量　+　発射ベクトル量　を初期ベクトル量にする
-        if (PlayerScript.vel.x > PlayerScript.MAX_RUN_SPEED)
+        if (Mathf.Abs(PlayerScript.vel.x) > PlayerScript.MAX_RUN_SPEED)
         {
             BulletScript.ShotSlideJumpBullet();
         }
         else
         {
             BulletScript.ShotBullet();
-        }        
+        }      
     }
 
     public override void Update()

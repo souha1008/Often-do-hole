@@ -198,7 +198,6 @@ public class PlayerStateShot_2 : PlayerState
     float countTime;               //発射からの時間
     //Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
     Vector3 bulletVecs;     //発射からの弾のvectorを保存する
-    ShotState shotState;
 
     const float STRAINED_END_RATIO = 1.0f;
 
@@ -208,9 +207,8 @@ public class PlayerStateShot_2 : PlayerState
         bulletVecs = BulletScript.vel;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
-        shotState = ShotState.GO;
+        PlayerScript.shotState = ShotState.GO;
         PlayerScript.addVel = Vector3.zero;
-        
     }
 
     public PlayerStateShot_2(bool is_slide_jump)//コンストラクタ
@@ -226,7 +224,7 @@ public class PlayerStateShot_2 : PlayerState
         switch (BulletScript.NowBulletState)
         {
             case EnumBulletState.BulletGo:
-                if (shotState == ShotState.STRAINED)
+                if (PlayerScript.shotState == ShotState.STRAINED)
                 {
                     Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
 
@@ -334,7 +332,7 @@ public class PlayerStateShot_2 : PlayerState
 
             case EnumBulletState.BulletGo:
                 
-                if (shotState == ShotState.GO)
+                if (PlayerScript.shotState == ShotState.GO)
                 {
                     //bulletVecs *= 0.6f;
 
@@ -357,7 +355,7 @@ public class PlayerStateShot_2 : PlayerState
                         //PlayerScript.useVelocity = false;
                     }
                 }
-                else if (shotState == ShotState.STRAINED)
+                else if (PlayerScript.shotState == ShotState.STRAINED)
                 {
                     StrainedStop();
                     //このとき、移動処理は直にposition変更しているため???????、update内に記述
@@ -367,7 +365,7 @@ public class PlayerStateShot_2 : PlayerState
                 break;
 
             case EnumBulletState.BulletReturnFollow:
-                PlayerScript.vel += (BulletScript.transform.position - PlayerScript.transform.position).normalized * 10.0f;
+                PlayerScript.vel += (BulletScript.transform.position - PlayerScript.transform.position).normalized * 5.0f;
                 break;
         }
 
