@@ -82,6 +82,8 @@ public class PlayerMain : MonoBehaviour
 
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
+    [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
+
 
     [SerializeField] public const float colliderRadius = 1.4f;   //接地判定用ray半径
     [SerializeField] public const float coliderDistance = 1.78f; //

@@ -28,7 +28,7 @@ public class PlayerState
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
         vec = vec * 3;
-        vec.y += 1.0f;
+        vec.y += 0.0f;
         Vector3 adjustPos = PlayerScript.transform.position + vec;
 
         BulletScript.transform.position = adjustPos;
@@ -43,7 +43,6 @@ public class PlayerState
 public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
-    private bool jumpButton;
     private const float SLIDE_END_TIME = 0.3f; 
     private float slideEndTimer;
 
@@ -51,7 +50,6 @@ public class PlayerStateOnGround : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
-        jumpButton = false;
         PlayerScript.vel.y = 0;
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
@@ -61,7 +59,7 @@ public class PlayerStateOnGround : PlayerState
 
 
         //スライド発射処理
-        if (Mathf.Abs(PlayerScript.vel.x) > 30.0f)
+        if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
             PlayerScript.onGroundState = OnGroundState.SLIDE;
         }
@@ -75,18 +73,28 @@ public class PlayerStateOnGround : PlayerState
     {
         BulletAdjust();
 
-        if (Input.GetButtonDown("Button_R"))
+        if (PlayerScript.ReleaseMode)
         {
-            if (PlayerScript.canShot)
+            if (Input.GetButtonUp("Button_R"))
             {
-                shotButton = true;
+                if (PlayerScript.canShot)
+                {
+                    shotButton = true;
+                }
             }
         }
-        else if (Input.GetButtonDown("Jump"))
+        else
         {
-            jumpButton = true;
-            Debug.Log("Press Jump Button");
+            if (Input.GetButtonDown("Button_R"))
+            {
+                if (PlayerScript.canShot)
+                {
+                    shotButton = true;
+                }
+            }
         }
+
+        
 
         //プレイヤー向き回転処理
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
@@ -213,13 +221,6 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.mode = new PlayerStateShot_2(false);
             }
         }
-
-        if (jumpButton)
-        {
-            Debug.Log("Jump!!!!");
-            PlayerScript.onGroundState = OnGroundState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(true, true);
-        }
     }
 }
 
@@ -325,7 +326,7 @@ public class PlayerStateShot_2 : PlayerState
     {
         countTime += Time.deltaTime;
 
-        if (countTime > 0.2)
+        if (countTime > 9999)
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
@@ -748,17 +749,6 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.canShotState = can_shot;
     }
 
-    public PlayerStateMidair(bool Jump_start, bool can_shot)//コンストラクタ
-    {
-        Init();
-        PlayerScript.canShotState = can_shot;
-
-        if (Jump_start)
-        {
-            PlayerScript.isOnGround = false;
-            PlayerScript.vel.y += PlayerScript.JUMP_FORCE;
-        }
-    }
 
     public override void UpdateState()
     {
