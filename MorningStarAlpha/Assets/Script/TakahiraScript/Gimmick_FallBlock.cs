@@ -53,7 +53,7 @@ public class Gimmick_FallBlock : Gimmick_Main
             // •dˆÚ“®
             if (BulletMoveFlag)
             {
-                if (PlayerMain.instance.BulletScript.isTouched)
+                if (BulletMain.instance.NowBulletState == EnumBulletState.BulletStop)
                 {
                     PlayerMain.instance.BulletScript.transform.position +=
                         new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);

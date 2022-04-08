@@ -46,7 +46,7 @@ public enum ShotState
 {
     NONE,       //弾射出されていない
     GO,         //引っ張られずに飛んでいる
-    STRAINED,  //プレイヤーを引っ張りながら飛んでいる
+    STRAINED,   //プレイヤーを引っ張りながら飛んでいる
     RETURN,     //弾がプレイヤーに戻って終了
     FOLLOW,     //弾に勢いよく飛んでいき終了
 }
@@ -123,7 +123,6 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スティック入力角（調整前）")] public Vector2 sourceLeftStick;                        // 左スティック  
     [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
-    [ReadOnly, Tooltip("打てる可能性があるか")] public bool canShotState;                             // 打てる状態か
     [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
     [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
     [ReadOnly, Tooltip("最終的に打てるかどうか")] public bool canShot;                             // 打てる状態か
@@ -162,7 +161,6 @@ public class PlayerMain : MonoBehaviour
         addVel = Vector3.zero;
         floorVel = Vector3.zero;
         sourceLeftStick = adjustLeftStick = new Vector2(0.0f, 0.0f);
-        canShotState = true;
         stickCanShotRange = false;
         CanShotColBlock = false;
         canShot = false;
@@ -365,17 +363,6 @@ public class PlayerMain : MonoBehaviour
         }
         StartPos.z += 2.0f;
         Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
-
-
-        //最終的に打てるかの決定
-        if(canShotState && stickCanShotRange && CanShotColBlock)
-        {
-            canShot = true;
-        }
-        else
-        {
-            canShot = false;
-        }
     } 
 
     /// <summary>

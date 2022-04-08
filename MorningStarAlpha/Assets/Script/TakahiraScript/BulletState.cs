@@ -8,7 +8,8 @@ public enum EnumBulletState
     BulletReady = 0,
     BulletGo,
     BulletStop,
-    BulletReturn
+    BulletReturn,
+    BulletReturnFollow
 }
 
 
@@ -23,6 +24,8 @@ public abstract class BulletState
     static public GameObject Bullet;
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
+
+    
 }
 
 
@@ -40,8 +43,16 @@ public class BulletReady : BulletState
     {
         if (Input.GetButtonDown("Button_R"))
         {
-            BulletScript.mode = new BulletGo();
+            BulletScript.SetBulletState(EnumBulletState.BulletGo);
         }
+
+        // バレットの位置を常にスティック方向に調整
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+        vec = vec * 3;
+        vec.y += 1.0f;
+        Vector3 adjustPos = PlayerScript.transform.position + vec;
+
+        BulletScript.transform.position = adjustPos;
     }
 }
 
@@ -56,12 +67,18 @@ public class BulletGo : BulletState
         // 初期化
         BulletScript.NowBulletState = EnumBulletState.BulletGo;
         BulletScript.VisibleBullet();
+        BulletScript.co.isTrigger = false;
 
 
         // プレイヤーの移動量　+　発射ベクトル量　を初期ベクトル量にする
-        //if (PlayerScript.vel.x < )
-
-        BulletScript.ShotSlideJumpBullet();
+        if (PlayerScript.vel.x > PlayerScript.MAX_RUN_SPEED)
+        {
+            BulletScript.ShotSlideJumpBullet();
+        }
+        else
+        {
+            BulletScript.ShotBullet();
+        }        
     }
 
     public override void Update()
@@ -69,23 +86,20 @@ public class BulletGo : BulletState
         if (Input.GetButton("Button_R"))
         {
             // 錨の動き
-            if (!BulletScript.StopVelChange)
+            BulletScript.RotateBullet();
+            ExitFlameCnt++;
+            //定数秒以上経ってたら
+            if (ExitFlameCnt > BulletScript.STRAIGHT_FLAME_CNT)
             {
-                BulletScript.RotateBullet();
-                ExitFlameCnt++;
-                //定数秒以上経ってたら
-                if (ExitFlameCnt > BulletScript.STRAIGHT_FLAME_CNT)
-                {
-                    //重力加算
-                    BulletScript.vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * (BulletMain.fixedAdjust);
-                }
-
-                Mathf.Max(BulletScript.vel.y, BulletMain.BULLET_MAXFALLSPEED * -1);
+                //重力加算
+                BulletScript.vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * BulletScript.fixedAdjust;
             }
+
+            Mathf.Max(BulletScript.vel.y, BulletScript.BULLET_MAXFALLSPEED * -1);
         }
         else
         {
-            BulletScript.mode = new BulletReturn();
+            BulletScript.SetBulletState(EnumBulletState.BulletReturn);
         }
     }
 
@@ -101,6 +115,16 @@ public class BulletStop : BulletState
     {
         // 初期化
         BulletScript.NowBulletState = EnumBulletState.BulletStop;
+        BulletScript.vel = Vector3.zero;
+        BulletScript.rb.isKinematic = true;
+    }
+
+    public override void FixedUpdate()
+    {
+        if (!Input.GetButton("Button_R"))
+        {
+            BulletScript.SetBulletState(EnumBulletState.BulletReturn);
+        }
     }
 }
 
@@ -126,7 +150,34 @@ public class BulletReturn : BulletState
         //距離が一定以下になったら終了
         if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
         {
-            BulletScript.mode = new BulletReady();
+            BulletScript.SetBulletState(EnumBulletState.BulletReady);
+        }
+    }
+}
+
+
+// 錨にプレイヤーが引っ張られて回収
+public class BulletReturnFollow : BulletState
+{
+    public BulletReturnFollow()
+    {
+        // 初期化
+        BulletScript.NowBulletState = EnumBulletState.BulletReturnFollow;
+        BulletScript.ReturnBullet();
+    }
+
+    public override void FixedUpdate()
+    {
+        //自分へ弾を引き戻す
+        Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
+        vecToPlayer = vecToPlayer.normalized;
+        BulletScript.vel = vecToPlayer * 4;
+
+
+        //距離が一定以下になったら終了
+        if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
+        {
+            BulletScript.SetBulletState(EnumBulletState.BulletReady);
         }
     }
 }

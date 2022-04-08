@@ -254,7 +254,7 @@ public class ConveyorUp : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMain.instance.NowBulletState == EnumBulletState.BulletStop)
         {
             PlayerMain.instance.BulletScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
 
@@ -279,7 +279,7 @@ public class ConveyorDown : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMain.instance.NowBulletState == EnumBulletState.BulletStop)
         {
             PlayerMain.instance.BulletScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
 
@@ -304,7 +304,7 @@ public class ConveyorRight : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMain.instance.NowBulletState == EnumBulletState.BulletStop)
         {
             //Debug.Log("ïdâEà⁄ìÆíÜ");
             PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
@@ -331,7 +331,7 @@ public class ConveyorLeft : ConveyorState
 {
     public override void Move()
     {
-        if (PlayerMain.instance.BulletScript.isTouched)
+        if (BulletMain.instance.NowBulletState == EnumBulletState.BulletStop)
         {
             //Debug.LogWarning("ïdç∂à⁄ìÆíÜ");
             PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);

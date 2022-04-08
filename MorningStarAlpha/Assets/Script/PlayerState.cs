@@ -20,20 +20,6 @@ public class PlayerState
     static public GameObject Player;
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
-
-    /// <summary>
-    /// バレットの位置を常にスティック方向に調整
-    /// </summary>
-    protected void BulletAdjust()
-    {
-        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        vec = vec * 3;
-        vec.y += 1.0f;
-        Vector3 adjustPos = PlayerScript.transform.position + vec;
-
-        BulletScript.transform.position = adjustPos;
-    }
-
 }
 
 /// <summary>
@@ -53,12 +39,7 @@ public class PlayerStateOnGround : PlayerState
         shotButton = false;
         jumpButton = false;
         PlayerScript.vel.y = 0;
-        PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
-
-        //ボール関連
-        BulletScript.InvisibleBullet();
-
 
         //スライド発射処理
         if (Mathf.Abs(PlayerScript.vel.x) > 30.0f)
@@ -73,21 +54,6 @@ public class PlayerStateOnGround : PlayerState
 
     public override void UpdateState()
     {
-        BulletAdjust();
-
-        if (Input.GetButtonDown("Button_R"))
-        {
-            if (PlayerScript.canShot)
-            {
-                shotButton = true;
-            }
-        }
-        else if (Input.GetButtonDown("Jump"))
-        {
-            jumpButton = true;
-            Debug.Log("Press Jump Button");
-        }
-
         //プレイヤー向き回転処理
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
         {
@@ -152,7 +118,6 @@ public class PlayerStateOnGround : PlayerState
             if(slideEndTimer > SLIDE_END_TIME)
             {
                 PlayerScript.onGroundState = OnGroundState.NORMAL;
-                PlayerScript.canShotState = true;
             }
         }
         else //!isSlide
@@ -244,7 +209,6 @@ public class PlayerStateShot_2 : PlayerState
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
-        PlayerScript.canShotState = false;
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
         
@@ -253,20 +217,6 @@ public class PlayerStateShot_2 : PlayerState
     public PlayerStateShot_2(bool is_slide_jump)//コンストラクタ
     {
         Init();
-        //弾の発射
-        BulletScript.GetComponent<Collider>().isTrigger = false;
-        BulletScript.VisibleBullet();
-
-        if (is_slide_jump)
-        {
-            BulletScript.ShotSlideJumpBullet();
-            Debug.Log("Slide Shot");
-        }
-        else
-        {
-            BulletScript.ShotBullet();
-            Debug.Log("Normal Shot");
-        }
     }
 
     /// <summary>
@@ -313,7 +263,7 @@ public class PlayerStateShot_2 : PlayerState
 
         if (Physics.SphereCast(ray, PlayerMain.HcolliderRadius, PlayerMain.HcoliderDistance, LayerMask.GetMask("Platform")))
         { 
-            if(BulletScript.isTouched == false)
+            if(BulletScript.NowBulletState != EnumBulletState.BulletStop)
             {
                 Debug.Log("collision PlayerHead : Forcibly return");
                 PlayerScript.ForciblyReturnBullet(true);
@@ -331,9 +281,6 @@ public class PlayerStateShot_2 : PlayerState
             {
                 if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
                 {
-                   
-                    BulletScript.ReturnBullet();
-                    
                     PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
                     
                     PlayerScript.useVelocity = true;
@@ -355,8 +302,6 @@ public class PlayerStateShot_2 : PlayerState
             {
                 PlayerScript.vel = Vector3.zero;
             }
-
-            BulletScript.ReturnBullet();
             
             PlayerScript.useVelocity = true;
             PlayerScript.shotState = ShotState.RETURN;
@@ -392,12 +337,10 @@ public class PlayerStateShot_2 : PlayerState
 #endif
         }
 
-        if (BulletScript.isTouched)
+        if (BulletScript.NowBulletState == EnumBulletState.BulletStop)
         {
             if (BulletScript.followEnd)
             {
-                BulletScript.FollowedPlayer();
-
                 PlayerScript.vel = bulletVecs.Dequeue();
                 PlayerScript.useVelocity = true;
                 BulletScript.followEnd = false;
@@ -449,31 +392,13 @@ public class PlayerStateShot_2 : PlayerState
                 break;
 
             case ShotState.RETURN:
-                //自分へ弾を引き戻す
-                Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-                vecToPlayer = vecToPlayer.normalized;
-
-                BulletScript.vel = vecToPlayer * 100;
+            case ShotState.FOLLOW:
 
                 //距離が一定以下になったら終了処理フラグを建てる
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
                 }
-                break;
-
-            case ShotState.FOLLOW:
-                //自分へ弾を引き戻す
-                Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
-                vecToBullet = vecToBullet.normalized;
-
-                PlayerScript.vel += vecToBullet * 3;
-
-                if (interval < 4.0f)
-                {
-                    finishFlag = true;
-                }
-
                 break;
         }
 
@@ -483,7 +408,7 @@ public class PlayerStateShot_2 : PlayerState
     public override void StateTransition()
     {
         //ボールが触れたらスイング状態
-        if (BulletScript.isTouched)
+        if (BulletScript.NowBulletState == EnumBulletState.BulletStop)
         {
             PlayerScript.shotState = ShotState.NONE;
             if (BulletScript.swingEnd)
@@ -736,22 +661,17 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.refState = EnumPlayerState.MIDAIR;
         PlayerScript.midairState = MidairState.NORMAL;
         shotButton = false;
-        PlayerScript.canShotState = false;
         OnceFallDownFlag = false;
-
-        BulletScript.InvisibleBullet();
     }
 
     public PlayerStateMidair(bool can_shot)//コンストラクタ
     {
         Init();
-        PlayerScript.canShotState = can_shot;
     }
 
     public PlayerStateMidair(bool Jump_start, bool can_shot)//コンストラクタ
     {
         Init();
-        PlayerScript.canShotState = can_shot;
 
         if (Jump_start)
         {
@@ -762,8 +682,6 @@ public class PlayerStateMidair : PlayerState
 
     public override void UpdateState()
     {
-        BulletAdjust();
-
         if (PlayerScript.adjustLeftStick.x > 0.01f)
         {
             PlayerScript.dir = PlayerMoveDir.RIGHT;
@@ -1188,13 +1106,11 @@ public class PlayerStateSwing_R_Release : PlayerState
 
         PlayerScript.refState = EnumPlayerState.SWING;
         PlayerScript.swingState = SwingState.TOUCHED;
-        PlayerScript.canShotState = false;
         PlayerScript.endSwing = false;
         PlayerScript.hangingSwing = false;
         finishFlag = false;
         releaseButton = false;
         countreButton = false;
-        BulletScript.rb.isKinematic = true;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
 
@@ -1400,7 +1316,7 @@ public class PlayerStateSwing_R_Release : PlayerState
             {
                 PlayerScript.endSwing = false;
                 PlayerScript.useVelocity = true;
-                BulletScript.ReturnBullet();
+                BulletScript.SetBulletState(EnumBulletState.BulletReturn);
                 PlayerScript.swingState = SwingState.RELEASED;
             }
 
@@ -1409,7 +1325,7 @@ public class PlayerStateSwing_R_Release : PlayerState
                 if ((degree < endAngle) || (releaseButton == true))
                 {
                     PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
+                    BulletScript.SetBulletState(EnumBulletState.BulletReturn);
                     PlayerScript.swingState = SwingState.RELEASED;
 
                     //勢い追加
@@ -1429,7 +1345,7 @@ public class PlayerStateSwing_R_Release : PlayerState
                 if ((degree > endAngle) || (releaseButton == true))
                 {
                     PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
+                    BulletScript.SetBulletState(EnumBulletState.BulletReturn);
                     PlayerScript.swingState = SwingState.RELEASED;
 
                     //勢い追加
@@ -1507,14 +1423,10 @@ public class PlayerStateSwing_R_Release : PlayerState
             case SwingState.RELEASED:
                 //自分へ弾を引き戻す
                 float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-                Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
-                vec = vec.normalized;
-                BulletScript.vel = vec * 100;
                 //距離が一定以下になったら弾を非アクティブ
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
-
                 }
                 break;
 
@@ -1531,7 +1443,7 @@ public class PlayerStateSwing_R_Release : PlayerState
                 if (releaseButton)
                 {
                     PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
+                    BulletScript.SetBulletState(EnumBulletState.BulletReturn);
                     PlayerScript.swingState = SwingState.RELEASED;
 
                     PlayerScript.vel = Vector3.zero;
@@ -1567,13 +1479,10 @@ public class PlayerStateRail : PlayerState
     public PlayerStateRail()
     {
         PlayerScript.refState = EnumPlayerState.RAILING;
-        PlayerScript.canShotState = false; //撃てない
         PlayerScript.vel = Vector3.zero;   //速度0
         PlayerScript.addVel = Vector3.zero;
 
-        BulletScript.rb.velocity = Vector3.zero;
-        BulletScript.vel = Vector3.zero;
-        BulletScript.StopVelChange = true;
+        BulletScript.SetBulletState(EnumBulletState.BulletStop);
     }
 
     public override void UpdateState()
@@ -1599,15 +1508,10 @@ public class PlayerStateDeath : PlayerState
     public PlayerStateDeath()
     {
         PlayerScript.refState = EnumPlayerState.DEATH;
-        PlayerScript.canShotState = false;
         PlayerScript.vel = Vector3.zero;
         PlayerScript.addVel = Vector3.zero;
 
 
-
-        BulletScript.rb.velocity = Vector3.zero;
-        BulletScript.vel = Vector3.zero;
-        BulletScript.StopVelChange = true;
     }
 
     public override void UpdateState()

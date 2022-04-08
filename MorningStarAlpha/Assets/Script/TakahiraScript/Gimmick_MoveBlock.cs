@@ -207,7 +207,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
         // 錨オブジェクトの移動
         if (BulletMoveFlag)
         {
-            if (PlayerMain.instance.BulletScript.isTouched)
+            if (BulletMain.instance.NowBulletState == EnumBulletState.BulletStop)
             {
                 PlayerMain.instance.BulletScript.transform.position +=
                     new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
