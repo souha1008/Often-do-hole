@@ -12,6 +12,7 @@ public class PlayerStateShot : PlayerState
     float countTime;               //発射からの時間
     Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
     bool finishFlag;
+    private bool releaseButton;
 
     const float STRAINED_END_RATIO = 1.0f;
 
@@ -20,6 +21,7 @@ public class PlayerStateShot : PlayerState
         countTime = 0.0f;
         bulletVecs = new Queue<Vector3>();
         finishFlag = false;
+        releaseButton = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -108,9 +110,24 @@ public class PlayerStateShot : PlayerState
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
-                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+                if (PlayerScript.ReleaseMode)
                 {
+                    if (Input.GetButtonUp("Button_R")) //ボタンが離れていたら
+                    {
+                        releaseButton = true;
+                    }
+                }
+                else
+                {
+                    if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+                    {
+                        releaseButton = true;
+                    }
+                }
 
+                if (releaseButton) //ボタンが離れていたら
+                {
+                    releaseButton = false;
                     BulletScript.ReturnBullet();
 
                     PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;

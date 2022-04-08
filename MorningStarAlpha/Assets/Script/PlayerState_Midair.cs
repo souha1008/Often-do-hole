@@ -10,14 +10,12 @@ using UnityEngine;
 public class PlayerStateMidair : PlayerState
 {
     private bool shotButton;
-    private bool OnceFallDownFlag;//ã}ç~â∫ÉtÉâÉO
     private void Init()
     {
         PlayerScript.refState = EnumPlayerState.MIDAIR;
         PlayerScript.midairState = MidairState.NORMAL;
         shotButton = false;
         PlayerScript.canShotState = false;
-        OnceFallDownFlag = false;
 
         BulletScript.InvisibleBullet();
     }
@@ -44,13 +42,27 @@ public class PlayerStateMidair : PlayerState
             PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
         }
 
-        if (Input.GetButtonDown("Button_R"))
+        if (PlayerScript.ReleaseMode)
         {
-            if (PlayerScript.canShot)
+            if (Input.GetButtonUp("Button_R"))
             {
-                shotButton = true;
+                if (PlayerScript.canShot)
+                {
+                    shotButton = true;
+                }
             }
         }
+        else
+        {
+            if (Input.GetButtonDown("Button_R"))
+            {
+                if (PlayerScript.canShot)
+                {
+                    shotButton = true;
+                }
+            }
+        }
+        
 
         //ã}ç~â∫ì¸óÕâ∫ÅH
         if (PlayerScript.sourceLeftStick.y < -0.7f && Mathf.Abs(PlayerScript.sourceLeftStick.x) < 0.3f)

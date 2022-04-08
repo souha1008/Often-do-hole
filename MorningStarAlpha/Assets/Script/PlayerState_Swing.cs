@@ -208,23 +208,51 @@ public class PlayerStateSwing : PlayerState
 
     public void InputButton()
     {
-        if (PlayerScript.swingState != SwingState.RELEASED)
+
+        if (PlayerScript.ReleaseMode)
         {
-            if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+            if (PlayerScript.swingState == SwingState.TOUCHED)
             {
-
-                releaseButton = true;
+                if (Input.GetButtonUp("Button_R")) //ボタンを押して話したら
+                {
+                    releaseButton = true;
+                }
             }
-
+            else if (PlayerScript.swingState == SwingState.HANGING)
+            {
+                if (Input.GetButtonUp("Button_R")) //ボタンを押して話したら
+                {
+                    releaseButton = true;
+                }
+                else if (Input.GetButtonDown("Jump"))
+                {
+                    countreButton = true;
+                    Debug.Log("Press Jump");
+                }
+            }
         }
-
-        if (PlayerScript.swingState == SwingState.HANGING)
+        else
         {
-            if (Input.GetButtonDown("Jump"))
+            if (PlayerScript.swingState == SwingState.TOUCHED)
             {
-                countreButton = true;
-                Debug.Log("Press Jump");
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+                {
+                    releaseButton = true;
+                }
             }
+            else if (PlayerScript.swingState == SwingState.HANGING)
+            {
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
+                {
+                    releaseButton = true;
+                }
+                else if (Input.GetButtonDown("Jump"))
+                {
+                    countreButton = true;
+                    Debug.Log("Press Jump");
+                }
+            }
+
         }
 
     }
