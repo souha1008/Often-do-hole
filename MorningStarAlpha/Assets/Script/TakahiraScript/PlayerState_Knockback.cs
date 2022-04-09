@@ -12,14 +12,12 @@ public class PlayerState_Knockback : PlayerState
 
     private float NowTime = 0.0f;               // 経過時間
     private Vector3 HitPos;                     // ヒットしたオブジェクトの座標
-    private bool AnchorGetFlag = false;         // 錨が手元に戻ったフラグ
 
     public PlayerState_Knockback(Vector3 HitObjectPos)
     {
         PlayerScript.refState = EnumPlayerState.NOCKBACK;
         NowTime = 0.0f;
         HitPos = HitObjectPos;
-        AnchorGetFlag = false;
         
         PlayerScript.midairState = MidairState.NORMAL;
 
@@ -42,25 +40,15 @@ public class PlayerState_Knockback : PlayerState
         // 減衰処理
         PlayerSpeedDown();
 
-        if (!AnchorGetFlag)
+        if (BulletScript.NowBulletState != EnumBulletState.BulletReady)
         {
             //自分へ弾を引き戻す
-            Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-            vecToPlayer = vecToPlayer.normalized;
-            BulletScript.vel = vecToPlayer * 100;
-
-
-            //距離が一定以下になったら終了処理フラグを建てる
-            if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
-            {
-                AnchorGetFlag = true;
-                BulletScript.InvisibleBullet();
-            }
+            BulletScript.SetBulletState(EnumBulletState.BulletReturn);
         }      
 
 
         // 時間経過でステート変更
-        if (NowTime > KnockbackTime && AnchorGetFlag)
+        if (NowTime > KnockbackTime)
         {
             if (PlayerScript.isOnGround)
             {

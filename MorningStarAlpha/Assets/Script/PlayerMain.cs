@@ -44,7 +44,8 @@ public enum SwingState
 /// </summary>
 public enum ShotState
 {
-    GO = 0,         //引っ張られずに飛んでいる
+    NONE = 0,   //飛んでない
+    GO,         //引っ張られずに飛んでいる
     STRAINED,   //プレイヤーを引っ張りながら飛んでいる
 }
 
@@ -147,6 +148,7 @@ public class PlayerMain : MonoBehaviour
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
         midairState = MidairState.NONE;
+        shotState = ShotState.NONE;
         swingState = SwingState.NONE;
         dir = PlayerMoveDir.RIGHT;        //向き初期位置
         rb.rotation = Quaternion.Euler(0, 90, 0);
@@ -236,6 +238,11 @@ public class PlayerMain : MonoBehaviour
             else
             {
                 addVel = Vector3.zero;
+            }
+
+            if (refState != EnumPlayerState.SHOT)
+            {
+                shotState = ShotState.NONE;
             }
 
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）

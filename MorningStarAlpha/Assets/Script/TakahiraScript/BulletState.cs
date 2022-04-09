@@ -75,10 +75,13 @@ public class BulletGo : BulletState
         BulletScript.co.isTrigger = false;
 
 
-        // プレイヤーの移動量　+　発射ベクトル量　を初期ベクトル量にする
-        if (Mathf.Abs(PlayerScript.vel.x) > PlayerScript.MAX_RUN_SPEED)
+        // 発射
+        if (Mathf.Abs(PlayerScript.vel.x) > PlayerScript.MAX_RUN_SPEED &&
+           ((PlayerScript.vel.x > 0 && PlayerScript.adjustLeftStick.x > 0) ||
+           (PlayerScript.vel.x < 0 && PlayerScript.adjustLeftStick.x < 0)))
         {
-            BulletScript.ShotSlideJumpBullet();
+            BulletScript.ShotSlideJumpBullet(); // スライドジャンプ
+            //BulletScript.ShotBullet();
         }
         else
         {

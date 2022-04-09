@@ -269,6 +269,14 @@ public class PlayerStateShot_2 : PlayerState
 
     public override void UpdateState()
     {
+        if (BulletScript.NowBulletState == EnumBulletState.BulletReturn ||
+            BulletScript.NowBulletState == EnumBulletState.BulletReturnFollow)
+        {
+            PlayerScript.shotState = ShotState.NONE;
+            PlayerScript.useVelocity = true;
+        }
+
+
         //countTime += Time.deltaTime;
 
         //if (countTime > 0.2)
@@ -278,7 +286,7 @@ public class PlayerStateShot_2 : PlayerState
         //        if (BulletScript.NowBulletState == EnumBulletState.BulletReturn) //ボタンが離れていたら
         //        {
         //            PlayerScript.vel = bulletVecs * STRAINED_END_RATIO;
-                    
+
         //            PlayerScript.useVelocity = true;
         //        }
         //    }
@@ -313,12 +321,6 @@ public class PlayerStateShot_2 : PlayerState
             }
 #endif
         }
-
-        if (BulletScript.NowBulletState == EnumBulletState.BulletReturnFollow)
-        {
-            PlayerScript.useVelocity = true;
-        }
-
     }
 
     public override void Move()
@@ -377,6 +379,7 @@ public class PlayerStateShot_2 : PlayerState
         //ボールが触れたらスイング状態
         if (BulletScript.NowBulletState == EnumBulletState.BulletStop)
         {
+            PlayerScript.shotState = ShotState.NONE;
             PlayerScript.mode = new PlayerStateSwing_R_Release();
         }
 
@@ -385,10 +388,12 @@ public class PlayerStateShot_2 : PlayerState
             //着地したら立っている状態に移行
             if (PlayerScript.isOnGround)
             {
+                PlayerScript.shotState = ShotState.NONE;
                 PlayerScript.mode = new PlayerStateOnGround();
             }
             else //そうでないなら空中
             {
+                PlayerScript.shotState = ShotState.NONE;
                 PlayerScript.mode = new PlayerStateMidair(false);
             }
         } 
