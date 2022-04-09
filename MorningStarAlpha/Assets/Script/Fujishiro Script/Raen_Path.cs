@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Raen_Path : MonoBehaviour
 {
-    public Vector3[] Path; // ウェイポイント配列
+    public GameObject[] positions; // ウェイポイント配列
 
     void Awake()
     {
