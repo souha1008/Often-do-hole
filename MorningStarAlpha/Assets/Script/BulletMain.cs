@@ -257,7 +257,14 @@ public class BulletMain : MonoBehaviour
                         break;
 
                     case "Iron":
-                        PlayerScript.ForciblyReturnBullet(true);
+                        if (PlayerScript.isOnGround)
+                        {
+                            PlayerScript.ForciblyReturnBullet(false);
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblyReturnBullet(true);
+                        }                        
                         break;
 
                     case "Player":
