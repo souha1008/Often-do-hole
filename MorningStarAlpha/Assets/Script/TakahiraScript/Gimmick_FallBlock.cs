@@ -2,8 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum FALL_TYPE
+{
+    SINE_IN = 0,
+    QUAD_IN,
+    CUBIC_IN,
+    QUART_IN,
+    QUINT_IN
+}
+
 public class Gimmick_FallBlock : Gimmick_Main
 {
+    [Label("ìÆÇ´ï˚")]
+    public FALL_TYPE FallType;
+
     [Label("óéâ∫ãóó£")]
     public float FallLength = 15.0f;    // óéÇøÇÈãóó£
 
@@ -39,7 +51,25 @@ public class Gimmick_FallBlock : Gimmick_Main
         if (NowFall)
         {
             Vector3 OldPos = this.gameObject.transform.position;
-            this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+            switch (FallType)
+            {
+                case FALL_TYPE.SINE_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.SineIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.QUAD_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuadIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.CUBIC_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.CubicIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.QUART_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.QUINT_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+            }
+            
             NowTime += Time.fixedDeltaTime;
 
             // ÉvÉåÉCÉÑÅ[à⁄ìÆ
@@ -57,6 +87,10 @@ public class Gimmick_FallBlock : Gimmick_Main
                 {
                     PlayerMain.instance.BulletScript.transform.position +=
                         new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                }
+                else
+                {
+                    BulletMoveFlag = false;
                 }
             }
         }
