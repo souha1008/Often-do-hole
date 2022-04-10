@@ -41,19 +41,22 @@ public class Gimmick_Enemy2 : Gimmick_Main
             // Ž€–S
             Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.tag == "Platform" ||
+            collision.gameObject.tag == "Box")
             GravityFlag = false;
     }
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.tag == "Platform" ||
+            collision.gameObject.tag == "Box")
             GravityFlag = false;
     }
 
     public void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.tag == "Platform" ||
+            collision.gameObject.tag == "Box")
             GravityFlag = true;
     }
 }
