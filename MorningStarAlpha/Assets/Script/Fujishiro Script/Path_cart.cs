@@ -29,22 +29,18 @@ public class Path_cart : MonoBehaviour
         {
             if(Rall_Start == true && Rall_Now == false)
             {
-                PlayerState.PlayerScript.mode = new PlayerStateRail(); // ステートをレール状態に移行
-                if(sequence.IsPlaying()) 
+                PlayerState.PlayerScript.mode = new PlayerState_Rail(); // ステートをレール状態に移行
+                ikari.transform
+                .DOPath(path, 4.0f)
+                .OnComplete(() =>
                 {
-                    sequence.onComplete();
-                }
-                else
-                {
-                    sequence = DOTween.Sequence().Append(
-                            ikari.transform
-                            .DOPath(path, 4f))
-                            .onComplete(() =>
-                            {
-                                Debug.Log("Completed");
-                            });
-                            
-                }
+                    Debug.Log("Complete");
+                    PlayerState.PlayerScript.mode = new PlayerStateOnGround();
+                });
+
+
+
+                
                 Rall_Now = true;                                       // 一回のみ用フラグをオン
             }
         }
