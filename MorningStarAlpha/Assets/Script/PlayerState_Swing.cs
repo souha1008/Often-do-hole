@@ -106,7 +106,7 @@ public class PlayerStateSwing : PlayerState
         maxAnglerVel = minAnglerVel = angler_velocity;
         //Å‚‘¬“x‚Í“Ë“üŠp‚ª‘å‚«‚¢‚Ù‚Ç‘‚¢
         float velDiff = Mathf.Clamp01((diff_down / 90));
-        maxAnglerVel += velDiff * 1.2f;
+        maxAnglerVel =  minAnglerVel *2;
     }
 
     /// <summary>
