@@ -52,12 +52,12 @@ public class Gimmick_Conveyor : Gimmick_Main
             if (PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
-                conveyorState.PlayerMoveFlag = true;
+                ConveyorState.PlayerMoveFlag = true;
             }
         }
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            conveyorState.BulletMoveFlag = true;
+            ConveyorState.BulletMoveFlag = true;
             // 衝突点取得
             foreach (ContactPoint contact in collision.contacts)
             {
@@ -65,16 +65,16 @@ public class Gimmick_Conveyor : Gimmick_Main
                 if (contact.normal.y == 0)
                 {
                     if (contact.normal.x < 0) // 右
-                        conveyorState.TouchSide = TOUCH_SIDE.RIGHT;
+                        ConveyorState.TouchSide = TOUCH_SIDE.RIGHT;
                     else                        // 左
-                        conveyorState.TouchSide = TOUCH_SIDE.LEFT;
+                        ConveyorState.TouchSide = TOUCH_SIDE.LEFT;
                 }
                 else
                 {
                     if (contact.normal.y < 0) // 上
-                        conveyorState.TouchSide = TOUCH_SIDE.UP;
+                        ConveyorState.TouchSide = TOUCH_SIDE.UP;
                     else                        // 下
-                        conveyorState.TouchSide = TOUCH_SIDE.DOWN;
+                        ConveyorState.TouchSide = TOUCH_SIDE.DOWN;
                 }
 
                 //Debug.Log(contact.normal);
@@ -97,7 +97,7 @@ public class Gimmick_Conveyor : Gimmick_Main
             if (PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
-                conveyorState.PlayerMoveFlag = true;
+                ConveyorState.PlayerMoveFlag = true;
             }
         }
     }
@@ -106,11 +106,11 @@ public class Gimmick_Conveyor : Gimmick_Main
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            conveyorState.PlayerMoveFlag = false;
+            ConveyorState.PlayerMoveFlag = false;
         }
         //if (collision.gameObject.CompareTag("Bullet"))
         //{
-        //    conveyorState.BulletMoveFlag = false;
+        //    ConveyorState.BulletMoveFlag = false;
         //}
     }
 
@@ -149,10 +149,10 @@ public abstract class ConveyorState
         Conveyor.conveyorState = state;
     }
 
-    public TOUCH_SIDE TouchSide;
+    static public TOUCH_SIDE TouchSide;
     static public Gimmick_Conveyor Conveyor;
-    public bool PlayerMoveFlag;
-    public bool BulletMoveFlag;
+    static public bool PlayerMoveFlag;
+    static public bool BulletMoveFlag;
 }
 
 // スタート処理(ここから始める)
@@ -309,6 +309,9 @@ public class ConveyorRight : ConveyorState
             //Debug.Log("錨右移動中");
             PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
 
+            if (PlayerMain.instance.BulletScript.transform.position.x > Conveyor.transform.position.x + Conveyor.transform.lossyScale.x * 0.5f)
+                BulletMoveFlag = false;
+
             if (!BulletMoveFlag)
             {
                 PlayerMain.instance.BulletScript.transform.position -= new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
@@ -335,6 +338,9 @@ public class ConveyorLeft : ConveyorState
         {
             //Debug.LogWarning("錨左移動中");
             PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
+
+            if (PlayerMain.instance.BulletScript.transform.position.x < Conveyor.transform.position.x - Conveyor.transform.lossyScale.x * 0.5f)
+                BulletMoveFlag = false;
 
             if (!BulletMoveFlag)
             {

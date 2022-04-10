@@ -253,13 +253,13 @@ public class Gimmick_Enemy : Gimmick_Main
             }
         }
 
-        transform.rotation *= Quaternion.Euler(0, 0, 10);  // 回転
+        //transform.rotation *= Quaternion.Euler(0, 0, 10);  // 回転
     }
 
     // 敵死亡処理
     public override void Death()
     {
-        // ※死亡エフェクト
+        // ※死亡エフェクト(自身のタグで判定)
 
         // 自身を消す
         Destroy(this.gameObject);

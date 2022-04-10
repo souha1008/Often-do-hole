@@ -4,10 +4,10 @@ using UnityEngine;
 public enum EASING_TYPE
 {
     LINEAR = 0,
-    QUAD_IN,
     SINE_IN,
     SINE_OUT,
     SINE_INOUT,
+    QUAD_IN,
     QUAD_OUT,
     QUAD_INOUT,
     CUBIC_IN,
