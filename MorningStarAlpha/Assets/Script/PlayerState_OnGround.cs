@@ -22,7 +22,9 @@ public class PlayerStateOnGround : PlayerState
 
         //ボール関連
         BulletScript.InvisibleBullet();
-
+        PlayerScript.animator.SetBool("isRunning", false);
+        PlayerScript.animator.SetTrigger("onGroundTrigger");
+        
 
         //スライド発射処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
