@@ -156,6 +156,11 @@ public class PlayerStateSwing : PlayerState
             //îÕàÕì‡Ç…ï‚ê≥
             endAngle = Mathf.Clamp(endAngle, 220, 270);
         }
+
+        if(PlayerScript.AutoRelease == false)
+        {
+            minAnglerVel = 0.4f;
+        }      
     }
 
     public void RotationPlayer()
@@ -360,6 +365,17 @@ public class PlayerStateSwing : PlayerState
                 {
                     CalculateCounterVariable();
                     PlayerScript.hangingSwing = false;
+                }
+
+                //í∑Ç≠Ç∑ÇÈèàóù
+                if (PlayerScript.LongRope)
+                {
+                    if (betweenLength < BulletScript.BULLET_ROPE_LENGTH)
+                    {
+                        betweenLength += 0.2f;
+                        minAnglerVel *= 0.99f;
+                        maxAnglerVel *= 0.99f;
+                    }
                 }
 
                 //íZÇ≠Ç∑ÇÈèàóù

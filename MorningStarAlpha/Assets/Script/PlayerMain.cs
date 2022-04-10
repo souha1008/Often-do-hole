@@ -84,6 +84,7 @@ public class PlayerMain : MonoBehaviour
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
     [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
     [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
+    [SerializeField, Tooltip("チェックが入っていたら振り子時紐が長くなる")] public bool LongRope;
 
     [SerializeField] public const float colliderRadius = 1.4f;   //接地判定用ray半径
     [SerializeField] public const float coliderDistance = 1.78f; //
