@@ -36,7 +36,7 @@ public class Gimmick_Bridge : Gimmick_Main
 
         // ‰Šú‰ñ“]
         Vector3 ThisPos = StartPos = this.gameObject.transform.position; // ©•ª‚ÌÀ•W
-        Vector3 RotatePos = new Vector3(ThisPos.x, ThisPos.y, ThisPos.z + this.gameObject.transform.localScale.z * 0.5f); // ‰ñ“]Šî€À•W
+        Vector3 RotatePos = new Vector3(ThisPos.x, ThisPos.y, ThisPos.z + this.gameObject.transform.lossyScale.z * 0.5f); // ‰ñ“]Šî€À•W
         Quaternion AngleAxis = Quaternion.AngleAxis(90.0f, Vector3.right); // ‰ñ“]²‚ÆŠp“x
         
         Vector3 Pos = ThisPos;
@@ -87,7 +87,7 @@ public class Gimmick_Bridge : Gimmick_Main
     private void Rotate()
     {
         Vector3 ThisPos = this.gameObject.transform.position; // ©•ª‚ÌÀ•W
-        Vector3 RotatePos = new Vector3(StartPos.x, StartPos.y, StartPos.z + this.gameObject.transform.localScale.z * 0.5f); // ‰ñ“]Šî€À•W
+        Vector3 RotatePos = new Vector3(StartPos.x, StartPos.y, StartPos.z + this.gameObject.transform.lossyScale.z * 0.5f); // ‰ñ“]Šî€À•W
         Quaternion AngleAxis = Quaternion.AngleAxis(-(Easing.BounceOut(NowTime, MoveTime, 0, 90) - OldRad), Vector3.right); // ‰ñ“]²‚ÆŠp“x
         OldRad = Easing.BounceOut(NowTime, MoveTime, 0, 90);
 

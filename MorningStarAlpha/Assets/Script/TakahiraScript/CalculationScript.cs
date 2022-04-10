@@ -2,6 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public struct VecQuaternion
+{
+    public Vector3 Pos;
+    public Quaternion quaternion;
+}
+
+
 static public class CalculationScript
 {
     // 角度計算用
@@ -43,6 +51,30 @@ static public class CalculationScript
         }
         return degree;
     }
+
+    // ある点を中心に回転
+    //
+    // 引数　：　基準点, 回転したい点, 角度, 回転軸(Vector.right, Vector.up　Etc...)
+    // 戻り値：　回転後の座標、回転分のクオータニオン
+    public static VecQuaternion PointRotate(Vector3 OriginPos, Vector3 TargetPos, float Angle, Vector3 Axis)
+    {
+        VecQuaternion vecQuaternion ;
+
+        Quaternion AngleAxis = Quaternion.AngleAxis(Angle, Axis); // 回転軸と角度
+
+        Vector3 Pos = TargetPos; // 自身の座標
+
+        Pos -= OriginPos;
+        Pos = AngleAxis * Pos;
+        Pos += OriginPos;
+
+        vecQuaternion.Pos = Pos; // 現在の座標
+        vecQuaternion.quaternion = AngleAxis; // 回転
+
+        return vecQuaternion;
+    }
+
+
 
     // XY成分計算用
     public static Vector3 AngleVectorXY(float AngleRad)
