@@ -344,7 +344,6 @@ public class PlayerMain : MonoBehaviour
     /// </summary>
     private void CheckCanShot()
     {
-
         //デバッグログ
         Vector3 StartPos;
         StartPos = rb.position;
@@ -413,16 +412,16 @@ public class PlayerMain : MonoBehaviour
                 switch (asp) {
                     case Aspect.LEFT:
                     case Aspect.RIGHT:
-                        vel.x *= 0.2f;
+                        vel.x *= 0.0f;
                         if (vel.y > 1.0f)
                         {
-                            vel.y *= 0.2f;
+                            vel.y *= 0.1f;
                         }
                         break;
 
                     case Aspect.DOWN:
                         vel.x *= 0.2f;
-                        vel.y *= 0.2f;
+                        vel.y *= 0.0f;
                         break;
                 }
         }
@@ -452,7 +451,23 @@ public class PlayerMain : MonoBehaviour
 
                     case ShotState.GO:
                     case ShotState.RETURN:
-                        //何もしない
+                        //勢い殺す
+                        switch (asp)
+                        {
+                            case Aspect.LEFT:
+                            case Aspect.RIGHT:
+                                vel.x *= 0.0f;
+                                if (vel.y > 1.0f)
+                                {
+                                    vel.y *= 0.1f;
+                                }
+                                break;
+
+                            case Aspect.DOWN:
+                                vel.x *= 0.2f;
+                                vel.y *= 0.0f;
+                                break;
+                        }
                         break;
                 }
             }

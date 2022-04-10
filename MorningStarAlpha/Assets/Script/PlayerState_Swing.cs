@@ -330,8 +330,6 @@ public class PlayerStateSwing : PlayerState
                 }
             }
         }
-
-
     }
 
     public override void Move()
