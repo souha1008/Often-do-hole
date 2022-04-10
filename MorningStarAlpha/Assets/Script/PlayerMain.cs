@@ -83,7 +83,7 @@ public class PlayerMain : MonoBehaviour
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
     [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
-
+    [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
 
     [SerializeField] public const float colliderRadius = 1.4f;   //接地判定用ray半径
     [SerializeField] public const float coliderDistance = 1.78f; //
@@ -99,7 +99,7 @@ public class PlayerMain : MonoBehaviour
     [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
     [Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
     [Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED;           // 走り一フレームで上がるスピード
-    [Tooltip("ジャンプ力")] public float 　　　　　　　　　　　 JUMP_FORCE;
+    [Tooltip("振り子切り離し時加算")] public float 　　　　　　 RELEASE_FORCE;
     [Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED;          // 重力による最低速度
     [Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
     [Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
@@ -473,7 +473,7 @@ public class PlayerMain : MonoBehaviour
                     {
                         hangingSwing = true;
                     }
-                    else if(dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
+                    else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
                     {
                         Debug.Log("collision Platform : Wall Jump");
                     }
@@ -481,29 +481,22 @@ public class PlayerMain : MonoBehaviour
                     {
                         Debug.Log("collision Platform : Wall Jump");
                     }
-                    else 
+                    else if (asp == Aspect.UP)
                     {
                         Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
                         vecToPlayerR = vecToPlayerR.normalized;
                         Ray footRay = new Ray(rb.position, vecToPlayerR);
-                        if(asp == Aspect.UP)
+
+                        if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, LayerMask.GetMask("Platform")))
                         {
-                            if (Physics.SphereCast(footRay, SwingcolliderRadius, SwingcoliderDistance, LayerMask.GetMask("Platform")))
-                            {
-                                Debug.Log("collision Platform : slide continue");
-                                shortSwing.isShort = true;
+                            Debug.Log("collision Platform : slide continue");
+                            shortSwing.isShort = true;
 
-                                //短くした後の紐長さ計算
-                                float tempLength = Vector3.Distance(BulletScript.rb.position, collision.GetContact(0).point);
-                                tempLength -= 3.5f;
+                            //短くした後の紐長さ計算
+                            float tempLength = Vector3.Distance(BulletScript.rb.position, collision.GetContact(0).point);
+                            tempLength -= 3.5f;
 
-                                shortSwing.length = tempLength;
-                            }
-                            else
-                            {
-                                Debug.Log("collision Platform : swing end");
-                                endSwing = true;
-                            }
+                            shortSwing.length = tempLength;
                         }
                         else
                         {
@@ -511,6 +504,20 @@ public class PlayerMain : MonoBehaviour
                             endSwing = true;
                         }
                     }
+                    else if(asp == Aspect.DOWN)
+                    {
+                        if (AutoRelease)
+                        {
+                            Debug.Log("collision Platform down: swing end");
+                            endSwing = true;
+                        }
+                        else
+                        {
+                            Debug.Log("collision Platform down: swing end");
+                            hangingSwing = true;
+                        } 
+                    }
+                    
                 }
             }
         }

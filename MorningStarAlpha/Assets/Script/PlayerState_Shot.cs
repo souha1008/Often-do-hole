@@ -283,10 +283,20 @@ public class PlayerStateShot : PlayerState
         if (BulletScript.isTouched)
         {
             PlayerScript.shotState = ShotState.NONE;
+
+            
             if (BulletScript.swingEnd)
             {
                 BulletScript.swingEnd = false;
-                PlayerScript.mode = new PlayerStateSwing();
+                if (PlayerScript.AutoRelease)
+                {
+                    PlayerScript.mode = new PlayerStateSwing_2();
+                }
+                else
+                {
+                    PlayerScript.mode = new PlayerStateSwing();
+                }
+               
             }
         }
 
