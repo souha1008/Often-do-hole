@@ -29,6 +29,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
+        PlayerScript.animator.SetTrigger("shotTrigger");
     }
 
     public PlayerStateShot(bool is_slide_jump)//コンストラクタ
