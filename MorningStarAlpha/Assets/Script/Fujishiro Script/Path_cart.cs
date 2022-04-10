@@ -36,6 +36,7 @@ public class Path_cart : MonoBehaviour
                 {
                     Debug.Log("Complete");
                     PlayerState.PlayerScript.mode = new PlayerStateOnGround();
+                    Destroy(PlayerState_Rail.Player.GetComponent<HingeJoint>());
                 });
 
 

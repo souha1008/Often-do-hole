@@ -14,25 +14,30 @@ public class PlayerState_Rail : PlayerState
     bool finishFlag;
     BulletMain BulletScript;
 
+    GameObject anchor;
+
     const float STRAINED_END_RATIO = 1.0f;
 
     private void Init()
     {
-        countTime = 0.0f;
-        bulletVecs = new Queue<Vector3>();
-        finishFlag = false;
-        //releaseButton = false;
+        anchor = GameObject.FindGameObjectWithTag("Bullet");
+        //countTime = 0.0f;
+        //bulletVecs = new Queue<Vector3>();
+        //finishFlag = false;
+        ////releaseButton = false;
 
-        PlayerScript.refState = EnumPlayerState.SHOT;
-        PlayerScript.shotState = ShotState.GO;
-        PlayerScript.canShotState = false;
-        PlayerScript.forciblyReturnBulletFlag = false;
-        PlayerScript.addVel = Vector3.zero;
+        //PlayerScript.refState = EnumPlayerState.SHOT;
+        //PlayerScript.shotState = ShotState.GO;
+        //PlayerScript.canShotState = false;
+        //PlayerScript.forciblyReturnBulletFlag = false;
+        //PlayerScript.addVel = Vector3.zero;
     }
 
     public PlayerState_Rail()
     {
         Init();
+        Player.AddComponent<HingeJoint>().connectedBody = anchor.GetComponent<Rigidbody>();
+
         ////’e‚Ì”­ŽË
         //BulletScript.GetComponent<Collider>().isTrigger = false;
         //BulletScript.VisibleBullet();
@@ -47,6 +52,11 @@ public class PlayerState_Rail : PlayerState
         //    BulletScript.ShotBullet();
         //    Debug.Log("Normal Shot");
         //}
+    }
+
+    ~PlayerState_Rail()
+    {
+        
     }
 
     public override void UpdateState()
@@ -66,10 +76,10 @@ public class PlayerState_Rail : PlayerState
             case ShotState.GO:
                 bulletVecs.Enqueue(BulletScript.vel * 0.6f);
 
-                // •R‚Ì’·‚³‚ð’´‚¦‚½‚çˆø‚Á’£‚ç‚ê‚éó‘Ô‚É‚·‚é
-                if(interval > BulletScript.BULLET_ROPE_LENGTH)
+                //•R‚Ì’·‚³‚ð’´‚¦‚½‚çˆø‚Á’£‚ç‚ê‚éó‘Ô‚É‚·‚é
+                if (interval > BulletScript.BULLET_ROPE_LENGTH)
                 {
-                    BulletScript.vel *= 0.84f;
+                    //BulletScript.vel *= 0.84f;
 
                     PlayerScript.shotState = ShotState.STRAINED;
                 }
@@ -78,7 +88,7 @@ public class PlayerState_Rail : PlayerState
             case ShotState.STRAINED:
                 bulletVecs.Enqueue(BulletScript.vel);
                 bulletVecs.Dequeue();
-                
+
                 break;
         }
 
