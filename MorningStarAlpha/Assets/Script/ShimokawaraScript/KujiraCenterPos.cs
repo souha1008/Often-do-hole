@@ -38,7 +38,7 @@ public class KujiraCenterPos : MonoBehaviour
                 break;
 
             case KujiraSpeed.High:
-                myDolly.m_Speed = 60;
+                myDolly.m_Speed = 25;
                 break;
 
         }
