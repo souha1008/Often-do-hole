@@ -29,7 +29,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
-        PlayerScript.animator.SetTrigger("shotTrigger");   
+        //PlayerScript.animator.SetTrigger("shotTrigger");   
     }
 
     public PlayerStateShot(bool is_slide_jump)//コンストラクタ
@@ -135,7 +135,7 @@ public class PlayerStateShot : PlayerState
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
-                    PlayerScript.animator.SetTrigger("returnTrigger");
+                    //PlayerScript.animator.SetTrigger("returnTrigger");
                 }
             }
         }
@@ -158,7 +158,7 @@ public class PlayerStateShot : PlayerState
 
             PlayerScript.useVelocity = true;
             PlayerScript.shotState = ShotState.RETURN;
-            PlayerScript.animator.SetTrigger("returnTrigger");
+            //PlayerScript.animator.SetTrigger("returnTrigger");
         }
 
         //ついていく処理

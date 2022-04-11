@@ -22,8 +22,8 @@ public class PlayerStateOnGround : PlayerState
 
         //ボール関連
         BulletScript.InvisibleBullet();
-        PlayerScript.animator.SetBool("isRunning", false);
-        PlayerScript.animator.SetTrigger("onGroundTrigger");
+        //PlayerScript.animator.SetBool("isRunning", false);
+        //PlayerScript.animator.SetTrigger("onGroundTrigger");
         
 
         //スライド発射処理
@@ -195,11 +195,11 @@ public class PlayerStateOnGround : PlayerState
     {
         if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.animator.SetBool("isRunning", true);   //走る
+            //PlayerScript.animator.SetBool("isRunning", true);   //走る
         }
         else
         {
-            PlayerScript.animator.SetBool("isRunning", false);　//走らない
+            //PlayerScript.animator.SetBool("isRunning", false);　//走らない
         }
     }
 }

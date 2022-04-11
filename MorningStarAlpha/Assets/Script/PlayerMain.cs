@@ -194,7 +194,7 @@ public class PlayerMain : MonoBehaviour
         if (mode != null)
         {
             mode.UpdateState();
-            mode.Animation();
+            //mode.Animation();
             mode.StateTransition();
             mode.Move();
         }
