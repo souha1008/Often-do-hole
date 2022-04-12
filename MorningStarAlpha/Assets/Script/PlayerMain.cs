@@ -87,11 +87,11 @@ public class PlayerMain : MonoBehaviour
     [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
     [SerializeField, Tooltip("チェックが入っていたら振り子時紐が長くなる")] public bool LongRope;
 
-    [SerializeField] public const float colliderRadius = 1.4f;   //接地判定用ray半径
-    [SerializeField] public const float coliderDistance = 1.78f; //
+    [SerializeField] public float colliderRadius = 1.1f;   //接地判定用ray半径
+    [SerializeField] public float coliderDistance = 2.1f; //
                                                                  //
-    [SerializeField] public const float HcolliderRadius = 1.6f;   //頭判定用ray半径
-    [SerializeField] public const float HcoliderDistance = 0.8f; //頭判定用ray中心点から頭までのオフセット
+    [SerializeField] public float HcolliderRadius = 1.6f;   //頭判定用ray半径
+    [SerializeField] public float HcoliderDistance = 0.8f; //頭判定用ray中心点から頭までのオフセット
 
     [SerializeField] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
     [SerializeField] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット

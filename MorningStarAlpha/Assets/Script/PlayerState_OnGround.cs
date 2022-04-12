@@ -195,11 +195,11 @@ public class PlayerStateOnGround : PlayerState
     {
         if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            //PlayerScript.animator.SetBool("isRunning", true);   //ëñÇÈ
+            PlayerScript.animator.SetBool("isRunning", true);   //ëñÇÈ
         }
         else
         {
-            //PlayerScript.animator.SetBool("isRunning", false);Å@//ëñÇÁÇ»Ç¢
+            PlayerScript.animator.SetBool("isRunning", false);Å@//ëñÇÁÇ»Ç¢
         }
     }
 }
