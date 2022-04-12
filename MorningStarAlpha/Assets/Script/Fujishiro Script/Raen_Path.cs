@@ -5,6 +5,7 @@ using UnityEngine;
 public class Raen_Path : MonoBehaviour
 {
     public GameObject[] positions; // ウェイポイント配列
+    public GameObject[] player_postions;
 
     void Awake()
     {
