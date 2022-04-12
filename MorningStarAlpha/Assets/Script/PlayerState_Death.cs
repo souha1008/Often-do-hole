@@ -14,8 +14,6 @@ public class PlayerStateDeath : PlayerState
         PlayerScript.vel = Vector3.zero;
         PlayerScript.addVel = Vector3.zero;
 
-
-
         BulletScript.rb.velocity = Vector3.zero;
         BulletScript.vel = Vector3.zero;
         BulletScript.StopVelChange = true;

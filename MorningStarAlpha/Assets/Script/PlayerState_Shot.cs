@@ -29,6 +29,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
+        //PlayerScript.animator.SetTrigger("shotTrigger");   
     }
 
     public PlayerStateShot(bool is_slide_jump)//コンストラクタ
@@ -92,7 +93,7 @@ public class PlayerStateShot : PlayerState
         Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
         Ray ray = new Ray(PlayerScript.rb.position, vecToPlayer.normalized);
 
-        if (Physics.SphereCast(ray, PlayerMain.HcolliderRadius, PlayerMain.HcoliderDistance, LayerMask.GetMask("Platform")))
+        if (Physics.SphereCast(ray, PlayerScript.HcolliderRadius, PlayerScript.HcoliderDistance, LayerMask.GetMask("Platform")))
         {
             if (BulletScript.isTouched == false)
             {
@@ -134,6 +135,7 @@ public class PlayerStateShot : PlayerState
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
+                    //PlayerScript.animator.SetTrigger("returnTrigger");
                 }
             }
         }
@@ -156,6 +158,7 @@ public class PlayerStateShot : PlayerState
 
             PlayerScript.useVelocity = true;
             PlayerScript.shotState = ShotState.RETURN;
+            //PlayerScript.animator.SetTrigger("returnTrigger");
         }
 
         //ついていく処理
@@ -283,10 +286,20 @@ public class PlayerStateShot : PlayerState
         if (BulletScript.isTouched)
         {
             PlayerScript.shotState = ShotState.NONE;
+
+            
             if (BulletScript.swingEnd)
             {
                 BulletScript.swingEnd = false;
-                PlayerScript.mode = new PlayerStateSwing();
+                if (PlayerScript.AutoRelease)
+                {
+                    PlayerScript.mode = new PlayerStateSwing_2();
+                }
+                else
+                {
+                    PlayerScript.mode = new PlayerStateSwing();
+                }
+               
             }
         }
 

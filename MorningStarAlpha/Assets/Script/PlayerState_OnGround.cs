@@ -22,7 +22,9 @@ public class PlayerStateOnGround : PlayerState
 
         //ボール関連
         BulletScript.InvisibleBullet();
-
+        //PlayerScript.animator.SetBool("isRunning", false);
+        //PlayerScript.animator.SetTrigger("onGroundTrigger");
+        
 
         //スライド発射処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
@@ -186,6 +188,18 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.onGroundState = OnGroundState.NONE;
                 PlayerScript.mode = new PlayerStateShot(false);
             }
+        }
+    }
+
+    public override void Animation()
+    {
+        if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
+        {
+            PlayerScript.animator.SetBool("isRunning", true);   //走る
+        }
+        else
+        {
+            PlayerScript.animator.SetBool("isRunning", false);　//走らない
         }
     }
 }
