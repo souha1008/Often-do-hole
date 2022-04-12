@@ -109,9 +109,7 @@ public class LoupeScript : MonoBehaviour
 
                 HukidasiUI.GetComponent<RectTransform>().rotation = new Quaternion(0, 0, 180, 0);
             }           
-        }
-
-       
+        }       
     }
 
     void OnWillRenderObject()

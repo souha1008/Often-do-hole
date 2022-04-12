@@ -156,7 +156,11 @@ public class Gimmick_CannonParent : Gimmick_Main
     {
         if (CannonChild != null)
         {
-            GameObject Child = Instantiate(CannonChild, gameObject.transform.position, this.gameObject.transform.rotation); // íeê∂ê¨
+            VecQuaternion vecQuaternion = 
+                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(gameObject.transform.lossyScale.x * 0.5f, 0, 0), gameObject.transform.rotation.eulerAngles.z, Vector3.forward);
+
+
+            GameObject Child = Instantiate(CannonChild, vecQuaternion.Pos, this.gameObject.transform.rotation); // íeê∂ê¨
 
             Child.GetComponent<Gimmick_CannonChild>().SetCannonChild(PlayerObject, Speed, LifeTime, ChaseFlag); // íeÇÃílÉZÉbÉg
         }

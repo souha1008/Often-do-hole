@@ -8,14 +8,18 @@ public class Gimmick_SpringBoard : Gimmick_Main
     [Label("ジャンプ台の力")]
     public float SpringPower = 100.0f;   // ジャンプ台の力
 
+    private static float ReUseTime = 1.0f;
+    private float Time;
+
     public override void Init()
     {
-        
+        Time = ReUseTime;
     }
 
     public override void FixedMove()
     {
-        
+        if (Time < ReUseTime)
+            Time++;
     }
 
     public override void Death()
@@ -25,7 +29,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player") && Time >= ReUseTime)
         {
             float Rad;           // 回転角
             Vector3 VecPower = Vector3.zero;    // 加えるベクトル量
@@ -44,6 +48,10 @@ public class Gimmick_SpringBoard : Gimmick_Main
             PlayerMain.instance.addVel = VecPower;
 
             SoundManager.Instance.PlaySound("決定音");
+
+            //Handheld.Vibrate
+
+           Time = 0.0f;
         }
     }
 }

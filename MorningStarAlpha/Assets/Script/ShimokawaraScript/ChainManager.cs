@@ -26,7 +26,7 @@ public class ChainManager : MonoBehaviour
         OneChainLength = MaxChain / (MAX_CHAIN_NUM - 1);
         //Debug.Log(OneChainLength);
         LocalSize = OneChainLength / Obj.transform.lossyScale.y;
-        Debug.Log(Sample.transform.lossyScale);
+        //Debug.Log(Sample.transform.lossyScale);
         //lr.SetPosition(0, Player.transform.position);
         //lr.SetPosition(1, Player.transform.position);
     }
@@ -40,7 +40,7 @@ public class ChainManager : MonoBehaviour
             Vector3 StartPos = Bullet.transform.position;
             Vector3 EndPos = Player.transform.position;
             float NowLength = (EndPos - StartPos).magnitude;
-            Debug.Log(NowLength);
+            //Debug.Log(NowLength);
 
             //何個の鎖が必要？
             int ChainNum = 0;
@@ -59,7 +59,7 @@ public class ChainManager : MonoBehaviour
                     //大きさ
                     //float Temp = OneChainLength / Chain[i].transform.lossyScale.y;
                     Chain[i].transform.localScale = new Vector3(LocalSize * 0.6f, LocalSize * 0.6f, LocalSize * 0.6f);
-                    Debug.Log(LocalSize);
+                    //Debug.Log(LocalSize);
 
                     //移動、回転
                     Chain[i].transform.position = Vector3.Lerp(StartPos, EndPos, (float) i / (MAX_CHAIN_NUM - 1));
