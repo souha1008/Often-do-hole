@@ -297,7 +297,7 @@ public class PlayerStateShot : PlayerState
                 }
                 else
                 {
-                    PlayerScript.mode = new PlayerStateSwing();
+                    PlayerScript.mode = new PlayerStateSwing_Vel();
                 }
                
             }
