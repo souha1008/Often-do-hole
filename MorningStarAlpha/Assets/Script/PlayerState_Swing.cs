@@ -376,12 +376,12 @@ public class PlayerStateSwing : PlayerState
                     }
                 }
 
-                //短くする処理
-                if (PlayerScript.shortSwing.isShort)
-                {
-                    betweenLength = PlayerScript.shortSwing.length;
-                    PlayerScript.shortSwing.isShort = false;
-                }
+                ////短くする処理
+                //if (PlayerScript.shortSwing.isShort)
+                //{
+                //    betweenLength = PlayerScript.shortSwing.length;
+                //    PlayerScript.shortSwing.isShort = false;
+                //}
 
                 //角速度計算
                 float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
@@ -808,12 +808,12 @@ public class PlayerStateSwing_2 : PlayerState
                     PlayerScript.hangingSwing = false;
                 }
 
-                //短くする処理
-                if (PlayerScript.shortSwing.isShort)
-                {
-                    betweenLength = PlayerScript.shortSwing.length;
-                    PlayerScript.shortSwing.isShort = false;
-                }
+                ////短くする処理
+                //if (PlayerScript.shortSwing.isShort)
+                //{
+                //    betweenLength = PlayerScript.shortSwing.length;
+                //    PlayerScript.shortSwing.isShort = false;
+                //}
 
                 //角速度計算
                 float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
@@ -1267,12 +1267,6 @@ public class PlayerStateSwing_Vel : PlayerState
                     }
                 }
 
-                //短くする処理
-                if (PlayerScript.shortSwing.isShort)
-                {
-                    betweenLength = PlayerScript.shortSwing.length;
-                    PlayerScript.shortSwing.isShort = false;
-                }
 
                 //角速度計算
                 float deg180Ratio = deg180dif / Mathf.Abs(endAngle - 180); //真下と最高到達点の比率
@@ -1286,7 +1280,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 //前回計算後のAfterAngleを持ってくる
                 LastBtoP_Angle = AfterBtoP_Angle;
 
-                //↑を角速度分回す
+
                 //向きによって回転方向が違う
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
@@ -1305,8 +1299,39 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.vel = tempVec * 50.0f;
                 }
 
+                //振り子の最大長になっていない場合には円外に向かうベクトルを与える
+                if(Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) < BulletScript.BULLET_ROPE_LENGTH - 0.01f)
+                {
+                    Vector3 longerVec = PlayerScript.rb.position - BulletScript.rb.position;
+                    longerVec = longerVec.normalized;
+
+                    float outForce = 20.0f;
+                    longerVec *= outForce;
+
+                    PlayerScript.vel += longerVec;
+                }
+
+
+                //地面滑り処理
+                if (PlayerScript.SlideSwing)
+                {
+                    Vector3 lateralVel = Vector3.zero;
+
+                    if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                    {
+                        lateralVel.x = PlayerScript.vel.magnitude * 0.8f;
+                    }
+                    else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                    {
+                        lateralVel.x = PlayerScript.vel.magnitude * 0.8f * -1;
+                    }
+
+                    PlayerScript.vel = lateralVel;
+                    PlayerScript.SlideSwing = false;
+                }
+
                 //振り子よりも長くなってしまった場合は補正
-                if(Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) > BulletScript.BULLET_ROPE_LENGTH)
+                if (Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) > BulletScript.BULLET_ROPE_LENGTH)
                 {
                     float ang = CalculationScript.UnityTwoPointAngle360(BulletScript.rb.position, PlayerScript.rb.position);
                     Vector3 adjustPos = BulletScript.rb.position;
