@@ -16,6 +16,7 @@ public class PlayerState
     virtual public void Move() { }             //継承先で物理挙動（rigidbodyを使用したもの）overrideする
     virtual public void StateTransition() { }  //継承先でシーンの移動を決める
     virtual public void DebugMessage() { }     //デバッグ用のメッセージ表示
+    virtual public void Animation() { }
 
     static public GameObject Player;
     static public PlayerMain PlayerScript;
