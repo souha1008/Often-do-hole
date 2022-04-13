@@ -144,7 +144,6 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            onceFlag = false;
             isTouched = false;
             StopVelChange = true;
             rb.isKinematic = false;
@@ -159,7 +158,6 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            onceFlag = false;
             isTouched = false;
             StopVelChange = true;
             rb.isKinematic = true;
@@ -257,7 +255,14 @@ public class BulletMain : MonoBehaviour
                         break;
 
                     case "Iron":
-                        PlayerScript.ForciblyReturnBullet(true);
+                        if (PlayerScript.isOnGround)
+                        {
+                            PlayerScript.ForciblyReturnBullet(false);
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblyReturnBullet(true);
+                        }                        
                         break;
 
                     case "Player":
