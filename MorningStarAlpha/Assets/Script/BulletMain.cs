@@ -144,7 +144,6 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            onceFlag = false;
             isTouched = false;
             StopVelChange = true;
             rb.isKinematic = false;
@@ -159,7 +158,6 @@ public class BulletMain : MonoBehaviour
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            onceFlag = false;
             isTouched = false;
             StopVelChange = true;
             rb.isKinematic = true;

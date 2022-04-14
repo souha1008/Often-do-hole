@@ -12,7 +12,6 @@ public class ChainManager : MonoBehaviour
     GameObject Obj ;
     GameObject[] Chain = new GameObject[20];
 
-    public GameObject Sample;
 
     float MaxChain;
     float OneChainLength;
