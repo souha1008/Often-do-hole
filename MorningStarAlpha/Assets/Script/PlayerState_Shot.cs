@@ -29,7 +29,8 @@ public class PlayerStateShot : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
-        //PlayerScript.animator.SetTrigger("shotTrigger");   
+        PlayerScript.vel *= 0.4f;
+        PlayerScript.animator.SetTrigger("shotTrigger");   
     }
 
     public PlayerStateShot(bool is_slide_jump)//コンストラクタ
@@ -49,6 +50,8 @@ public class PlayerStateShot : PlayerState
             BulletScript.ShotBullet();
             Debug.Log("Normal Shot");
         }
+
+    
     }
 
     /// <summary>
@@ -135,7 +138,7 @@ public class PlayerStateShot : PlayerState
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
-                    //PlayerScript.animator.SetTrigger("returnTrigger");
+                    PlayerScript.animator.SetTrigger("returnTrigger");
                 }
             }
         }
@@ -158,7 +161,7 @@ public class PlayerStateShot : PlayerState
 
             PlayerScript.useVelocity = true;
             PlayerScript.shotState = ShotState.RETURN;
-            //PlayerScript.animator.SetTrigger("returnTrigger");
+            PlayerScript.animator.SetTrigger("returnTrigger");
         }
 
         //ついていく処理
@@ -246,6 +249,17 @@ public class PlayerStateShot : PlayerState
                 StrainedStop();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
+
+                if (interval < 6.0f)
+                {
+                    Debug.Log("aaa");
+                    if (BulletScript.vel.y < -2.0f)
+                    {
+                        Debug.Log("eee");
+                        PlayerScript.ForciblyReturnBullet(true);
+                    }
+                }
+
                 break;
 
             case ShotState.RETURN:
@@ -272,6 +286,7 @@ public class PlayerStateShot : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
+                    PlayerScript.animator.SetTrigger("returnTrigger");
                 }
 
                 break;
@@ -286,7 +301,6 @@ public class PlayerStateShot : PlayerState
         if (BulletScript.isTouched)
         {
             PlayerScript.shotState = ShotState.NONE;
-
             
             if (BulletScript.swingEnd)
             {
@@ -299,7 +313,6 @@ public class PlayerStateShot : PlayerState
                 {
                     PlayerScript.mode = new PlayerStateSwing_Vel();
                 }
-               
             }
         }
 

@@ -195,11 +195,15 @@ public class PlayerStateOnGround : PlayerState
     {
         if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.animator.SetBool("isRunning", true);   //ëñÇÈ
+            //PlayerScript.animator.SetBool("isRunning", true);   //ëñÇÈ
+            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 1.0f, 0.1f, Time.deltaTime);
+            //PlayerScript.animator.SetFloat("RunSpeed", 1.0f);
         }
         else
         {
-            PlayerScript.animator.SetBool("isRunning", false);Å@//ëñÇÁÇ»Ç¢
+            //PlayerScript.animator.SetBool("isRunning", false); //ëñÇÁÇ»Ç¢
+            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 0.0f, 0.1f, Time.deltaTime);
+            //PlayerScript.animator.SetFloat("RunSpeed", 0.0f);
         }
     }
 }

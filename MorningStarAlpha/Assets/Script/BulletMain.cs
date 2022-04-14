@@ -22,7 +22,8 @@ public class BulletMain : MonoBehaviour
 
 
    //’eŠÖŒW’è”
-    [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬   
+    [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬
+    [SerializeField] private float BULLET_SPEED_MAX; //’e‚Ì‰‘¬(Å‘å’lj
     [SerializeField] private float BULLET_START_DISTANCE; //’e‚Ì”­ŽËˆÊ’u
     [SerializeField] public float BULLET_ROPE_LENGTH; //•R‚Ì’·‚³
     private float BULLET_MAXFALLSPEED = 35.0f;
@@ -87,13 +88,16 @@ public class BulletMain : MonoBehaviour
         isTouched = false;
         vel += vec * BULLET_SPEED;
 
-        //Á‚³‚¹‚Ä‚à‚ç‚¢‚Ü‚µ‚½
-        //is•ûŒü‚Æ“¯‚¶Œü‚«‚É“Š‚°‚éê‡ˆÐ—Í•â³
-        //if (Mathf.Sign(vec.x) == Mathf.Sign(PlayerScript.vel.x))
-        //{
-        //    vel += PlayerScript.vel *= 0.6f;
-        //}
+        vel += PlayerScript.vel;
 
+        if(vel.magnitude > BULLET_SPEED_MAX)
+        {
+            float adjustVec = BULLET_SPEED_MAX / vel.magnitude;
+
+            Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
+
+            vel *= adjustVec;
+        }
     }
 
     public void ShotSlideJumpBullet()
