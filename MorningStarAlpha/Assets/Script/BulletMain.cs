@@ -88,14 +88,17 @@ public class BulletMain : MonoBehaviour
         isTouched = false;
         vel += vec * BULLET_SPEED;
 
-        vel += PlayerScript.vel;
+        if (vel.x * PlayerScript.vel.x > 0) //”ò‚Î‚·•ûŒü‚ÆƒvƒŒƒCƒ„[‚Ì•ûŒü‚ª“¯‚¶‚¾‚Á‚½‚ç
+        {
+            vel.x += PlayerScript.vel.x;
+        }
+
+
 
         if(vel.magnitude > BULLET_SPEED_MAX)
         {
             float adjustVec = BULLET_SPEED_MAX / vel.magnitude;
-
             Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
-
             vel *= adjustVec;
         }
     }

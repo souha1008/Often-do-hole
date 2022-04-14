@@ -29,7 +29,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
-        PlayerScript.vel *= 0.4f;
+        PlayerScript.vel.x *= 0.4f;
         PlayerScript.animator.SetTrigger("shotTrigger");   
     }
 
@@ -224,10 +224,11 @@ public class PlayerStateShot : PlayerState
                     //{
                     //    BulletScript.vel *= 0.92f;
                     //}
-
                     BulletScript.vel *= 0.84f;
 
                     PlayerScript.shotState = ShotState.STRAINED;
+                    PlayerScript.vel = Vector3.zero;
+
                     //PlayerScript.useVelocity = false;
                 }
                 break;
