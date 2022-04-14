@@ -33,25 +33,15 @@ public class PlayerStateShot : PlayerState
         PlayerScript.animator.SetTrigger("shotTrigger");   
     }
 
-    public PlayerStateShot(bool is_slide_jump)//コンストラクタ
+    //消去
+    public PlayerStateShot()//コンストラクタ
     {
         Init();
         //弾の発射
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
 
-        if (is_slide_jump)
-        {
-            BulletScript.ShotSlideJumpBullet();
-            Debug.Log("Slide Shot");
-        }
-        else
-        {
-            BulletScript.ShotBullet();
-            Debug.Log("Normal Shot");
-        }
-
-    
+        BulletScript.ShotBullet();  
     }
 
     /// <summary>

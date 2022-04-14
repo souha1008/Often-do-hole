@@ -181,12 +181,12 @@ public class PlayerStateOnGround : PlayerState
             if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
             {
                 PlayerScript.onGroundState = OnGroundState.NONE;
-                PlayerScript.mode = new PlayerStateShot(true);
+                PlayerScript.mode = new PlayerStateShot();
             }
             else
             {
                 PlayerScript.onGroundState = OnGroundState.NONE;
-                PlayerScript.mode = new PlayerStateShot(false);
+                PlayerScript.mode = new PlayerStateShot();
             }
         }
     }

@@ -115,7 +115,7 @@ public class PlayerStateMidair : PlayerState
         if (shotButton)
         {
             PlayerScript.midairState = MidairState.NONE;
-            PlayerScript.mode = new PlayerStateShot(false);
+            PlayerScript.mode = new PlayerStateShot();
         }
 
         //’…’n‚µ‚½‚ç—§‚Á‚Ä‚¢‚éó‘Ô‚ÉˆÚs
