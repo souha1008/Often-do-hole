@@ -29,26 +29,33 @@ public class PlayerStateShot : PlayerState
         PlayerScript.forciblyReturnBulletFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
-        //PlayerScript.animator.SetTrigger("shotTrigger");   
+        PlayerScript.vel.x *= 0.4f;
+        PlayerScript.animator.SetTrigger("shotTrigger");
+
+
+
+        if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f && PlayerScript.isOnGround)
+        {
+            //横投げ
+            PlayerScript.animator.SetInteger("shotdirType", 1);
+        }
+        else
+        {
+            //斜め投げ
+            PlayerScript.animator.SetInteger("shotdirType", 2);
+        }
+
     }
 
-    public PlayerStateShot(bool is_slide_jump)//コンストラクタ
+    //消去
+    public PlayerStateShot()//コンストラクタ
     {
         Init();
         //弾の発射
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
 
-        if (is_slide_jump)
-        {
-            BulletScript.ShotSlideJumpBullet();
-            Debug.Log("Slide Shot");
-        }
-        else
-        {
-            BulletScript.ShotBullet();
-            Debug.Log("Normal Shot");
-        }
+        BulletScript.ShotBullet();  
     }
 
     /// <summary>
@@ -135,7 +142,7 @@ public class PlayerStateShot : PlayerState
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
-                    //PlayerScript.animator.SetTrigger("returnTrigger");
+                    PlayerScript.animator.SetTrigger("returnTrigger");
                 }
             }
         }
@@ -158,7 +165,7 @@ public class PlayerStateShot : PlayerState
 
             PlayerScript.useVelocity = true;
             PlayerScript.shotState = ShotState.RETURN;
-            //PlayerScript.animator.SetTrigger("returnTrigger");
+            PlayerScript.animator.SetTrigger("returnTrigger");
         }
 
         //ついていく処理
@@ -231,10 +238,11 @@ public class PlayerStateShot : PlayerState
                     //{
                     //    BulletScript.vel *= 0.92f;
                     //}
-
                     BulletScript.vel *= 0.84f;
 
                     PlayerScript.shotState = ShotState.STRAINED;
+                    PlayerScript.vel = Vector3.zero;
+
                     //PlayerScript.useVelocity = false;
                 }
                 break;
@@ -246,6 +254,17 @@ public class PlayerStateShot : PlayerState
                 StrainedStop();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
+
+                if (interval < 6.0f)
+                {
+                    Debug.Log("aaa");
+                    if (BulletScript.vel.y < -2.0f)
+                    {
+                        Debug.Log("eee");
+                        PlayerScript.ForciblyReturnBullet(true);
+                    }
+                }
+
                 break;
 
             case ShotState.RETURN:
@@ -272,6 +291,7 @@ public class PlayerStateShot : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
+                    PlayerScript.animator.SetTrigger("returnTrigger");
                 }
 
                 break;
@@ -286,20 +306,18 @@ public class PlayerStateShot : PlayerState
         if (BulletScript.isTouched)
         {
             PlayerScript.shotState = ShotState.NONE;
-
             
             if (BulletScript.swingEnd)
             {
                 BulletScript.swingEnd = false;
                 if (PlayerScript.AutoRelease)
                 {
-                    PlayerScript.mode = new PlayerStateSwing_2();
+                    PlayerScript.mode = new PlayerStateSwing_Vel();
                 }
                 else
                 {
                     PlayerScript.mode = new PlayerStateSwing_Vel();
                 }
-               
             }
         }
 
