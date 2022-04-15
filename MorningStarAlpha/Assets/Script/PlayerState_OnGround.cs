@@ -35,6 +35,9 @@ public class PlayerStateOnGround : PlayerState
         {
             PlayerScript.onGroundState = OnGroundState.NORMAL;
         }
+
+        //ÉAÉjÉÅóp
+        PlayerScript.animator.SetBool("onGround", true);
     }
 
     public override void UpdateState()

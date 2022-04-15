@@ -30,7 +30,21 @@ public class PlayerStateShot : PlayerState
         PlayerScript.addVel = Vector3.zero;
 
         PlayerScript.vel.x *= 0.4f;
-        PlayerScript.animator.SetTrigger("shotTrigger");   
+        PlayerScript.animator.SetTrigger("shotTrigger");
+
+
+
+        if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f && PlayerScript.isOnGround)
+        {
+            //‰¡“Š‚°
+            PlayerScript.animator.SetInteger("shotdirType", 1);
+        }
+        else
+        {
+            //ŽÎ‚ß“Š‚°
+            PlayerScript.animator.SetInteger("shotdirType", 2);
+        }
+
     }
 
     //Á‹Ž
@@ -298,7 +312,7 @@ public class PlayerStateShot : PlayerState
                 BulletScript.swingEnd = false;
                 if (PlayerScript.AutoRelease)
                 {
-                    PlayerScript.mode = new PlayerStateSwing_2();
+                    PlayerScript.mode = new PlayerStateSwing_Vel();
                 }
                 else
                 {
