@@ -44,7 +44,6 @@ public class VirtualCamera : CinemachineExtension
     //ƒJƒƒ‰ˆ—‚ÌÅŒã‚ÉŒÄ‚Ô
     public void CameraReturn()
     {
-        Debug.Log(_dolly.m_PathPosition);
         if (CameraMainShimokawara.instance.isRail)
         {
             if (isReturn)
@@ -63,9 +62,6 @@ public class VirtualCamera : CinemachineExtension
                 _dolly.m_PathPosition = ReturnPos;
                
                // _dolly.VirtualCamera.GetComponent<CinemachineVirtualCamera>().m_Follow = null;
-
-                Debug.Log(_dolly.m_PathPosition);
-
 
             }
         }
