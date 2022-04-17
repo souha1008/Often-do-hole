@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.PostProcessing;
 
-public class Goal_kari : MonoBehaviour
+public class GoalManager : MonoBehaviour
 {
     [SerializeField] GameObject ClearCam;
     [SerializeField] GameObject MainCam;
@@ -35,33 +35,33 @@ public class Goal_kari : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void FixedUpdate()
     {
-        if(AngleChange == true)
+        if (AngleChange == true)
         {
             MainCam.transform.Rotate(new Vector3(0.2f, 0, 0));
             counter_1++;
         }
 
-        if(counter_1 <= 4)
+        if (counter_1 <= 4)
         {
             alpha++;
             RawImage.color += new Color(1, 1, 1, alpha);
         }
 
         // ƒŠƒUƒ‹ƒg‰æ–Ê‚Ö‚Ì‘JˆÚ”»’è
-        if(alpha >= 255)
+        if (alpha >= 255)
         {
             SceneManager.LoadScene("ResultScene");
         }
     }
 
     void OnTriggerEnter(Collider other)
-    { 
-        if(other.CompareTag("Player"))
+    {
+        if (other.CompareTag("Player"))
         {
             AngleChange = true;
             PostProssece.AddSettings<MotionBlur>().enabled.Override(true);
