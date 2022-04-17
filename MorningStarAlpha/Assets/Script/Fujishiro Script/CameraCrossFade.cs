@@ -35,7 +35,7 @@ public class CameraCrossFade : MonoBehaviour
 
     void Start()
     {
-        Goal_kari.ccf = this;
+        //Goal_kari.ccf = this;
         
     }
 

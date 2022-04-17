@@ -32,12 +32,6 @@ public class GoalManager : MonoBehaviour
         RawImage.color = new Color(255, 255, 255, 0);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void FixedUpdate()
     {
         if (AngleChange == true)
