@@ -248,7 +248,5 @@ public class PlayerStateOnGround : PlayerState
         {
             rareMotionTimer = 0.0f;
         }
-
-        Debug.Log(rareMotionTimer);
     }
 }

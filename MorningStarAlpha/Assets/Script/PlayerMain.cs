@@ -88,8 +88,8 @@ public class PlayerMain : MonoBehaviour
     [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
     [SerializeField, Tooltip("チェックが入っていたら振り子時紐が長くなる")] public bool LongRope;
 
-    [System.NonSerialized] public float colliderRadius = 1.1f;   //接地判定用ray半径
-    [System.NonSerialized] public float coliderDistance = 2.1f; //
+    [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
+    [System.NonSerialized] public float coliderDistance = 1.8f; //
                                                                  //
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
     [System.NonSerialized] public float HcoliderDistance = 0.6f; //頭判定用ray中心点から頭までのオフセット
