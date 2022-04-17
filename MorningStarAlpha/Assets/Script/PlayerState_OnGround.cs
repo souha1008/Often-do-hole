@@ -11,21 +11,22 @@ public class PlayerStateOnGround : PlayerState
     private bool shotButton;
     private const float SLIDE_END_TIME = 0.3f;
     private float slideEndTimer;
+    private float rareMotionTimer;
+    private bool isRunning;
 
     public PlayerStateOnGround()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
+        isRunning = false;
         PlayerScript.vel.y = 0;
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
+        rareMotionTimer = 0.0f;
 
         //ボール関連
         BulletScript.InvisibleBullet();
-        //PlayerScript.animator.SetBool("isRunning", false);
-        //PlayerScript.animator.SetTrigger("onGroundTrigger");
         
-
         //スライド発射処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
@@ -91,6 +92,7 @@ public class PlayerStateOnGround : PlayerState
 
         if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
+            isRunning = true;
             float slide_Weaken = 0.5f;
 
             if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
@@ -120,7 +122,6 @@ public class PlayerStateOnGround : PlayerState
                 //PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
 
-
             //減衰
             {
                 PlayerScript.vel *= 0.97f;
@@ -138,6 +139,13 @@ public class PlayerStateOnGround : PlayerState
         {
             if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {
+                if (isRunning == false)
+                {
+                    isRunning = true;
+                    PlayerScript.animator.SetBool("isRunning", true); //走らない
+                }
+              
+
                 if (PlayerScript.vel.x < -0.2f)
                 {
                     PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * 2 * (fixedAdjust);
@@ -151,7 +159,12 @@ public class PlayerStateOnGround : PlayerState
             }
             else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
             {
-
+                if (isRunning == false)
+                {
+                    isRunning = true;
+                    PlayerScript.animator.SetBool("isRunning", true); //走らない
+                }
+               
                 if (PlayerScript.vel.x > 0.2f)
                 {
                     PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * -1 * 2 * (fixedAdjust);
@@ -164,7 +177,16 @@ public class PlayerStateOnGround : PlayerState
             }
             else //減衰
             {
+                if (isRunning)
+                {
+                    isRunning = false;
+                    PlayerScript.animator.SetBool("isRunning", false); //走らない
+                }
+               
                 PlayerScript.vel *= PlayerScript.RUN_FRICTION;
+
+                //ある程度下回ったら0にする処理
+                
             }
         }
     }
@@ -208,5 +230,25 @@ public class PlayerStateOnGround : PlayerState
             PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 0.0f, 0.1f, Time.deltaTime);
             //PlayerScript.animator.SetFloat("RunSpeed", 0.0f);
         }
+
+
+        if (isRunning == false)
+        {
+            rareMotionTimer += Time.deltaTime;
+            if (rareMotionTimer > 10.0f)
+            {
+                rareMotionTimer = 0.0f;
+                PlayerScript.animator.SetTrigger("rareWaitTrigger");
+
+                int motionType = Random.Range(0, 2);
+                PlayerScript.animator.SetInteger("rareWaitType", motionType);
+            }
+        }
+        else
+        {
+            rareMotionTimer = 0.0f;
+        }
+
+        Debug.Log(rareMotionTimer);
     }
 }

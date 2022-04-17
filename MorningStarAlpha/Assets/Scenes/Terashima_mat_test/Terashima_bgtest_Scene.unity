@@ -11627,6 +11627,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2837052820101360446, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
   m_PrefabInstance: {fileID: 1303553095}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &893804783 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+  m_PrefabInstance: {fileID: 1303553095}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893804781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c243131bc93f6141a88e0acaee1a520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &895132096
 GameObject:
   m_ObjectHideFlags: 0
@@ -29087,7 +29098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1773930a733a1c4aa9a1c5fcb4aba74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  Player: {fileID: 893804783}
   Bullet: {fileID: 1422196806259275374}
 --- !u!4 &2105489618
 Transform:
@@ -30085,6 +30096,7 @@ MonoBehaviour:
   followEnd: 0
   STRAIGHT_FLAME_CNT: 10
   BULLET_SPEED: 80
+  BULLET_SPEED_MAX: 90
   BULLET_START_DISTANCE: 3
   BULLET_ROPE_LENGTH: 15
 --- !u!54 &1422196806259275375

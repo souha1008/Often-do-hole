@@ -143,7 +143,6 @@ public class PlayerStateShot : PlayerState
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
-                    PlayerScript.animator.SetTrigger("returnTrigger");
                 }
             }
         }
@@ -298,7 +297,6 @@ public class PlayerStateShot : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
-                    PlayerScript.animator.SetTrigger("returnTrigger");
                 }
 
                 break;
