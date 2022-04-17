@@ -1264,15 +1264,15 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
 
                 //’·‚­‚·‚éˆ—
-                if (PlayerScript.LongRope)
-                {
-                    if (betweenLength < BulletScript.BULLET_ROPE_LENGTH)
-                    {
-                        betweenLength += 0.2f;
-                        minAnglerVel *= 0.99f;
-                        maxAnglerVel *= 0.99f;
-                    }
-                }
+                //if (PlayerScript.LongRope)
+                //{
+                //    if (betweenLength < BulletScript.BULLET_ROPE_LENGTH)
+                //    {
+                //        betweenLength += 0.2f;
+                //        minAnglerVel *= 0.99f;
+                //        maxAnglerVel *= 0.99f;
+                //    }
+                //}
 
 
                 //Šp‘¬“xŒvZ
