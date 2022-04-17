@@ -31,7 +31,7 @@ public class PlayerStateShot : PlayerState
 
         PlayerScript.vel.x *= 0.4f;
         PlayerScript.animator.SetTrigger("shotTrigger");
-
+        PlayerScript.animator.SetBool("isShot", true);
 
 
         if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f && PlayerScript.isOnGround)
