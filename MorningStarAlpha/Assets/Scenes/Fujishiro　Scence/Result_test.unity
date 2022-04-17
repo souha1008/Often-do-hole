@@ -5425,10 +5425,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 518779739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f836c368a2c8e941b96c0dcf052df17, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cf0cb4290380d34c8b787dcc585aff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClearCam: {fileID: 0}
+  ClearCam: {fileID: 2088649132}
+  MainCam: {fileID: 963194225}
+  PostProssece: {fileID: 2113406851}
+  RawImage: {fileID: 1786111347}
 --- !u!65 &518779742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13898,7 +13901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerObj: {fileID: 1969681216}
-  CameraObj: {fileID: 1448871809}
+  CameraObj: {fileID: 963194225}
   cameraDistanceY: 4
   isDraw: 1
   SpeedMultiX: 0.5
@@ -21920,6 +21923,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9365ac830ac64e46bbbb64e99902a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Obj: {fileID: 0}
+  isReturn: 1
 --- !u!1 &1961428989
 GameObject:
   m_ObjectHideFlags: 0
@@ -23775,6 +23780,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb8d81766ec4f7a42862941f69029269, type: 3}
+--- !u!1 &2113406851 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6939656784954220955, guid: cb8d81766ec4f7a42862941f69029269, type: 3}
+  m_PrefabInstance: {fileID: 2113406850}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2118307136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24264,6 +24274,7 @@ MonoBehaviour:
   followEnd: 0
   STRAIGHT_FLAME_CNT: 10
   BULLET_SPEED: 80
+  BULLET_SPEED_MAX: 90
   BULLET_START_DISTANCE: 3
   BULLET_ROPE_LENGTH: 15
 --- !u!54 &1422196806259275375
