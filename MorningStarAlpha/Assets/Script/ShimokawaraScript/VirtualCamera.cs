@@ -33,6 +33,15 @@ public class VirtualCamera : CinemachineExtension
     {
         //Debug.Log(_dolly.m_PathPosition);
 
+#if false
+        if(Input.GetKey("a"))
+        {
+            PlayerMain.instance.mode = new PlayerStateStan();
+            PlayerMain.instance.ForciblyReturnBullet(false);
+            PlayerMain.instance.vel = Vector3.zero;
+        }
+#endif
+
         if (!CameraMainShimokawara.instance.isRail)
         {
             this.gameObject.SetActive(false);
