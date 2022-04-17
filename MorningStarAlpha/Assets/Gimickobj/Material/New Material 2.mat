@@ -22,8 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: New Material 2
   m_Shader: {fileID: 4800000, guid: 766736548846cdf459a9766614dcccab, type: 3}
-  m_ShaderKeywords: UTS_USE_RAYTRACING_SHADOW _ _EMISSIVE_SIMPLE _IS_ANGELRING_OFF
-    _IS_CLIPPING_TRANSMODE _IS_OUTLINE_CLIPPING_YES _OUTLINE_NML
+  m_ShaderKeywords: UTS_USE_RAYTRACING_SHADOW _ _EMISSIVE_SIMPLE _GLOSSYREFLECTIONS_OFF
+    _IS_ANGELRING_OFF _IS_CLIPPING_TRANSMODE _IS_OUTLINE_CLIPPING_YES _OUTLINE_NML
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -242,6 +242,7 @@ Material:
     - _LightDirection_MaskOn: 0
     - _MatCap: 0
     - _Metallic: 0
+    - _Mode: 0
     - _Nearest_Distance: 0.5
     - _OUTLINE: 0
     - _OcclusionStrength: 1
@@ -287,6 +288,7 @@ Material:
     - _Tweak_ShadingGradeMapLevel: 0
     - _Tweak_SystemShadowsLevel: 0.5
     - _Tweak_transparency: 0
+    - _UVSec: 0
     - _Unlit_Intensity: 1
     - _Use_1stAs2nd: 1
     - _Use_BaseAs1st: 1

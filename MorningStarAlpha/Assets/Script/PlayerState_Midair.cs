@@ -18,6 +18,8 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.canShotState = false;
 
         BulletScript.InvisibleBullet();
+
+        PlayerScript.animator.SetBool("onGround", false);
     }
 
     public PlayerStateMidair(bool can_shot)//コンストラクタ
@@ -115,7 +117,7 @@ public class PlayerStateMidair : PlayerState
         if (shotButton)
         {
             PlayerScript.midairState = MidairState.NONE;
-            PlayerScript.mode = new PlayerStateShot(false);
+            PlayerScript.mode = new PlayerStateShot();
         }
 
         //着地したら立っている状態に移行

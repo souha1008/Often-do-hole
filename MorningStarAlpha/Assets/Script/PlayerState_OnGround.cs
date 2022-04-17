@@ -35,6 +35,9 @@ public class PlayerStateOnGround : PlayerState
         {
             PlayerScript.onGroundState = OnGroundState.NORMAL;
         }
+
+        //アニメ用
+        PlayerScript.animator.SetBool("onGround", true);
     }
 
     public override void UpdateState()
@@ -181,12 +184,12 @@ public class PlayerStateOnGround : PlayerState
             if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
             {
                 PlayerScript.onGroundState = OnGroundState.NONE;
-                PlayerScript.mode = new PlayerStateShot(true);
+                PlayerScript.mode = new PlayerStateShot();
             }
             else
             {
                 PlayerScript.onGroundState = OnGroundState.NONE;
-                PlayerScript.mode = new PlayerStateShot(false);
+                PlayerScript.mode = new PlayerStateShot();
             }
         }
     }
@@ -195,11 +198,15 @@ public class PlayerStateOnGround : PlayerState
     {
         if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.animator.SetBool("isRunning", true);   //走る
+            //PlayerScript.animator.SetBool("isRunning", true);   //走る
+            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 1.0f, 0.1f, Time.deltaTime);
+            //PlayerScript.animator.SetFloat("RunSpeed", 1.0f);
         }
         else
         {
-            PlayerScript.animator.SetBool("isRunning", false);　//走らない
+            //PlayerScript.animator.SetBool("isRunning", false); //走らない
+            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 0.0f, 0.1f, Time.deltaTime);
+            //PlayerScript.animator.SetFloat("RunSpeed", 0.0f);
         }
     }
 }

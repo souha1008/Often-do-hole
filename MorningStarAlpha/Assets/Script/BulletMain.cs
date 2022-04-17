@@ -22,7 +22,8 @@ public class BulletMain : MonoBehaviour
 
 
    //íeä÷åWíËêî
-    [SerializeField] private float BULLET_SPEED; //íeÇÃèâë¨   
+    [SerializeField] private float BULLET_SPEED; //íeÇÃèâë¨
+    [SerializeField] private float BULLET_SPEED_MAX; //íeÇÃèâë¨(ç≈ëÂílÅj
     [SerializeField] private float BULLET_START_DISTANCE; //íeÇÃî≠éÀà íu
     [SerializeField] public float BULLET_ROPE_LENGTH; //ïRÇÃí∑Ç≥
     private float BULLET_MAXFALLSPEED = 35.0f;
@@ -87,33 +88,40 @@ public class BulletMain : MonoBehaviour
         isTouched = false;
         vel += vec * BULLET_SPEED;
 
-        //è¡Ç≥ÇπÇƒÇ‡ÇÁÇ¢Ç‹ÇµÇΩ
-        //êiçsï˚å¸Ç∆ìØÇ∂å¸Ç´Ç…ìäÇ∞ÇÈèÍçáà–óÕï‚ê≥
-        //if (Mathf.Sign(vec.x) == Mathf.Sign(PlayerScript.vel.x))
-        //{
-        //    vel += PlayerScript.vel *= 0.6f;
-        //}
+        if (vel.x * PlayerScript.vel.x > 0) //îÚÇŒÇ∑ï˚å¸Ç∆ÉvÉåÉCÉÑÅ[ÇÃï˚å¸Ç™ìØÇ∂ÇæÇ¡ÇΩÇÁ
+        {
+            vel.x += PlayerScript.vel.x;
+        }
 
+
+
+        if(vel.magnitude > BULLET_SPEED_MAX)
+        {
+            float adjustVec = BULLET_SPEED_MAX / vel.magnitude;
+            Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
+            vel *= adjustVec;
+        }
     }
 
-    public void ShotSlideJumpBullet()
-    {
-        rb.isKinematic = false;
-        onceFlag = false;
-        StopVelChange = false;
-        swingEnd = false;
-        followEnd = false;
-        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+    // è¡ãé
+    //public void ShotSlideJumpBullet()
+    //{
+    //    rb.isKinematic = false;
+    //    onceFlag = false;
+    //    StopVelChange = false;
+    //    swingEnd = false;
+    //    followEnd = false;
+    //    Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
-        //íeÇÃèâä˙âª
-        rb.velocity = Vector3.zero;
-        vel = Vector3.zero;
-        isTouched = false;
-        vel += vec * BULLET_SPEED * 0.8f;
+    //    //íeÇÃèâä˙âª
+    //    rb.velocity = Vector3.zero;
+    //    vel = Vector3.zero;
+    //    isTouched = false;
+    //    vel += vec * BULLET_SPEED * 0.8f;
 
        
-         vel += PlayerScript.vel *= 0.6f;
-    }
+    //     vel += PlayerScript.vel *= 0.6f;
+    //}
 
     void FixedUpdate()
     {
