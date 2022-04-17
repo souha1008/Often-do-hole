@@ -111,7 +111,6 @@ public class PlayerMain : MonoBehaviour
 
     [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
     [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION;         // 空中の速度減衰率
-    [Tooltip("空中で再び球が打てるようになる時間")]public float                   BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
     //----------プレイヤー物理挙動関連の定数終わり----------------------
 
     [ Header("[以下実行時変数確認用：変更不可]")]

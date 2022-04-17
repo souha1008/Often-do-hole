@@ -14,6 +14,7 @@ public class PlayerStateShot : PlayerState
     bool finishFlag;
     private bool releaseButton;
     private bool onceAnimReturn;
+    private Vector3 followStartdiff;
 
     const float STRAINED_END_RATIO = 1.0f;
 
@@ -24,6 +25,7 @@ public class PlayerStateShot : PlayerState
         finishFlag = false;
         releaseButton = false;
         onceAnimReturn = false;
+        followStartdiff = Vector3.zero;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -198,6 +200,7 @@ public class PlayerStateShot : PlayerState
 #endif
         }
 
+        //follow開始
         if (BulletScript.isTouched)
         {
             if (BulletScript.followEnd)
@@ -208,6 +211,7 @@ public class PlayerStateShot : PlayerState
                 PlayerScript.useVelocity = true;
                 BulletScript.followEnd = false;
                 PlayerScript.shotState = ShotState.FOLLOW;
+                followStartdiff = BulletScript.rb.position - PlayerScript.rb.position;
             }
         }
 
@@ -255,14 +259,10 @@ public class PlayerStateShot : PlayerState
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
 
+                //真上用キャッチ処理
                 if (interval < 6.0f)
                 {
-                    Debug.Log("aaa");
-                    if (BulletScript.vel.y < -2.0f)
-                    {
-                        Debug.Log("eee");
-                        PlayerScript.ForciblyReturnBullet(true);
-                    }
+                    PlayerScript.ForciblyReturnBullet(true);
                 }
 
                 break;
@@ -293,6 +293,14 @@ public class PlayerStateShot : PlayerState
                 vecToBullet = vecToBullet.normalized;
 
                 PlayerScript.vel += vecToBullet * 3;
+
+                //ボールに収束しなそうだったら切り離し（回転バグ防止）
+                Vector3 nowDiff = BulletScript.rb.position - PlayerScript.rb.position;
+                if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
+                {
+                    PlayerScript.ForciblyReturnBullet(true);
+                    Debug.Log("FOLLOW END : 収束しない");
+                }
 
                 if (interval < 4.0f)
                 {
