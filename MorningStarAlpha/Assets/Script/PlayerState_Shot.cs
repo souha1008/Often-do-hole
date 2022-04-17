@@ -13,6 +13,7 @@ public class PlayerStateShot : PlayerState
     Queue<Vector3> bulletVecs = new Queue<Vector3>();     //”­ŽË‚©‚ç‚Ì’e‚Ìvector‚ð•Û‘¶‚·‚é
     bool finishFlag;
     private bool releaseButton;
+    private bool onceAnimReturn;
 
     const float STRAINED_END_RATIO = 1.0f;
 
@@ -22,6 +23,7 @@ public class PlayerStateShot : PlayerState
         bulletVecs = new Queue<Vector3>();
         finishFlag = false;
         releaseButton = false;
+        onceAnimReturn = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -30,11 +32,10 @@ public class PlayerStateShot : PlayerState
         PlayerScript.addVel = Vector3.zero;
 
         PlayerScript.vel.x *= 0.4f;
-        PlayerScript.animator.SetTrigger("shotTrigger");
         PlayerScript.animator.SetBool("isShot", true);
+        
 
-
-        if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f && PlayerScript.isOnGround)
+        if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
         {
             //‰¡“Š‚°
             PlayerScript.animator.SetInteger("shotdirType", 1);
@@ -269,6 +270,12 @@ public class PlayerStateShot : PlayerState
 
             case ShotState.RETURN:
                 //Ž©•ª‚Ö’e‚ðˆø‚«–ß‚·
+                if (onceAnimReturn == false)
+                {
+                    onceAnimReturn = true;
+                    PlayerScript.animator.SetBool("isShot", false);
+                }
+
                 Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
                 vecToPlayer = vecToPlayer.normalized;
 
@@ -306,7 +313,8 @@ public class PlayerStateShot : PlayerState
         if (BulletScript.isTouched)
         {
             PlayerScript.shotState = ShotState.NONE;
-            
+            PlayerScript.animator.SetBool("isShot", false);
+
             if (BulletScript.swingEnd)
             {
                 BulletScript.swingEnd = false;
@@ -324,6 +332,8 @@ public class PlayerStateShot : PlayerState
         if (finishFlag)
         {
             PlayerScript.shotState = ShotState.NONE;
+            PlayerScript.animator.SetBool("isShot", false);
+
             //’…’n‚µ‚½‚ç—§‚Á‚Ä‚¢‚éó‘Ô‚ÉˆÚs
             if (PlayerScript.isOnGround)
             {
