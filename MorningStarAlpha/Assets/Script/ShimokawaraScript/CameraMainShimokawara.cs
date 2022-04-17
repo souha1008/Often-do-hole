@@ -37,10 +37,16 @@ public class CameraMainShimokawara: MonoBehaviour
 
     public void CameraReturn()
     {
-        Vector3 Temp  = TempCamera.instance.transform.position;
-        Temp.z -= CAMERA_DISTANCE;
-        
-        transform.position = Temp;
+        if (isRail)
+        {
+            if (VirtualCamera.instance. isReturn)
+            {
+                Vector3 Temp = TempCamera.instance.transform.position;
+                Temp.z -= CAMERA_DISTANCE;
+
+                transform.position = Temp;
+            }
+        }
     }
 
     //private void FixedUpdate()
