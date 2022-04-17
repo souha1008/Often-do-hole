@@ -34,6 +34,7 @@ public class GoalManager : MonoBehaviour
 
     void FixedUpdate()
     {
+
         if (AngleChange == true)
         {
             MainCam.transform.Rotate(new Vector3(-0.2f, 0, 0));
@@ -42,7 +43,7 @@ public class GoalManager : MonoBehaviour
 
         if (counter_1 >= 4)
         {
-            alpha += 0.1f;
+            alpha += 0.00002f;
             RawImage.color += new Color(0, 0, 0, alpha);
         }
 
@@ -68,7 +69,7 @@ public class GoalManager : MonoBehaviour
 
             ClearCam.SetActive(true);
             if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
-            
+
         }
 
         Debug.Log("Goal“–‚½‚Á‚½");
