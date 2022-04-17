@@ -1258,6 +1258,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 //ï«íµÇÀï‘ÇËèàóù
                 if (PlayerScript.hangingSwing)
                 {
+                    PlayerScript.animator.SetTrigger("wallKick");
                     CalculateCounterVariable();
                     PlayerScript.hangingSwing = false;
                 }
