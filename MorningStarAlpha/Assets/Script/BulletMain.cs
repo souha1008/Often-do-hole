@@ -230,6 +230,9 @@ public class BulletMain : MonoBehaviour
                         Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
                         Vector3 colPoint = collision.GetContact(0).point;
 
+                        //カメラシェイク
+                        CameraShake.instance.Shake(rb.velocity);
+
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
                         GetComponent<Collider>().isTrigger = true;
