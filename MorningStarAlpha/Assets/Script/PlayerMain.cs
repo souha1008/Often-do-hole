@@ -403,10 +403,34 @@ public class PlayerMain : MonoBehaviour
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
 
-        
+        //空中で壁にぶつかったとき速度をなくす
+        if (refState == EnumPlayerState.MIDAIR)
+        {
+                switch (asp)
+                {
+                    case Aspect.LEFT:
+                    case Aspect.RIGHT:
+                        vel.x *= 0.0f;
+                        if (vel.y > 1.0f)
+                        {
+                            vel.y *= 0.0f;
+                        }
+
+                        break;
+
+                    case Aspect.DOWN:
+                        vel.x *= 1.0f;
+                        vel.y *= 0.2f;
+
+                        
+                        break;
+                }
+        }
+
+
 
         //ショット中に壁にあたったときの処理
-        if(refState == EnumPlayerState.SHOT)
+        if (refState == EnumPlayerState.SHOT)
         {
             if (collision.gameObject.CompareTag("Platform"))
             {
@@ -443,8 +467,8 @@ public class PlayerMain : MonoBehaviour
                                 break;
 
                             case Aspect.DOWN:
-                                vel.x *= 0.2f;
-                                vel.y *= 0.0f;
+                                vel.x *= 1.0f;
+                                vel.y *= 0.2f;
                                 break;
                         }
                         break;
@@ -512,33 +536,6 @@ public class PlayerMain : MonoBehaviour
                     isOnGround = true;
                 }
             //}
-        }
-
-        
-        //空中で壁にぶつかったとき速度をなくす
-        if (refState == EnumPlayerState.MIDAIR)
-        {
-            if (killVeltimer > 0.1f)
-            {
-                switch (asp)
-                {
-                    case Aspect.LEFT:
-                    case Aspect.RIGHT:
-                        vel.x *= 0.0f;
-                        if (vel.y > 1.0f)
-                        {
-                            vel.y *= 0.0f;
-                        }
-                        
-                        break;
-
-                    case Aspect.DOWN:
-                        vel.x *= 0.2f;
-                        vel.y *= 0.0f;
-                        break;
-                }
-                killVeltimer = 0.0f;
-            }
         }
 
         //swing中に壁にぶつかったときの処理(スライド)
