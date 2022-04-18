@@ -12700,6 +12700,7 @@ GameObject:
   - component: {fileID: 963194230}
   - component: {fileID: 963194229}
   - component: {fileID: 963194231}
+  - component: {fileID: 963194232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -12831,6 +12832,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79a0056a3760c544d9e5639eccf725cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &963194232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12cfc9ae8b2f4f04980463943dbd7a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &967738213 stripped
@@ -18055,6 +18068,14 @@ PrefabInstance:
       propertyPath: BulletScript
       value: 
       objectReference: {fileID: 1422196806259275374}
+    - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+      propertyPath: AdjustAngles.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+      propertyPath: AdjustAngles.Array.data[6]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2837052820101360446, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
       propertyPath: m_Name
       value: Player_01
@@ -30089,6 +30110,7 @@ MonoBehaviour:
   - {fileID: 4481910273944405684}
   - {fileID: 5224054340427850514}
   vel: {x: 0, y: 0, z: 0}
+  colPoint: {x: 0, y: 0, z: 0}
   isTouched: 0
   onceFlag: 0
   StopVelChange: 0

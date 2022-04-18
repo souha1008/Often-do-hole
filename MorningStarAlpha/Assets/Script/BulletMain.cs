@@ -10,6 +10,7 @@ public class BulletMain : MonoBehaviour
 
     private PlayerMain PlayerScript;
     [ReadOnly] public Vector3 vel;
+    [ReadOnly] public Vector3 colPoint;
     [ReadOnly] public bool isTouched; //’e‚ª‚È‚É‚©‚ÉG‚ê‚½‚©
     [ReadOnly] public bool onceFlag; //ˆê‰ñ‚Ì”­Ë‚É•t‚«ÚG‚ª‹N‚±‚é‚Ì‚Íˆê‰ñ
     [ReadOnly] public bool StopVelChange; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
@@ -41,6 +42,7 @@ public class BulletMain : MonoBehaviour
     {
         PlayerScript = Player.GetComponent<PlayerMain>();
         ExitFlameCnt = 0;
+        colPoint = Vector3.zero;
 
         fixedAdjust = Time.fixedDeltaTime * 50;
         InvisibleBullet();
@@ -80,6 +82,7 @@ public class BulletMain : MonoBehaviour
         StopVelChange = false;
         swingEnd = false;
         followEnd = false;
+        colPoint = Vector3.zero;
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
         //’e‚Ì‰Šú‰»
@@ -228,7 +231,7 @@ public class BulletMain : MonoBehaviour
                 {
                     case "Platform":
                         Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
-                        Vector3 colPoint = collision.GetContact(0).point;
+                        colPoint = collision.GetContact(0).point;
 
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
                         isTouched = true;
@@ -237,6 +240,8 @@ public class BulletMain : MonoBehaviour
                         rb.velocity = Vector3.zero;
                         StopVelChange = true;
 
+                        //ƒJƒƒ‰U“®
+                        CameraShake.instance.Shake();
                        
                         if (colAspect == Aspect_8.UP)
                         {

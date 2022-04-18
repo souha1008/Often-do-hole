@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ShotDir
+{
+    UP,
+    LATERAL,
+    DIAGONAL_60,
+    DIAGONAL_30
+}
+
+
 /// <summary>
 /// 弾を撃った状態(一度紐が伸び切ったら長さ固定のもの)
 /// 弾はオブジェクトには接触していない
@@ -12,9 +21,11 @@ public class PlayerStateShot : PlayerState
     float countTime;               //発射からの時間
     Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
     bool finishFlag;
+    private ShotDir shotDir;
     private bool releaseButton;
     private bool onceAnimReturn;
     private Vector3 followStartdiff;
+    private Vector3 maxFollowAddvec;
 
     const float STRAINED_END_RATIO = 1.0f;
 
@@ -22,10 +33,12 @@ public class PlayerStateShot : PlayerState
     {
         countTime = 0.0f;
         bulletVecs = new Queue<Vector3>();
+        shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
         onceAnimReturn = false;
         followStartdiff = Vector3.zero;
+        maxFollowAddvec = Vector3.zero;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -36,7 +49,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.vel.x *= 0.4f;
         PlayerScript.animator.SetBool("isShot", true);
         
-
+        //アニメーション用
         if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
         {
             //横投げ
@@ -48,6 +61,15 @@ public class PlayerStateShot : PlayerState
             PlayerScript.animator.SetInteger("shotdirType", 2);
         }
 
+        //アニメーション・回転用　真上
+        if(Mathf.Abs(PlayerScript.adjustLeftStick.x) < 0.1f)
+        {
+            shotDir = ShotDir.UP;
+        }
+        else
+        {
+            shotDir = ShotDir.LATERAL;
+        }
     }
 
     //消去
@@ -74,8 +96,11 @@ public class PlayerStateShot : PlayerState
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
 
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+
                 Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
+
                 quaternion *= adjustQua;
+                
                 PlayerScript.rb.rotation = quaternion;
                 break;
 
@@ -211,7 +236,7 @@ public class PlayerStateShot : PlayerState
                 PlayerScript.useVelocity = true;
                 BulletScript.followEnd = false;
                 PlayerScript.shotState = ShotState.FOLLOW;
-                followStartdiff = BulletScript.rb.position - PlayerScript.rb.position;
+                followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
             }
         }
 
@@ -292,10 +317,18 @@ public class PlayerStateShot : PlayerState
                 Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
                 vecToBullet = vecToBullet.normalized;
 
-                PlayerScript.vel += vecToBullet * 3;
+                PlayerScript.vel += vecToBullet * 2;
+                maxFollowAddvec += vecToBullet * 2;
 
+                //留まってベクトルが溜まってしまった場合切り離し
+                if(maxFollowAddvec.magnitude > 80)
+                {
+                    PlayerScript.vel *= 0.5f;
+                    PlayerScript.ForciblyReturnBullet(true);
+                    Debug.Log("FOLLOW END : over 80");
+                }
                 //ボールに収束しなそうだったら切り離し（回転バグ防止）
-                Vector3 nowDiff = BulletScript.rb.position - PlayerScript.rb.position;
+                Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
                     PlayerScript.ForciblyReturnBullet(true);
