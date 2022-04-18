@@ -922,7 +922,7 @@ public class PlayerStateSwing_Vel : PlayerState
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
 
-
+    private PlayerMoveDir firstDir; 
     const float SWING_END_RATIO = 1.4f;
 
     public PlayerStateSwing_Vel()  //コンストラクタ
@@ -931,6 +931,7 @@ public class PlayerStateSwing_Vel : PlayerState
 
         //計算用情報格納
         startPlayerVel = BulletScript.vel;
+        firstDir = PlayerScript.dir;
         betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
         float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
         startAngle = endAngle = degree;
@@ -1016,13 +1017,13 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             //プレイヤー回転処理
             PlayerScript.dir = PlayerMoveDir.LEFT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
+            //PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
         }
         else if (PlayerScript.dir == PlayerMoveDir.LEFT)
         {
             //プレイヤー回転処理
             PlayerScript.dir = PlayerMoveDir.RIGHT;
-            PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
+            //PlayerScript.rb.rotation = Quaternion.Euler(0, 90, 0);
         }
 
         //切り離しアングルの計算
@@ -1074,14 +1075,14 @@ public class PlayerStateSwing_Vel : PlayerState
 
                 quaternion *= adjustQua;
 
-                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                if (firstDir == PlayerMoveDir.RIGHT)
                 {
                     if (degree < 180)
                     {
                         quaternion *= Quaternion.Euler(0, 180, 0);
                     }
                 }
-                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                else if (firstDir == PlayerMoveDir.LEFT)
                 {
                     if (degree > 180)
                     {

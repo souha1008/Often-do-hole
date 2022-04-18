@@ -49,7 +49,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
             SoundManager.Instance.PlaySound("Œˆ’è‰¹");
 
-            //Handheld.Vibrate
+            VibrationManager.Instance.StartVibration(1, 1, 0.2f);
 
            Time = 0.0f;
         }
