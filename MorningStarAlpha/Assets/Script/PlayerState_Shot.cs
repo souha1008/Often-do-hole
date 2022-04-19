@@ -26,6 +26,7 @@ public class PlayerStateShot : PlayerState
     private bool onceAnimReturn;
     private Vector3 followStartdiff;
     private Vector3 maxFollowAddvec;
+    private float debug_timer;
 
     const float STRAINED_END_RATIO = 1.0f;
 
@@ -39,6 +40,7 @@ public class PlayerStateShot : PlayerState
         onceAnimReturn = false;
         followStartdiff = Vector3.zero;
         maxFollowAddvec = Vector3.zero;
+        debug_timer = 0.0f;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -93,15 +95,14 @@ public class PlayerStateShot : PlayerState
         {
             case ShotState.STRAINED:
 
-                Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
-
-                Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
-
-                Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
-
-                quaternion *= adjustQua;
-                
-                PlayerScript.rb.rotation = quaternion;
+                if (PlayerScript.isOnGround == false)
+                {
+                    Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
+                    Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+                    Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
+                    quaternion *= adjustQua;
+                    PlayerScript.rb.rotation = quaternion;
+                }
                 break;
 
             case ShotState.RETURN:
@@ -142,7 +143,7 @@ public class PlayerStateShot : PlayerState
     {
         countTime += Time.deltaTime;
 
-        if (countTime > 0.2)
+        if (countTime > 0.1)
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
@@ -250,33 +251,28 @@ public class PlayerStateShot : PlayerState
 
         switch (PlayerScript.shotState)
         {
-
+            
             case ShotState.GO:
-                bulletVecs.Enqueue(BulletScript.vel * 0.6f);
+                bulletVecs.Enqueue(BulletScript.vel / (BulletScript.BULLET_SPEED_MULTIPLE));
 
                 //紐の長さを超えたら引っ張られている状態にする
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
                 {
                     //引っ張られたタイミングでボール減速
-                    //if(BulletScript.vel.magnitude > 60.0f)
-                    //{
-                    //    BulletScript.vel *= 0.64f;
-                    //}
-                    //else if(BulletScript.vel.magnitude > 40.0f)
-                    //{
-                    //    BulletScript.vel *= 0.92f;
-                    //}
-                    BulletScript.vel *= 0.84f;
+                    BulletScript.vel /= BulletScript.BULLET_SPEED_MULTIPLE;
 
                     PlayerScript.shotState = ShotState.STRAINED;
                     PlayerScript.vel = Vector3.zero;
 
                     //PlayerScript.useVelocity = false;
                 }
+
+                debug_timer += Time.fixedDeltaTime;
+                Debug.Log(debug_timer);
                 break;
 
             case ShotState.STRAINED:
-
+                Debug.Log(debug_timer);
                 bulletVecs.Enqueue(BulletScript.vel);
                 bulletVecs.Dequeue();
                 StrainedStop();

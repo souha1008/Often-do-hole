@@ -1276,7 +1276,7 @@ public class PlayerStateSwing_Vel : PlayerState
                     startVelDownFlag = true;
                 }
             }
-            else if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+            else if (PlayerScript.dir == PlayerMoveDir.LEFT)
             {
                 if (degree > 180)
                 {
@@ -1314,24 +1314,11 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.hangingSwing = false;
                 }
 
-                //長くする処理
-                //if (PlayerScript.LongRope)
-                //{
-                //    if (betweenLength < BulletScript.BULLET_ROPE_LENGTH)
-                //    {
-                //        betweenLength += 0.2f;
-                //        minAnglerVel *= 0.99f;
-                //        maxAnglerVel *= 0.99f;
-                //    }
-                //}
-
-
                 //速度計算
                 float deg180Ratio = deg180dif / 90;       //真下と真横の比率
                 deg180Ratio = Mathf.Clamp01(deg180Ratio); //角度が９０度以上ある場合でも補正
                 deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
 
-                Debug.Log(deg180Ratio);
 
                 float easeRatio = Easing.EasingTypeFloat(EASING_TYPE.SINE_OUT, deg180Ratio, 1.0f, 0.0f, 1.0f);
 

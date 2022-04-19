@@ -138,7 +138,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
 
-
+    public float aaaaa;
     void Awake()
     {
         instance = this;
