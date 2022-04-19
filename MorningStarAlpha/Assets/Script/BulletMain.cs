@@ -280,6 +280,7 @@ public class BulletMain : MonoBehaviour
 
                     case "Player":
                         onceFlag = false;
+                        Debug.LogWarning("colPlayerBullet");
                         break;
 
                     default:

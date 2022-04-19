@@ -192,7 +192,6 @@ public class PlayerStateShot : PlayerState
 
             PlayerScript.useVelocity = true;
             PlayerScript.shotState = ShotState.RETURN;
-            PlayerScript.animator.SetTrigger("returnTrigger");
         }
 
         //‚Â‚¢‚Ä‚¢‚­ˆ—

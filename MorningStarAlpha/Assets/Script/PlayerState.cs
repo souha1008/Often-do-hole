@@ -28,7 +28,7 @@ public class PlayerState
     protected void BulletAdjust()
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        vec = vec * 3;
+        vec = vec * 5;
         vec.y += 0.0f;
         Vector3 adjustPos = PlayerScript.transform.position + vec;
 
