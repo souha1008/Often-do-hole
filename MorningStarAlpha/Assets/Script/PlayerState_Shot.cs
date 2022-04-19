@@ -19,7 +19,9 @@ public enum ShotDir
 public class PlayerStateShot : PlayerState
 {
     float countTime;               //発射からの時間
-    Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
+    //Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
+    private Vector3 oldPos;
+    private Vector3 PlayerTowardAngle;
     bool finishFlag;
     private ShotDir shotDir;
     private bool releaseButton;
@@ -28,12 +30,14 @@ public class PlayerStateShot : PlayerState
     private Vector3 maxFollowAddvec;
     private float debug_timer;
 
-    const float STRAINED_END_RATIO = 1.0f;
+    const float STRAINED_END_POWER = 70.0f;
 
     private void Init()
     {
         countTime = 0.0f;
-        bulletVecs = new Queue<Vector3>();
+        oldPos = PlayerScript.rb.position;
+        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
+        PlayerTowardAngle = PlayerTowardAngle.normalized;
         shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
@@ -90,11 +94,9 @@ public class PlayerStateShot : PlayerState
     /// </summary>
     public void RotationPlayer()
     {
-
         switch (PlayerScript.shotState)
         {
             case ShotState.STRAINED:
-
                 if (PlayerScript.isOnGround == false)
                 {
                     Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
@@ -122,7 +124,7 @@ public class PlayerStateShot : PlayerState
     }
 
     /// <summary>
-    /// 引っ張られている時間にオブジェクトがあったら切り離し
+    /// 引っ張られている時、間にオブジェクトがあったら切り離し
     /// </summary>
     private void StrainedStop()
     {
@@ -143,7 +145,7 @@ public class PlayerStateShot : PlayerState
     {
         countTime += Time.deltaTime;
 
-        if (countTime > 0.1)
+        if (countTime > 0.1f)
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
@@ -167,7 +169,7 @@ public class PlayerStateShot : PlayerState
                     releaseButton = false;
                     BulletScript.ReturnBullet();
 
-                    PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
+                    PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
@@ -182,7 +184,8 @@ public class PlayerStateShot : PlayerState
 
             if (PlayerScript.forciblyReturnSaveVelocity)
             {
-                PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
+                PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+                ;
             }
             else
             {
@@ -232,7 +235,8 @@ public class PlayerStateShot : PlayerState
             {
                 BulletScript.FollowedPlayer();
 
-                PlayerScript.vel = bulletVecs.Dequeue();
+                PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+
                 PlayerScript.useVelocity = true;
                 BulletScript.followEnd = false;
                 PlayerScript.shotState = ShotState.FOLLOW;
@@ -247,14 +251,14 @@ public class PlayerStateShot : PlayerState
         float interval;
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
 
+        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
+
         RotationPlayer();
 
         switch (PlayerScript.shotState)
         {
             
-            case ShotState.GO:
-                bulletVecs.Enqueue(BulletScript.vel / (BulletScript.BULLET_SPEED_MULTIPLE));
-
+            case ShotState.GO:         
                 //紐の長さを超えたら引っ張られている状態にする
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
                 {
@@ -273,8 +277,6 @@ public class PlayerStateShot : PlayerState
 
             case ShotState.STRAINED:
                 Debug.Log(debug_timer);
-                bulletVecs.Enqueue(BulletScript.vel);
-                bulletVecs.Dequeue();
                 StrainedStop();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
@@ -338,7 +340,7 @@ public class PlayerStateShot : PlayerState
                 break;
         }
 
-
+        oldPos = PlayerScript.rb.position;
     }
 
     public override void StateTransition()
