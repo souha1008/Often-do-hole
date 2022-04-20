@@ -2,16 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FALL_TYPE
-{
-    SINE_IN = 0,
-    QUAD_IN,
-    CUBIC_IN,
-    QUART_IN,
-    QUINT_IN
-}
-
-public class Gimmick_FallBlock : Gimmick_Main
+public class Gimmick_FallBlock_2 : Gimmick_Main
 {
     [Label("動き方")]
     public FALL_TYPE FallType;
@@ -23,12 +14,10 @@ public class Gimmick_FallBlock : Gimmick_Main
     public float FallTime = 3.0f;       // 何秒かけて落下するか
 
 
-    [Label("落下床のメッシュオブジェクト")]
-    public GameObject FallBlockMashObject;
-
     private bool NowFall;               // 落下中か
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
+    private Vector3 FallPos;            // 落下座標
 
     private bool PlayerMoveFlag = false;
     private bool BulletMoveFlag = false;
@@ -53,7 +42,6 @@ public class Gimmick_FallBlock : Gimmick_Main
     private ShakeInfo Shake;        // 揺れ情報
     private bool ShakeFlag;         // 揺れ実行中か
     private float NowShakeTime;     // 揺れ経過時間
-    private Vector3 ShakeStartPos;  // 揺れ初期座標
 
 
     public override void Init()
@@ -61,29 +49,25 @@ public class Gimmick_FallBlock : Gimmick_Main
         // 初期化
         NowFall = false;
         NowTime = 0.0f;
-        StartPos = this.gameObject.transform.position;
+        StartPos = FallPos = this.gameObject.transform.position;
         PlayerMoveFlag = false;
         BulletMoveFlag = false;
 
         ShakeFlag = false;
         NowShakeTime = 0.0f;
-        ShakeStartPos = Vector3.zero;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
 
         // リジッドボディ
         Rb.isKinematic = true;  // キネマティックオン
-
-        if (FallBlockMashObject == null)
-            Debug.LogError("落下床のメッシュオブジェクトをいれてください");
     }
 
     public override void FixedMove()
     {
         // 揺れ開始
         if (NowFall && NowTime <= 0)
-            StartShake(FallTime * 0.2f, 20.0f, 0.05f);  // 揺れの情報セット
+            StartShake(FallTime * 0.2f, 20.0f, 0.2f);  // 揺れの情報セット
 
         // 床移動
         if (NowFall)
@@ -92,19 +76,19 @@ public class Gimmick_FallBlock : Gimmick_Main
             switch (FallType)
             {
                 case FALL_TYPE.SINE_IN:
-                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.SineIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    FallPos = new Vector3(StartPos.x, Easing.SineIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
                 case FALL_TYPE.QUAD_IN:
-                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuadIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    FallPos = new Vector3(StartPos.x, Easing.QuadIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
                 case FALL_TYPE.CUBIC_IN:
-                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.CubicIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    FallPos = new Vector3(StartPos.x, Easing.CubicIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
                 case FALL_TYPE.QUART_IN:
-                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    FallPos = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
                 case FALL_TYPE.QUINT_IN:
-                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    FallPos = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
             }
 
@@ -113,10 +97,10 @@ public class Gimmick_FallBlock : Gimmick_Main
             if (ShakeFlag)
             {
                 // 揺れ位置情報更新
-                FallBlockMashObject.transform.localPosition = GetUpdateShakePosition(
+                this.gameObject.transform.position = GetUpdateShakePosition(
                     Shake,
                     NowShakeTime,
-                    ShakeStartPos);
+                    FallPos);
 
                 // ShakeTime分の時間が経過したら揺らすのを止める
                 NowShakeTime += Time.fixedDeltaTime;
@@ -125,10 +109,14 @@ public class Gimmick_FallBlock : Gimmick_Main
                     ShakeFlag = false;
                     NowShakeTime = 0.0f;
                     // 初期位置に戻す
-                    FallBlockMashObject.transform.localPosition = ShakeStartPos;
+                    this.gameObject.transform.position = FallPos;
                 }
             }
-            
+            else
+            {
+                this.gameObject.transform.position = FallPos;
+            }
+
             // 時間更新
             NowTime += Time.fixedDeltaTime;
 
@@ -227,7 +215,7 @@ public class Gimmick_FallBlock : Gimmick_Main
             NowFall = true; // 落下中
             BulletMoveFlag = true;
         }
-        
+
         if (collision.gameObject.CompareTag("Player"))
         {
             //Debug.Log("プレイヤー当たった");
