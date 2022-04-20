@@ -19,26 +19,31 @@ public enum ShotDir
 public class PlayerStateShot : PlayerState
 {
     float countTime;               //発射からの時間
-    Queue<Vector3> bulletVecs = new Queue<Vector3>();     //発射からの弾のvectorを保存する
+    private Vector3 oldPos;
+    private Vector3 PlayerTowardAngle;
     bool finishFlag;
     private ShotDir shotDir;
     private bool releaseButton;
     private bool onceAnimReturn;
     private Vector3 followStartdiff;
     private Vector3 maxFollowAddvec;
+    private float debug_timer;
 
-    const float STRAINED_END_RATIO = 1.0f;
+    const float STRAINED_END_POWER = 70.0f;
 
     private void Init()
     {
         countTime = 0.0f;
-        bulletVecs = new Queue<Vector3>();
+        oldPos = PlayerScript.rb.position;
+        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
+        PlayerTowardAngle = PlayerTowardAngle.normalized;
         shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
         onceAnimReturn = false;
         followStartdiff = Vector3.zero;
         maxFollowAddvec = Vector3.zero;
+        debug_timer = 0.0f;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -88,20 +93,17 @@ public class PlayerStateShot : PlayerState
     /// </summary>
     public void RotationPlayer()
     {
-
         switch (PlayerScript.shotState)
         {
             case ShotState.STRAINED:
-
-                Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
-
-                Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
-
-                Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
-
-                quaternion *= adjustQua;
-                
-                PlayerScript.rb.rotation = quaternion;
+                if (PlayerScript.isOnGround == false)
+                {
+                    Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
+                    Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+                    Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
+                    quaternion *= adjustQua;
+                    PlayerScript.rb.rotation = quaternion;
+                }
                 break;
 
             case ShotState.RETURN:
@@ -121,7 +123,7 @@ public class PlayerStateShot : PlayerState
     }
 
     /// <summary>
-    /// 引っ張られている時間にオブジェクトがあったら切り離し
+    /// 引っ張られている時、間にオブジェクトがあったら切り離し
     /// </summary>
     private void StrainedStop()
     {
@@ -142,7 +144,7 @@ public class PlayerStateShot : PlayerState
     {
         countTime += Time.deltaTime;
 
-        if (countTime > 0.2)
+        if (countTime > 0.1f)
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
@@ -166,7 +168,7 @@ public class PlayerStateShot : PlayerState
                     releaseButton = false;
                     BulletScript.ReturnBullet();
 
-                    PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
+                    PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
@@ -181,7 +183,8 @@ public class PlayerStateShot : PlayerState
 
             if (PlayerScript.forciblyReturnSaveVelocity)
             {
-                PlayerScript.vel = bulletVecs.Dequeue() * STRAINED_END_RATIO;
+                PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+                ;
             }
             else
             {
@@ -231,7 +234,8 @@ public class PlayerStateShot : PlayerState
             {
                 BulletScript.FollowedPlayer();
 
-                PlayerScript.vel = bulletVecs.Dequeue();
+                PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+
                 PlayerScript.useVelocity = true;
                 BulletScript.followEnd = false;
                 PlayerScript.shotState = ShotState.FOLLOW;
@@ -246,39 +250,32 @@ public class PlayerStateShot : PlayerState
         float interval;
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
 
+        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
+
         RotationPlayer();
 
         switch (PlayerScript.shotState)
         {
-
-            case ShotState.GO:
-                bulletVecs.Enqueue(BulletScript.vel * 0.6f);
-
+            
+            case ShotState.GO:         
                 //紐の長さを超えたら引っ張られている状態にする
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
                 {
                     //引っ張られたタイミングでボール減速
-                    //if(BulletScript.vel.magnitude > 60.0f)
-                    //{
-                    //    BulletScript.vel *= 0.64f;
-                    //}
-                    //else if(BulletScript.vel.magnitude > 40.0f)
-                    //{
-                    //    BulletScript.vel *= 0.92f;
-                    //}
-                    BulletScript.vel *= 0.84f;
+                    BulletScript.vel /= BulletScript.BULLET_SPEED_MULTIPLE;
 
                     PlayerScript.shotState = ShotState.STRAINED;
                     PlayerScript.vel = Vector3.zero;
 
                     //PlayerScript.useVelocity = false;
                 }
+
+                debug_timer += Time.fixedDeltaTime;
+                Debug.Log(debug_timer);
                 break;
 
             case ShotState.STRAINED:
-
-                bulletVecs.Enqueue(BulletScript.vel);
-                bulletVecs.Dequeue();
+                Debug.Log(debug_timer);
                 StrainedStop();
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
@@ -342,7 +339,7 @@ public class PlayerStateShot : PlayerState
                 break;
         }
 
-
+        oldPos = PlayerScript.rb.position;
     }
 
     public override void StateTransition()
