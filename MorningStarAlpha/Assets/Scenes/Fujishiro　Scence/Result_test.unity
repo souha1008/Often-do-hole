@@ -5430,8 +5430,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ClearCam: {fileID: 2088649132}
   MainCam: {fileID: 963194225}
-  PostProssece: {fileID: 2113406851}
+  PostProssece: {fileID: 2113406852}
   RawImage: {fileID: 1786111347}
+  AlphaSpeed: 48
+  CameraRotateSpeed: 0.604
+  alpha: 0
 --- !u!65 &518779742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10288,12 +10291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c6cb87b0dfe4240883454c2cda1ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClearCam: {fileID: 2088649134}
-  FadeImage: {fileID: 1786111347}
-  fadeDuration: 1
-  renderTexture: {fileID: 0}
-  IsChange: 0
-  IsFadeStart: 0
 --- !u!114 &955916157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23782,11 +23779,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb8d81766ec4f7a42862941f69029269, type: 3}
---- !u!1 &2113406851 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6939656784954220955, guid: cb8d81766ec4f7a42862941f69029269, type: 3}
+--- !u!114 &2113406852 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6939656784954220952, guid: cb8d81766ec4f7a42862941f69029269, type: 3}
   m_PrefabInstance: {fileID: 2113406850}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2118307136
 PrefabInstance:
   m_ObjectHideFlags: 0

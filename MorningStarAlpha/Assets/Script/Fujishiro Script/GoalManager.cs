@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Rendering.Universal;
 
 public class GoalManager : MonoBehaviour
 {
     [SerializeField] GameObject ClearCam;
     [SerializeField] GameObject MainCam;
-    [SerializeField] GameObject PostProssece;
+    [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
 
+    [SerializeField][Range(1.0f, 100.0f)] float AlphaSpeed; // 透明度の設定
+    [SerializeField][Range(0.0f, 1.0f)] float CameraRotateSpeed;
+
     private int counter_1; // 調整カウント用
-    private float alpha;
+    [SerializeField][ReadOnly] private float alpha;
 
     private bool AngleChange;
 
@@ -38,19 +41,20 @@ public class GoalManager : MonoBehaviour
 
         if (AngleChange == true)
         {
-            MainCam.transform.Rotate(new Vector3(-0.2f, 0, 0));
+            MainCam.transform.Rotate(new Vector3(-CameraRotateSpeed, 0, 0));
             counter_1++;
         }
 
         if (counter_1 >= 4)
         {
-            alpha += 0.00002f;
+            alpha += AlphaSpeed / 1000000;
             RawImage.color += new Color(0, 0, 0, alpha);
         }
 
         // リザルト画面への遷移判定
-        if (alpha >= 255)
+        if (alpha > 0.01)
         {
+            
             SceneManager.LoadScene("ResultScene");
         }
     }
@@ -60,13 +64,11 @@ public class GoalManager : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             AngleChange = true;
-            PostProcessVolume ppv = PostProssece.GetComponent<Volume>();
-            if (ppv == null) Debug.Log("ppv is not loading");
+            if (PostProssece == null) Debug.Log("volume is not loading");
 
-            PostProcessProfile ppp = ppv.profile;
-            if (ppp == null) Debug.Log("ppp is not loading");
-
-            ppp.AddSettings<MotionBlur>().enabled.Override(true);
+            PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
+            motionBlur.active = true;
+            if (!motionBlur.active) Debug.Log("motionBlur is false");
 
             ClearCam.SetActive(true);
             if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
