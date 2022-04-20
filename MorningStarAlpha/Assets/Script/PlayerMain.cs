@@ -76,7 +76,7 @@ public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
-    [System.NonSerialized] public Animator animator;
+    public Animator animator;
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // Ge
@@ -194,7 +194,7 @@ public class PlayerMain : MonoBehaviour
         if (mode != null)
         {
             mode.UpdateState();
-            //mode.Animation();
+            mode.Animation();
             mode.StateTransition();
             mode.Move();
         }
