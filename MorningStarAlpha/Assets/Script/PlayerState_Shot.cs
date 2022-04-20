@@ -19,7 +19,6 @@ public enum ShotDir
 public class PlayerStateShot : PlayerState
 {
     float countTime;               //”­ŽË‚©‚ç‚ÌŽžŠÔ
-    //Queue<Vector3> bulletVecs = new Queue<Vector3>();     //”­ŽË‚©‚ç‚Ì’e‚Ìvector‚ð•Û‘¶‚·‚é
     private Vector3 oldPos;
     private Vector3 PlayerTowardAngle;
     bool finishFlag;

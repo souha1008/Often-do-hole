@@ -1234,12 +1234,12 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.swingState = SwingState.RELEASED;
 
                     //勢い追加(速度が低すぎる場合に一定以上に補正
-                    if (PlayerScript.vel.magnitude < 50.0f)
+                    if (PlayerScript.vel.magnitude < 100.0f)
                     {
                         Vector3 addVec = BulletPosition - Player.transform.position;
                         addVec = addVec.normalized;
                         addVec = Quaternion.Euler(0, 0, -90) * addVec;
-                        PlayerScript.vel = addVec * 50.0f;
+                        PlayerScript.vel = addVec * 80.0f;
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -1250,12 +1250,12 @@ public class PlayerStateSwing_Vel : PlayerState
 
 
                     //勢い追加(速度が低すぎる場合に一定以上に補正
-                    if (PlayerScript.vel.magnitude < 50.0f)
+                    if (PlayerScript.vel.magnitude < 80.0f)
                     {
                         Vector3 addVec = BulletPosition - Player.transform.position;
                         addVec = addVec.normalized;
                         addVec = Quaternion.Euler(0, 0, 90) * addVec;
-                        PlayerScript.vel = addVec * 50.0f;
+                        PlayerScript.vel = addVec * 80.0f;
                     }
                 }
             }
@@ -1410,7 +1410,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
                 Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
                 vec = vec.normalized;
-                BulletScript.vel = vec * 100;
+                BulletScript.vel = vec * 150;
                 //距離が一定以下になったら弾を非アクティブ
                 if (interval < 4.0f)
                 {
