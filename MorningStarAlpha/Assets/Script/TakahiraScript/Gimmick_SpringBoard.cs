@@ -51,7 +51,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
             VibrationManager.Instance.StartVibration(1, 1, 0.2f);
 
-           Time = 0.0f;
+            Time = 0.0f;
         }
     }
 }
