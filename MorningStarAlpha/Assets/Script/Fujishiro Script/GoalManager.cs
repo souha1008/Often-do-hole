@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 
 public class GoalManager : MonoBehaviour
@@ -59,13 +60,13 @@ public class GoalManager : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             AngleChange = true;
-            //PostProcessVolume ppv = PostProssece.GetComponent<PostProcessVolume>();
-            //if (ppv == null) Debug.Log("ppv is not loading");
+            PostProcessVolume ppv = PostProssece.GetComponent<Volume>();
+            if (ppv == null) Debug.Log("ppv is not loading");
 
-            //PostProcessProfile ppp = ppv.profile;
-            //if (ppp == null) Debug.Log("ppp is not loading");
+            PostProcessProfile ppp = ppv.profile;
+            if (ppp == null) Debug.Log("ppp is not loading");
 
-            //ppp.AddSettings<MotionBlur>().enabled.Override(true);
+            ppp.AddSettings<MotionBlur>().enabled.Override(true);
 
             ClearCam.SetActive(true);
             if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
