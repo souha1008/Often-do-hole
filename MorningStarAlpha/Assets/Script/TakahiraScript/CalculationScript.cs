@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,10 +12,10 @@ public struct VecQuaternion
 
 static public class CalculationScript
 {
-    // Šp“xŒvZ—p
+    // è§’åº¦è¨ˆç®—ç”¨
     public static float AngleCalculation(float AngleDeg)
     {
-        // “ü—Í‚³‚ê‚½Šp“x‚ğƒ‰ƒWƒAƒ“‚É•ÏŠ·
+        // å…¥åŠ›ã•ã‚ŒãŸè§’åº¦ã‚’ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›
         float rad = AngleDeg * Mathf.Deg2Rad;
 
         return rad;
@@ -23,72 +23,72 @@ static public class CalculationScript
 
 
     /// <summary>
-    /// “ñ“_ŠÔ‚ÌŠp“x‚ğ‹‚ß‚é
-    /// –ß‚è’lF0`360
+    /// äºŒç‚¹é–“ã®è§’åº¦ã‚’æ±‚ã‚ã‚‹
+    /// æˆ»ã‚Šå€¤ï¼š0ï½360
     /// </summary>
     public static float TwoPointAngle360(Vector3 origin, Vector3 target)
     {
         Vector3 dt = target - origin;
         float rad = Mathf.Atan2(dt.x, dt.y);
         float degree = rad * Mathf.Rad2Deg;
-        if (degree < 0)//ã•ûŒü‚ğŠî€‚ÉŒv‰ñ‚è‚É0~360‚Ì’l‚É•â³
+        if (degree < 0)//ä¸Šæ–¹å‘ã‚’åŸºæº–ã«æ™‚è¨ˆå›ã‚Šã«0~360ã®å€¤ã«è£œæ­£
         {
             degree += 360;
         }
         return degree;
     }
 
-    // “ñ“_ŠÔ‚ÌŠp“x‚ğ‹‚ß‚é(Unity‚ÌTransformŠp“x‚Æˆê’v)
-    // –ß‚è’lF0`360(ZŠp“x)
+    // äºŒç‚¹é–“ã®è§’åº¦ã‚’æ±‚ã‚ã‚‹(Unityã®Transformè§’åº¦ã¨ä¸€è‡´)
+    // æˆ»ã‚Šå€¤ï¼š0ï½360(Zè§’åº¦)
     public static float UnityTwoPointAngle360(Vector3 origin, Vector3 target)
     {
         Vector3 dt = target - origin;
         float rad = Mathf.Atan2(dt.y, dt.x);
         float degree = rad * Mathf.Rad2Deg;
-        if (degree < 0) // ‰E•ûŒü‚ğŠî€‚ÉŒv‰ñ‚è‚É0~360‚Ì’l‚É•â³
+        if (degree < 0) // å³æ–¹å‘ã‚’åŸºæº–ã«æ™‚è¨ˆå›ã‚Šã«0~360ã®å€¤ã«è£œæ­£
         {
             degree += 360;
         }
         return degree;
     }
 
-    // ‚ ‚é“_‚ğ’†S‚É‰ñ“]
+    // ã‚ã‚‹ç‚¹ã‚’ä¸­å¿ƒã«å›è»¢
     //
-    // ˆø”@F@Šî€“_, ‰ñ“]‚µ‚½‚¢“_, Šp“x, ‰ñ“]²(Vector.right, Vector.up@Etc...)
-    // –ß‚è’lF@‰ñ“]Œã‚ÌÀ•WA‰ñ“]•ª‚ÌƒNƒI[ƒ^ƒjƒIƒ“
+    // å¼•æ•°ã€€ï¼šã€€åŸºæº–ç‚¹, å›è»¢ã—ãŸã„ç‚¹, è§’åº¦, å›è»¢è»¸(Vector.right, Vector.upã€€Etc...)
+    // æˆ»ã‚Šå€¤ï¼šã€€å›è»¢å¾Œã®åº§æ¨™ã€å›è»¢åˆ†ã®ã‚¯ã‚ªãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
     public static VecQuaternion PointRotate(Vector3 OriginPos, Vector3 TargetPos, float Angle, Vector3 Axis)
     {
         VecQuaternion vecQuaternion ;
 
-        Quaternion AngleAxis = Quaternion.AngleAxis(Angle, Axis); // ‰ñ“]²‚ÆŠp“x
+        Quaternion AngleAxis = Quaternion.AngleAxis(Angle, Axis); // å›è»¢è»¸ã¨è§’åº¦
 
-        Vector3 Pos = TargetPos; // ©g‚ÌÀ•W
+        Vector3 Pos = TargetPos; // è‡ªèº«ã®åº§æ¨™
 
         Pos -= OriginPos;
         Pos = AngleAxis * Pos;
         Pos += OriginPos;
 
-        vecQuaternion.Pos = Pos; // Œ»İ‚ÌÀ•W
-        vecQuaternion.quaternion = AngleAxis; // ‰ñ“]
+        vecQuaternion.Pos = Pos; // ç¾åœ¨ã®åº§æ¨™
+        vecQuaternion.quaternion = AngleAxis; // å›è»¢
 
         return vecQuaternion;
     }
 
 
 
-    // XY¬•ªŒvZ—p
+    // XYæˆåˆ†è¨ˆç®—ç”¨
     public static Vector3 AngleVectorXY(float AngleRad)
     {
-        // ‚»‚ê‚¼‚ê‚Ì²‚Ì¬•ª‚ğŒvZ
+        // ãã‚Œãã‚Œã®è»¸ã®æˆåˆ†ã‚’è¨ˆç®—
         float x = Mathf.Cos(AngleRad);
         float y = Mathf.Sin(AngleRad);
         float z = 0f;
 
-        // Vector3Œ^‚ÉŠi”[
+        // Vector3å‹ã«æ ¼ç´
         return new Vector3(x, y, z);
     }
 
-    // true‚È‚ç1.0f‚ğfalse‚È‚ç-1.0f‚ğ•Ô‚·
+    // trueãªã‚‰1.0fã‚’falseãªã‚‰-1.0fã‚’è¿”ã™
     public static float FugouChange(bool TrueorFalse)
     {
         if (TrueorFalse)
@@ -99,12 +99,12 @@ static public class CalculationScript
 
 
     // <summary>
-    /// ‹…‚Ì“à‘¤‚©
+    /// çƒã®å†…å´ã‹
     /// (x - a)^2 + (y - b)^2 + (z - c)^2 <= r^2
     /// </summary>
-    /// <param name="p">‹…‚Ì’†SÀ•W</param>
-    /// <param name="r">”¼Œa</param>
-    /// <param name="c">‘ÎÛ‚Æ‚È‚é“_</param>
+    /// <param name="p">çƒã®ä¸­å¿ƒåº§æ¨™</param>
+    /// <param name="r">åŠå¾„</param>
+    /// <param name="c">å¯¾è±¡ã¨ãªã‚‹ç‚¹</param>
     /// <returns></returns>
     public static bool InSphere(Vector3 p, float r, Vector3 c)
     {
@@ -112,5 +112,23 @@ static public class CalculationScript
         for (var i = 0; i < 3; i++)
             sum += Mathf.Pow(p[i] - c[i], 2);
         return sum <= Mathf.Pow(r, 2f);
+    }
+
+
+    /// <summary>
+    /// ãƒ‘ãƒ¼ãƒªãƒ³ãƒã‚¤ã‚ºå€¤ã‚’å–å¾—
+    /// </summary>
+    /// <param name="offset">ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤</param>
+    /// <param name="speed">é€Ÿåº¦</param>
+    /// <param name="time">æ™‚é–“</param>
+    /// <returns>ãƒ‘ãƒ¼ãƒªãƒ³ãƒã‚¤ã‚ºå€¤(-1.0ã€œ1.0)</returns>
+    public static float GetPerlinNoiseValue(float offset, float speed, float time)
+    {
+        // ãƒ‘ãƒ¼ãƒªãƒ³ãƒã‚¤ã‚ºå€¤ã‚’å–å¾—ã™ã‚‹
+        // X: ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ + é€Ÿåº¦ * æ™‚é–“
+        // Y: 0.0å›ºå®š
+        var perlinNoise = Mathf.PerlinNoise(offset + speed * time, 0.0f);
+        // 0.0ã€œ1.0 -> -1.0ã€œ1.0ã«å¤‰æ›ã—ã¦è¿”å´
+        return (perlinNoise - 0.5f) * 2.0f;
     }
 }
