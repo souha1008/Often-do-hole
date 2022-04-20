@@ -1234,12 +1234,12 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.swingState = SwingState.RELEASED;
 
                     //¨‚¢’Ç‰Á(‘¬“x‚ª’á‚·‚¬‚éê‡‚Éˆê’èˆÈã‚É•â³
-                    if (PlayerScript.vel.magnitude < 100.0f)
+                    if (PlayerScript.vel.magnitude < 90.0f)
                     {
                         Vector3 addVec = BulletPosition - Player.transform.position;
                         addVec = addVec.normalized;
                         addVec = Quaternion.Euler(0, 0, -90) * addVec;
-                        PlayerScript.vel = addVec * 80.0f;
+                        PlayerScript.vel = addVec * 90.0f;
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -1250,12 +1250,12 @@ public class PlayerStateSwing_Vel : PlayerState
 
 
                     //¨‚¢’Ç‰Á(‘¬“x‚ª’á‚·‚¬‚éê‡‚Éˆê’èˆÈã‚É•â³
-                    if (PlayerScript.vel.magnitude < 80.0f)
+                    if (PlayerScript.vel.magnitude < 90.0f)
                     {
                         Vector3 addVec = BulletPosition - Player.transform.position;
                         addVec = addVec.normalized;
                         addVec = Quaternion.Euler(0, 0, 90) * addVec;
-                        PlayerScript.vel = addVec * 80.0f;
+                        PlayerScript.vel = addVec * 90.0f;
                     }
                 }
             }
