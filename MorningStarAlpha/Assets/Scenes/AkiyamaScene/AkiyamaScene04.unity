@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.8409551, g: 1.0966662, b: 1.4126546, a: 1}
+  m_IndirectSpecularColor: {r: 0.5756829, g: 0.89697146, b: 0.9765628, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -14572,7 +14572,15 @@ PrefabInstance:
       objectReference: {fileID: 634260153}
     - target: {fileID: 1084616123403366921, guid: cb62e5590b01f16419eb7b00e556386a, type: 3}
       propertyPath: BULLET_SPEED
-      value: 84.02
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084616123403366921, guid: cb62e5590b01f16419eb7b00e556386a, type: 3}
+      propertyPath: BULLET_SPEED_MAX
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084616123403366921, guid: cb62e5590b01f16419eb7b00e556386a, type: 3}
+      propertyPath: BULLET_SPEED_MULTIPLE
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1084616123403366921, guid: cb62e5590b01f16419eb7b00e556386a, type: 3}
       propertyPath: BULLET_SPEED_MAX
