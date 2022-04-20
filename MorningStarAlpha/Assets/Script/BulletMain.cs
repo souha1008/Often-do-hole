@@ -23,10 +23,11 @@ public class BulletMain : MonoBehaviour
 
 
    //’eŠÖŒW’è”
-    [SerializeField] private float BULLET_SPEED; //’e‚Ì‰‘¬
+    [SerializeField] public float BULLET_SPEED; //’e‚Ì‰‘¬
     [SerializeField] private float BULLET_SPEED_MAX; //’e‚Ì‰‘¬(Å‘å’lj
+    [SerializeField] public float BULLET_SPEED_MULTIPLE; //GO‚ÆSTRAINED‚Ì”{—¦i‚±‚ÌÝ’è‚Ågo‚ÌŽžŠÔ‚ð’Z‚­‚·‚éj
     [SerializeField] private float BULLET_START_DISTANCE; //’e‚Ì”­ŽËˆÊ’u
-    [SerializeField] public float BULLET_ROPE_LENGTH; //•R‚Ì’·‚³
+    [SerializeField] public float  BULLET_ROPE_LENGTH; //•R‚Ì’·‚³
     private float BULLET_MAXFALLSPEED = 35.0f;
     private float fixedAdjust;
 
@@ -89,7 +90,7 @@ public class BulletMain : MonoBehaviour
         rb.velocity = Vector3.zero;
         vel = Vector3.zero;
         isTouched = false;
-        vel += vec * BULLET_SPEED;
+        vel += vec * BULLET_SPEED * BULLET_SPEED_MULTIPLE;
 
         if (vel.x * PlayerScript.vel.x > 0) //”ò‚Î‚·•ûŒü‚ÆƒvƒŒƒCƒ„[‚Ì•ûŒü‚ª“¯‚¶‚¾‚Á‚½‚ç
         {
@@ -98,9 +99,9 @@ public class BulletMain : MonoBehaviour
 
 
 
-        if(vel.magnitude > BULLET_SPEED_MAX)
+        if(vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE)
         {
-            float adjustVec = BULLET_SPEED_MAX / vel.magnitude;
+            float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
             Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
             vel *= adjustVec;
         }
