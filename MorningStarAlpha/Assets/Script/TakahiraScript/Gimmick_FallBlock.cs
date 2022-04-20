@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,41 +13,79 @@ public enum FALL_TYPE
 
 public class Gimmick_FallBlock : Gimmick_Main
 {
-    [Label("“®‚«•û")]
+    [Label("å‹•ãæ–¹")]
     public FALL_TYPE FallType;
 
-    [Label("—‰º‹——£")]
-    public float FallLength = 15.0f;    // —‚¿‚é‹——£
+    [Label("è½ä¸‹è·é›¢")]
+    public float FallLength = 15.0f;    // è½ã¡ã‚‹è·é›¢
 
-    [Label("‰½•b‚©‚¯‚Ä—‰º‚·‚é‚©")]
-    public float FallTime = 3.0f;       // ‰½•b‚©‚¯‚Ä—‰º‚·‚é‚©
+    [Label("ä½•ç§’ã‹ã‘ã¦è½ä¸‹ã™ã‚‹ã‹")]
+    public float FallTime = 3.0f;       // ä½•ç§’ã‹ã‘ã¦è½ä¸‹ã™ã‚‹ã‹
 
-    private bool NowFall;               // —‰º’†‚©
-    private float NowTime;              // Œo‰ßŠÔ
-    private Vector3 StartPos;           // ‰ŠúÀ•W
+
+    [Label("è½ä¸‹åºŠã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ")]
+    public GameObject FallBlockMashObject;
+
+    private bool NowFall;               // è½ä¸‹ä¸­ã‹
+    private float NowTime;              // çµŒéæ™‚é–“
+    private Vector3 StartPos;           // åˆæœŸåº§æ¨™
 
     private bool PlayerMoveFlag = false;
     private bool BulletMoveFlag = false;
 
+
+    // æºã‚Œæƒ…å ±
+    private struct ShakeInfo
+    {
+        public ShakeInfo(float shakeTime, float speed, float power, Vector2 randomOffset)
+        {
+            ShakeTime = shakeTime;
+            Speed = speed;
+            Power = power;
+            RandomOffset = randomOffset;
+        }
+        public float ShakeTime { get; } // æ™‚é–“
+        public float Speed { get; } // æºã‚Œã®é€Ÿã•
+        public float Power { get; }  // æŒ¯å‹•é‡
+        public Vector2 RandomOffset { get; } // ãƒ©ãƒ³ãƒ€ãƒ ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤
+    }
+
+    private ShakeInfo Shake;        // æºã‚Œæƒ…å ±
+    private bool ShakeFlag;         // æºã‚Œå®Ÿè¡Œä¸­ã‹
+    private float NowShakeTime;     // æºã‚ŒçµŒéæ™‚é–“
+    private Vector3 ShakeStartPos;  // æºã‚ŒåˆæœŸåº§æ¨™
+
+
     public override void Init()
     {
-        // ‰Šú‰»
+        // åˆæœŸåŒ–
         NowFall = false;
         NowTime = 0.0f;
         StartPos = this.gameObject.transform.position;
         PlayerMoveFlag = false;
         BulletMoveFlag = false;
 
-        // ƒRƒŠƒWƒ‡ƒ“
-        this.gameObject.GetComponent<Collider>().isTrigger = false;  // ƒgƒŠƒK[ƒIƒt
+        ShakeFlag = false;
+        NowShakeTime = 0.0f;
+        ShakeStartPos = Vector3.zero;
 
-        // ƒŠƒWƒbƒhƒ{ƒfƒB
-        Rb.isKinematic = true;  // ƒLƒlƒ}ƒeƒBƒbƒNƒIƒ“
+        // ã‚³ãƒªã‚¸ãƒ§ãƒ³
+        this.gameObject.GetComponent<Collider>().isTrigger = false;  // ãƒˆãƒªã‚¬ãƒ¼ã‚ªãƒ•
+
+        // ãƒªã‚¸ãƒƒãƒ‰ãƒœãƒ‡ã‚£
+        Rb.isKinematic = true;  // ã‚­ãƒãƒãƒ†ã‚£ãƒƒã‚¯ã‚ªãƒ³
+
+        if (FallBlockMashObject == null)
+            Debug.LogError("è½ä¸‹åºŠã®ãƒ¡ãƒƒã‚·ãƒ¥ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã„ã‚Œã¦ãã ã•ã„");
     }
 
     public override void FixedMove()
     {
-        // °ˆÚ“®
+        // æºã‚Œé–‹å§‹
+        if (NowFall && NowTime <= 0)
+            StartShake(FallTime * 0.2f, 20.0f, 0.05f);  // æºã‚Œã®æƒ…å ±ã‚»ãƒƒãƒˆ
+
+        // åºŠç§»å‹•
         if (NowFall)
         {
             Vector3 OldPos = this.gameObject.transform.position;
@@ -69,10 +107,33 @@ public class Gimmick_FallBlock : Gimmick_Main
                     this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
             }
+
+
+            // æºã‚Œã«ã‚ˆã‚‹ç§»å‹•
+            if (ShakeFlag)
+            {
+                // æºã‚Œä½ç½®æƒ…å ±æ›´æ–°
+                FallBlockMashObject.transform.localPosition = GetUpdateShakePosition(
+                    Shake,
+                    NowShakeTime,
+                    ShakeStartPos);
+
+                // ShakeTimeåˆ†ã®æ™‚é–“ãŒçµŒéã—ãŸã‚‰æºã‚‰ã™ã®ã‚’æ­¢ã‚ã‚‹
+                NowShakeTime += Time.fixedDeltaTime;
+                if (NowShakeTime >= Shake.ShakeTime)
+                {
+                    ShakeFlag = false;
+                    NowShakeTime = 0.0f;
+                    // åˆæœŸä½ç½®ã«æˆ»ã™
+                    FallBlockMashObject.transform.localPosition = ShakeStartPos;
+                }
+            }
             
+            // æ™‚é–“æ›´æ–°
             NowTime += Time.fixedDeltaTime;
 
-            // ƒvƒŒƒCƒ„[ˆÚ“®
+
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç§»å‹•
             if (PlayerMoveFlag)
             {
                 PlayerMain.instance.transform.position +=
@@ -80,7 +141,7 @@ public class Gimmick_FallBlock : Gimmick_Main
                 //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
             }
 
-            // •dˆÚ“®
+            // éŒ¨ç§»å‹•
             if (BulletMoveFlag)
             {
                 if (PlayerMain.instance.BulletScript.isTouched)
@@ -100,32 +161,81 @@ public class Gimmick_FallBlock : Gimmick_Main
         }
     }
 
+    /// <summary>
+    /// æ›´æ–°å¾Œã®æºã‚Œä½ç½®ã‚’å–å¾—
+    /// </summary>
+    /// <param name="shakeInfo">æºã‚Œæƒ…å ±</param>
+    /// <param name="nowShakeTime">çµŒéæ™‚é–“</param>
+    /// <param name="shakeStartPos">åˆæœŸä½ç½®</param>
+    /// <returns>æ›´æ–°å¾Œã®æºã‚Œä½ç½®</returns>
+    private Vector3 GetUpdateShakePosition(ShakeInfo shakeInfo, float nowShakeTime, Vector3 shakeStartPos)
+    {
+        // ãƒ‘ãƒ¼ãƒªãƒ³ãƒã‚¤ã‚ºå€¤(-1.0ã€œ1.0)ã‚’å–å¾—
+        var Speed = shakeInfo.Speed;
+        var randomOffset = shakeInfo.RandomOffset;
+        var randomX = CalculationScript.GetPerlinNoiseValue(randomOffset.x, Speed, nowShakeTime);
+        var randomY = CalculationScript.GetPerlinNoiseValue(randomOffset.y, Speed, nowShakeTime);
+
+        // -Speed ~ Speed ã®å€¤ã«å¤‰æ›
+        randomX *= Speed;
+        randomY *= Speed;
+
+        // -Power ~ Power ã®å€¤ã«å¤‰æ›
+        var vibrato = shakeInfo.Power;
+        var ratio = 1.0f - nowShakeTime / shakeInfo.ShakeTime;
+        vibrato *= ratio; // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆã•ã›ã‚‹ãŸã‚ã€çµŒéæ™‚é–“ã«ã‚ˆã‚Šæºã‚Œã®é‡ã‚’æ¸›è¡°
+        randomX = Mathf.Clamp(randomX, -vibrato, vibrato);
+        randomY = Mathf.Clamp(randomY, -vibrato, vibrato);
+
+        // åˆæœŸä½ç½®ã«åŠ ãˆã¦è¨­å®š
+        var position = shakeStartPos;
+        position.x += randomX;
+        position.y += randomY;
+        return position;
+    }
+
+    /// <summary>
+    /// æºã‚Œé–‹å§‹
+    /// </summary>
+    /// <param name="shakeTime">æ™‚é–“</param>
+    /// <param name="speed">æºã‚Œã®é€Ÿã•</param>
+    /// <param name="power">ã©ã®ãã‚‰ã„æŒ¯å‹•ã™ã‚‹ã‹</param>
+    public void StartShake(float shakeTime, float speed, float power)
+    {
+        // æºã‚Œæƒ…å ±ã‚’è¨­å®šã—ã¦é–‹å§‹
+        var randomOffset = new Vector2(Random.Range(0.0f, 100.0f), Random.Range(0.0f, 100.0f)); // ãƒ©ãƒ³ãƒ€ãƒ å€¤ã¯ã¨ã‚Šã‚ãˆãš0ã€œ100ã§è¨­å®š
+        Shake = new ShakeInfo(shakeTime, speed, power, randomOffset);
+        ShakeFlag = true;
+        NowShakeTime = 0.0f;
+    }
+
     public override void Death()
     {
-        // ƒvƒŒƒCƒ„[‚Ì•dˆø‚«–ß‚µ
-        PlayerMain.instance.endSwing = true;
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®éŒ¨å¼•ãæˆ»ã—
+        if (BulletMoveFlag)
+            PlayerMain.instance.endSwing = true;
 
-        // ©•ª©g‚ğÁ‚·
+        // è‡ªåˆ†è‡ªèº«ã‚’æ¶ˆã™
         Destroy(this.gameObject);
     }
 
     public override void OnCollisionEnter(Collision collision)
     {
-        // ƒvƒŒƒCƒ„[‚©•d‚ÆÚG
+        // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹éŒ¨ã¨æ¥è§¦
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            NowFall = true; // —‰º’†
+            NowFall = true; // è½ä¸‹ä¸­
             BulletMoveFlag = true;
         }
         
         if (collision.gameObject.CompareTag("Player"))
         {
-            //Debug.Log("ƒvƒŒƒCƒ„[“–‚½‚Á‚½");
-            // ƒvƒŒƒCƒ„[‚©‚çƒŒƒC”ò‚Î‚µ‚Ä^‰º‚ÉƒuƒƒbƒN‚ª‚ ‚Á‚½‚ç—‰º
+            //Debug.Log("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å½“ãŸã£ãŸ");
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‹ã‚‰ãƒ¬ã‚¤é£›ã°ã—ã¦çœŸä¸‹ã«ãƒ–ãƒ­ãƒƒã‚¯ãŒã‚ã£ãŸã‚‰è½ä¸‹
             if (PlayerMain.instance.getFootHit().collider != null &&
                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
-                NowFall = true; // —‰º’†
+                NowFall = true; // è½ä¸‹ä¸­
                 PlayerMoveFlag = true;
             }
         }
@@ -138,7 +248,7 @@ public class Gimmick_FallBlock : Gimmick_Main
             if (PlayerMain.instance.getFootHit().collider != null &&
                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
-                NowFall = true; // —‰º’†
+                NowFall = true; // è½ä¸‹ä¸­
                 PlayerMoveFlag = true;
             }
         }

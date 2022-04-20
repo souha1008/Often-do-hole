@@ -43,15 +43,16 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
 
-            PlayerMain.instance.ForciblyReturnBullet(false);
+            //PlayerMain.instance.ForciblyReturnBullet(false);
+            PlayerMain.instance.endSwing = true;
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
             SoundManager.Instance.PlaySound("Œˆ’è‰¹");
 
-            //Handheld.Vibrate
+            VibrationManager.Instance.StartVibration(1, 1, 0.2f);
 
-           Time = 0.0f;
+            Time = 0.0f;
         }
     }
 }

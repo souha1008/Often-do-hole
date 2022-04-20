@@ -64,6 +64,7 @@ public enum EnumPlayerState
     RAILING,   //レール状態
     NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
+    STAN,      //スタン状態
 }
 
 public struct ShortenSwing {
