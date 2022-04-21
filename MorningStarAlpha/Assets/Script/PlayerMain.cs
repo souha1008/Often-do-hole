@@ -355,6 +355,8 @@ public class PlayerMain : MonoBehaviour
         StartPos = rb.position;
         StartPos.y += 1.0f;
 
+#if false
+
         RaycastHit hit;
         if (Physics.Raycast(StartPos, adjustLeftStick, out hit, 3.0f))
         {
@@ -374,9 +376,13 @@ public class PlayerMain : MonoBehaviour
         StartPos.z += 2.0f;
         Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
 
+#else
+        CanShotColBlock = true;
+
+#endif
 
         //ÅI“I‚É‘Å‚Ä‚é‚©‚ÌŒˆ’è
-        if(canShotState && stickCanShotRange && CanShotColBlock)
+        if (canShotState && stickCanShotRange && CanShotColBlock)
         {
             canShot = true;
         }
@@ -421,11 +427,33 @@ public class PlayerMain : MonoBehaviour
 
                     case Aspect.DOWN:
                         vel.x *= 1.0f;
-                        vel.y *= 0.2f;
+                        vel.y *= 0.0f;
 
                         
                         break;
                 }
+        }
+        else if (refState == EnumPlayerState.SWING)
+        {
+            if(swingState == SwingState.RELEASED)
+            {
+                switch (asp)
+                {
+                    case Aspect.LEFT:
+                    case Aspect.RIGHT:
+                        vel.x *= 0.0f;
+                        if (vel.y > 1.0f)
+                        {
+                            vel.y *= 0.0f;
+                        }
+                        break;
+
+                    case Aspect.DOWN:
+                        vel.x *= 1.0f;
+                        vel.y *= 0.0f;
+                        break;
+                }
+            }
         }
 
 
@@ -469,7 +497,7 @@ public class PlayerMain : MonoBehaviour
 
                             case Aspect.DOWN:
                                 vel.x *= 1.0f;
-                                vel.y *= 0.2f;
+                                vel.y *= 0.0f;
                                 break;
                         }
                         break;
