@@ -1203,18 +1203,12 @@ public class PlayerStateSwing_Vel : PlayerState
 
     public override void UpdateState()
     {
-        //切り離し入力
-        InputButton();
-
-        //弾の場所更新
-        BulletPosition = BulletScript.rb.position;
-
-        //ボールプレイヤー間の角度を求める
-        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
-
         //切り離し
         if (PlayerScript.swingState == SwingState.TOUCHED)
         {
+            //切り離し入力
+            InputButton();
+
             if (PlayerScript.endSwing)
             {
                 PlayerScript.endSwing = false;
@@ -1225,39 +1219,67 @@ public class PlayerStateSwing_Vel : PlayerState
 
             if (releaseButton == true)
             {
+                //与えるベクトル
+                Vector3 addVec = BulletScript.rb.position - Player.transform.position;
+                addVec = addVec.normalized;
+                //ボールプレイヤー間の角度を求める
+                float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+                float deg180dif = Mathf.Abs(degree - 180);
+                float deg45dif = Mathf.Min(Mathf.Abs(degree - 135), Mathf.Abs(degree - 225));
+
+                float deg180Ratio = deg180dif / 90;       //真下と真横の比率
+                float deg45Ratio = deg45dif / 45;         //斜め45度との比率
+
+
+                deg180Ratio = Mathf.Clamp01(deg180Ratio); //角度が９０度以上ある場合でも補正
+                deg45Ratio = Mathf.Clamp01(deg45Ratio);   
+                deg45Ratio = 1 - deg180Ratio;　　　　　　 //斜め45度を1,直角を0とする
+                deg180Ratio = 1 - deg180Ratio;            //真下を1,最高到達点を0とする
+                float Rvdeg180Ratio = 1 - deg180Ratio;    //真下を0,最高到達点を1とする
+
+
+
 
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-               
-                    PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
-                    PlayerScript.swingState = SwingState.RELEASED;
-
-                    //勢い追加(速度が低すぎる場合に一定以上に補正
-                    if (PlayerScript.vel.magnitude < 90.0f)
-                    {
-                        Vector3 addVec = BulletPosition - Player.transform.position;
-                        addVec = addVec.normalized;
-                        addVec = Quaternion.Euler(0, 0, -90) * addVec;
-                        PlayerScript.vel = addVec * 90.0f;
-                    }
+                    addVec = Quaternion.Euler(0, 0, -90) * addVec;
+                   
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {              
-                    PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
-                    PlayerScript.swingState = SwingState.RELEASED;
-
-
-                    //勢い追加(速度が低すぎる場合に一定以上に補正
-                    if (PlayerScript.vel.magnitude < 90.0f)
+                {
+                    addVec = Quaternion.Euler(0, 0, 90) * addVec;
+                    
+                    //斜め下に向かっているときに横方向にする
+                    if(degree < 180)
                     {
-                        Vector3 addVec = BulletPosition - Player.transform.position;
-                        addVec = addVec.normalized;
-                        addVec = Quaternion.Euler(0, 0, 90) * addVec;
-                        PlayerScript.vel = addVec * 90.0f;
+                        //float Xvecrotate 
+                        //deg45Ratio
+                        //addVec = Quaternion.Euler(0, 0, 30) * addVec;
                     }
                 }
+
+                //下に向かっているときは加算するベクトルを少なくする
+                if (addVec.y < 0.0f)
+                {
+                    float AddVecRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
+                    float JumpRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
+                    //Debug.Log("easeRatio : " + AddVecRatio);
+
+                    float DownVecMax = (AddVecRatio * 50.0f) + 10.0f; //最大値と最小値の差 + 最小値 = 最大値
+                    float AddJumpVec = (JumpRatio * 20.0f) + 0.0f;
+
+                    addVec.y *= 0.2f;
+                    addVec *= DownVecMax;
+                    addVec.y += AddJumpVec;
+
+                }
+
+                PlayerScript.vel = addVec;
+
+                PlayerScript.useVelocity = true;
+                BulletScript.ReturnBullet();
+                PlayerScript.swingState = SwingState.RELEASED;
+
             }
         }
     }
@@ -1318,7 +1340,6 @@ public class PlayerStateSwing_Vel : PlayerState
                 float deg180Ratio = deg180dif / 90;       //真下と真横の比率
                 deg180Ratio = Mathf.Clamp01(deg180Ratio); //角度が９０度以上ある場合でも補正
                 deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
-
 
                 float easeRatio = Easing.EasingTypeFloat(EASING_TYPE.SINE_OUT, deg180Ratio, 1.0f, 0.0f, 1.0f);
 
