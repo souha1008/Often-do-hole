@@ -29,7 +29,7 @@ public class PlayerStateShot : PlayerState
     private Vector3 maxFollowAddvec;
     private float debug_timer;
 
-    const float STRAINED_END_POWER = 60.0f;
+    const float STRAINED_END_POWER = 70.0f;
 
     private void Init()
     {
@@ -255,7 +255,6 @@ public class PlayerStateShot : PlayerState
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
 
         PlayerTowardAngle = PlayerScript.rb.position - oldPos;
-        PlayerTowardAngle = PlayerTowardAngle.normalized;
 
         RotationPlayer();
 
