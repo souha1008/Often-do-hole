@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
-    private const float SLIDE_END_TIME = 0.3f;
+    private const float SLIDE_END_TIME = 0.5f;
     private float slideEndTimer;
     private float rareMotionTimer;
     private bool isRunning;
