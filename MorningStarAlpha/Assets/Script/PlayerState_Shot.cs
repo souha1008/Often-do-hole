@@ -29,14 +29,13 @@ public class PlayerStateShot : PlayerState
     private Vector3 maxFollowAddvec;
     private float debug_timer;
 
-    const float STRAINED_END_POWER = 70.0f;
+    const float STRAINED_END_POWER = 60.0f;
 
     private void Init()
     {
         countTime = 0.0f;
         oldPos = PlayerScript.rb.position;
-        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
-        PlayerTowardAngle = PlayerTowardAngle.normalized;
+        
         shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
@@ -85,7 +84,12 @@ public class PlayerStateShot : PlayerState
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
 
-        BulletScript.ShotBullet();  
+        oldPos = PlayerScript.rb.position;
+
+        BulletScript.ShotBullet();
+
+        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
+        PlayerTowardAngle = PlayerTowardAngle.normalized;
     }
 
     /// <summary>
@@ -251,6 +255,7 @@ public class PlayerStateShot : PlayerState
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
 
         PlayerTowardAngle = PlayerScript.rb.position - oldPos;
+        PlayerTowardAngle = PlayerTowardAngle.normalized;
 
         RotationPlayer();
 
