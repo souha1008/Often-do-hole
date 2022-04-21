@@ -1263,15 +1263,33 @@ public class PlayerStateSwing_Vel : PlayerState
                 {
                     float AddVecRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
                     float JumpRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
-                    //Debug.Log("easeRatio : " + AddVecRatio);
+                    float BoostRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
 
-                    float DownVecMax = (AddVecRatio * 50.0f) + 10.0f; //最大値と最小値の差 + 最小値 = 最大値
-                    float AddJumpVec = (JumpRatio * 20.0f) + 0.0f;
+                    float VecForce = PlayerScript.vel.magnitude;
+                    float AddJumpVec = (JumpRatio * 35.0f) + 0.0f;
+                    float AddBoostVec = (BoostRatio * 10.0f) + 0.0f;  //スピードアップのためのx方向のベクトル
 
                     addVec.y *= 0.2f;
-                    addVec *= DownVecMax;
+                    addVec *= VecForce;
+                    addVec.y += AddJumpVec;
+                    addVec.x += AddBoostVec * Mathf.Sign(PlayerScript.vel.x);
+                }
+                else
+                {
+                    float AddVecRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
+                    float JumpRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, Rvdeg180Ratio, 1.0f, 0.0f, 1.0f);
+                    float BoostRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, Rvdeg180Ratio, 1.0f, 0.0f, 1.0f);
+                    //Debug.Log("easeRatio : " + AddVecRatio);
+
+                    float VecForce = PlayerScript.vel.magnitude;   //円の半径に直行するベクトル量
+                    float AddJumpVec = (JumpRatio * 20.0f) + 35.0f;   //下にいかないように加算するy方向のベクトル量
+                    float AddBoostVec = (BoostRatio * 30.0f) + 10.0f;  //スピードアップのためのx方向のベクトル
+
+                    addVec.y *= 0.3f;
+                    addVec *= VecForce;
                     addVec.y += AddJumpVec;
 
+                    addVec.x += AddBoostVec * Mathf.Sign(PlayerScript.vel.x);
                 }
 
                 PlayerScript.vel = addVec;
