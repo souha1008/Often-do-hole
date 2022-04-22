@@ -157,6 +157,7 @@ public class PlayerStateShot : PlayerState
             float minVecPower = Mathf.Min(returnVec.magnitude, 60.0f);
             returnVec = returnVec * (60.0f / minVecPower);
 
+            //“ü—Í•ûŒü‚É‚â‚â•â³
             //if(PlayerScript.isOnGround == false)
             //{
             //    if((PlayerScript.dir == PlayerMoveDir.RIGHT) && PlayerScript.sourceLeftStick.x > 0.1f)
