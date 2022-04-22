@@ -225,12 +225,12 @@ public class BulletMain : MonoBehaviour
 
             if (onceFlag == false)
             {
-                onceFlag = true;
                 //collsionêÊÇÃtagÇ≈èÍçáï™ÇØ
                 string tag = collision.gameObject.tag;
                 switch (tag)
                 {
                     case "Platform":
+                        onceFlag = true;
                         Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
                         colPoint = collision.GetContact(0).point;
 
@@ -269,6 +269,7 @@ public class BulletMain : MonoBehaviour
                         break;
 
                     case "Iron":
+                        onceFlag = true;
                         if (PlayerScript.isOnGround)
                         {
                             PlayerScript.ForciblyReturnBullet(false);
@@ -281,7 +282,12 @@ public class BulletMain : MonoBehaviour
 
                     case "Player":
                         onceFlag = false;
+                        //Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
                         Debug.LogWarning("colPlayerBullet");
+                        break;
+
+                    case "Box":
+                        onceFlag = false;
                         break;
 
                     default:

@@ -19,8 +19,7 @@ public enum ShotDir
 public class PlayerStateShot : PlayerState
 {
     float countTime;               //”­ŽË‚©‚ç‚ÌŽžŠÔ
-    private Vector3 oldPos;
-    private Vector3 PlayerTowardAngle;
+
     bool finishFlag;
     private ShotDir shotDir;
     private bool releaseButton;
@@ -28,14 +27,14 @@ public class PlayerStateShot : PlayerState
     private Vector3 followStartdiff;
     private Vector3 maxFollowAddvec;
     private float debug_timer;
+    private Queue<Vector3> Vecs = new Queue<Vector3>();
+    private int beforeFrame;
 
-    const float STRAINED_END_POWER = 60.0f;
+    const float STRAINED_END_POWER = 70.0f;
 
     private void Init()
     {
         countTime = 0.0f;
-        oldPos = PlayerScript.rb.position;
-        
         shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
@@ -43,6 +42,7 @@ public class PlayerStateShot : PlayerState
         followStartdiff = Vector3.zero;
         maxFollowAddvec = Vector3.zero;
         debug_timer = 0.0f;
+        beforeFrame = 0;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -84,12 +84,10 @@ public class PlayerStateShot : PlayerState
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
 
-        oldPos = PlayerScript.rb.position;
-
+      
         BulletScript.ShotBullet();
 
-        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
-        PlayerTowardAngle = PlayerTowardAngle.normalized;
+        Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
     }
 
     /// <summary>
@@ -144,6 +142,69 @@ public class PlayerStateShot : PlayerState
         }
     }
 
+    private Vector3 ReleaseForceCalicurate()
+    {
+        if(Vecs.Count == 0) 
+        {
+            Debug.LogWarning("No Vecs IN Queue");
+            return BulletScript.vel;
+        }
+        else
+        {
+            Vector3 returnVec = Vecs.Peek();
+
+            //returnVec‚ðˆê’è‚Ì’l‚É•â³
+            float minVecPower = Mathf.Min(returnVec.magnitude, 60.0f);
+            returnVec = returnVec * (60.0f / minVecPower);
+
+            //“ü—Í•ûŒü‚É‚â‚â•â³
+            //if(PlayerScript.isOnGround == false)
+            //{
+            //    if((PlayerScript.dir == PlayerMoveDir.RIGHT) && PlayerScript.sourceLeftStick.x > 0.1f)
+            //    {
+            //        returnVec.x *= 1.1f;
+            //    }
+            //    if ((PlayerScript.dir == PlayerMoveDir.LEFT) && PlayerScript.sourceLeftStick.x < -0.1f)
+            //    {
+            //        returnVec.x *= 1.1f;
+            //    }
+            //}
+
+            return returnVec;
+        }
+      
+    }
+
+
+    private void intoVecsQueue()
+    {
+        
+        if (PlayerScript.shotState == ShotState.GO)
+        {
+            Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
+            if (beforeFrame > 30)
+            {
+                Vecs.Dequeue();
+            }
+            else
+            {
+                beforeFrame++;
+            }
+        }
+        else if (PlayerScript.shotState == ShotState.STRAINED)
+        {
+            Vecs.Enqueue(BulletScript.vel);
+            if (beforeFrame > 30)
+            {
+                Vecs.Dequeue();
+            }
+            else
+            {
+                beforeFrame++;
+            }
+        } 
+    }
+
     public override void UpdateState()
     {
         countTime += Time.deltaTime;
@@ -172,7 +233,7 @@ public class PlayerStateShot : PlayerState
                     releaseButton = false;
                     BulletScript.ReturnBullet();
 
-                    PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+                    PlayerScript.vel = ReleaseForceCalicurate();
 
                     PlayerScript.useVelocity = true;
                     PlayerScript.shotState = ShotState.RETURN;
@@ -187,7 +248,7 @@ public class PlayerStateShot : PlayerState
 
             if (PlayerScript.forciblyReturnSaveVelocity)
             {
-                PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+                PlayerScript.vel = ReleaseForceCalicurate();
                 ;
             }
             else
@@ -238,7 +299,7 @@ public class PlayerStateShot : PlayerState
             {
                 BulletScript.FollowedPlayer();
 
-                PlayerScript.vel = PlayerTowardAngle * STRAINED_END_POWER;
+                PlayerScript.vel = ReleaseForceCalicurate();
 
                 PlayerScript.useVelocity = true;
                 BulletScript.followEnd = false;
@@ -253,11 +314,9 @@ public class PlayerStateShot : PlayerState
     {
         float interval;
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-
-        PlayerTowardAngle = PlayerScript.rb.position - oldPos;
-        PlayerTowardAngle = PlayerTowardAngle.normalized;
-
+  
         RotationPlayer();
+        intoVecsQueue();
 
         switch (PlayerScript.shotState)
         {
@@ -343,8 +402,6 @@ public class PlayerStateShot : PlayerState
 
                 break;
         }
-
-        oldPos = PlayerScript.rb.position;
     }
 
     public override void StateTransition()
