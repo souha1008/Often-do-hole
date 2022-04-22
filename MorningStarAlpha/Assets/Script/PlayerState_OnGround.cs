@@ -30,6 +30,7 @@ public class PlayerStateOnGround : PlayerState
         //スライド発射処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
+            PlayerScript.animator.SetBool("isRunning", true);
             PlayerScript.onGroundState = OnGroundState.SLIDE;
         }
         else
@@ -137,13 +138,10 @@ public class PlayerStateOnGround : PlayerState
         }
         else //!isSlide
         {
-            if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
-            {
-                if (isRunning == false)
-                {
-                    isRunning = true;
-                    PlayerScript.animator.SetBool("isRunning", true); //走らない
-                }
+            if (PlayerScript.sourceLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
+            {       
+                isRunning = true;
+                PlayerScript.animator.SetBool("isRunning", true); 
               
 
                 if (PlayerScript.vel.x < -0.2f)
@@ -158,12 +156,10 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
             }
             else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
-            {
-                if (isRunning == false)
-                {
-                    isRunning = true;
-                    PlayerScript.animator.SetBool("isRunning", true); //走らない
-                }
+            { 
+                isRunning = true;
+                PlayerScript.animator.SetBool("isRunning", true); 
+               
                
                 if (PlayerScript.vel.x > 0.2f)
                 {
@@ -177,11 +173,8 @@ public class PlayerStateOnGround : PlayerState
             }
             else //減衰
             {
-                if (isRunning)
-                {
-                    isRunning = false;
-                    PlayerScript.animator.SetBool("isRunning", false); //走らない
-                }
+                isRunning = false;
+                PlayerScript.animator.SetBool("isRunning", false);
                
                 PlayerScript.vel *= PlayerScript.RUN_FRICTION;
 
@@ -196,21 +189,27 @@ public class PlayerStateOnGround : PlayerState
     {
         if (PlayerScript.isOnGround == false)
         {
+            isRunning = false;
+            PlayerScript.animator.SetBool("isRunning", false);
+
             PlayerScript.onGroundState = OnGroundState.NONE;
             PlayerScript.mode = new PlayerStateMidair(true);
         }
 
         if (shotButton)
         {
+            isRunning = false;
+            PlayerScript.animator.SetBool("isRunning", false);
+
+            PlayerScript.onGroundState = OnGroundState.NONE;
+
             //スライド中で投げる方向が進行方向と同じなら
             if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
             {
-                PlayerScript.onGroundState = OnGroundState.NONE;
                 PlayerScript.mode = new PlayerStateShot();
             }
             else
             {
-                PlayerScript.onGroundState = OnGroundState.NONE;
                 PlayerScript.mode = new PlayerStateShot();
             }
         }

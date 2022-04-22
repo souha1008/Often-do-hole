@@ -77,7 +77,7 @@ public class PlayerMain : MonoBehaviour
 {
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
-    public Animator animator;
+    [System.NonSerialized] public Animator animator;
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // Ge
@@ -139,7 +139,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
 
-    public float aaaaa;
+
     void Awake()
     {
         instance = this;
@@ -342,7 +342,9 @@ public class PlayerMain : MonoBehaviour
                 adjustLeftStick = vec;
             }
         }
-        
+
+
+        Debug.Log("adjuststick" + adjustLeftStick);
     }
 
     /// <summary>
