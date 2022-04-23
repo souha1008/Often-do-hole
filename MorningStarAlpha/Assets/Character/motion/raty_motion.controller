@@ -861,7 +861,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.09191954
   m_TransitionOffset: 0.0104113035
   m_ExitTime: 0.9033167
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -946,7 +946,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: a84e8f0c91432bc4eafab0b4977782f9, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 1.2
     m_CycleOffset: 0
     m_DirectBlendParameter: Speed
     m_Mirror: 0
@@ -1251,6 +1251,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: 414815614455187543}
   - {fileID: -236814222590827673}
+  - {fileID: 3952876646008838998}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -1575,7 +1576,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.040332228
   m_TransitionOffset: 0
   m_ExitTime: 0.7267029
-  m_HasExitTime: 0
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -2371,6 +2372,31 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &3952876646008838998
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: onGround
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 1813952508364875746}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.16666687
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -3266,13 +3292,13 @@ AnimatorStateMachine:
   - {fileID: -8872670535476364165}
   - {fileID: 2014236195365159988}
   m_StateMachineTransitions:
-  - first: {fileID: 5998779857671962497}
-    second: []
   - first: {fileID: -5247931140489662637}
     second: []
   - first: {fileID: -1705204529978703707}
     second:
     - {fileID: 3406633956111224489}
+  - first: {fileID: 5998779857671962497}
+    second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 190, y: 130, z: 0}
