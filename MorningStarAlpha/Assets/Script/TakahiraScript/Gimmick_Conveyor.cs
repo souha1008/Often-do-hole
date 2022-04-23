@@ -36,7 +36,7 @@ public class Gimmick_Conveyor : Gimmick_Main
 
         // コンベアの動き処理
         conveyorState.Move();
-        Debug.LogWarning(conveyorState); // 現在のコンベアのステート
+        //Debug.LogWarning(conveyorState); // 現在のコンベアのステート
     }
 
 
