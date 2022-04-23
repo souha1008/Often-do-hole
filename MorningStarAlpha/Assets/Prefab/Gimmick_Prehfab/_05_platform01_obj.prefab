@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6401852610738980367
+--- !u!1 &4348342544605098217
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7417949484488471820}
-  - component: {fileID: 3521649796339096512}
-  - component: {fileID: 2067432312203302600}
-  - component: {fileID: -5679006499527690060}
+  - component: {fileID: 427201743131776506}
+  - component: {fileID: 7857576904139785873}
+  - component: {fileID: 2310836059234385039}
+  - component: {fileID: 248380770601321801}
+  - component: {fileID: 7687699283592423650}
+  - component: {fileID: 8829497083586068036}
   m_Layer: 8
-  m_Name: _05_kinzoku01_obj
-  m_TagString: Iron
+  m_Name: _05_platform01_obj
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7417949484488471820
+--- !u!4 &427201743131776506
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6401852610738980367}
+  m_GameObject: {fileID: 4348342544605098217}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -85, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3521649796339096512
+--- !u!33 &7857576904139785873
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6401852610738980367}
-  m_Mesh: {fileID: 4788386752467440165, guid: 3b0a7e02527dc3d44bdbbc9faae2c9bb, type: 3}
---- !u!23 &2067432312203302600
+  m_GameObject: {fileID: 4348342544605098217}
+  m_Mesh: {fileID: -4512520477447662991, guid: 3b0a7e02527dc3d44bdbbc9faae2c9bb, type: 3}
+--- !u!23 &2310836059234385039
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6401852610738980367}
+  m_GameObject: {fileID: 4348342544605098217}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -60,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d0d2cdc1e1764fe4a963485ac2b9a88c, type: 2}
+  - {fileID: 2100000, guid: 8c5acf80397624e448c5f90f58814d8d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,16 +84,42 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-5679006499527690060
+--- !u!65 &248380770601321801
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6401852610738980367}
+  m_GameObject: {fileID: 4348342544605098217}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.0492668, y: 1.062006, z: 1.0584574}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.4122882, y: 0.18293095, z: 1.144976}
+  m_Center: {x: 0, y: 0.5518277, z: 0}
+--- !u!65 &7687699283592423650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4348342544605098217}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1490754, y: 0.18673144, z: 1.0701133}
+  m_Center: {x: 0.031376697, y: 0.36648852, z: -0.007574701}
+--- !u!65 &8829497083586068036
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4348342544605098217}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9383255, y: 0.4472928, z: 0.86989135}
+  m_Center: {x: 0.018775178, y: 0.047884226, z: -0.0040566446}

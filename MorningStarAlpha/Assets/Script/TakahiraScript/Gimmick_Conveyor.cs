@@ -204,14 +204,15 @@ public class ConveyorNone : ConveyorState
                 case TOUCH_SIDE.NONE:
                     break;
                 case TOUCH_SIDE.UP:
-                    if (Conveyor.MoveRight) // âEâÒì]Ç»ÇÁâEà⁄ìÆ
-                    {
-                        StateChange(new ConveyorRight());
-                    }
-                    else // ç∂âÒì]Ç»ÇÁç∂à⁄ìÆ
-                    {
-                        StateChange(new ConveyorLeft());
-                    }
+                    //if (Conveyor.MoveRight) // âEâÒì]Ç»ÇÁâEà⁄ìÆ
+                    //{
+                    //    StateChange(new ConveyorRight());
+                    //}
+                    //else // ç∂âÒì]Ç»ÇÁç∂à⁄ìÆ
+                    //{
+                    //    StateChange(new ConveyorLeft());
+                    //}
+                    PlayerMain.instance.ForciblyReturnBullet(true);
                     break;
                 case TOUCH_SIDE.DOWN:
                     if (Conveyor.MoveRight) // âEâÒì]Ç»ÇÁç∂à⁄ìÆ
@@ -232,7 +233,7 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorUp());
                     //}
-                    PlayerMain.instance.endSwing = true;
+                    PlayerMain.instance.ForciblyReturnBullet(true);
                     break;
                 case TOUCH_SIDE.LEFT:
                     //if (Conveyor.MoveRight)
@@ -243,7 +244,7 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorDown());
                     //}
-                    PlayerMain.instance.endSwing = true;
+                    PlayerMain.instance.ForciblyReturnBullet(true);
                     break;
             }
         }
@@ -371,7 +372,7 @@ public class ConveyorPlayerMoveRight : ConveyorState
     {
         if(PlayerMoveFlag)
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower, 0, 0);
         }
         else
         {
@@ -388,7 +389,7 @@ public class ConveyorPlayerMoveLeft : ConveyorState
     {
         if (PlayerMoveFlag)
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
         }
         else
         {
