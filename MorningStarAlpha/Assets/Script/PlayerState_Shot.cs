@@ -209,6 +209,27 @@ public class PlayerStateShot : PlayerState
     {
         countTime += Time.deltaTime;
 
+        //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
+        if (PlayerScript.forciblyReturnBulletFlag)
+        {
+            PlayerScript.forciblyReturnBulletFlag = false;
+
+            if (PlayerScript.forciblyReturnSaveVelocity)
+            {
+                PlayerScript.vel = ReleaseForceCalicurate();
+                ;
+            }
+            else
+            {
+                PlayerScript.vel = Vector3.zero;
+            }
+
+            BulletScript.ReturnBullet();
+
+            PlayerScript.useVelocity = true;
+            PlayerScript.shotState = ShotState.RETURN;
+        }
+
         if (countTime > 0.1f)
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
@@ -241,26 +262,7 @@ public class PlayerStateShot : PlayerState
             }
         }
 
-        //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
-        if (PlayerScript.forciblyReturnBulletFlag)
-        {
-            PlayerScript.forciblyReturnBulletFlag = false;
 
-            if (PlayerScript.forciblyReturnSaveVelocity)
-            {
-                PlayerScript.vel = ReleaseForceCalicurate();
-                ;
-            }
-            else
-            {
-                PlayerScript.vel = Vector3.zero;
-            }
-
-            BulletScript.ReturnBullet();
-
-            PlayerScript.useVelocity = true;
-            PlayerScript.shotState = ShotState.RETURN;
-        }
 
         //ついていく処理
         if (PlayerScript.shotState == ShotState.STRAINED)
