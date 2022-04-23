@@ -181,6 +181,7 @@ public class ConveyorNone : ConveyorState
         TouchSide = TOUCH_SIDE.NONE;
         PlayerMoveFlag = false;
         BulletMoveFlag = false;
+        PlayerMain.instance.floorVel = Vector3.zero;
     }
 
     public override void Move()
@@ -257,6 +258,7 @@ public class ConveyorUp : ConveyorState
         if (PlayerMain.instance.BulletScript.isTouched)
         {
             PlayerMain.instance.BulletScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0);
+            PlayerMain.instance.floorVel = new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime, 0) * 1 / Time.fixedDeltaTime;
 
             if (!BulletMoveFlag)
             {
@@ -282,6 +284,7 @@ public class ConveyorDown : ConveyorState
         if (PlayerMain.instance.BulletScript.isTouched)
         {
             PlayerMain.instance.BulletScript.transform.position += new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
+            PlayerMain.instance.floorVel = new Vector3(0, Conveyor.MovePower * Time.fixedDeltaTime * -1, 0) * 1 / Time.fixedDeltaTime;
 
             if (!BulletMoveFlag)
             {
@@ -308,6 +311,7 @@ public class ConveyorRight : ConveyorState
         {
             //Debug.Log("ïdâEà⁄ìÆíÜ");
             PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower * Time.fixedDeltaTime, 0, 0) * 1 / Time.fixedDeltaTime;
 
             if (PlayerMain.instance.BulletScript.transform.position.x > Conveyor.transform.position.x + Conveyor.transform.lossyScale.x * 0.5f)
                 BulletMoveFlag = false;
@@ -338,6 +342,7 @@ public class ConveyorLeft : ConveyorState
         {
             //Debug.LogWarning("ïdç∂à⁄ìÆíÜ");
             PlayerMain.instance.BulletScript.transform.position += new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower * Time.fixedDeltaTime * -1, 0, 0) * 1 / Time.fixedDeltaTime;
 
             if (PlayerMain.instance.BulletScript.transform.position.x < Conveyor.transform.position.x - Conveyor.transform.lossyScale.x * 0.5f)
                 BulletMoveFlag = false;
