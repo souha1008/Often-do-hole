@@ -10,6 +10,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
     public override void Init()
     {
         Cd.isTrigger = false;
+        Rb.constraints |= RigidbodyConstraints.FreezePositionZ;   // 座標Zのフリーズをオン
         //GravityFlag = true;
     }
 
@@ -34,8 +35,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
             // 死亡
             Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag == "Platform" ||
-            collision.gameObject.tag == "Box")
+        if (collision.gameObject.tag == "Platform")
         {
             Vel.y = 0.0f;
         }
@@ -43,10 +43,21 @@ public class Gimmick_Enemy2 : Gimmick_Main
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Platform" ||
-            collision.gameObject.tag == "Box")
+        if (collision.gameObject.tag == "Platform")
         {
             Vel.y = 0.0f;
+        }
+
+        if (collision.gameObject.tag == "Box")
+        {
+            // 衝突点取得
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                if (contact.normal.y < -0.1f || contact.normal.y > 0.1f)
+                {
+                    Vel.y = 0.0f;
+                }
+            }
         }
     }
 
