@@ -204,14 +204,15 @@ public class ConveyorNone : ConveyorState
                 case TOUCH_SIDE.NONE:
                     break;
                 case TOUCH_SIDE.UP:
-                    if (Conveyor.MoveRight) // ‰E‰ñ“]‚È‚ç‰EˆÚ“®
-                    {
-                        StateChange(new ConveyorRight());
-                    }
-                    else // ¶‰ñ“]‚È‚ç¶ˆÚ“®
-                    {
-                        StateChange(new ConveyorLeft());
-                    }
+                    //if (Conveyor.MoveRight) // ‰E‰ñ“]‚È‚ç‰EˆÚ“®
+                    //{
+                    //    StateChange(new ConveyorRight());
+                    //}
+                    //else // ¶‰ñ“]‚È‚ç¶ˆÚ“®
+                    //{
+                    //    StateChange(new ConveyorLeft());
+                    //}
+                    PlayerMain.instance.endSwing = true;
                     break;
                 case TOUCH_SIDE.DOWN:
                     if (Conveyor.MoveRight) // ‰E‰ñ“]‚È‚ç¶ˆÚ“®
