@@ -36,7 +36,7 @@ public class Gimmick_Conveyor : Gimmick_Main
 
         // コンベアの動き処理
         conveyorState.Move();
-        //Debug.LogWarning(conveyorState); // 現在のコンベアのステート
+        Debug.LogWarning(conveyorState); // 現在のコンベアのステート
     }
 
 
@@ -371,7 +371,7 @@ public class ConveyorPlayerMoveRight : ConveyorState
     {
         if(PlayerMoveFlag)
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower, 0, 0);
         }
         else
         {
@@ -388,7 +388,7 @@ public class ConveyorPlayerMoveLeft : ConveyorState
     {
         if (PlayerMoveFlag)
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
         }
         else
         {
