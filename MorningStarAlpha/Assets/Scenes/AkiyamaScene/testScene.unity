@@ -3530,7 +3530,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
       propertyPath: AdjustAngles.Array.size
-      value: 6
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+      propertyPath: AdjustAngles.Array.data[0]
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+      propertyPath: AdjustAngles.Array.data[1]
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+      propertyPath: AdjustAngles.Array.data[2]
+      value: 285
+      objectReference: {fileID: 0}
+    - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
+      propertyPath: AdjustAngles.Array.data[3]
+      value: 335
       objectReference: {fileID: 0}
     - target: {fileID: 2837052820101360433, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
       propertyPath: AdjustAngles.Array.data[6]
@@ -3546,7 +3562,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2837052820101360447, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.400009
+      value: 69.20001
       objectReference: {fileID: 0}
     - target: {fileID: 2837052820101360447, guid: d86129e4651396d47ad502a2c8a888c7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -4938,11 +4954,11 @@ MonoBehaviour:
   swingEnd: 0
   followEnd: 0
   STRAIGHT_FLAME_CNT: 10
-  BULLET_SPEED: 60
-  BULLET_SPEED_MAX: 70
-  BULLET_SPEED_MULTIPLE: 3
+  BULLET_SPEED: 50
+  BULLET_SPEED_MAX: 55
+  BULLET_SPEED_MULTIPLE: 4
   BULLET_START_DISTANCE: 3
-  BULLET_ROPE_LENGTH: 15
+  BULLET_ROPE_LENGTH: 13
 --- !u!54 &1098091286
 Rigidbody:
   m_ObjectHideFlags: 0
