@@ -204,7 +204,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     {
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
+        {
             PlayerMain.instance.endSwing = true;
+            PlayerMain.instance.floorVel = Vector3.zero;
+        }  
 
         // 自分自身を消す
         Destroy(this.gameObject);
