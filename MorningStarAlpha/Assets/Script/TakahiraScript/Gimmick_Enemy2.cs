@@ -5,12 +5,12 @@ using UnityEngine;
 public class Gimmick_Enemy2 : Gimmick_Main
 {
     private static float Gravity = 0.98f;
-    private bool GravityFlag = false;
+    //private bool GravityFlag = false;
 
     public override void Init()
     {
         Cd.isTrigger = false;
-        GravityFlag = true;
+        //GravityFlag = true;
     }
 
     public override void Death()
@@ -20,14 +20,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
 
     public override void FixedMove()
     {
-        if (GravityFlag)
-        {
-            Vel.y -= Gravity;
-        }
-        else
-        {
-            Vel.y = 0.0f;
-        }
+        Vel.y -= Gravity;
     }
 
 
@@ -43,20 +36,24 @@ public class Gimmick_Enemy2 : Gimmick_Main
         }
         if (collision.gameObject.tag == "Platform" ||
             collision.gameObject.tag == "Box")
-            GravityFlag = false;
+        {
+            Vel.y = 0.0f;
+        }
     }
 
     public void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "Platform" ||
             collision.gameObject.tag == "Box")
-            GravityFlag = false;
+        {
+            Vel.y = 0.0f;
+        }
     }
 
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.tag == "Platform" ||
-            collision.gameObject.tag == "Box")
-            GravityFlag = true;
-    }
+    //public void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Platform" ||
+    //        collision.gameObject.tag == "Box")
+    //        GravityFlag = true;
+    //}
 }
