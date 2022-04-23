@@ -1374,6 +1374,12 @@ public class PlayerStateSwing_Vel : PlayerState
                     tempVec = tempVec.normalized;
                     tempVec = Quaternion.Euler(0, 0, -90) * tempVec;
 
+                    //振り子の最大長になっていない場合には円外に向かうようベクトルの角度を変える
+                    if (Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) < BulletScript.BULLET_ROPE_LENGTH - 0.01f)
+                    {
+                        tempVec = Quaternion.Euler(0, 0, -30) * tempVec;
+                    }
+
                     if (startVelDownFlag)
                     {
                         PlayerScript.vel = tempVec * easeRatio * 70.0f + (tempVec * 5.0f);
@@ -1389,6 +1395,12 @@ public class PlayerStateSwing_Vel : PlayerState
                     tempVec = tempVec.normalized;
                     tempVec = Quaternion.Euler(0, 0, 90) * tempVec;
 
+                    //振り子の最大長になっていない場合には円外に向かうようベクトルの角度を変える
+                    if (Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) < BulletScript.BULLET_ROPE_LENGTH - 0.01f)
+                    {
+                        tempVec = Quaternion.Euler(0, 0, 30) * tempVec;
+                    }
+
                     if (startVelDownFlag)
                     {
                         PlayerScript.vel = tempVec * easeRatio * 70.0f + (tempVec * 5.0f);
@@ -1398,21 +1410,6 @@ public class PlayerStateSwing_Vel : PlayerState
                         PlayerScript.vel = tempVec * 50.0f;
                     }
                 }
-
-                //振り子の最大長になっていない場合には円外に向かうベクトルを与える
-                if(Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) < BulletScript.BULLET_ROPE_LENGTH - 0.01f)
-                {
-                    Vector3 longerVec = PlayerScript.rb.position - BulletScript.rb.position;
-                    longerVec = longerVec.normalized;
-
-                    float outForce = 20.0f;
-                    longerVec *= outForce;
-
-                    PlayerScript.vel += longerVec;
-                }
-
-                //振り子の最大長になっていない場合には円外に向かうようベクトルの角度を変える
-
 
                 //地面滑り処理
                 if (PlayerScript.SlideSwing)

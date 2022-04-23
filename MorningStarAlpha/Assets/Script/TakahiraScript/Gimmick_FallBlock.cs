@@ -148,9 +148,12 @@ public class Gimmick_FallBlock : Gimmick_Main
                 {
                     PlayerMain.instance.BulletScript.transform.position +=
                         new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                    PlayerMain.instance.floorVel =
+                        new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
                 }
                 else
                 {
+                    PlayerMain.instance.floorVel = Vector3.zero;
                     BulletMoveFlag = false;
                 }
             }
