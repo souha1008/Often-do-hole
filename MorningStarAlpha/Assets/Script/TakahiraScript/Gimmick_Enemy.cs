@@ -271,7 +271,7 @@ public class Gimmick_Enemy : Gimmick_Main
         if (collider.gameObject.CompareTag("Bullet"))
         {
             // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
+            GameSpeedManager.Instance.StartHitStop(0.1f);
             // ※当たったエフェクト
 
             Death(); // 死亡処理   

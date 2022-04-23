@@ -71,7 +71,7 @@ public class Gimmick_CannonChild : Gimmick_Main
         if (collider.gameObject.CompareTag("Player"))
         {
             // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
+            //GameSpeedManager.Instance.StartHitStop(0.1f);
 
             // プレイヤーを死亡状態に変更
             PlayerMain.instance.mode = new PlayerStateDeath();
@@ -83,7 +83,7 @@ public class Gimmick_CannonChild : Gimmick_Main
         if (collider.gameObject.CompareTag("Bullet"))
         {
             // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
+            GameSpeedManager.Instance.StartHitStop(0.1f);
 
             // 死亡
             Death();
