@@ -909,8 +909,7 @@ public class PlayerStateSwing_Vel : PlayerState
     private bool finishFlag;
     private bool releaseButton;
     private bool countreButton;
-    private Vector3 BulletPosition; //ボールの位置
-
+    
     private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
     private Vector3 startPlayerVel;　　　　　　 //突入時velocity
     private float startAngle;    //開始時の二点間アングル
@@ -919,23 +918,18 @@ public class PlayerStateSwing_Vel : PlayerState
     private float maxAnglerVel;　//最高角速度 (真下にプレイヤーが居る時）
     private float nowAnglerVel;  //現在角速度
     private bool startVelDownFlag; //velocityを減速させるフラグ（真下に到達したら
+    private bool LongestLope;    //ロープが最大長になっているかどうか
 
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
 
     private PlayerMoveDir firstDir; 
-    const float SWING_END_RATIO = 1.4f;
-
     public PlayerStateSwing_Vel()  //コンストラクタ
     {
-        BulletPosition = BulletScript.gameObject.transform.position;
 
         //計算用情報格納
         startPlayerVel = BulletScript.vel;
         firstDir = PlayerScript.dir;
-        betweenLength = Vector3.Distance(Player.transform.position, BulletPosition);
-        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
-        startAngle = endAngle = degree;
         startVelDownFlag = false;
 
         PlayerScript.refState = EnumPlayerState.SWING;
@@ -975,9 +969,7 @@ public class PlayerStateSwing_Vel : PlayerState
         nowAnglerVel = maxAnglerVel = minAnglerVel = angler_velocity;
         Debug.Log("AnglerVelocity: " + angler_velocity);
 
-        //バレットからプレイヤーのアングルを保存
-        LastBtoP_Angle = AfterBtoP_Angle = (Player.transform.position - BulletPosition).normalized;
-
+       
         //切り離しアングルの計算
         float diff_down = Mathf.Abs(startAngle - 180.0f); //真下と突入角の差
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
@@ -1027,7 +1019,7 @@ public class PlayerStateSwing_Vel : PlayerState
         Debug.Log("AnglerVelocity: " + angler_velocity);
 
         //バレットからプレイヤーのアングルを保存
-        LastBtoP_Angle = AfterBtoP_Angle = (Player.transform.position - BulletPosition).normalized;
+        LastBtoP_Angle = AfterBtoP_Angle = (Player.transform.position - BulletScript.rb.position).normalized;
 
         //切り離しアングルの計算
         float diff_down = Mathf.Abs(startAngle - 180.0f); //真下と突入角の差
@@ -1119,7 +1111,7 @@ public class PlayerStateSwing_Vel : PlayerState
         switch (PlayerScript.swingState)
         {
             case SwingState.TOUCHED:
-                float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+                float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
 
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
@@ -1223,7 +1215,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 Vector3 addVec = BulletScript.rb.position - Player.transform.position;
                 addVec = addVec.normalized;
                 //ボールプレイヤー間の角度を求める
-                float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position);
+                float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
                 float deg180dif = Mathf.Abs(degree - 180);
                 float deg45dif = Mathf.Min(Mathf.Abs(degree - 135), Mathf.Abs(degree - 225));
 
@@ -1304,7 +1296,7 @@ public class PlayerStateSwing_Vel : PlayerState
 
     public override void Move()
     {
-        float degree = CalculationScript.TwoPointAngle360(BulletPosition, Player.transform.position); //バレットからプレイヤーベクトル
+        float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position) ; //バレットからプレイヤーベクトル
         float deg180dif = Mathf.Abs(degree - 180); //プレイヤーからベクトル
 
         if(startVelDownFlag == false)
@@ -1370,14 +1362,15 @@ public class PlayerStateSwing_Vel : PlayerState
 
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    Vector3 tempVec = BulletPosition - PlayerScript.rb.position;
+                    Vector3 tempVec = BulletScript.rb.position - PlayerScript.rb.position;
                     tempVec = tempVec.normalized;
                     tempVec = Quaternion.Euler(0, 0, -90) * tempVec;
 
                     //振り子の最大長になっていない場合には円外に向かうようベクトルの角度を変える
-                    if (Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) < BulletScript.BULLET_ROPE_LENGTH - 0.01f)
+                    if (LongestLope == false)
                     {
                         tempVec = Quaternion.Euler(0, 0, -30) * tempVec;
+
                     }
 
                     if (startVelDownFlag)
@@ -1391,16 +1384,17 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {
-                    Vector3 tempVec = BulletPosition - PlayerScript.rb.position;
+                    Vector3 tempVec = BulletScript.rb.position - PlayerScript.rb.position;
                     tempVec = tempVec.normalized;
                     tempVec = Quaternion.Euler(0, 0, 90) * tempVec;
 
                     //振り子の最大長になっていない場合には円外に向かうようベクトルの角度を変える
-                    if (Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) < BulletScript.BULLET_ROPE_LENGTH - 0.01f)
+                    if (LongestLope == false)
                     {
                         tempVec = Quaternion.Euler(0, 0, 30) * tempVec;
-                    }
 
+                    }
+                    
                     if (startVelDownFlag)
                     {
                         PlayerScript.vel = tempVec * easeRatio * 70.0f + (tempVec * 5.0f);
@@ -1429,9 +1423,44 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.SlideSwing = false;
                 }
 
+                // if (PlayerScript.floorVel.magnitude < 0.01f)
+                //{
+                //    if(LongestLope == false)
+                //    {
+                //        Vector3 longerVec = PlayerScript.rb.position - BulletScript.rb.position;
+                //        longerVec = longerVec.normalized;
+
+                //        float outForce = 20.0f;
+                //        longerVec *= outForce;
+
+                //        PlayerScript.vel += longerVec;
+                //    }
+                //}
+
+
+                //振り子の最大長になっていない場合には円外に向かうベクトルを与える
+                //if (LongestLope == false)
+                //{
+                //    if (PlayerScript.SlideSwing == false)
+                //    {
+                //        if (PlayerScript.floorVel.magnitude < 0.01f)
+                //        {
+                //            Vector3 longerVec = PlayerScript.rb.position - BulletScript.rb.position;
+                //            longerVec = longerVec.normalized;
+
+                //            float outForce = 20.0f;
+                //            longerVec *= outForce;
+
+                //            PlayerScript.vel += longerVec;
+                //        }
+                //    }
+                //}
+
+
                 //振り子よりも長くなってしまった場合は補正
                 if (Vector3.Distance(PlayerScript.rb.position, BulletScript.rb.position) > BulletScript.BULLET_ROPE_LENGTH)
                 {
+                    LongestLope = true;
                     float ang = CalculationScript.UnityTwoPointAngle360(BulletScript.rb.position, PlayerScript.rb.position);
                     Vector3 adjustPos = BulletScript.rb.position;
                     adjustPos.x += Mathf.Cos(ang * Mathf.Deg2Rad) * BulletScript.BULLET_ROPE_LENGTH;
