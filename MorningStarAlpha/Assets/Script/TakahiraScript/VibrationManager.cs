@@ -26,15 +26,16 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         // 以下振動テスト
 
 
-        //// A ボタンが押されたら
-        //if (gamepad.aButton.wasPressedThisFrame)
-        //{
-        //    // 低周波（左）モーターの強さを 1、
-        //    // 高周波（右）モーターの強さを 0、
-        //    // 0.3f秒間かけて振動させる
-        //    StartCoroutine(Vibration(1, 0, 0.3f));
-        //    Debug.LogWarning("Aボタン押した");
-        //}
+        // A ボタンが押されたら
+        if (gamepad.aButton.wasPressedThisFrame)
+        {
+            // 低周波（左）モーターの強さを 1、
+            // 高周波（右）モーターの強さを 0、
+            // 0.3f秒間かけて振動させる
+            StartCoroutine(Vibration(1, 0, 0.3f));
+            Debug.LogWarning("Aボタン押した");
+            SoundManager.Instance.PlaySound("決定音");
+        }
         //// B ボタンが押されたら
         //else if (gamepad.bButton.wasPressedThisFrame)
         //{
@@ -94,7 +95,7 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         }
 
         gamepad.SetMotorSpeeds(lowFrequency, highFrequency);
-        yield return new WaitForSeconds(VibrationTime); // 1 秒間振動させる
+        yield return new WaitForSeconds(VibrationTime); // VibrationTime振動させる
         gamepad.SetMotorSpeeds(0, 0);
     }
 }
