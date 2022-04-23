@@ -136,9 +136,12 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 {
                     PlayerMain.instance.BulletScript.transform.position +=
                         new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                    PlayerMain.instance.floorVel =
+                        new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
                 }
                 else
                 {
+                    PlayerMain.instance.floorVel = Vector3.zero;
                     BulletMoveFlag = false;
                 }
             }
@@ -201,7 +204,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     {
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
+        {
             PlayerMain.instance.endSwing = true;
+            PlayerMain.instance.floorVel = Vector3.zero;
+        }  
 
         // 自分自身を消す
         Destroy(this.gameObject);

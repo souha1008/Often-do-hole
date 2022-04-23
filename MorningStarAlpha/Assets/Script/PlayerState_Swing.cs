@@ -1031,7 +1031,7 @@ public class PlayerStateSwing_Vel : PlayerState
             endAngle -= 90;
 
             //範囲内に補正
-            endAngle = Mathf.Clamp(endAngle, 90, 140);
+            endAngle = Mathf.Clamp(endAngle, 95, 140);
         }
         else if (PlayerScript.dir == PlayerMoveDir.LEFT)
         {
@@ -1041,7 +1041,7 @@ public class PlayerStateSwing_Vel : PlayerState
             endAngle += 90;
 
             //範囲内に補正
-            endAngle = Mathf.Clamp(endAngle, 220, 270);
+            endAngle = Mathf.Clamp(endAngle, 220, 265);
         }
 
         //最低速は突入時プレイヤーvelocity
@@ -1240,14 +1240,6 @@ public class PlayerStateSwing_Vel : PlayerState
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {
                     addVec = Quaternion.Euler(0, 0, 90) * addVec;
-                    
-                    //斜め下に向かっているときに横方向にする
-                    if(degree < 180)
-                    {
-                        //float Xvecrotate 
-                        //deg45Ratio
-                        //addVec = Quaternion.Euler(0, 0, 30) * addVec;
-                    }
                 }
 
                 //下に向かっているときは加算するベクトルを少なくする

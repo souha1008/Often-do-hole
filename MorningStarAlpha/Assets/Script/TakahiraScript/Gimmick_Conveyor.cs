@@ -371,7 +371,7 @@ public class ConveyorPlayerMoveRight : ConveyorState
     {
         if(PlayerMoveFlag)
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower, 0, 0);
         }
         else
         {
@@ -388,7 +388,7 @@ public class ConveyorPlayerMoveLeft : ConveyorState
     {
         if (PlayerMoveFlag)
         {
-            PlayerMain.instance.addVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
+            PlayerMain.instance.floorVel = new Vector3(Conveyor.MovePower * -1, 0, 0);
         }
         else
         {
