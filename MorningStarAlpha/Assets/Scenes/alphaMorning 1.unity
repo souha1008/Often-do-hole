@@ -334,6 +334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerScript: {fileID: 2969638211002371839}
   CanvasTf: {fileID: 590114}
+  Length: 6
 --- !u!1 &125654493
 GameObject:
   m_ObjectHideFlags: 0
@@ -11768,8 +11769,10 @@ MonoBehaviour:
   CanShotColBlock: 0
   canShot: 0
   useVelocity: 0
-  forciblyReturnBulletFlag: 0
-  forciblyReturnSaveVelocity: 0
+  forciblyRleaseFlag: 0
+  forciblyReleaseSaveVelocity: 0
+  forciblyFollowFlag: 0
+  forciblySwingFlag: 0
   endSwing: 0
   SlideSwing: 0
   conuterSwing: 0
@@ -21775,6 +21778,10 @@ PrefabInstance:
       value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 7484967012900574961, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7484967012900574961, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
       propertyPath: MoveDirection_X
       value: 0
       objectReference: {fileID: 0}
@@ -21784,7 +21791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7484967012900574964, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
       propertyPath: m_TagString
-      value: Platform
+      value: Conveyor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
