@@ -936,7 +936,7 @@ public class PlayerStateSwing_Vel : PlayerState
         PlayerScript.swingState = SwingState.TOUCHED;
         PlayerScript.canShotState = false;
         PlayerScript.endSwing = false;
-        PlayerScript.hangingSwing = false;
+        PlayerScript.conuterSwing = false;
         finishFlag = false;
         releaseButton = false;
         countreButton = false;
@@ -1165,13 +1165,6 @@ public class PlayerStateSwing_Vel : PlayerState
                     releaseButton = true;
                 }
             }
-            else if (PlayerScript.swingState == SwingState.HANGING)
-            {
-                if (Input.GetButtonUp("Button_R")) //ボタンを押して話したら
-                {
-                    releaseButton = true;
-                }
-            }
         }
         else
         {
@@ -1182,14 +1175,6 @@ public class PlayerStateSwing_Vel : PlayerState
                     releaseButton = true;
                 }
             }
-            else if (PlayerScript.swingState == SwingState.HANGING)
-            {
-                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-                {
-                    releaseButton = true;
-                }
-            }
-
         }
     }
 
@@ -1331,11 +1316,11 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
 
                 //壁跳ね返り処理
-                if (PlayerScript.hangingSwing)
+                if (PlayerScript.conuterSwing)
                 {
                     PlayerScript.animator.SetTrigger("wallKick");
                     CalculateCounterVariable();
-                    PlayerScript.hangingSwing = false;
+                    PlayerScript.conuterSwing = false;
                 }
 
                 //速度計算
@@ -1474,26 +1459,6 @@ public class PlayerStateSwing_Vel : PlayerState
                     finishFlag = true;
 
                 }
-                break;
-
-            case SwingState.HANGING:
-                //反転処理
-                if (countreButton)
-                {
-                    PlayerScript.swingState = SwingState.TOUCHED;
-                    CalculateCounterVariable();
-                    countreButton = false;
-                }
-
-                if (releaseButton)
-                {
-                    PlayerScript.useVelocity = true;
-                    BulletScript.ReturnBullet();
-                    PlayerScript.swingState = SwingState.RELEASED;
-
-                    PlayerScript.vel = Vector3.zero;
-                }
-
                 break;
 
             default:

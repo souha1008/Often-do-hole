@@ -12,8 +12,8 @@ public abstract class Gimmick_Main : MonoBehaviour
         [SerializeField, Label("現在の移動量")]
         public Vector3 Vel;          // 移動量
 
-        [SerializeField, Label("合計移動量")]
-        public Vector3 TotalMoveVel; // 自分の合計移動量
+        //[SerializeField, Label("合計移動量")]
+        //public Vector3 TotalMoveVel; // 自分の合計移動量
     }
     [Label("現在の移動情報")]
     public NowMoveInfo MoveInfo;
@@ -68,11 +68,11 @@ public abstract class Gimmick_Main : MonoBehaviour
     protected void FixedUpdate() 
     {
         FixedMove();                 // ギミックの動き処理
-        TotalMoveVel += Vel;    // 合計移動量変更
+        //TotalMoveVel += Vel;    // 合計移動量変更
         Rb.velocity = Vel;      // 移動量変更
 
 
         MoveInfo.Vel = Vel;
-        MoveInfo.TotalMoveVel = TotalMoveVel;
+        //MoveInfo.TotalMoveVel = TotalMoveVel;
     }
 }

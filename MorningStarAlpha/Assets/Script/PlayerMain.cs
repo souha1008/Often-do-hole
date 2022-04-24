@@ -36,7 +36,6 @@ public enum SwingState
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
     RELEASED,  //切り離した状態
-    HANGING,   //ぶら下がり状態
 }
 
 /// <summary>
@@ -133,11 +132,15 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
     [ReadOnly, Tooltip("最終的に打てるかどうか")] public bool canShot;                             // 打てる状態か
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
-    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
-    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
+    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyRleaseFlag;            // 強制的に弾を戻させるフラグ
+    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReleaseSaveVelocity;
+    [ReadOnly, Tooltip("強制的に弾についていくときのフラグ")] public bool forciblyFollowFlag;
+    [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
+
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
-    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
+    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
 
 
     void Awake()
@@ -174,18 +177,16 @@ public class PlayerMain : MonoBehaviour
         isOnGround = true;
         useVelocity = true;
 
-        forciblyReturnBulletFlag = false;
-        forciblyReturnSaveVelocity = false;
+        ClearModeTransitionFlag();
 
         endSwing = false;
         SlideSwing = false;
         
-        hangingSwing = false;
+        conuterSwing = false;
         killVeltimer = 0.0f;
 
         Ray footray = new Ray(rb.position, Vector3.down);
         Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
-
 
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
@@ -343,8 +344,6 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-
-        Debug.Log("adjuststick" + adjustLeftStick);
     }
 
     /// <summary>
@@ -394,18 +393,57 @@ public class PlayerMain : MonoBehaviour
         }
     } 
 
+    public void ClearModeTransitionFlag()
+    {
+        forciblyRleaseFlag = false;
+        forciblyFollowFlag = false;
+        forciblySwingFlag = false;
+        forciblyReleaseSaveVelocity = false;
+        forciblyFollowVelToward = false;
+    }
+
     /// <summary>
-    /// 強制的に弾を引き戻させる
+    /// 弾を引き戻させる
     /// </summary>
     /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
     ///　false:引き戻し時にもとのベロシティを殺す
     /// </param>
-    public void ForciblyReturnBullet(bool saveVelocity)
+    public void ForciblyReleaseMode(bool saveVelocity)
     {
-        forciblyReturnBulletFlag = true;
-        forciblyReturnSaveVelocity = saveVelocity;
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblyRleaseFlag = true;
+            forciblyReleaseSaveVelocity = saveVelocity;
+
+            //フラグクリア
+            forciblyFollowFlag = false;
+            forciblySwingFlag = false;
+        }
     }
 
+    public void ForciblyFollowMode(bool velTowardBullet)
+    {
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblyFollowFlag = true;
+            forciblyFollowVelToward = velTowardBullet;
+            //フラグクリア
+            forciblySwingFlag = false;
+            forciblyRleaseFlag = false;
+        }
+    }
+
+    public void ForciblySwingMode()
+    {
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblySwingFlag = true;
+
+            //フラグクリア
+            forciblyRleaseFlag = false;
+            forciblyFollowFlag = false;
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -479,7 +517,7 @@ public class PlayerMain : MonoBehaviour
                     case ShotState.FOLLOW: //紐に引っ張られ
                         if (asp == Aspect.DOWN)
                         {
-                            ForciblyReturnBullet(false);
+                            ForciblyReleaseMode(false);
                         }
                         break;
 
@@ -517,11 +555,11 @@ public class PlayerMain : MonoBehaviour
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
                     else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
                     {
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
                     else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
                     {
@@ -534,7 +572,7 @@ public class PlayerMain : MonoBehaviour
                     else　if (asp == Aspect.DOWN)
                     {
                         Debug.Log("collision Platform down: swing end");
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
 
                 }
