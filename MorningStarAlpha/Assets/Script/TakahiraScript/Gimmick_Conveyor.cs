@@ -212,7 +212,7 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorLeft());
                     //}
-                    PlayerMain.instance.ForciblyReturnBullet(true);
+                    PlayerMain.instance.ForciblyReleaseMode(true);
                     break;
                 case TOUCH_SIDE.DOWN:
                     if (Conveyor.MoveRight) // âEâÒì]Ç»ÇÁç∂à⁄ìÆ
@@ -233,7 +233,7 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorUp());
                     //}
-                    PlayerMain.instance.ForciblyReturnBullet(true);
+                    PlayerMain.instance.ForciblyReleaseMode(true);
                     break;
                 case TOUCH_SIDE.LEFT:
                     //if (Conveyor.MoveRight)
@@ -244,7 +244,7 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorDown());
                     //}
-                    PlayerMain.instance.ForciblyReturnBullet(true);
+                    PlayerMain.instance.ForciblyReleaseMode(true);
                     break;
             }
         }

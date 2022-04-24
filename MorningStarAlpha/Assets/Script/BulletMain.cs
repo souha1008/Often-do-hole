@@ -215,6 +215,16 @@ public class BulletMain : MonoBehaviour
 
     }
 
+    private void StopBullet()
+    {
+        isTouched = true;
+        GetComponent<Collider>().isTrigger = true;
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        StopVelChange = true;
+    }
+
+
     private void OnCollisionEnter(Collision collision)
     {
         if (ReferenceEquals(Player, null) == false)
@@ -231,19 +241,18 @@ public class BulletMain : MonoBehaviour
                 {
                     case "Platform":
                         onceFlag = true;
+                        StopBullet();
+
+                        //面計算
                         Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
-                        colPoint = collision.GetContact(0).point;
-
-                        //カメラシェイク
-                        CameraShake.instance.Shake(rb.velocity);
-
-                        EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
-                        isTouched = true;
-                        GetComponent<Collider>().isTrigger = true;
-                        rb.isKinematic = true;
-                        rb.velocity = Vector3.zero;
-                        StopVelChange = true;
                        
+                        //各種演出
+                        CameraShake.instance.Shake(rb.velocity);
+                        colPoint = collision.GetContact(0).point;
+                        EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
+
+
+
                         if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
@@ -272,17 +281,24 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         if (PlayerScript.isOnGround)
                         {
-                            PlayerScript.ForciblyReturnBullet(false);
+                            PlayerScript.ForciblyReleaseMode(false);
                         }
                         else
                         {
-                            PlayerScript.ForciblyReturnBullet(true);
+                            PlayerScript.ForciblyReleaseMode(true);
                         }                        
+                        break;
+
+
+                    case "WireMesh":    
+                        onceFlag = true;
+                        StopBullet();
+                        followEnd = true;
+
                         break;
 
                     case "Player":
                         onceFlag = false;
-                        //Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
                         Debug.LogWarning("colPlayerBullet");
                         break;
 
@@ -296,4 +312,33 @@ public class BulletMain : MonoBehaviour
             }
         }
     }
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("aaa");
+        if (ReferenceEquals(Player, null) == false)
+        {
+            //錨が刺さる場所を壁ピッタリにする処理
+            //AdjustColPoint(colAspect, colPoint);
+
+            if (onceFlag == false)
+            {
+                //collsion先のtagで場合分け
+                string tag = other.gameObject.tag;
+                switch (tag)
+                {
+                    case "WireMesh":
+                        onceFlag = true;
+                        StopBullet();
+                        followEnd = true;
+
+                        break;
+                }
+            }
+        }
+    }
 }
+
+

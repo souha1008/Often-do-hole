@@ -36,7 +36,6 @@ public enum SwingState
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
     RELEASED,  //切り離した状態
-    HANGING,   //ぶら下がり状態
 }
 
 /// <summary>
@@ -137,7 +136,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
-    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
+    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
 
 
     void Awake()
@@ -180,7 +179,7 @@ public class PlayerMain : MonoBehaviour
         endSwing = false;
         SlideSwing = false;
         
-        hangingSwing = false;
+        conuterSwing = false;
         killVeltimer = 0.0f;
 
         Ray footray = new Ray(rb.position, Vector3.down);
@@ -343,8 +342,6 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-
-        Debug.Log("adjuststick" + adjustLeftStick);
     }
 
     /// <summary>
@@ -395,17 +392,27 @@ public class PlayerMain : MonoBehaviour
     } 
 
     /// <summary>
-    /// 強制的に弾を引き戻させる
+    /// Shot中に強制的に弾を引き戻させる
     /// </summary>
     /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
     ///　false:引き戻し時にもとのベロシティを殺す
     /// </param>
-    public void ForciblyReturnBullet(bool saveVelocity)
+    public void ForciblyReleaseMode(bool saveVelocity)
     {
-        forciblyReturnBulletFlag = true;
-        forciblyReturnSaveVelocity = saveVelocity;
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblyReturnBulletFlag = true;
+            forciblyReturnSaveVelocity = saveVelocity;
+        }
     }
 
+    public void ForciblyFollowMode()
+    {
+        if (refState == EnumPlayerState.SHOT)
+        {
+
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -479,7 +486,7 @@ public class PlayerMain : MonoBehaviour
                     case ShotState.FOLLOW: //紐に引っ張られ
                         if (asp == Aspect.DOWN)
                         {
-                            ForciblyReturnBullet(false);
+                            ForciblyReleaseMode(false);
                         }
                         break;
 
@@ -517,11 +524,11 @@ public class PlayerMain : MonoBehaviour
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
                     else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
                     {
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
                     else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
                     {
@@ -534,7 +541,7 @@ public class PlayerMain : MonoBehaviour
                     else　if (asp == Aspect.DOWN)
                     {
                         Debug.Log("collision Platform down: swing end");
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
 
                 }

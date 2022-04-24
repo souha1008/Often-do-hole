@@ -137,7 +137,7 @@ public class PlayerStateShot : PlayerState
             if (BulletScript.isTouched == false)
             {
                 Debug.Log("collision PlayerHead : Forcibly return");
-                PlayerScript.ForciblyReturnBullet(true);
+                PlayerScript.ForciblyReleaseMode(true);
             }
         }
     }
@@ -349,7 +349,7 @@ public class PlayerStateShot : PlayerState
                 //真上用キャッチ処理
                 if (interval < 6.0f)
                 {
-                    PlayerScript.ForciblyReturnBullet(true);
+                    PlayerScript.ForciblyReleaseMode(true);
                 }
 
                 break;
@@ -386,14 +386,14 @@ public class PlayerStateShot : PlayerState
                 if(maxFollowAddvec.magnitude > 80)
                 {
                     PlayerScript.vel *= 0.5f;
-                    PlayerScript.ForciblyReturnBullet(true);
+                    PlayerScript.ForciblyReleaseMode(true);
                     Debug.Log("FOLLOW END : over 80");
                 }
                 //ボールに収束しなそうだったら切り離し（回転バグ防止）
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
-                    PlayerScript.ForciblyReturnBullet(true);
+                    PlayerScript.ForciblyReleaseMode(true);
                     Debug.Log("FOLLOW END : 収束しない");
                 }
 
