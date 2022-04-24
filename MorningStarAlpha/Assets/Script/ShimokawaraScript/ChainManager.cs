@@ -16,7 +16,9 @@ public class ChainManager : MonoBehaviour
     float MaxChain;
     float OneChainLength;
     float LocalSize;
-    
+    int SideCnt = 0;//右が＋ 左がマイナス
+    int MAX_SIDE_CNT = 40;
+    float MAX_VEZIE_DISTANCE = 2;
 
     void Start()
     {
@@ -45,8 +47,60 @@ public class ChainManager : MonoBehaviour
             int ChainNum = 0;
             ChainNum = (int)((NowLength + (OneChainLength / 2)) / OneChainLength) + 1;
 
+            //状態による変更
+            //振り子なら
+            if (Player.refState == EnumPlayerState.SWING)
+            {
+
+                //プレイヤーのほうが右にいる
+                if (StartPos.x < EndPos.x)
+                {
+                    SideCnt = Mathf.Max(SideCnt - 1, -MAX_SIDE_CNT);
+                }
+                else
+                {
+                    SideCnt = Mathf.Min(SideCnt + 1, MAX_SIDE_CNT);
+                }
+
+#if false
+                //左
+                if (Player.dir == PlayerMoveDir.LEFT)
+                {
+                    //プレイヤーのほうが右にいる
+                    if(StartPos.x < EndPos.x)
+                    {
+                        SideCnt = Mathf.Max(SideCnt - 1, -MAX_SIDE_CNT);
+                    }
+                    else
+                    {
+                        SideCnt = Mathf.Min(SideCnt + 1, MAX_SIDE_CNT);
+                    }
+                }
+                //右
+                else
+                {
+                    //プレイヤーのほうが左にいる
+                    if(StartPos.x > EndPos.x)
+                    {
+                        SideCnt = Mathf.Min(SideCnt + 1, MAX_SIDE_CNT);
+                    }
+                    else
+                    {
+                        SideCnt = Mathf.Max(SideCnt - 1, -MAX_SIDE_CNT);
+                    }
+                }
+#endif
+            }
+            //振り子じゃない
+            else
+            {
+                SideCnt = 0;
+
+            }
+
             //まだなければ足す 、 要らなければ消す
-            for(int i = 0; i <  MAX_CHAIN_NUM; i++ )
+
+            for (int i = 0; i <  MAX_CHAIN_NUM; i++ )
             {
                 if(i < ChainNum)
                 {
@@ -56,27 +110,50 @@ public class ChainManager : MonoBehaviour
                     }
 
                     //大きさ
-                    //float Temp = OneChainLength / Chain[i].transform.lossyScale.y;
                     Chain[i].transform.localScale = new Vector3(LocalSize * 0.6f, LocalSize * 0.6f, LocalSize * 0.6f);
-                    //Debug.Log(LocalSize);
 
-                    //移動、回転
-                    Chain[i].transform.position = Vector3.Lerp(StartPos, EndPos, (float) i / (MAX_CHAIN_NUM - 1));
-
-                    float Radian = Mathf.Atan2(EndPos.y - StartPos.y, EndPos.x - StartPos.x);
-                    float Do = Radian / Mathf.PI * 180 + 90;
-                    if(i % 2 == 0)
+                    //////ここから移動、回転
+                    //振り子なら
+                    if(Player.refState == EnumPlayerState.SWING)
                     {
-                        Chain[i].transform.rotation = Quaternion.Euler(0, 0, Do);
+                        Vector3 CenterPos = Vector3.Lerp(StartPos, EndPos, 0.9f);
+                        Vector3 HousenVector = new Vector3(StartPos.y - EndPos.y, -(StartPos.x - EndPos.x), 0).normalized;//正規化した右へのベクトル
+                        CenterPos += (HousenVector * (MAX_VEZIE_DISTANCE * ((float)(SideCnt) / MAX_SIDE_CNT)));
+
+                        //なぞのPosition
+                        //Vector3 TempEnd = StartPos + (StartPos - EndPos);
+
+                        Chain[i].transform.position = Vezie.Vezie_3(StartPos, CenterPos, EndPos, (float)(i) / (ChainNum - 1));
+
+                        float Radian = Mathf.Atan2(EndPos.y - StartPos.y, EndPos.x - StartPos.x);
+                        float Do = Radian / Mathf.PI * 180 + 90;
+                        if (i % 2 == 0)
+                        {
+                            Chain[i].transform.rotation = Quaternion.Euler(0, 0, Do);
+                        }
+                        else
+                        {
+                            Chain[i].transform.rotation = Quaternion.Euler(0, 90, Do);
+                        }
+
                     }
+                    //振り子じゃない
                     else
                     {
-                        Chain[i].transform.rotation = Quaternion.Euler(0, 90, Do);
+                        Chain[i].transform.position = Vector3.Lerp(StartPos, EndPos, (float)i / (ChainNum - 1));
+
+                        float Radian = Mathf.Atan2(EndPos.y - StartPos.y, EndPos.x - StartPos.x);
+                        float Do = Radian / Mathf.PI * 180 + 90;
+                        if (i % 2 == 0)
+                        {
+                            Chain[i].transform.rotation = Quaternion.Euler(0, 0, Do);
+                        }
+                        else
+                        {
+                            Chain[i].transform.rotation = Quaternion.Euler(0, 90, Do);
+                        }
                     }
-                    //Chain[i].transform.rotation = Quaternion.Euler(0,0, Do);
-
-
-
+                    //////ここまで移動、回転
                 }
                 else
                 {
