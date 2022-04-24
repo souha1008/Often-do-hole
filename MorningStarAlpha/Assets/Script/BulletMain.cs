@@ -233,28 +233,27 @@ public class BulletMain : MonoBehaviour
         {
             //錨が刺さる場所を壁ピッタリにする処理
             //AdjustColPoint(colAspect, colPoint);
-
+            Aspect_8 colAspect;
 
             if (onceFlag == false)
-            {
+            { 
                 //collsion先のtagで場合分け
                 string tag = collision.gameObject.tag;
+
                 switch (tag)
                 {
                     case "Platform":
                         onceFlag = true;
                         StopBullet();
 
-                        //面計算
-                        Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
-                       
+                      
                         //各種演出
                         CameraShake.instance.Shake(rb.velocity);
                         colPoint = collision.GetContact(0).point;
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
 
-
-
+                        //面計算
+                        colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
                         if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
@@ -296,6 +295,32 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         StopBullet();
                         PlayerScript.ForciblyFollowMode();
+
+                        break;
+
+                    case "Conveyor":
+                        onceFlag = true;
+                        StopBullet();
+
+                        //面計算
+                        colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+                        if ((colAspect == Aspect_8.DOWN) || (colAspect == Aspect_8.DOWN_LEFT) || (colAspect == Aspect_8.DOWN_RIGHT))
+                        {
+                            //SWING状態に移行
+                            PlayerScript.ForciblySwingMode();
+                            Debug.Log("swing");                          
+                        }
+                        else if ((colAspect == Aspect_8.UP) || (colAspect == Aspect_8.UP_LEFT) || (colAspect == Aspect_8.UP_RIGHT))
+                        {
+                            //FOLLOW状態に移行
+                            PlayerScript.ForciblyFollowMode();
+                            Debug.Log("follow");
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblyReleaseMode(true);
+                            Debug.Log("release");
+                        }
 
                         break;
 

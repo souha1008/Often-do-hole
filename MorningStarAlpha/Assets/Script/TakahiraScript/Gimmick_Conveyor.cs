@@ -55,39 +55,40 @@ public class Gimmick_Conveyor : Gimmick_Main
                 ConveyorState.PlayerMoveFlag = true;
             }
         }
-        if (collision.gameObject.CompareTag("Bullet"))
-        {
-            ConveyorState.BulletMoveFlag = true;
-            // 衝突点取得
-            foreach (ContactPoint contact in collision.contacts)
-            {
-                // ヒットした面取得
-                if (contact.normal.y == 0)
-                {
-                    if (contact.normal.x < 0) // 右
-                        ConveyorState.TouchSide = TOUCH_SIDE.RIGHT;
-                    else                        // 左
-                        ConveyorState.TouchSide = TOUCH_SIDE.LEFT;
-                }
-                else
-                {
-                    if (contact.normal.y < 0) // 上
-                        ConveyorState.TouchSide = TOUCH_SIDE.UP;
-                    else                        // 下
-                        ConveyorState.TouchSide = TOUCH_SIDE.DOWN;
-                }
 
-                //Debug.Log(contact.normal);
-                //Debug.Log(conveyorState.TouchSide);
+        //if (collision.gameObject.CompareTag("Bullet"))
+        //{
+        //    ConveyorState.BulletMoveFlag = true;
+        //    // 衝突点取得
+        //    foreach (ContactPoint contact in collision.contacts)
+        //    {
+        //        // ヒットした面取得
+        //        if (contact.normal.y == 0)
+        //        {
+        //            if (contact.normal.x < 0) // 右
+        //                ConveyorState.TouchSide = TOUCH_SIDE.RIGHT;
+        //            else                        // 左
+        //                ConveyorState.TouchSide = TOUCH_SIDE.LEFT;
+        //        }
+        //        else
+        //        {
+        //            if (contact.normal.y < 0) // 上
+        //                ConveyorState.TouchSide = TOUCH_SIDE.UP;
+        //            else                        // 下
+        //                ConveyorState.TouchSide = TOUCH_SIDE.DOWN;
+        //        }
 
-                //============
-                // 自分用メモ
-                //============
-                //print(contact.thisCollider.name + " hit " + contact.otherCollider.name); // 自分が　hit 相手に
-                //Debug.Log(contact.normal); // 法線
-                //Debug.DrawRay(contact.point, contact.normal, Color.white); // 当たった点でレイを可視化
-            }
-        }
+        //        //Debug.Log(contact.normal);
+        //        //Debug.Log(conveyorState.TouchSide);
+
+        //        //============
+        //        // 自分用メモ
+        //        //============
+        //        //print(contact.thisCollider.name + " hit " + contact.otherCollider.name); // 自分が　hit 相手に
+        //        //Debug.Log(contact.normal); // 法線
+        //        //Debug.DrawRay(contact.point, contact.normal, Color.white); // 当たった点でレイを可視化
+        //    }
+        //}
     }
 
     public void OnCollisionStay(Collision collision)
