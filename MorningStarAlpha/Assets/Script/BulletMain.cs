@@ -14,8 +14,6 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool isTouched; //弾がなにかに触れたか
     [ReadOnly] public bool onceFlag; //一回の発射に付き接触が起こるのは一回
     [ReadOnly] public bool StopVelChange; //弾が戻されて引っ張られている状態
-    [ReadOnly] public bool swingEnd;
-    [ReadOnly] public bool followEnd;
 
     //下川原
     private int ExitFlameCnt = 0;//存在し始めてからのカウント
@@ -81,10 +79,16 @@ public class BulletMain : MonoBehaviour
         rb.isKinematic = false;
         onceFlag = false;
         StopVelChange = false;
-        swingEnd = false;
-        followEnd = false;
+      
+        
         colPoint = Vector3.zero;
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+
+        //プレイヤー強制処理フラグクリア
+        PlayerScript.forciblyRleaseFlag = false;
+        PlayerScript.forciblyFollowFlag = false;
+        PlayerScript.forciblySwingFlag = false;
+
 
         //弾の初期化
         rb.velocity = Vector3.zero;
@@ -256,22 +260,22 @@ public class BulletMain : MonoBehaviour
                         if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
-                            followEnd = true;
+                            PlayerScript.ForciblyFollowMode();
                         }
                         else if(colAspect == Aspect_8.UP_RIGHT && this.vel.x >= 0) //右に進んでいるのに右上に当たったとき
                         {
                             //FOLLOW状態に移行
-                            followEnd = true;
+                            PlayerScript.ForciblyFollowMode();
                         }
                         else if (colAspect == Aspect_8.UP_LEFT && this.vel.x <= 0) //逆
                         {
                             //FOLLOW状態に移行
-                            followEnd = true;
+                            PlayerScript.ForciblyFollowMode();
                         }
                         else
                         {
                             //SWING状態に移行
-                            swingEnd = true;
+                            PlayerScript.ForciblySwingMode();
                         }
                      
 
@@ -293,7 +297,7 @@ public class BulletMain : MonoBehaviour
                     case "WireMesh":    
                         onceFlag = true;
                         StopBullet();
-                        followEnd = true;
+                        PlayerScript.ForciblyFollowMode();
 
                         break;
 
@@ -332,7 +336,7 @@ public class BulletMain : MonoBehaviour
                     case "WireMesh":
                         onceFlag = true;
                         StopBullet();
-                        followEnd = true;
+                        PlayerScript.ForciblyFollowMode();
 
                         break;
                 }

@@ -30,8 +30,6 @@ public class PlayerStateShot : PlayerState
     private Queue<Vector3> Vecs = new Queue<Vector3>();
     private int beforeFrame;
 
-    const float STRAINED_END_POWER = 70.0f;
-
     private void Init()
     {
         countTime = 0.0f;
@@ -47,7 +45,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
         PlayerScript.canShotState = false;
-        PlayerScript.forciblyReturnBulletFlag = false;
+        PlayerScript.forciblyRleaseFlag = false;
         PlayerScript.addVel = Vector3.zero;
 
         PlayerScript.vel.x *= 0.4f;
@@ -210,11 +208,11 @@ public class PlayerStateShot : PlayerState
         countTime += Time.deltaTime;
 
         //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
-        if (PlayerScript.forciblyReturnBulletFlag)
+        if (PlayerScript.forciblyRleaseFlag)
         {
-            PlayerScript.forciblyReturnBulletFlag = false;
+            PlayerScript.forciblyRleaseFlag = false;
 
-            if (PlayerScript.forciblyReturnSaveVelocity)
+            if (PlayerScript.forciblyReleaseSaveVelocity)
             {
                 PlayerScript.vel = ReleaseForceCalicurate();
                 ;
@@ -297,14 +295,14 @@ public class PlayerStateShot : PlayerState
         //follow開始
         if (BulletScript.isTouched)
         {
-            if (BulletScript.followEnd)
+            if (PlayerScript.forciblyFollowFlag)
             {
                 BulletScript.FollowedPlayer();
 
                 PlayerScript.vel = ReleaseForceCalicurate();
 
                 PlayerScript.useVelocity = true;
-                BulletScript.followEnd = false;
+                PlayerScript.forciblyFollowFlag = false;
                 PlayerScript.shotState = ShotState.FOLLOW;
                 followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
             }
@@ -414,9 +412,9 @@ public class PlayerStateShot : PlayerState
             PlayerScript.shotState = ShotState.NONE;
             PlayerScript.animator.SetBool("isShot", false);
 
-            if (BulletScript.swingEnd)
+            if (PlayerScript.forciblySwingFlag)
             {
-                BulletScript.swingEnd = false;
+                PlayerScript.forciblySwingFlag = false;
                 if (PlayerScript.AutoRelease)
                 {
                     PlayerScript.mode = new PlayerStateSwing_Vel();

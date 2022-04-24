@@ -132,8 +132,11 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
     [ReadOnly, Tooltip("最終的に打てるかどうか")] public bool canShot;                             // 打てる状態か
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
-    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
-    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
+    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyRleaseFlag;            // 強制的に弾を戻させるフラグ
+    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReleaseSaveVelocity;
+    [ReadOnly, Tooltip("強制的に弾についていくときのフラグ")] public bool forciblyFollowFlag;
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
+
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
@@ -173,8 +176,7 @@ public class PlayerMain : MonoBehaviour
         isOnGround = true;
         useVelocity = true;
 
-        forciblyReturnBulletFlag = false;
-        forciblyReturnSaveVelocity = false;
+        ClearModeTransitionFlag();
 
         endSwing = false;
         SlideSwing = false;
@@ -184,7 +186,6 @@ public class PlayerMain : MonoBehaviour
 
         Ray footray = new Ray(rb.position, Vector3.down);
         Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
-
 
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
@@ -391,8 +392,16 @@ public class PlayerMain : MonoBehaviour
         }
     } 
 
+    public void ClearModeTransitionFlag()
+    {
+        forciblyRleaseFlag = false;
+        forciblySwingFlag = false;
+        forciblyReleaseSaveVelocity = false;
+        forciblyFollowFlag = true;
+    }
+
     /// <summary>
-    /// Shot中に強制的に弾を引き戻させる
+    /// 弾を引き戻させる
     /// </summary>
     /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
     ///　false:引き戻し時にもとのベロシティを殺す
@@ -401,8 +410,8 @@ public class PlayerMain : MonoBehaviour
     {
         if (refState == EnumPlayerState.SHOT)
         {
-            forciblyReturnBulletFlag = true;
-            forciblyReturnSaveVelocity = saveVelocity;
+            forciblyRleaseFlag = true;
+            forciblyReleaseSaveVelocity = saveVelocity;
         }
     }
 
@@ -410,7 +419,15 @@ public class PlayerMain : MonoBehaviour
     {
         if (refState == EnumPlayerState.SHOT)
         {
+            forciblyFollowFlag = true;
+        }
+    }
 
+    public void ForciblySwingMode()
+    {
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblySwingFlag = true;
         }
     }
 
