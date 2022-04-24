@@ -85,9 +85,7 @@ public class BulletMain : MonoBehaviour
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
         //プレイヤー強制処理フラグクリア
-        PlayerScript.forciblyRleaseFlag = false;
-        PlayerScript.forciblyFollowFlag = false;
-        PlayerScript.forciblySwingFlag = false;
+        PlayerScript.ClearModeTransitionFlag();
 
 
         //弾の初期化

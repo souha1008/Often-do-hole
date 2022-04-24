@@ -395,9 +395,9 @@ public class PlayerMain : MonoBehaviour
     public void ClearModeTransitionFlag()
     {
         forciblyRleaseFlag = false;
+        forciblyFollowFlag = false;
         forciblySwingFlag = false;
         forciblyReleaseSaveVelocity = false;
-        forciblyFollowFlag = true;
     }
 
     /// <summary>

@@ -45,9 +45,8 @@ public class PlayerStateShot : PlayerState
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
         PlayerScript.canShotState = false;
-        PlayerScript.forciblyRleaseFlag = false;
+        PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
-
         PlayerScript.vel.x *= 0.4f;
         PlayerScript.animator.SetBool("isShot", true);
         
@@ -176,11 +175,11 @@ public class PlayerStateShot : PlayerState
 
     private void intoVecsQueue()
     {
-        
+        const int VEC_SAVE_NUM = 25;
         if (PlayerScript.shotState == ShotState.GO)
         {
             Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
-            if (beforeFrame > 30)
+            if (beforeFrame > VEC_SAVE_NUM)
             {
                 Vecs.Dequeue();
             }
@@ -192,7 +191,7 @@ public class PlayerStateShot : PlayerState
         else if (PlayerScript.shotState == ShotState.STRAINED)
         {
             Vecs.Enqueue(BulletScript.vel);
-            if (beforeFrame > 30)
+            if (beforeFrame > VEC_SAVE_NUM)
             {
                 Vecs.Dequeue();
             }
