@@ -257,17 +257,17 @@ public class BulletMain : MonoBehaviour
                         if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
-                            PlayerScript.ForciblyFollowMode();
+                            PlayerScript.ForciblyFollowMode(false);
                         }
                         else if(colAspect == Aspect_8.UP_RIGHT && this.vel.x >= 0) //右に進んでいるのに右上に当たったとき
                         {
                             //FOLLOW状態に移行
-                            PlayerScript.ForciblyFollowMode();
+                            PlayerScript.ForciblyFollowMode(false);
                         }
                         else if (colAspect == Aspect_8.UP_LEFT && this.vel.x <= 0) //逆
                         {
                             //FOLLOW状態に移行
-                            PlayerScript.ForciblyFollowMode();
+                            PlayerScript.ForciblyFollowMode(false);
                         }
                         else
                         {
@@ -290,14 +290,6 @@ public class BulletMain : MonoBehaviour
                         }                        
                         break;
 
-
-                    case "WireMesh":    
-                        onceFlag = true;
-                        StopBullet();
-                        PlayerScript.ForciblyFollowMode();
-
-                        break;
-
                     case "Conveyor":
                         onceFlag = true;
                         StopBullet();
@@ -313,7 +305,7 @@ public class BulletMain : MonoBehaviour
                         else if ((colAspect == Aspect_8.UP) || (colAspect == Aspect_8.UP_LEFT) || (colAspect == Aspect_8.UP_RIGHT))
                         {
                             //FOLLOW状態に移行
-                            PlayerScript.ForciblyFollowMode();
+                            PlayerScript.ForciblyFollowMode(false);
                             Debug.Log("follow");
                         }
                         else
@@ -344,7 +336,6 @@ public class BulletMain : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("aaa");
         if (ReferenceEquals(Player, null) == false)
         {
             //錨が刺さる場所を壁ピッタリにする処理
@@ -359,7 +350,7 @@ public class BulletMain : MonoBehaviour
                     case "WireMesh":
                         onceFlag = true;
                         StopBullet();
-                        PlayerScript.ForciblyFollowMode();
+                        PlayerScript.ForciblyFollowMode(true);
 
                         break;
                 }

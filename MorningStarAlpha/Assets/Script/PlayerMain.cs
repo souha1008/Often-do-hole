@@ -135,6 +135,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyRleaseFlag;            // 強制的に弾を戻させるフラグ
     [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReleaseSaveVelocity;
     [ReadOnly, Tooltip("強制的に弾についていくときのフラグ")] public bool forciblyFollowFlag;
+    [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
 
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
@@ -398,6 +399,7 @@ public class PlayerMain : MonoBehaviour
         forciblyFollowFlag = false;
         forciblySwingFlag = false;
         forciblyReleaseSaveVelocity = false;
+        forciblyFollowVelToward = false;
     }
 
     /// <summary>
@@ -412,14 +414,22 @@ public class PlayerMain : MonoBehaviour
         {
             forciblyRleaseFlag = true;
             forciblyReleaseSaveVelocity = saveVelocity;
+
+            //フラグクリア
+            forciblyFollowFlag = false;
+            forciblySwingFlag = false;
         }
     }
 
-    public void ForciblyFollowMode()
+    public void ForciblyFollowMode(bool velTowardBullet)
     {
         if (refState == EnumPlayerState.SHOT)
         {
             forciblyFollowFlag = true;
+            forciblyFollowVelToward = velTowardBullet;
+            //フラグクリア
+            forciblySwingFlag = false;
+            forciblyRleaseFlag = false;
         }
     }
 
@@ -428,6 +438,10 @@ public class PlayerMain : MonoBehaviour
         if (refState == EnumPlayerState.SHOT)
         {
             forciblySwingFlag = true;
+
+            //フラグクリア
+            forciblyRleaseFlag = false;
+            forciblyFollowFlag = false;
         }
     }
 
