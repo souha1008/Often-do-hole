@@ -205,7 +205,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
         {
-            PlayerMain.instance.ForciblyReturnBullet(false);
+            PlayerMain.instance.ForciblyReturnBullet(true);
             PlayerMain.instance.floorVel = Vector3.zero;
         }  
 
