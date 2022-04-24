@@ -5,6 +5,8 @@ public class Direction_UI : MonoBehaviour
 {
     [SerializeField] private PlayerMain PlayerScript;   // プレイヤー
     [SerializeField] private RectTransform CanvasTf;    // キャンバス
+    [SerializeField] private Camera MainCamera;    // キャンバス
+    [SerializeField] private Camera UICamera;    // キャンバス
 
     [SerializeField] private float Length = 6.0f;       // プレイヤーとの距離
     private Transform TargetTf;                         // プレイヤー
@@ -17,15 +19,10 @@ public class Direction_UI : MonoBehaviour
         MyRectTf = GetComponent<RectTransform>();
         TargetTf = PlayerScript.transform;
         DirectionUI = GetComponent<Image>();
+        DirectionUI.enabled = false;
     }
 
-    void Update()
-    {
-        //MyRectTf.position
-        //    = RectTransformUtility.WorldToScreenPoint(Camera.main, TargetTf.position + Offset);
-    }
-
-    void LateUpdate()
+    public void UpdateDirectionUI()
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
@@ -42,11 +39,25 @@ public class Direction_UI : MonoBehaviour
                 DirectionUI.enabled = false;
             }
 
-            // 座標指定
+
             if (PlayerScript.stickCanShotRange) // スティック入力一定以上あるか
             {
-                // 座標変更
-                MyRectTf.position = RectTransformUtility.WorldToScreenPoint(Camera.main, TargetTf.position + vec * Length);
+                // 座標変換
+
+                // カメラ
+                var pos = Vector2.zero;
+                var uiCamera = UICamera;
+                var worldCamera = MainCamera;
+                var canvasRect = CanvasTf;
+
+                var screenPos = RectTransformUtility.WorldToScreenPoint(worldCamera, TargetTf.position + vec * Length);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPos, uiCamera, out pos);
+                MyRectTf.anchoredPosition = pos;
+
+                // オーバーレイ
+                //MyRectTf.anchoredPosition = RectTransformUtility.WorldToScreenPoint(MainCamera, TargetTf.position + vec * Length);
+
+
                 // 回転
                 MyRectTf.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(Vector3.zero, vec) - 90);
             }
@@ -58,8 +69,6 @@ public class Direction_UI : MonoBehaviour
         else
         {
             DirectionUI.enabled = false;
-        }
-
-        
+        }   
     }
 }

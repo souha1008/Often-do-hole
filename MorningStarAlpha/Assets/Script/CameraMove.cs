@@ -6,10 +6,13 @@ public class CameraMove : MonoBehaviour
 {
     [SerializeField] private  GameObject Player;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] private  float CAMERA_DISTANCE;      //カメラとプレイヤーの距離
+    [SerializeField] private  Direction_UI DirectionUI;      // 矢印UI
 
     private void Start()
     {
         TracePlayer();
+
+        if (DirectionUI != null) DirectionUI.UpdateDirectionUI();
     }
 
     //private void Update()
@@ -26,6 +29,8 @@ public class CameraMove : MonoBehaviour
     private void LateUpdate()
     {
         TracePlayer();
+
+        if (DirectionUI != null) DirectionUI.UpdateDirectionUI();
     }
 
     //プレイヤーをカメラの中央に収め続ける
