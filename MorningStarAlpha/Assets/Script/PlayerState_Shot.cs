@@ -29,6 +29,7 @@ public class PlayerStateShot : PlayerState
     private float debug_timer;
     private Queue<Vector3> Vecs = new Queue<Vector3>();
     private int beforeFrame;
+    bool recoverCanShot;
 
     private void Init()
     {
@@ -41,6 +42,7 @@ public class PlayerStateShot : PlayerState
         maxFollowAddvec = Vector3.zero;
         debug_timer = 0.0f;
         beforeFrame = 0;
+        recoverCanShot = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -264,16 +266,11 @@ public class PlayerStateShot : PlayerState
         //ついていく処理
         if (PlayerScript.shotState == ShotState.STRAINED)
         {
-#if false
             //弾からプレイヤー方向へBULLET_ROPE_LENGTHだけ離れた位置に常に補正
-            Vector3 diff = (PlayerScript.transform.position - BulletScript.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
-            Player.transform.position = BulletScript.transform.position + diff;
-#else
-            //弾からプレイヤー方向へBULLET_ROPE_LENGTHだけ離れた位置に常に補正
-            if (Vector3.Magnitude(Player.transform.position - BulletScript.transform.position) > BulletScript.BULLET_ROPE_LENGTH)
+            if (Vector3.Magnitude(PlayerScript.rb.position - BulletScript.rb.position) > BulletScript.BULLET_ROPE_LENGTH)
             {
-                Vector3 diff = (PlayerScript.transform.position - BulletScript.transform.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
-                Player.transform.position = BulletScript.transform.position + diff;
+                Vector3 diff = (PlayerScript.rb.position - BulletScript.rb.position).normalized * BulletScript.BULLET_ROPE_LENGTH;
+                PlayerScript.rb.position = BulletScript.rb.position + diff;
                 //弾がプレイヤーより強い勢いを持っているときのみ
                 if (PlayerScript.vel.magnitude < BulletScript.vel.magnitude * 0.8f)
                 {
@@ -288,25 +285,35 @@ public class PlayerStateShot : PlayerState
                 PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 0.1f * (fixedAdjust);
                 PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
             }
-#endif
         }
 
         //follow開始
-        if (BulletScript.isTouched)
+
+        if ((PlayerScript.shotState == ShotState.GO) || (PlayerScript.shotState == ShotState.STRAINED))
         {
-            if (PlayerScript.forciblyFollowFlag)
+            if (BulletScript.isTouched)
             {
-                BulletScript.FollowedPlayer();
+                if (PlayerScript.forciblyFollowFlag)
+                {
+                    BulletScript.FollowedPlayer();
 
-                PlayerScript.vel = ReleaseForceCalicurate();
+                    PlayerScript.vel = ReleaseForceCalicurate();
 
-                PlayerScript.useVelocity = true;
-                PlayerScript.forciblyFollowFlag = false;
-                PlayerScript.shotState = ShotState.FOLLOW;
-                followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
+                    if (PlayerScript.forciblyFollowVelToward)
+                    {
+                        Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
+                        PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
+                        recoverCanShot = true;
+                    }
+
+                    PlayerScript.useVelocity = true;
+                    PlayerScript.forciblyFollowFlag = false;
+                    PlayerScript.forciblyFollowVelToward = false;
+                    PlayerScript.shotState = ShotState.FOLLOW;
+                    followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
+                }
             }
         }
-
     }
 
     public override void Move()
@@ -437,7 +444,7 @@ public class PlayerStateShot : PlayerState
             }
             else //そうでないなら空中
             {
-                PlayerScript.mode = new PlayerStateMidair(false);
+                PlayerScript.mode = new PlayerStateMidair(recoverCanShot);
             }
         }
 
