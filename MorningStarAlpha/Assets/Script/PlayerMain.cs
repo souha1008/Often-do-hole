@@ -24,7 +24,6 @@ public enum MidairState
 {
     NONE,      //ãÛíÜèÛë‘Ç≈ÇÕÇ»Ç¢
     NORMAL,   //í èÌéû
-    FALL, Å@  //ã}ç~â∫
 }
 
 
@@ -231,7 +230,8 @@ public class PlayerMain : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-        {
+        {         
+
             if (mode != null)
             {
                 mode.Move();
@@ -597,7 +597,6 @@ public class PlayerMain : MonoBehaviour
     {
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
         Collider col = GetComponent<Collider>();
-
 
         //footHitäiî[óp
         Ray footray = new Ray(rb.position, Vector3.down);

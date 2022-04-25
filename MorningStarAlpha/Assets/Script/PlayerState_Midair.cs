@@ -64,15 +64,6 @@ public class PlayerStateMidair : PlayerState
                 }
             }
         }
-        
-
-        //ã}ç~â∫ì¸óÕâ∫ÅH
-        if (PlayerScript.sourceLeftStick.y < -0.7f && Mathf.Abs(PlayerScript.sourceLeftStick.x) < 0.3f)
-        {
-            //àÍìxÇ≈Ç‡ì¸óÕÇ≥ÇÍÇΩÇÁâiãvÇ…
-            PlayerScript.midairState = MidairState.FALL;
-        }
-
     }
 
     public override void Move()
@@ -88,23 +79,8 @@ public class PlayerStateMidair : PlayerState
             PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1 * (fixedAdjust);
         }
 
-        //ã}ç~â∫íÜ
-        if (PlayerScript.midairState == MidairState.FALL)
-        {
-            //ÉvÉåÉCÉÑÅ[Ç™è„Ç…å¸Ç©Ç¡ÇƒÇ¢ÇÈÇ∆Ç´ÇÕëÅÇ¢
-            if (PlayerScript.vel.y > 0.0f)
-            {
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2.0f * (fixedAdjust);
-            }
-            elseÅ@//â∫ÇÃÇ∆Ç´Ç‡è≠ÇµëÅÇ¢
-            {
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 1.5f * (fixedAdjust);
-            }
-
-            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1 * 1.3f);
-        }
         //é©óRóéâ∫
-        else if (PlayerScript.midairState == MidairState.NORMAL)
+        if (PlayerScript.midairState == MidairState.NORMAL)
         {
             PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
             PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);

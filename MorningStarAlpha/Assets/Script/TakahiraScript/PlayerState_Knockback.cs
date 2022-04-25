@@ -107,14 +107,6 @@ public class PlayerState_Knockback : PlayerState
     // 減衰処理(PlayerStateMidair　Move()　から引用)
     private void PlayerSpeedDown()
     {
-        //急降下入力下？
-        if (PlayerScript.sourceLeftStick.y < -0.7f && Mathf.Abs(PlayerScript.sourceLeftStick.x) < 0.3f)
-        {
-            //一度でも入力されたら永久に
-            PlayerScript.midairState = MidairState.FALL;
-        }
-
-
         //減衰S
         PlayerScript.vel.x *= PlayerScript.MIDAIR_FRICTION;
         if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)
@@ -126,26 +118,10 @@ public class PlayerState_Knockback : PlayerState
             PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1 * (fixedAdjust);
         }
 
-        //急降下中
-        if (PlayerScript.midairState == MidairState.FALL)
-        {
-            //プレイヤーが上に向かっているときは早い
-            if (PlayerScript.vel.y > 0.0f)
+          if (PlayerScript.midairState == MidairState.NORMAL)
             {
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 2.0f * (fixedAdjust);
+                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
+                PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
             }
-            else　//下のときも少し早い
-            {
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 1.5f * (fixedAdjust);
-            }
-
-            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1 * 1.3f);
-        }
-        //自由落下
-        else if (PlayerScript.midairState == MidairState.NORMAL)
-        {
-            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
-            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
-        }
     }
 }
