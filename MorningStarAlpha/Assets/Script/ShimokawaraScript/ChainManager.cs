@@ -18,7 +18,7 @@ public class ChainManager : MonoBehaviour
     float LocalSize;
     int SideCnt = 0;//右が＋ 左がマイナス
     int MAX_SIDE_CNT = 40;
-    float MAX_VEZIE_DISTANCE = 2;
+    float MAX_VEZIE_DISTANCE = 4;
 
     void Start()
     {
@@ -116,7 +116,9 @@ public class ChainManager : MonoBehaviour
                     //振り子なら
                     if (Player.refState == EnumPlayerState.SWING)
                     {
-                        Vector3 CenterPos = Vector3.Lerp(StartPos, EndPos, 0.9f);
+                        //Vector3 BtoP_angle = 
+
+                        Vector3 CenterPos = Vector3.Lerp(StartPos, EndPos, 0.5f);
                         Vector3 HousenVector = new Vector3(StartPos.y - EndPos.y, -(StartPos.x - EndPos.x), 0).normalized;//正規化した右へのベクトル
                         CenterPos += (HousenVector * (MAX_VEZIE_DISTANCE * ((float)(SideCnt) / MAX_SIDE_CNT)));
 
