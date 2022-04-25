@@ -5,7 +5,7 @@ using UnityEngine;
 // ノックバックステート
 public class PlayerState_Knockback : PlayerState
 {
-    private static float KnockbackTime = 1.0f;       // ノックバック時間
+    private static float KnockbackTime = 0.8f;       // ノックバック時間
     private static float KnockbackPowerX = 60.0f;    // ノックバック力 X
     private static float KnockbackPowerY = 50.0f;    // ノックバック力 Y
 
@@ -23,6 +23,8 @@ public class PlayerState_Knockback : PlayerState
 
         PlayerScript.midairState = MidairState.NORMAL;
 
+
+        PlayerScript.animator.SetTrigger("NockBack");
 
         // 錨引き戻し
         BulletScript.ReturnBullet();
@@ -49,7 +51,7 @@ public class PlayerState_Knockback : PlayerState
             float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
             Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
             vec = vec.normalized;
-            BulletScript.vel = vec * 150;
+            BulletScript.vel = vec * 200.0f;
             //距離が一定以下になったら弾を非アクティブ
             if (interval < 4.0f)
             {

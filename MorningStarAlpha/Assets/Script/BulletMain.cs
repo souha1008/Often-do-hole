@@ -6,7 +6,10 @@ public class BulletMain : MonoBehaviour
     [System.NonSerialized] public Collider co;
 
     [SerializeField] private GameObject Player;
-    [SerializeField] private Renderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
+    [SerializeField] private SkinnedMeshRenderer[] scriptPart; //構成パーツ、　レンダラーがアタッチされているもの
+    //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
+
+    
 
     private PlayerMain PlayerScript;
     [ReadOnly] public Vector3 vel;
@@ -51,28 +54,36 @@ public class BulletMain : MonoBehaviour
     {
         rb.isKinematic = true;
         co.enabled = false;
-        for (int i = 0; i < Part.Length; i++)
+        for (int i = 0; i < scriptPart.Length; i++)
         {
-            Part[i].enabled = false;
-            rb.isKinematic = true;
-            rb.velocity = Vector3.zero;
-            vel = Vector3.zero;
-            StopVelChange = true;
+            scriptPart[i].enabled = false;         
         }
+
+        //for (int i = 0; i < animPart.Length; i++)
+        //{
+        //    animPart[i].enabled = true;
+        //}
+
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        vel = Vector3.zero;
+        StopVelChange = true;
     }
 
     public void VisibleBullet()
     {
         rb.isKinematic = false;
         co.enabled = true;
-        for (int i = 0; i < Part.Length; i++)
+        for (int i = 0; i < scriptPart.Length; i++)
         {
-            Part[i].enabled = true;
+            scriptPart[i].enabled = true;
         }
+
+        //for (int i = 0; i < animPart.Length; i++)
+        //{
+        //    animPart[i].enabled = false;
+        //}
     }
-
-
-
 
     public void ShotBullet()
     {
@@ -348,6 +359,7 @@ public class BulletMain : MonoBehaviour
                 switch (tag)
                 {
                     case "WireMesh":
+                    case "SpringBoard":
                         onceFlag = true;
                         StopBullet();
                         PlayerScript.ForciblyFollowMode(true);
