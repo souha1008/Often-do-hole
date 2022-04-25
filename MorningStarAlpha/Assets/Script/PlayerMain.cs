@@ -24,7 +24,6 @@ public enum MidairState
 {
     NONE,      //‹ó’†ó‘Ô‚Å‚Í‚È‚¢
     NORMAL,   //’Êí
-    FALL, @  //‹}~‰º
 }
 
 
