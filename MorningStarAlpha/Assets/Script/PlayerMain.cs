@@ -66,9 +66,11 @@ public enum EnumPlayerState
     STAN,      //スタン状態
 }
 
-public struct ShortenSwing {
-    public bool isShort;
-    public float length;
+
+public struct AnimHash{
+    public int onGround;
+    public int isRunning;
+    public int RunSpeed;
 }
 
 
@@ -77,11 +79,12 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
     [System.NonSerialized] public Animator animator;
+    [System.NonSerialized] public AnimHash animHash;
+
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
-    private RaycastHit footHit;                      // Ge
-    private float killVeltimer;                      //壁ぶつかりで速度を殺すときのチャタリング防止用
-
+    private RaycastHit footHit;                      // 下に当たっているものの情報格納
+  
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
     [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
@@ -178,12 +181,13 @@ public class PlayerMain : MonoBehaviour
         useVelocity = true;
 
         ClearModeTransitionFlag();
+        SetAnimHash();
+
 
         endSwing = false;
         SlideSwing = false;
         
         conuterSwing = false;
-        killVeltimer = 0.0f;
 
         Ray footray = new Ray(rb.position, Vector3.down);
         Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
@@ -259,14 +263,20 @@ public class PlayerMain : MonoBehaviour
                 addVel = Vector3.zero;
             }
 
-            killVeltimer = Mathf.Clamp(killVeltimer += Time.fixedDeltaTime, 0.0f, 2.0f);
-
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
                 //mode.DebugMessage();
 #endif
             
         }
     }
+
+    private void SetAnimHash()
+    {
+        animHash.onGround = Animator.StringToHash("onGround");
+        animHash.isRunning = Animator.StringToHash("isRunning");
+        animHash.RunSpeed = Animator.StringToHash("RunSpeed");
+    }
+
 
     public RaycastHit getFootHit()
     {
@@ -603,7 +613,7 @@ public class PlayerMain : MonoBehaviour
                 if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
                 {
                     isOnGround = true;
-                    animator.SetBool("onGround", true);
+                    animator.SetBool(animHash.onGround, true);
                  }
             //}
         }
@@ -664,7 +674,7 @@ public class PlayerMain : MonoBehaviour
             if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")) == false)
             {
                 isOnGround = false;
-                animator.SetBool("onGround", false);
+                animator.SetBool(animHash.onGround, false);
             }
         }
     }

@@ -19,7 +19,7 @@ public class PlayerStateMidair : PlayerState
 
         BulletScript.InvisibleBullet();
 
-        PlayerScript.animator.SetBool("onGround", false);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, false);
     }
 
     public PlayerStateMidair(bool can_shot)//コンストラクタ
