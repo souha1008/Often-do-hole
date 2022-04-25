@@ -1112,9 +1112,11 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             case SwingState.TOUCHED:
                 float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
-
+#if false
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+#endif
+                Quaternion quaternion = Quaternion.LookRotation(ChainManager.instance.PlayerAngle);
 
                 Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
 

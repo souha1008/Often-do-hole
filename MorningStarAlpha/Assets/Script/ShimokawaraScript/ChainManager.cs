@@ -7,11 +7,13 @@ public class ChainManager : MonoBehaviour
     [SerializeField] private PlayerMain Player;
     [SerializeField] private BulletMain Bullet;
 
+    static public ChainManager instance;
     // 
     int MAX_CHAIN_NUM = 20;
     GameObject Obj;
     GameObject[] Chain = new GameObject[20];
 
+    public Vector3 PlayerAngle = Vector3.zero;//渡す用のプレイヤー回転角
 
     float MaxChain;
     float OneChainLength;
@@ -22,7 +24,7 @@ public class ChainManager : MonoBehaviour
 
     void Start()
     {
-
+        instance = this;
         Obj = (GameObject)Resources.Load("_05_chain_o5bj");
         MaxChain = Bullet.GetComponent<BulletMain>().BULLET_ROPE_LENGTH;
         OneChainLength = MaxChain / (MAX_CHAIN_NUM - 1);
@@ -122,8 +124,6 @@ public class ChainManager : MonoBehaviour
                         if (BtoP_angle < 0)//右から上に一周に直す
                             BtoP_angle += (Mathf.PI * 2);
 
-                        Debug.Log(BtoP_angle);
-
                         int Hugou;//符号
                         if (BtoP_angle < Mathf.PI * 0.5f || BtoP_angle > Mathf.PI * 1.5f)
                             Hugou = 1;
@@ -159,6 +159,9 @@ public class ChainManager : MonoBehaviour
                         {
                             AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / (ChainNum - 1));
                             AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
+
+                            //プレイヤーに渡すやつ
+                            PlayerAngle = AngleStart - AngleEnd;
                         }
                         else
                         {
