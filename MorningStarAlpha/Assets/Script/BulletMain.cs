@@ -6,7 +6,7 @@ public class BulletMain : MonoBehaviour
     [System.NonSerialized] public Collider co;
 
     [SerializeField] private GameObject Player;
-    [SerializeField] private SkinnedMeshRenderer[] scriptPart; //構成パーツ、　レンダラーがアタッチされているもの
+    [SerializeField] private SkinnedMeshRenderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
     //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
 
     
@@ -54,9 +54,9 @@ public class BulletMain : MonoBehaviour
     {
         rb.isKinematic = true;
         co.enabled = false;
-        for (int i = 0; i < scriptPart.Length; i++)
+        for (int i = 0; i < Part.Length; i++)
         {
-            scriptPart[i].enabled = false;         
+            Part[i].enabled = false;         
         }
 
         //for (int i = 0; i < animPart.Length; i++)
@@ -74,9 +74,9 @@ public class BulletMain : MonoBehaviour
     {
         rb.isKinematic = false;
         co.enabled = true;
-        for (int i = 0; i < scriptPart.Length; i++)
+        for (int i = 0; i < Part.Length; i++)
         {
-            scriptPart[i].enabled = true;
+            Part[i].enabled = true;
         }
 
         //for (int i = 0; i < animPart.Length; i++)
