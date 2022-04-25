@@ -1235,7 +1235,7 @@ public class PlayerStateSwing_Vel : PlayerState
                     float BoostRatio = Easing.EasingTypeFloat(EASING_TYPE.CUBIC_IN, deg180Ratio, 1.0f, 0.0f, 1.0f);
 
                     float VecForce = PlayerScript.vel.magnitude;
-                    float AddJumpVec = (JumpRatio * 35.0f) + 0.0f;
+                    float AddJumpVec = (JumpRatio * 0.0f) + 35.0f;
                     float AddBoostVec = (BoostRatio * 10.0f) + 0.0f;  //スピードアップのためのx方向のベクトル
 
                     addVec.y *= 0.2f;
@@ -1352,11 +1352,11 @@ public class PlayerStateSwing_Vel : PlayerState
 
                     if (startVelDownFlag)
                     {
-                        PlayerScript.vel = tempVec * easeRatio * 70.0f + (tempVec * 5.0f);
+                        PlayerScript.vel = tempVec * easeRatio * 65.0f + (tempVec * 5.0f);
                     }
                     else
                     {
-                        PlayerScript.vel = tempVec * 50.0f;
+                        PlayerScript.vel = tempVec * 40.0f;
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -1374,11 +1374,11 @@ public class PlayerStateSwing_Vel : PlayerState
                     
                     if (startVelDownFlag)
                     {
-                        PlayerScript.vel = tempVec * easeRatio * 70.0f + (tempVec * 5.0f);
+                        PlayerScript.vel = tempVec * easeRatio * 65.0f + (tempVec * 5.0f);
                     }
                     else
                     {
-                        PlayerScript.vel = tempVec * 50.0f;
+                        PlayerScript.vel = tempVec * 40.0f;
                     }
                 }
 
@@ -1452,7 +1452,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
                 Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
                 vec = vec.normalized;
-                BulletScript.vel = vec * 150;
+                BulletScript.vel = vec * 200.0f;
                 //距離が一定以下になったら弾を非アクティブ
                 if (interval < 4.0f)
                 {

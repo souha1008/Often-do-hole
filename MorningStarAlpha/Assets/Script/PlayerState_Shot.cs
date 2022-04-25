@@ -369,7 +369,7 @@ public class PlayerStateShot : PlayerState
                 Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
                 vecToPlayer = vecToPlayer.normalized;
 
-                BulletScript.vel = vecToPlayer * 200;
+                BulletScript.vel = vecToPlayer * 200.0f;
 
                 //‹——£‚ªˆê’èˆÈ‰º‚É‚È‚Á‚½‚çI—¹ˆ—ƒtƒ‰ƒO‚ğŒš‚Ä‚é
                 if (interval < 4.0f)

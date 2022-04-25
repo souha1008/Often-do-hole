@@ -603,7 +603,8 @@ public class PlayerMain : MonoBehaviour
                 if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
                 {
                     isOnGround = true;
-                }
+                    animator.SetBool("onGround", true);
+                 }
             //}
         }
 
@@ -663,6 +664,7 @@ public class PlayerMain : MonoBehaviour
             if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")) == false)
             {
                 isOnGround = false;
+                animator.SetBool("onGround", false);
             }
         }
     }
