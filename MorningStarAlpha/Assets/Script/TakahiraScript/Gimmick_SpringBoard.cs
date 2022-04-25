@@ -35,6 +35,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             Vector3 VecPower = Vector3.zero;    // 加えるベクトル量
 
             PlayerMain playermain = collider.gameObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
+            PlayerMain.instance.BulletScript.rb.position =  PlayerMain.instance.rb.position;   //プレイヤーと弾のいちを等しくする
             Rad = this.transform.localEulerAngles.z;  // ジャンプ台の回転角(度)
             Rad = CalculationScript.AngleCalculation(Rad); // 角度ラジアン変換
             VecPower = CalculationScript.AngleVectorXY(Rad) * SpringPower;  // 飛ぶベクトル量
@@ -46,6 +47,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             PlayerMain.instance.ForciblyReleaseMode(false);
             //PlayerMain.instance.endSwing = true;
             PlayerMain.instance.vel = Vector3.zero;
+            PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
             SoundManager.Instance.PlaySound("決定音");

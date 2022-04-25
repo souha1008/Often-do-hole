@@ -30,7 +30,7 @@ public class PlayerStateOnGround : PlayerState
         //スライド発射処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
-            PlayerScript.animator.SetBool("isRunning", true);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
             PlayerScript.onGroundState = OnGroundState.SLIDE;
         }
         else
@@ -39,7 +39,7 @@ public class PlayerStateOnGround : PlayerState
         }
 
         //アニメ用
-        PlayerScript.animator.SetBool("onGround", true);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
 
     public override void UpdateState()
@@ -141,7 +141,7 @@ public class PlayerStateOnGround : PlayerState
             if (PlayerScript.sourceLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {       
                 isRunning = true;
-                PlayerScript.animator.SetBool("isRunning", true); 
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
               
 
                 if (PlayerScript.vel.x < -0.2f)
@@ -158,7 +158,7 @@ public class PlayerStateOnGround : PlayerState
             else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
             { 
                 isRunning = true;
-                PlayerScript.animator.SetBool("isRunning", true); 
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
                
                
                 if (PlayerScript.vel.x > 0.2f)
@@ -174,7 +174,7 @@ public class PlayerStateOnGround : PlayerState
             else //減衰
             {
                 isRunning = false;
-                PlayerScript.animator.SetBool("isRunning", false);
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
                
                 PlayerScript.vel *= PlayerScript.RUN_FRICTION;
 
@@ -190,7 +190,7 @@ public class PlayerStateOnGround : PlayerState
         if (PlayerScript.isOnGround == false)
         {
             isRunning = false;
-            PlayerScript.animator.SetBool("isRunning", false);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
 
             PlayerScript.onGroundState = OnGroundState.NONE;
             PlayerScript.mode = new PlayerStateMidair(true);
@@ -199,7 +199,7 @@ public class PlayerStateOnGround : PlayerState
         if (shotButton)
         {
             isRunning = false;
-            PlayerScript.animator.SetBool("isRunning", false);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
 
             PlayerScript.onGroundState = OnGroundState.NONE;
 
@@ -217,17 +217,19 @@ public class PlayerStateOnGround : PlayerState
 
     public override void Animation()
     {
-        if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
+        ////速度を参照
+        //float animBlend = Mathf.Abs(PlayerScript.vel.x);
+        //animBlend = Mathf.Clamp(animBlend, 0.0f, PlayerScript.MAX_RUN_SPEED);
+        //PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), animBlend);
+
+        //速度依存でない一時増加
+        if (Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            //PlayerScript.animator.SetBool("isRunning", true);   //走る
-            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 1.0f, 0.1f, Time.deltaTime);
-            //PlayerScript.animator.SetFloat("RunSpeed", 1.0f);
+            PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 1.0f, 0.2f, Time.deltaTime);
         }
         else
         {
-            //PlayerScript.animator.SetBool("isRunning", false); //走らない
-            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 0.0f, 0.1f, Time.deltaTime);
-            //PlayerScript.animator.SetFloat("RunSpeed", 0.0f);
+            PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 0.0f, 0.2f, Time.deltaTime);
         }
 
 
