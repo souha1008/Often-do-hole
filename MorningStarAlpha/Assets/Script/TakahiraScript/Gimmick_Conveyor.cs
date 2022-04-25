@@ -195,7 +195,6 @@ public class ConveyorNone : ConveyorState
     }
     public override void Move()
     {
-        Debug.LogWarning(ConveyorMain.Conveyor);
         if (ConveyorMain.PlayerMoveFlag)
         {
             if (ConveyorMain.Conveyor.MoveRight)
