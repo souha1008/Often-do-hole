@@ -44,7 +44,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
 
             PlayerMain.instance.ForciblyReleaseMode(false);
-            //PlayerMain.instance.endSwing = true;
+            PlayerMain.instance.endSwing = true;
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 

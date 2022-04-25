@@ -5,8 +5,8 @@ public class Direction_UI : MonoBehaviour
 {
     [SerializeField] private PlayerMain PlayerScript;   // プレイヤー
     [SerializeField] private RectTransform CanvasTf;    // キャンバス
-    [SerializeField] private Camera MainCamera;    // キャンバス
-    [SerializeField] private Camera UICamera;    // キャンバス
+    [SerializeField] private Camera MainCamera;    // メインカメラ
+    [SerializeField] private Camera UICamera;    // UIカメラ
 
     [SerializeField] private float Length = 6.0f;       // プレイヤーとの距離
     private Transform TargetTf;                         // プレイヤー
