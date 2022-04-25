@@ -182,6 +182,10 @@ public class PlayerStateOnGround : PlayerState
                 
             }
         }
+
+
+        //バグ防止用にほんの少しだけ弱い重力を与える
+        PlayerScript.vel.y = -0.1f;
     }
 
 
