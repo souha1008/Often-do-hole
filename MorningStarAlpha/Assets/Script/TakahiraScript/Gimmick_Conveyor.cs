@@ -55,6 +55,7 @@ public class Gimmick_Conveyor : Gimmick_Main
                 ConveyorState.PlayerMoveFlag = true;
             }
         }
+
         if (collision.gameObject.CompareTag("Bullet"))
         {
             ConveyorState.BulletMoveFlag = true;
@@ -212,7 +213,8 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorLeft());
                     //}
-                    PlayerMain.instance.ForciblyReturnBullet(true);
+                    //PlayerMain.instance.ForciblyReleaseMode(true);
+                    BulletMoveFlag = false;
                     break;
                 case TOUCH_SIDE.DOWN:
                     if (Conveyor.MoveRight) // âEâÒì]Ç»ÇÁç∂à⁄ìÆ
@@ -233,7 +235,8 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorUp());
                     //}
-                    PlayerMain.instance.ForciblyReturnBullet(true);
+                    //PlayerMain.instance.ForciblyReleaseMode(true);
+                    BulletMoveFlag = false;
                     break;
                 case TOUCH_SIDE.LEFT:
                     //if (Conveyor.MoveRight)
@@ -244,7 +247,8 @@ public class ConveyorNone : ConveyorState
                     //{
                     //    StateChange(new ConveyorDown());
                     //}
-                    PlayerMain.instance.ForciblyReturnBullet(true);
+                    //PlayerMain.instance.ForciblyReleaseMode(true);
+                    BulletMoveFlag = false;
                     break;
             }
         }

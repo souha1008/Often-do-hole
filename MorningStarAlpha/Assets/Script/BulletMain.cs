@@ -6,7 +6,10 @@ public class BulletMain : MonoBehaviour
     [System.NonSerialized] public Collider co;
 
     [SerializeField] private GameObject Player;
-    [SerializeField] private Renderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
+    [SerializeField] private SkinnedMeshRenderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
+    //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
+
+    
 
     private PlayerMain PlayerScript;
     [ReadOnly] public Vector3 vel;
@@ -14,8 +17,6 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool isTouched; //弾がなにかに触れたか
     [ReadOnly] public bool onceFlag; //一回の発射に付き接触が起こるのは一回
     [ReadOnly] public bool StopVelChange; //弾が戻されて引っ張られている状態
-    [ReadOnly] public bool swingEnd;
-    [ReadOnly] public bool followEnd;
 
     //下川原
     private int ExitFlameCnt = 0;//存在し始めてからのカウント
@@ -55,12 +56,18 @@ public class BulletMain : MonoBehaviour
         co.enabled = false;
         for (int i = 0; i < Part.Length; i++)
         {
-            Part[i].enabled = false;
-            rb.isKinematic = true;
-            rb.velocity = Vector3.zero;
-            vel = Vector3.zero;
-            StopVelChange = true;
+            Part[i].enabled = false;         
         }
+
+        //for (int i = 0; i < animPart.Length; i++)
+        //{
+        //    animPart[i].enabled = true;
+        //}
+
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        vel = Vector3.zero;
+        StopVelChange = true;
     }
 
     public void VisibleBullet()
@@ -71,20 +78,26 @@ public class BulletMain : MonoBehaviour
         {
             Part[i].enabled = true;
         }
+
+        //for (int i = 0; i < animPart.Length; i++)
+        //{
+        //    animPart[i].enabled = false;
+        //}
     }
-
-
-
 
     public void ShotBullet()
     {
         rb.isKinematic = false;
         onceFlag = false;
         StopVelChange = false;
-        swingEnd = false;
-        followEnd = false;
+      
+        
         colPoint = Vector3.zero;
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+
+        //プレイヤー強制処理フラグクリア
+        PlayerScript.ClearModeTransitionFlag();
+
 
         //弾の初期化
         rb.velocity = Vector3.zero;
@@ -215,54 +228,62 @@ public class BulletMain : MonoBehaviour
 
     }
 
+    private void StopBullet()
+    {
+        isTouched = true;
+        GetComponent<Collider>().isTrigger = true;
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        StopVelChange = true;
+    }
+
+
     private void OnCollisionEnter(Collision collision)
     {
         if (ReferenceEquals(Player, null) == false)
         {
             //錨が刺さる場所を壁ピッタリにする処理
             //AdjustColPoint(colAspect, colPoint);
-
+            Aspect_8 colAspect;
 
             if (onceFlag == false)
-            {
+            { 
                 //collsion先のtagで場合分け
                 string tag = collision.gameObject.tag;
+
                 switch (tag)
                 {
                     case "Platform":
                         onceFlag = true;
-                        Aspect_8 colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
-                        colPoint = collision.GetContact(0).point;
+                        StopBullet();
 
-                        //カメラシェイク
+                      
+                        //各種演出
                         CameraShake.instance.Shake(rb.velocity);
-
+                        colPoint = collision.GetContact(0).point;
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
-                        isTouched = true;
-                        GetComponent<Collider>().isTrigger = true;
-                        rb.isKinematic = true;
-                        rb.velocity = Vector3.zero;
-                        StopVelChange = true;
-                       
+
+                        //面計算
+                        colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
                         if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
-                            followEnd = true;
+                            PlayerScript.ForciblyFollowMode(false);
                         }
                         else if(colAspect == Aspect_8.UP_RIGHT && this.vel.x >= 0) //右に進んでいるのに右上に当たったとき
                         {
                             //FOLLOW状態に移行
-                            followEnd = true;
+                            PlayerScript.ForciblyFollowMode(false);
                         }
                         else if (colAspect == Aspect_8.UP_LEFT && this.vel.x <= 0) //逆
                         {
                             //FOLLOW状態に移行
-                            followEnd = true;
+                            PlayerScript.ForciblyFollowMode(false);
                         }
                         else
                         {
                             //SWING状態に移行
-                            swingEnd = true;
+                            PlayerScript.ForciblySwingMode();
                         }
                      
 
@@ -272,17 +293,42 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         if (PlayerScript.isOnGround)
                         {
-                            PlayerScript.ForciblyReturnBullet(false);
+                            PlayerScript.ForciblyReleaseMode(false);
                         }
                         else
                         {
-                            PlayerScript.ForciblyReturnBullet(true);
+                            PlayerScript.ForciblyReleaseMode(true);
                         }                        
+                        break;
+
+                    case "Conveyor":
+                        onceFlag = true;
+                        StopBullet();
+
+                        //面計算
+                        colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+                        if ((colAspect == Aspect_8.DOWN) || (colAspect == Aspect_8.DOWN_LEFT) || (colAspect == Aspect_8.DOWN_RIGHT))
+                        {
+                            //SWING状態に移行
+                            PlayerScript.ForciblySwingMode();
+                            Debug.Log("swing");                          
+                        }
+                        else if ((colAspect == Aspect_8.UP) || (colAspect == Aspect_8.UP_LEFT) || (colAspect == Aspect_8.UP_RIGHT))
+                        {
+                            //FOLLOW状態に移行
+                            PlayerScript.ForciblyFollowMode(false);
+                            Debug.Log("follow");
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblyReleaseMode(true);
+                            Debug.Log("release");
+                        }
+
                         break;
 
                     case "Player":
                         onceFlag = false;
-                        //Physics.IgnoreCollision(this.GetComponent<Collider>(), collision.collider);
                         Debug.LogWarning("colPlayerBullet");
                         break;
 
@@ -296,4 +342,33 @@ public class BulletMain : MonoBehaviour
             }
         }
     }
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (ReferenceEquals(Player, null) == false)
+        {
+            //錨が刺さる場所を壁ピッタリにする処理
+            //AdjustColPoint(colAspect, colPoint);
+
+            if (onceFlag == false)
+            {
+                //collsion先のtagで場合分け
+                string tag = other.gameObject.tag;
+                switch (tag)
+                {
+                    case "WireMesh":
+                    case "SpringBoard":
+                        onceFlag = true;
+                        StopBullet();
+                        PlayerScript.ForciblyFollowMode(true);
+
+                        break;
+                }
+            }
+        }
+    }
 }
+
+

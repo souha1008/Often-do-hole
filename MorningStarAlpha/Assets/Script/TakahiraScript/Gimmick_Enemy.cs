@@ -280,7 +280,7 @@ public class Gimmick_Enemy : Gimmick_Main
         if (collider.gameObject.CompareTag("Player"))
         {
             // プレイヤーノックバックステートに移行
-
+            PlayerMain.instance.mode = new PlayerState_Knockback(this.gameObject.transform.position);
         }
     }
 
