@@ -1776,6 +1776,11 @@ Transform:
   m_Father: {fileID: 824868828}
   m_RootOrder: 118
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!137 &147278791 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7837300956473592093, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+  m_PrefabInstance: {fileID: 6353977211574338236}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &149408775
 GameObject:
   m_ObjectHideFlags: 0
@@ -4887,6 +4892,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4194611054144986034, guid: 8ef3f585df135504797ac41ef96f65c0, type: 3}
   m_PrefabInstance: {fileID: 368389100}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &381101197 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1176087276126134702, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+  m_PrefabInstance: {fileID: 6353977211574338236}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &384654388
 PrefabInstance:
@@ -28000,6 +28010,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2033655927108465836, guid: 7f61f94ecc3d00d46a71d048bd77dc5b, type: 3}
   m_PrefabInstance: {fileID: 1123006075}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &1978923334 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7358650060716999688, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+  m_PrefabInstance: {fileID: 6353977211574338236}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1981790100
 GameObject:
   m_ObjectHideFlags: 0
@@ -31203,5 +31218,21 @@ PrefabInstance:
       propertyPath: Player
       value: 
       objectReference: {fileID: 1907481519}
+    - target: {fileID: 5445261990607434962, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+      propertyPath: Part.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5445261990607434962, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+      propertyPath: Part.Array.data[0]
+      value: 
+      objectReference: {fileID: 147278791}
+    - target: {fileID: 5445261990607434962, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+      propertyPath: Part.Array.data[1]
+      value: 
+      objectReference: {fileID: 1978923334}
+    - target: {fileID: 5445261990607434962, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}
+      propertyPath: Part.Array.data[2]
+      value: 
+      objectReference: {fileID: 381101197}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4530b75c6310d2249825c4236f1338b0, type: 3}

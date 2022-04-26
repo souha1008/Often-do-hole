@@ -444,6 +444,10 @@ public class PlayerMain : MonoBehaviour
             forciblyFollowFlag = false;
             forciblySwingFlag = false;
         }
+        else if(refState == EnumPlayerState.SWING)
+        {
+            endSwing = true;
+        }
     }
 
     public void ForciblyFollowMode(bool velTowardBullet)

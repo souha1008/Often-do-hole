@@ -1459,7 +1459,6 @@ public class PlayerStateSwing_Vel : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
-
                 }
                 break;
 
