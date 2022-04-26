@@ -530,7 +530,7 @@ public class PlayerMain : MonoBehaviour
         //ÉVÉáÉbÉgíÜÇ…ï«Ç…Ç†ÇΩÇ¡ÇΩÇ∆Ç´ÇÃèàóù
         if (refState == EnumPlayerState.SHOT)
         {
-            if (collision.gameObject.CompareTag("Platform"))
+            if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
             {
                 switch (shotState)
                 {
@@ -580,7 +580,7 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                if (collision.gameObject.CompareTag("Platform"))
+                if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
