@@ -3560,7 +3560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!120 &1289921553
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -12001,6 +12001,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 2969638211002371839}
   Bullet: {fileID: 29469854}
+  PlayerAngle: {x: 0, y: 0, z: 0}
 --- !u!1 &2969638211403230262
 GameObject:
   m_ObjectHideFlags: 0
@@ -12028,6 +12029,10 @@ PrefabInstance:
     - target: {fileID: 8444013274539345202, guid: cf1dad84d5f97f64fb7361501747bff8, type: 3}
       propertyPath: m_Name
       value: Direction_UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8444013274539345202, guid: cf1dad84d5f97f64fb7361501747bff8, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8444013274539345213, guid: cf1dad84d5f97f64fb7361501747bff8, type: 3}
       propertyPath: m_RootOrder
