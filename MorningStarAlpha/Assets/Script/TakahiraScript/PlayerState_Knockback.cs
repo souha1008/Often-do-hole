@@ -25,7 +25,7 @@ public class PlayerState_Knockback : PlayerState
         PlayerScript.midairState = MidairState.NORMAL;
 
         PlayerScript.AnimVariableReset();
-        PlayerScript.animator.SetTrigger("NockBack");
+        PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
 
         // •dˆø‚«–ß‚µ
         BulletScript.ReturnBullet();
@@ -47,7 +47,7 @@ public class PlayerState_Knockback : PlayerState
         PlayerScript.midairState = MidairState.NORMAL;
 
         PlayerScript.AnimVariableReset();
-        PlayerScript.animator.SetTrigger("NockBack");
+        PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
 
         // •dˆø‚«–ß‚µ
         BulletScript.ReturnBullet();

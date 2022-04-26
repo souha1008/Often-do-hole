@@ -71,8 +71,15 @@ public enum EnumPlayerState
 public struct AnimHash{
     public int onGround;
     public int isRunning;
-    public int RunSpeed;
+    public int isShot;
     public int isSwing;
+    public int wallKick;
+    public int NockBack;
+    public int BoostFlag;
+    public int shotdirType;
+    public int RunSpeed;
+    public int rareWaitTrigger;
+    public int rareWaitType;
 }
 
 
@@ -277,13 +284,29 @@ public class PlayerMain : MonoBehaviour
     {
         animHash.onGround = Animator.StringToHash("onGround");
         animHash.isRunning = Animator.StringToHash("isRunning");
+        animHash.isShot = Animator.StringToHash("isShot");
+        animHash.isSwing = Animator.StringToHash("isSwing");
+        animHash.wallKick = Animator.StringToHash("wallKick");
+        animHash.NockBack = Animator.StringToHash("NockBack");
+        animHash.BoostFlag = Animator.StringToHash("BoostFlag");
+        animHash.shotdirType = Animator.StringToHash("shotdirType");
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
-    }
+        animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
+        animHash.rareWaitType = Animator.StringToHash("rareWaitType");
+    }   
 
     public void AnimVariableReset()
     {
-        animator.SetBool("isShot", false);
-        animator.SetBool("isSwing", false);
+        animator.SetBool(animHash.isShot, false);
+        animator.SetBool(animHash.isSwing, false);
+    }
+
+    public void AnimTriggerReset()
+    {
+        animator.ResetTrigger(animHash.wallKick);
+        animator.ResetTrigger(animHash.NockBack);
+        animator.ResetTrigger(animHash.BoostFlag);
+        animator.ResetTrigger(animHash.rareWaitTrigger);
     }
 
 

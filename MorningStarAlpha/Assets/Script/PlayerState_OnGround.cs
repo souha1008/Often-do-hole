@@ -239,16 +239,16 @@ public class PlayerStateOnGround : PlayerState
         }
 
 
-        if (isRunning == false)
+        if (PlayerScript.animator.GetBool(PlayerScript.animHash.isRunning) == false)
         {
             rareMotionTimer += Time.deltaTime;
             if (rareMotionTimer > 10.0f)
             {
                 rareMotionTimer = 0.0f;
-                PlayerScript.animator.SetTrigger("rareWaitTrigger");
+                PlayerScript.animator.SetTrigger(PlayerScript.animHash.rareWaitTrigger);
 
                 int motionType = Random.Range(0, 2);
-                PlayerScript.animator.SetInteger("rareWaitType", motionType);
+                PlayerScript.animator.SetInteger(PlayerScript.animHash.rareWaitType, motionType);
             }
         }
         else

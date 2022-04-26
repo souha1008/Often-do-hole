@@ -944,7 +944,7 @@ public class PlayerStateSwing_Vel : PlayerState
 
         PlayerScript.useVelocity = true;
 
-        PlayerScript.animator.SetBool("isSwing", true);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, true);
 
         CalculateStartVariable();
 
@@ -1320,7 +1320,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 //ï«íµÇÀï‘ÇËèàóù
                 if (PlayerScript.conuterSwing)
                 {
-                    PlayerScript.animator.SetTrigger("wallKick");
+                    PlayerScript.animator.SetTrigger(PlayerScript.animHash.wallKick);
                     CalculateCounterVariable();
                     PlayerScript.conuterSwing = false;
                 }
@@ -1471,7 +1471,7 @@ public class PlayerStateSwing_Vel : PlayerState
     {
         if (finishFlag)
         {
-            PlayerScript.animator.SetBool("isSwing", false);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, false);
             PlayerScript.swingState = SwingState.NONE;
             PlayerScript.mode = new PlayerStateMidair(true);
         }
