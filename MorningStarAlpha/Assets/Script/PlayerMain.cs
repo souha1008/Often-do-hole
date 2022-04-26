@@ -65,11 +65,14 @@ public enum EnumPlayerState
     STAN,      //スタン状態
 }
 
-
+/// <summary>
+///アニメーションコントローラー用の文字列をindexにして格納
+/// </summary>
 public struct AnimHash{
     public int onGround;
     public int isRunning;
     public int RunSpeed;
+    public int isSwing;
 }
 
 
@@ -277,6 +280,12 @@ public class PlayerMain : MonoBehaviour
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
     }
 
+    public void AnimVariableReset()
+    {
+        animator.SetBool("isShot", false);
+        animator.SetBool("isSwing", false);
+    }
+
 
     public RaycastHit getFootHit()
     {
@@ -350,10 +359,16 @@ public class PlayerMain : MonoBehaviour
         {
             if (stickCanShotRange)
             {
-                adjustLeftStick = vec;
+                adjustLeftStick = (Vector2)vec;
+            }
+            else
+            {
+                adjustLeftStick = Vector2.zero;
             }
         }
 
+
+        Debug.Log(adjustLeftStick);
     }
 
     /// <summary>

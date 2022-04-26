@@ -97,6 +97,7 @@ public class PlayerStateShot : PlayerState
         switch (PlayerScript.shotState)
         {
             case ShotState.STRAINED:
+            case ShotState.FOLLOW:
                 if (PlayerScript.isOnGround == false)
                 {
                     Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
@@ -108,7 +109,6 @@ public class PlayerStateShot : PlayerState
                 break;
 
             case ShotState.RETURN:
-            case ShotState.FOLLOW:
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
                     PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
@@ -177,7 +177,7 @@ public class PlayerStateShot : PlayerState
 
     private void intoVecsQueue()
     {
-        const int VEC_SAVE_NUM = 25;
+        const int VEC_SAVE_NUM = 26;
         if (PlayerScript.shotState == ShotState.GO)
         {
             Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
@@ -261,8 +261,6 @@ public class PlayerStateShot : PlayerState
             }
         }
 
-
-
         //‚Â‚¢‚Ä‚¢‚­ˆ—
         if (PlayerScript.shotState == ShotState.STRAINED)
         {
@@ -325,8 +323,7 @@ public class PlayerStateShot : PlayerState
         intoVecsQueue();
 
         switch (PlayerScript.shotState)
-        {
-            
+        {           
             case ShotState.GO:         
                 //•R‚Ì’·‚³‚ð’´‚¦‚½‚çˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô‚É‚·‚é
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
