@@ -34,18 +34,6 @@ public class PlayerState
         BulletScript.transform.position = adjustPos;
     }
 
-    protected void RotationStand()
-    {
-        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-        {
-            PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
-        }
-        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-        {
-            PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -90, 0));
-        }
-    }
-
 }
 
 
