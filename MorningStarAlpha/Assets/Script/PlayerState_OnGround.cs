@@ -26,8 +26,10 @@ public class PlayerStateOnGround : PlayerState
 
         //ボール関連
         BulletScript.InvisibleBullet();
-        
-        //スライド発射処理
+
+        RotationStand();
+
+        //スライド処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
             PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
@@ -138,7 +140,7 @@ public class PlayerStateOnGround : PlayerState
         }
         else //!isSlide
         {
-            if (PlayerScript.sourceLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
+            if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {       
                 isRunning = true;
                 PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
