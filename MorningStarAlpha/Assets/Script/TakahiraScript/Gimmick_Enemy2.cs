@@ -27,7 +27,8 @@ public class Gimmick_Enemy2 : Gimmick_Main
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet") ||
+            (collision.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))
         {
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop();
@@ -38,7 +39,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
             // 死亡
             Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.CompareTag("Platform"))
         {
             Vel.y = 0.0f;
         }
@@ -46,12 +47,12 @@ public class Gimmick_Enemy2 : Gimmick_Main
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.CompareTag("Platform"))
         {
             Vel.y = 0.0f;
         }
 
-        if (collision.gameObject.tag == "Box")
+        if (collision.gameObject.CompareTag("Box"))
         {
             // 衝突点取得
             foreach (ContactPoint contact in collision.contacts)
