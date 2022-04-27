@@ -22,6 +22,8 @@ public class PlayerStateShot : PlayerState
     private int beforeFrame;
     bool recoverCanShot;
     bool onceAnim;
+
+
     private void Init()
     {
         countTime = 0.0f;
@@ -68,7 +70,7 @@ public class PlayerStateShot : PlayerState
         BulletScript.VisibleBullet();
 
       
-        BulletScript.ShotBullet();
+        BulletScript.SetBulletState(EnumBulletState.GO);
 
         Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
     }
@@ -92,19 +94,8 @@ public class PlayerStateShot : PlayerState
                 }
                 break;
 
-            case ShotState.RETURN:
-                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-                {
-                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
-                }
-                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {
-                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -90, 0));
-                }
-                break;
+        
         }
-
-
     }
 
     /// <summary>
@@ -127,7 +118,7 @@ public class PlayerStateShot : PlayerState
 
     private Vector3 ReleaseForceCalicurate()
     {
-        if(Vecs.Count == 0) 
+        if (Vecs.Count == 0)
         {
             Debug.LogWarning("No Vecs IN Queue");
             return BulletScript.vel;
@@ -140,24 +131,10 @@ public class PlayerStateShot : PlayerState
             float minVecPower = Mathf.Min(returnVec.magnitude, 60.0f);
             returnVec = returnVec * (60.0f / minVecPower);
 
-            //入力方向にやや補正
-            //if(PlayerScript.isOnGround == false)
-            //{
-            //    if((PlayerScript.dir == PlayerMoveDir.RIGHT) && PlayerScript.sourceLeftStick.x > 0.1f)
-            //    {
-            //        returnVec.x *= 1.1f;
-            //    }
-            //    if ((PlayerScript.dir == PlayerMoveDir.LEFT) && PlayerScript.sourceLeftStick.x < -0.1f)
-            //    {
-            //        returnVec.x *= 1.1f;
-            //    }
-            //}
-
             return returnVec;
         }
-      
-    }
 
+    }
 
     private void intoVecsQueue()
     {
@@ -195,22 +172,54 @@ public class PlayerStateShot : PlayerState
         //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
         if (PlayerScript.forciblyRleaseFlag)
         {
-            PlayerScript.forciblyRleaseFlag = false;
-
-            if (PlayerScript.forciblyReleaseSaveVelocity)
+            if (BulletScript.isTouched)
             {
-                PlayerScript.vel = ReleaseForceCalicurate();
-                ;
+                PlayerScript.forciblyRleaseFlag = false;
+
+                if (PlayerScript.forciblyReleaseSaveVelocity)
+                {
+                    PlayerScript.vel = ReleaseForceCalicurate();
+                    ;
+                }
+                else
+                {
+                    PlayerScript.vel = Vector3.zero;
+                }
+
+                BulletScript.SetBulletState(EnumBulletState.RETURN);
+                PlayerScript.useVelocity = true;
+                finishFlag = true;
             }
-            else
+        }
+
+        //follow開始
+
+        if ((PlayerScript.shotState == ShotState.GO) || (PlayerScript.shotState == ShotState.STRAINED))
+        {
+            if (BulletScript.isTouched)
             {
-                PlayerScript.vel = Vector3.zero;
+                if (PlayerScript.forciblyFollowFlag)
+                {
+                    BulletScript.SetBulletState(EnumBulletState.STOP);
+
+                    //PlayerScript.vel = ReleaseForceCalicurate();
+
+                    if (PlayerScript.forciblyFollowVelToward)
+                    {
+                        Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
+                        PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
+                        recoverCanShot = true;
+                    }
+
+                    PlayerScript.useVelocity = true;
+                    PlayerScript.forciblyFollowFlag = false;
+                    PlayerScript.forciblyFollowVelToward = false;
+                    followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
+
+                    Debug.Log("aaaaaa");
+                    PlayerScript.shotState = ShotState.FOLLOW;
+                }
             }
-
-            BulletScript.ReturnBullet();
-
-            PlayerScript.useVelocity = true;
-            PlayerScript.shotState = ShotState.RETURN;
         }
 
         if (countTime > 0.1f)
@@ -235,12 +244,12 @@ public class PlayerStateShot : PlayerState
                 if (releaseButton) //ボタンが離れていたら
                 {
                     releaseButton = false;
-                    BulletScript.ReturnBullet();
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
 
                     PlayerScript.vel = ReleaseForceCalicurate();
 
                     PlayerScript.useVelocity = true;
-                    PlayerScript.shotState = ShotState.RETURN;
+                    finishFlag = true;
                 }
             }
         }
@@ -269,33 +278,7 @@ public class PlayerStateShot : PlayerState
             }
         }
 
-        //follow開始
-
-        if ((PlayerScript.shotState == ShotState.GO) || (PlayerScript.shotState == ShotState.STRAINED))
-        {
-            if (BulletScript.isTouched)
-            {
-                if (PlayerScript.forciblyFollowFlag)
-                {
-                    BulletScript.FollowedPlayer();
-
-                    PlayerScript.vel = ReleaseForceCalicurate();
-
-                    if (PlayerScript.forciblyFollowVelToward)
-                    {
-                        Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
-                        PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
-                        recoverCanShot = true;
-                    }
-
-                    PlayerScript.useVelocity = true;
-                    PlayerScript.forciblyFollowFlag = false;
-                    PlayerScript.forciblyFollowVelToward = false;
-                    PlayerScript.shotState = ShotState.FOLLOW;
-                    followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
-                }
-            }
-        }
+      
     }
 
     public override void Move()
@@ -347,26 +330,6 @@ public class PlayerStateShot : PlayerState
 
                 break;
 
-            case ShotState.RETURN:
-                //自分へ弾を引き戻す
-                if (onceAnimReturn == false)
-                {
-                    onceAnimReturn = true;
-                    PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
-                }
-
-                Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-                vecToPlayer = vecToPlayer.normalized;
-
-                BulletScript.vel = vecToPlayer * 200.0f;
-
-                //距離が一定以下になったら終了処理フラグを建てる
-                if (interval < 4.0f)
-                {
-                    finishFlag = true;
-                }
-                break;
-
             case ShotState.FOLLOW:
                 //自分へ弾を引き戻す
                 Vector3 vecToBullet = BulletScript.rb.position - PlayerScript.rb.position;
@@ -379,18 +342,21 @@ public class PlayerStateShot : PlayerState
                 if(maxFollowAddvec.magnitude > 80)
                 {
                     PlayerScript.vel *= 0.5f;
-                    PlayerScript.ForciblyReleaseMode(true);
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : over 80");
+                    finishFlag = true;
                 }
                 //ボールに収束しなそうだったら切り離し（回転バグ防止）
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
                     PlayerScript.ForciblyReleaseMode(true);
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : 収束しない");
+                    finishFlag = true;
                 }
 
-                if (interval < 4.0f)
+                if (interval < 8.0f)
                 {
                     finishFlag = true;
                 }

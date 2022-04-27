@@ -1114,10 +1114,10 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             case SwingState.TOUCHED:
                 float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
-#if false
+#if true
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
-#endif
+#else
                 Quaternion quaternion = Quaternion.LookRotation(ChainManager.instance.PlayerAngle);
 
                 Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
@@ -1138,19 +1138,8 @@ public class PlayerStateSwing_Vel : PlayerState
                         quaternion *= Quaternion.Euler(0, 180, 0);
                     }
                 }
-
+#endif
                 PlayerScript.rb.rotation = quaternion;
-                break;
-
-            case SwingState.RELEASED:
-                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-                {
-                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
-                }
-                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {
-                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -90, 0));
-                }
                 break;
         }
 
@@ -1200,10 +1189,7 @@ public class PlayerStateSwing_Vel : PlayerState
 
             if (PlayerScript.endSwing)
             {
-                PlayerScript.endSwing = false;
-                PlayerScript.useVelocity = true;
-                BulletScript.ReturnBullet();
-                PlayerScript.swingState = SwingState.RELEASED;
+                finishFlag = true;
             }
 
             if (releaseButton == true)
@@ -1277,8 +1263,7 @@ public class PlayerStateSwing_Vel : PlayerState
 
                 PlayerScript.useVelocity = true;
                 BulletScript.ReturnBullet();
-                PlayerScript.swingState = SwingState.RELEASED;
-
+                finishFlag = true;
             }
         }
     }
@@ -1459,19 +1444,6 @@ public class PlayerStateSwing_Vel : PlayerState
 
                 break;
 
-            case SwingState.RELEASED:
-                //自分へ弾を引き戻す
-                float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-                Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
-                vec = vec.normalized;
-                BulletScript.vel = vec * 200.0f;
-                //距離が一定以下になったら弾を非アクティブ
-                if (interval < 4.0f)
-                {
-                    finishFlag = true;
-                }
-                break;
-
             default:
                 break;
         }
@@ -1483,6 +1455,7 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, false);
             PlayerScript.swingState = SwingState.NONE;
+            BulletScript.SetBulletState(EnumBulletState.RETURN);
             PlayerScript.mode = new PlayerStateMidair(true, MidairState.BOOST);
         }
     }

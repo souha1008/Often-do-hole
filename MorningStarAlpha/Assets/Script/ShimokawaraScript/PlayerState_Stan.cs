@@ -30,7 +30,7 @@ public class PlayerStateStan : PlayerState
 
     public override void UpdateState()
     {
-        BulletAdjust();
+        //BulletAdjust();
 
         
     }

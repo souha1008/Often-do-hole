@@ -18,8 +18,6 @@ public class PlayerStateMidair : PlayerState
         shotButton = false;
         boostTimer = 0.0f;
 
-        BulletScript.InvisibleBullet();
-
         RotationStand();
         //ƒAƒjƒ—p
         PlayerScript.ResetAnimation();
@@ -46,7 +44,6 @@ public class PlayerStateMidair : PlayerState
 
     public override void UpdateState()
     {
-        BulletAdjust();
 
         if (PlayerScript.adjustLeftStick.x > 0.01f)
         {

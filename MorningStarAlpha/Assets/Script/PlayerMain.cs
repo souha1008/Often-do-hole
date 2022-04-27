@@ -35,7 +35,6 @@ public enum SwingState
 {
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
-    RELEASED,  //切り離した状態
 }
 
 /// <summary>
@@ -46,7 +45,6 @@ public enum ShotState
     NONE,       //弾射出されていない
     GO,         //引っ張られずに飛んでいる
     STRAINED,  //プレイヤーを引っ張りながら飛んでいる
-    RETURN,     //弾がプレイヤーに戻って終了
     FOLLOW,     //弾に勢いよく飛んでいき終了
 }
 
@@ -244,8 +242,7 @@ public class PlayerMain : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-        {         
-
+        {
             if (mode != null)
             {
                 mode.Move();
@@ -270,7 +267,7 @@ public class PlayerMain : MonoBehaviour
 
             if (Mathf.Abs(addVel.magnitude) > 10.0f)
             {
-                addVel *= 0.96f;
+                addVel *= 0.98f;
             }
             else
             {
@@ -398,9 +395,6 @@ public class PlayerMain : MonoBehaviour
                 adjustLeftStick = Vector2.zero;
             }
         }
-
-
-        Debug.Log(adjustLeftStick);
     }
 
     /// <summary>
@@ -539,29 +533,6 @@ public class PlayerMain : MonoBehaviour
                         break;
                 }
         }
-        else if (refState == EnumPlayerState.SWING)
-        {
-            if(swingState == SwingState.RELEASED)
-            {
-                switch (asp)
-                {
-                    case Aspect.LEFT:
-                    case Aspect.RIGHT:
-                        vel.x *= 0.0f;
-                        if (vel.y > 1.0f)
-                        {
-                            vel.y *= 0.0f;
-                        }
-                        break;
-
-                    case Aspect.DOWN:
-                        vel.x *= 1.0f;
-                        vel.y *= 0.0f;
-                        break;
-                }
-            }
-        }
-
 
 
         //ショット中に壁にあたったときの処理
@@ -588,7 +559,6 @@ public class PlayerMain : MonoBehaviour
                         break;
 
                     case ShotState.GO:
-                    case ShotState.RETURN:
                         //勢い殺す
                         switch (asp)
                         {

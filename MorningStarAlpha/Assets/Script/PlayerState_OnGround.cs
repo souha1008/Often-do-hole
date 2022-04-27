@@ -22,9 +22,6 @@ public class PlayerStateOnGround : PlayerState
         slideEndTimer = 0.0f;
         rareMotionTimer = 0.0f;
 
-        //ボール関連
-        BulletScript.InvisibleBullet();
-
         RotationStand();
 
         //スライド処理
@@ -45,7 +42,7 @@ public class PlayerStateOnGround : PlayerState
 
     public override void UpdateState()
     {
-        BulletAdjust();
+        //BulletAdjust();
 
         if (PlayerScript.ReleaseMode)
         {
