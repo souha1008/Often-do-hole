@@ -380,14 +380,14 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         isTouched = true;
 
-                        //if (PlayerScript.isOnGround)
-                        //{
-                        //    PlayerScript.ForciblyReleaseMode(false);
-                        //}
-                        //else
-                        //{
-                        //    PlayerScript.ForciblyReleaseMode(true);
-                        //}                        
+                        if (PlayerScript.isOnGround)
+                        {
+                            PlayerScript.ForciblyReleaseMode(false);
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblyReleaseMode(true);
+                        }
                         break;
 
                     case "Conveyor":

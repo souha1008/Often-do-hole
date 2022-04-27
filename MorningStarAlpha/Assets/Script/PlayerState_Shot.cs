@@ -194,33 +194,32 @@ public class PlayerStateShot : PlayerState
 
         //follow開始
 
-        if ((PlayerScript.shotState == ShotState.GO) || (PlayerScript.shotState == ShotState.STRAINED))
+   
+        if (PlayerScript.forciblyFollowFlag)
         {
             if (BulletScript.isTouched)
             {
-                if (PlayerScript.forciblyFollowFlag)
+                BulletScript.SetBulletState(EnumBulletState.STOP);
+
+                //PlayerScript.vel = ReleaseForceCalicurate();
+
+                if (PlayerScript.forciblyFollowVelToward)
                 {
-                    BulletScript.SetBulletState(EnumBulletState.STOP);
-
-                    //PlayerScript.vel = ReleaseForceCalicurate();
-
-                    if (PlayerScript.forciblyFollowVelToward)
-                    {
-                        Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
-                        PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
-                        recoverCanShot = true;
-                    }
-
-                    PlayerScript.useVelocity = true;
-                    PlayerScript.forciblyFollowFlag = false;
-                    PlayerScript.forciblyFollowVelToward = false;
-                    followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
-
-                    Debug.Log("aaaaaa");
-                    PlayerScript.shotState = ShotState.FOLLOW;
+                    Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
+                    PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
+                    recoverCanShot = true;
                 }
+
+                PlayerScript.useVelocity = true;
+                PlayerScript.forciblyFollowFlag = false;
+                PlayerScript.forciblyFollowVelToward = false;
+                followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
+
+                Debug.Log("aaaaaa");
+                PlayerScript.shotState = ShotState.FOLLOW;
             }
         }
+        
 
         if (countTime > 0.1f)
         {
@@ -356,9 +355,10 @@ public class PlayerStateShot : PlayerState
                     finishFlag = true;
                 }
 
-                if (interval < 8.0f)
+                if (interval < 4.0f)
                 {
                     finishFlag = true;
+                    BulletScript.SetBulletState(EnumBulletState.READY);
                 }
 
                 break;
@@ -368,22 +368,18 @@ public class PlayerStateShot : PlayerState
     public override void StateTransition()
     {
         //ボールが触れたらスイング状態
-        if (BulletScript.isTouched)
+        if (PlayerScript.forciblySwingFlag)
         {
-            PlayerScript.shotState = ShotState.NONE;
-            PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
-
-            if (PlayerScript.forciblySwingFlag)
+            if (BulletScript.isTouched)
             {
+                PlayerScript.shotState = ShotState.NONE;
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
+                BulletScript.SetBulletState(EnumBulletState.STOP);
+
                 PlayerScript.forciblySwingFlag = false;
-                if (PlayerScript.AutoRelease)
-                {
-                    PlayerScript.mode = new PlayerStateSwing_Vel();
-                }
-                else
-                {
-                    PlayerScript.mode = new PlayerStateSwing_Vel();
-                }
+               
+                PlayerScript.mode = new PlayerStateSwing_Vel();
+                
             }
         }
 
