@@ -215,7 +215,6 @@ public class PlayerStateShot : PlayerState
                 PlayerScript.forciblyFollowVelToward = false;
                 followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
 
-                Debug.Log("aaaaaa");
                 PlayerScript.shotState = ShotState.FOLLOW;
             }
         }
@@ -298,9 +297,7 @@ public class PlayerStateShot : PlayerState
                     BulletScript.vel /= BulletScript.BULLET_SPEED_MULTIPLE;
 
                     PlayerScript.shotState = ShotState.STRAINED;
-                    PlayerScript.vel = Vector3.zero;
-
-                               
+                    PlayerScript.vel = Vector3.zero;            
                 }
 
                 debug_timer += Time.fixedDeltaTime;

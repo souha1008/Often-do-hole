@@ -438,7 +438,7 @@ public class BulletMain : MonoBehaviour
             if (onceFlag == false)
             {
                 //collsionæ‚Ìtag‚Åê‡•ª‚¯
-
+                if(PlayerScript.refState == EnumPlayerState.SHOT)
                 if (NowBulletState == EnumBulletState.GO)
                 {
                     string tag = other.gameObject.tag;
