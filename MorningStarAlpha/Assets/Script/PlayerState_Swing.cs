@@ -1173,8 +1173,21 @@ public class PlayerStateSwing_Vel : PlayerState
 
     public void AnimFrameSetting()
     {
-        float frame = 60;
-        PlayerScript.animator.Play("Swing.normalSwing", 0, frame);
+        float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
+        if (firstDir == PlayerMoveDir.RIGHT)
+        {
+            degree -= 85;
+            degree /= 170;
+            Mathf.Clamp01(degree);
+        }
+        else if(firstDir == PlayerMoveDir.LEFT)
+        {
+            degree -= 85;
+            degree /= 170;
+            Mathf.Clamp01(degree);
+        }
+
+        PlayerScript.animator.Play("Swing.normalSwing", 0, degree);
     }
 
     public override void UpdateState()
