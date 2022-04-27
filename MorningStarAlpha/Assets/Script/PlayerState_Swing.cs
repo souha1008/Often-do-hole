@@ -1114,7 +1114,7 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             case SwingState.TOUCHED:
                 float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
-#if true
+#if false
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
 #else
@@ -1262,7 +1262,6 @@ public class PlayerStateSwing_Vel : PlayerState
                 PlayerScript.vel = addVec;
 
                 PlayerScript.useVelocity = true;
-                BulletScript.ReturnBullet();
                 finishFlag = true;
             }
         }

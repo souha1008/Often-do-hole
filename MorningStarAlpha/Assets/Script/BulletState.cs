@@ -38,6 +38,7 @@ public class BulletReady : BulletState
         BulletScript.NowBulletState = EnumBulletState.READY;
         BulletScript.InvisibleBullet();
         BulletScript.isTouched = false;
+        BulletScript.co.enabled = false;
         BulletScript.co.isTrigger = true;
         BulletScript.CanShotFlag = true;
     }
@@ -65,6 +66,7 @@ public class BulletGo : BulletState
         // 初期化
         BulletScript.NowBulletState = EnumBulletState.GO;
         BulletScript.VisibleBullet();
+        BulletScript.co.enabled = true;
         BulletScript.co.isTrigger = false;
         BulletScript.CanShotFlag = false;
 
@@ -99,6 +101,7 @@ public class BulletStop : BulletState
         // 初期化
         
         BulletScript.NowBulletState = EnumBulletState.STOP;
+        BulletScript.co.enabled = false;
         BulletScript.CanShotFlag = false;
         BulletScript.co.isTrigger = true;
         BulletScript.StopBullet();
@@ -119,8 +122,11 @@ public class BulletReturn : BulletState
     {
         // 初期化
         BulletScript.NowBulletState = EnumBulletState.RETURN;
-        BulletScript.ReturnBullet();
+
+        BulletScript.rb.velocity = Vector3.zero;
+        BulletScript.vel = Vector3.zero;
         BulletScript.rb.isKinematic = false;
+        BulletScript.co.enabled = false;
         BulletScript.co.isTrigger = true;
         BulletScript.StopVelChange = true;
         BulletScript.CanShotFlag = false;
@@ -143,28 +149,28 @@ public class BulletReturn : BulletState
 }
 
 
-// 錨にプレイヤーが引っ張られて回収
-public class BulletReturnFollow : BulletState
-{
-    public BulletReturnFollow()
-    {
-        // 初期化
-        BulletScript.NowBulletState = EnumBulletState.BulletReturnFollow;
-        BulletScript.ReturnBullet();
-    }
+//// 錨にプレイヤーが引っ張られて回収
+//public class BulletReturnFollow : BulletState
+//{
+//    public BulletReturnFollow()
+//    {
+//        // 初期化
+//        BulletScript.NowBulletState = EnumBulletState.BulletReturnFollow;
+//        BulletScript.ReturnBullet();
+//    }
 
-    public override void Move()
-    {
-        //自分へ弾を引き戻す
-        Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-        vecToPlayer = vecToPlayer.normalized;
-        BulletScript.vel = vecToPlayer * 4;
+//    public override void Move()
+//    {
+//        //自分へ弾を引き戻す
+//        Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
+//        vecToPlayer = vecToPlayer.normalized;
+//        BulletScript.vel = vecToPlayer * 4;
 
 
-        //距離が一定以下になったら終了
-        if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
-        {
-            BulletScript.SetBulletState(EnumBulletState.READY);
-        }
-    }
-}
+//        //距離が一定以下になったら終了
+//        if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
+//        {
+//            BulletScript.SetBulletState(EnumBulletState.READY);
+//        }
+//    }
+//}

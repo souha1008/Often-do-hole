@@ -201,7 +201,7 @@ public class PlayerStateShot : PlayerState
             {
                 BulletScript.SetBulletState(EnumBulletState.STOP);
 
-                //PlayerScript.vel = ReleaseForceCalicurate();
+                PlayerScript.vel = ReleaseForceCalicurate();
 
                 if (PlayerScript.forciblyFollowVelToward)
                 {

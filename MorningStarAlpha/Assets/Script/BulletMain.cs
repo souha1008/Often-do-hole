@@ -170,8 +170,6 @@ public class BulletMain : MonoBehaviour
                 return new BulletStop();
             case EnumBulletState.RETURN:
                 return new BulletReturn();
-            case EnumBulletState.BulletReturnFollow:
-                return new BulletReturnFollow();
         }
         return null;
     }
@@ -206,6 +204,14 @@ public class BulletMain : MonoBehaviour
             float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
             Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
             vel *= adjustVec;
+        }
+    }
+
+    public void ReturnBullet()
+    {
+        if ((NowBulletState == EnumBulletState.STOP) || (NowBulletState == EnumBulletState.GO))
+        {
+            SetBulletState(EnumBulletState.RETURN);
         }
     }
 
@@ -253,18 +259,7 @@ public class BulletMain : MonoBehaviour
     //    }
     //}
 
-    public void ReturnBullet()
-    {
-        if (ReferenceEquals(Player, null) == false)
-        {
-            StopVelChange = true;
-            rb.isKinematic = false;
-            GetComponent<Collider>().isTrigger = true;
-            rb.velocity = Vector3.zero;
-            vel = Vector3.zero;
-            //ExitFlameCnt = 0;
-        }
-    }
+
 
     public void FollowedPlayer()
     {
@@ -443,16 +438,20 @@ public class BulletMain : MonoBehaviour
             if (onceFlag == false)
             {
                 //collsionêÊÇÃtagÇ≈èÍçáï™ÇØ
-                string tag = other.gameObject.tag;
-                switch (tag)
-                {
-                    case "WireMesh":
-                    case "SpringBoard":
-                        onceFlag = true;
-                        SetBulletState(EnumBulletState.STOP);
-                        PlayerScript.ForciblyFollowMode(true);
 
-                        break;
+                if (NowBulletState == EnumBulletState.GO)
+                {
+                    string tag = other.gameObject.tag;
+                    switch (tag)
+                    {
+                        case "WireMesh":
+                        case "SpringBoard":
+                            onceFlag = true;
+                            SetBulletState(EnumBulletState.STOP);
+                            PlayerScript.ForciblyFollowMode(true);
+
+                            break;
+                    }
                 }
             }
         }

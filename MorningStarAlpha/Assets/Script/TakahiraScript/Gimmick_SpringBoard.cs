@@ -42,7 +42,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
             PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.BOOST);
-            //PlayerMain.instance.ForciblyReleaseMode(false);
+
 
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
