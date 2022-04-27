@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Coin
@@ -67,17 +65,17 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     }
 
 
-    private void Start()
-    {
-        //Debug.LogWarning(coin.NowGetCoin1.Length);
-    }
+    //private void Start()
+    //{
+    //    //Debug.LogWarning(coin.NowGetCoin1.Length);
+    //}
 
-    public void FixedUpdate()
-    {
-        Debug.LogWarning(coin.NowGetCoin1[0]);
-        Debug.LogWarning(coin.NowGetCoin1[1]);
-        Debug.LogWarning(coin.NowGetCoin1[2]);
-    }
+    //public void FixedUpdate()
+    //{
+    //    //Debug.LogWarning(coin.NowGetCoin1[0]);
+    //    //Debug.LogWarning(coin.NowGetCoin1[1]);
+    //    //Debug.LogWarning(coin.NowGetCoin1[2]);
+    //}
 
 
     // コインオブジェクトにデータセット

@@ -239,9 +239,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
 
-    public int NowPlaySoundBGM = 0;     // 現在再生中のBGM
-    public int NowPlaySoundSE = 0;      // 現在再生中のSE
-    public int NowPlaySoundOBJECT = 0;  // 現在再生中のOBJECT
+    public int NowPlaySoundBGM = 0;     // 現在再生中のBGM数
+    public int NowPlaySoundSE = 0;      // 現在再生中のSE数
+    public int NowPlaySoundOBJECT = 0;  // 現在再生中のOBJECT数
 
 
     // 内部データ用
@@ -328,6 +328,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         StartCoroutine(SetSEData());
         StartCoroutine(SetBGMData());
         StartCoroutine(SetOBJECTData());
+
+        // セーブデータから音量データ読み込み
+        if (SaveDataManager.Instance != null)
+        {
+            //Debug.LogWarning("音量読み込み");
+            SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
+            SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
+            SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
+            SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
+        }
 
         // 音量セット
         UpdateVolume();
