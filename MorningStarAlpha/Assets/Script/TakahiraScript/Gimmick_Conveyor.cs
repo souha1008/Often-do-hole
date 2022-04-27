@@ -8,14 +8,14 @@ public class Gimmick_Conveyor : Gimmick_Main
     public float MovePower = 30;                // 移動量
 
 
-    [HideInInspector] public ConveyorStateMain conveyorState;
+    [HideInInspector] public ConveyorStateMain conveyorStateMain;
     [HideInInspector] public bool MoveRight;    // 回転方向
 
 
     public override void Init()
     {
         // コンベアステート初期化
-        conveyorState = new ConveyorStateMain(this);
+        conveyorStateMain = new ConveyorStateMain(this);
 
         // 回転方向更新
         MoveRight = MoveDirectionBoolChangeX(MoveDirection_X);
@@ -35,8 +35,8 @@ public class Gimmick_Conveyor : Gimmick_Main
         MoveRight = MoveDirectionBoolChangeX(MoveDirection_X); // 回転方向更新
 
         // コンベアの動き処理
-        conveyorState.Move();
-        //Debug.LogWarning(conveyorState); // 現在のコンベアのステート
+        conveyorStateMain.Move();
+        //Debug.LogWarning(conveyorStateMain.ConveyorState); // 現在のコンベアのステート
     }
 
 
@@ -52,13 +52,13 @@ public class Gimmick_Conveyor : Gimmick_Main
             if (PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
-                conveyorState.PlayerMoveFlag = true;
+                conveyorStateMain.PlayerMoveFlag = true;
             }
         }
 
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            conveyorState.BulletMoveFlag = true;
+            conveyorStateMain.BulletMoveFlag = true;
             // 衝突点取得
             foreach (ContactPoint contact in collision.contacts)
             {
@@ -66,16 +66,16 @@ public class Gimmick_Conveyor : Gimmick_Main
                 if (contact.normal.y == 0)
                 {
                     if (contact.normal.x < 0) // 右
-                        conveyorState.TouchSide = TOUCH_SIDE.RIGHT;
+                        conveyorStateMain.TouchSide = TOUCH_SIDE.RIGHT;
                     else                        // 左
-                        conveyorState.TouchSide = TOUCH_SIDE.LEFT;
+                        conveyorStateMain.TouchSide = TOUCH_SIDE.LEFT;
                 }
                 else
                 {
                     if (contact.normal.y < 0) // 上
-                        conveyorState.TouchSide = TOUCH_SIDE.UP;
+                        conveyorStateMain.TouchSide = TOUCH_SIDE.UP;
                     else                        // 下
-                        conveyorState.TouchSide = TOUCH_SIDE.DOWN;
+                        conveyorStateMain.TouchSide = TOUCH_SIDE.DOWN;
                 }
 
                 //Debug.Log(contact.normal);
@@ -98,7 +98,7 @@ public class Gimmick_Conveyor : Gimmick_Main
             if (PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
-                conveyorState.PlayerMoveFlag = true;
+                conveyorStateMain.PlayerMoveFlag = true;
             }
         }
     }
@@ -107,7 +107,7 @@ public class Gimmick_Conveyor : Gimmick_Main
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            conveyorState.PlayerMoveFlag = false;
+            conveyorStateMain.PlayerMoveFlag = false;
         }
         //if (collision.gameObject.CompareTag("Bullet"))
         //{
@@ -285,7 +285,7 @@ public class ConveyorUp : ConveyorState
         }
         else
         {
-            ConveyorMain.StateChange(new ConveyorNone(ConveyorMain.Conveyor.conveyorState));
+            ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
         }
     }
 }

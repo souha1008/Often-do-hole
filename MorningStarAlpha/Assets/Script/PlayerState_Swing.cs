@@ -944,7 +944,7 @@ public class PlayerStateSwing_Vel : PlayerState
 
         PlayerScript.useVelocity = true;
 
-        PlayerScript.animator.SetBool("isSwing", true);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, true);
 
         CalculateStartVariable();
 
@@ -1112,9 +1112,11 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             case SwingState.TOUCHED:
                 float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
-
+#if false
                 Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
                 Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+#endif
+                Quaternion quaternion = Quaternion.LookRotation(ChainManager.instance.PlayerAngle);
 
                 Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
 
@@ -1318,7 +1320,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 //壁跳ね返り処理
                 if (PlayerScript.conuterSwing)
                 {
-                    PlayerScript.animator.SetTrigger("wallKick");
+                    PlayerScript.animator.SetTrigger(PlayerScript.animHash.wallKick);
                     CalculateCounterVariable();
                     PlayerScript.conuterSwing = false;
                 }
@@ -1457,7 +1459,6 @@ public class PlayerStateSwing_Vel : PlayerState
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
-
                 }
                 break;
 
@@ -1470,7 +1471,7 @@ public class PlayerStateSwing_Vel : PlayerState
     {
         if (finishFlag)
         {
-            PlayerScript.animator.SetBool("isSwing", false);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, false);
             PlayerScript.swingState = SwingState.NONE;
             PlayerScript.mode = new PlayerStateMidair(true);
         }

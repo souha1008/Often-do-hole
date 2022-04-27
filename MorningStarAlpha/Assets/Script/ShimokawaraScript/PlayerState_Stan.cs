@@ -17,7 +17,7 @@ public class PlayerStateStan : PlayerState
         PlayerScript.refState = EnumPlayerState.STAN;
         shotButton = false;
         PlayerScript.vel.y = 0;
-        PlayerScript.canShotState = true;
+        PlayerScript.canShotState = false;
         slideEndTimer = 0.0f;
 
         StartTime = Time.time;
@@ -25,7 +25,7 @@ public class PlayerStateStan : PlayerState
         //ボール関連
         BulletScript.InvisibleBullet();
         //アニメ用
-        PlayerScript.animator.SetBool("onGround", true);
+        //PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
 
     public override void UpdateState()
@@ -53,22 +53,6 @@ public class PlayerStateStan : PlayerState
             {
                 PlayerScript.mode = new PlayerStateMidair(true);
             }
-        }
-    }
-
-    public override void Animation()
-    {
-        if (Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
-        {
-            //PlayerScript.animator.SetBool("isRunning", true);   //走る
-            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 1.0f, 0.1f, Time.deltaTime);
-            //PlayerScript.animator.SetFloat("RunSpeed", 1.0f);
-        }
-        else
-        {
-            //PlayerScript.animator.SetBool("isRunning", false); //走らない
-            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 0.0f, 0.1f, Time.deltaTime);
-            //PlayerScript.animator.SetFloat("RunSpeed", 0.0f);
         }
     }
 }

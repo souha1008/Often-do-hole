@@ -44,11 +44,14 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
 
+            PlayerMain.instance.mode = new PlayerStateMidair(true);
+
             PlayerMain.instance.ForciblyReleaseMode(false);
             PlayerMain.instance.endSwing = true;
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
+
 
             SoundManager.Instance.PlaySound("Œˆ’è‰¹");
 

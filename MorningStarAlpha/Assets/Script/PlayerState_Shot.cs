@@ -50,18 +50,18 @@ public class PlayerStateShot : PlayerState
         PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
         PlayerScript.vel.x *= 0.4f;
-        PlayerScript.animator.SetBool("isShot", true);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
         
         //アニメーション用
         if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
         {
             //横投げ
-            PlayerScript.animator.SetInteger("shotdirType", 1);
+            PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 1);
         }
         else
         {
             //斜め投げ
-            PlayerScript.animator.SetInteger("shotdirType", 2);
+            PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 2);
         }
 
         //アニメーション・回転用　真上
@@ -97,6 +97,7 @@ public class PlayerStateShot : PlayerState
         switch (PlayerScript.shotState)
         {
             case ShotState.STRAINED:
+            case ShotState.FOLLOW:
                 if (PlayerScript.isOnGround == false)
                 {
                     Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
@@ -108,7 +109,6 @@ public class PlayerStateShot : PlayerState
                 break;
 
             case ShotState.RETURN:
-            case ShotState.FOLLOW:
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
                     PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
@@ -177,7 +177,7 @@ public class PlayerStateShot : PlayerState
 
     private void intoVecsQueue()
     {
-        const int VEC_SAVE_NUM = 25;
+        const int VEC_SAVE_NUM = 26;
         if (PlayerScript.shotState == ShotState.GO)
         {
             Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
@@ -261,8 +261,6 @@ public class PlayerStateShot : PlayerState
             }
         }
 
-
-
         //ついていく処理
         if (PlayerScript.shotState == ShotState.STRAINED)
         {
@@ -325,8 +323,7 @@ public class PlayerStateShot : PlayerState
         intoVecsQueue();
 
         switch (PlayerScript.shotState)
-        {
-            
+        {           
             case ShotState.GO:         
                 //紐の長さを超えたら引っ張られている状態にする
                 if (interval > BulletScript.BULLET_ROPE_LENGTH)
@@ -363,7 +360,7 @@ public class PlayerStateShot : PlayerState
                 if (onceAnimReturn == false)
                 {
                     onceAnimReturn = true;
-                    PlayerScript.animator.SetBool("isShot", false);
+                    PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
                 }
 
                 Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
@@ -416,7 +413,7 @@ public class PlayerStateShot : PlayerState
         if (BulletScript.isTouched)
         {
             PlayerScript.shotState = ShotState.NONE;
-            PlayerScript.animator.SetBool("isShot", false);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
 
             if (PlayerScript.forciblySwingFlag)
             {
@@ -435,7 +432,7 @@ public class PlayerStateShot : PlayerState
         if (finishFlag)
         {
             PlayerScript.shotState = ShotState.NONE;
-            PlayerScript.animator.SetBool("isShot", false);
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
 
             //着地したら立っている状態に移行
             if (PlayerScript.isOnGround)
