@@ -217,8 +217,6 @@ public class PlayerMain : MonoBehaviour
             mode.StateTransition();
             mode.Move();
         }
-
-        SoundManager.Instance.PlaySound("BGM_01", 0.8f, AudioReverbPreset.City);
     }
 
     private void Update()

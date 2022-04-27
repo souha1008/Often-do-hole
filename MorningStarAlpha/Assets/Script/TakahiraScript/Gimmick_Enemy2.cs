@@ -34,7 +34,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
             GameSpeedManager.Instance.StartHitStop();
 
             // 効果音
-            SoundManager.Instance.PlaySound("sound_24_破壊SE_2");
+            SoundManager.Instance.PlaySound("sound_24_破壊SE_2", 0.8f);
 
             // 死亡
             Destroy(this.gameObject);
