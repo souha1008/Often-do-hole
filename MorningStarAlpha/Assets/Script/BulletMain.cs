@@ -17,6 +17,8 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool isTouched; //’e‚ª‚È‚É‚©‚ÉG‚ê‚½‚©
     [ReadOnly] public bool onceFlag; //ˆê‰ñ‚Ì”­Ë‚É•t‚«ÚG‚ª‹N‚±‚é‚Ì‚Íˆê‰ñ
     [ReadOnly] public bool StopVelChange; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
+    [ReadOnly] public bool isInside; //’e‚ª“à‘¤‚É‚ ‚éó‘Ô
+
 
     //‰ºìŒ´
     private int ExitFlameCnt = 0;//‘¶İ‚µn‚ß‚Ä‚©‚ç‚ÌƒJƒEƒ“ƒg
@@ -45,6 +47,7 @@ public class BulletMain : MonoBehaviour
         PlayerScript = Player.GetComponent<PlayerMain>();
         ExitFlameCnt = 0;
         colPoint = Vector3.zero;
+        isInside = false;
 
         fixedAdjust = Time.fixedDeltaTime * 50;
         InvisibleBullet();
@@ -54,6 +57,7 @@ public class BulletMain : MonoBehaviour
     {
         rb.isKinematic = true;
         co.enabled = false;
+        isInside = true;
         for (int i = 0; i < Part.Length; i++)
         {
             Part[i].enabled = false;         
@@ -72,6 +76,7 @@ public class BulletMain : MonoBehaviour
 
     public void VisibleBullet()
     {
+        isInside = false;
         rb.isKinematic = false;
         co.enabled = true;
         for (int i = 0; i < Part.Length; i++)
@@ -109,8 +114,6 @@ public class BulletMain : MonoBehaviour
         {
             vel.x += PlayerScript.vel.x;
         }
-
-
 
         if(vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE)
         {

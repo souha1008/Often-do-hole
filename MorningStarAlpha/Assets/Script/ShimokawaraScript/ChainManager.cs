@@ -7,11 +7,13 @@ public class ChainManager : MonoBehaviour
     [SerializeField] private PlayerMain Player;
     [SerializeField] private BulletMain Bullet;
 
+    static public ChainManager instance;
     // 
     int MAX_CHAIN_NUM = 20;
     GameObject Obj;
     GameObject[] Chain = new GameObject[20];
 
+    public Vector3 PlayerAngle = Vector3.zero;//渡す用のプレイヤー回転角
 
     float MaxChain;
     float OneChainLength;
@@ -22,6 +24,7 @@ public class ChainManager : MonoBehaviour
 
     void Start()
     {
+        instance = this;
         Obj = (GameObject)Resources.Load("_05_chain_o5bj");
         MaxChain = Bullet.GetComponent<BulletMain>().BULLET_ROPE_LENGTH;
         OneChainLength = MaxChain / (MAX_CHAIN_NUM - 1);
@@ -38,9 +41,9 @@ public class ChainManager : MonoBehaviour
         if (Player.refState == EnumPlayerState.SHOT || Player.refState == EnumPlayerState.SWING)
         {
             //始点と終点を探索
-            Vector3 StartPos = Bullet.transform.position;
-            Vector3 EndPos = Player.transform.position;
-            float NowLength = (EndPos - StartPos).magnitude;
+            Vector3 BulletPos = Bullet.transform.position;
+            Vector3 PlayerPos = Player.transform.position;
+            float NowLength = (PlayerPos - BulletPos).magnitude;
             //Debug.Log(NowLength);
 
             //何個の鎖が必要？
@@ -53,7 +56,7 @@ public class ChainManager : MonoBehaviour
             {
 
                 //プレイヤーのほうが右にいる
-                if (StartPos.x < EndPos.x)
+                if (BulletPos.x < PlayerPos.x)
                 {
                     SideCnt = Mathf.Max(SideCnt - 1, -MAX_SIDE_CNT);
                 }
@@ -116,18 +119,58 @@ public class ChainManager : MonoBehaviour
                     //振り子なら
                     if (Player.refState == EnumPlayerState.SWING)
                     {
-                        //Vector3 BtoP_angle = 
+                        float BtoP_angle = Mathf.Atan2(PlayerPos.y - BulletPos.y, PlayerPos.x - BulletPos.x);
 
-                        Vector3 CenterPos = Vector3.Lerp(StartPos, EndPos, 0.5f);
-                        Vector3 HousenVector = new Vector3(StartPos.y - EndPos.y, -(StartPos.x - EndPos.x), 0).normalized;//正規化した右へのベクトル
-                        CenterPos += (HousenVector * (MAX_VEZIE_DISTANCE * ((float)(SideCnt) / MAX_SIDE_CNT)));
+                        if (BtoP_angle < 0)//右から上に一周に直す
+                            BtoP_angle += (Mathf.PI * 2);
 
-                        //なぞのPosition
-                        //Vector3 TempEnd = StartPos + (StartPos - EndPos);
+                        int Hugou;//符号
+                        if (BtoP_angle < Mathf.PI * 0.5f || BtoP_angle > Mathf.PI * 1.5f)
+                            Hugou = 1;
+                        else
+                            Hugou = -1;
 
-                        Chain[i].transform.position = Vezie.Vezie_3(StartPos, CenterPos, EndPos, (float)(i) / (ChainNum - 1));
+                        float Difference = Mathf.Abs( BtoP_angle - (Mathf.PI * 1.5f)); //真下からの変化量
+                        if(Difference > Mathf.PI)
+                            Difference-= Mathf.PI;
 
-                        float Radian = Mathf.Atan2(EndPos.y - StartPos.y, EndPos.x - StartPos.x);
+                        float multi = 0.5f;//角度何倍？
+                        float CenterWariai = 0.6f;//Bulletからなんわり？
+
+                        float BtoC_angle = (Mathf.PI * 1.5f) + (Difference * multi * Hugou);//差にかける符号
+
+                        Vector3 CenterPos = new Vector3(BulletPos.x + Mathf.Cos(BtoC_angle) * NowLength * CenterWariai, BulletPos.y + Mathf.Sin(BtoC_angle) * NowLength * CenterWariai, 0);
+
+
+                        Chain[i].transform.position = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
+
+
+
+                        Vector3 AngleStart;
+                        Vector3 AngleEnd;
+
+                        //角度
+                        if (i == 0)
+                        {
+                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
+                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i + 1) / (ChainNum - 1));
+                        }
+                        else if(i == ChainNum - 1)
+                        {
+                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / (ChainNum - 1));
+                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
+
+                            //プレイヤーに渡すやつ
+                            PlayerAngle = AngleStart - AngleEnd;
+                        }
+                        else
+                        {
+                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / (ChainNum - 1));
+                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i + 1) / (ChainNum - 1));
+                        }
+
+
+                        float Radian = Mathf.Atan2(AngleEnd.y - AngleStart.y, AngleEnd.x - AngleStart.x);
                         float Do = Radian / Mathf.PI * 180 + 90;
                         if (i % 2 == 0)
                         {
@@ -135,16 +178,16 @@ public class ChainManager : MonoBehaviour
                         }
                         else
                         {
-                            Chain[i].transform.rotation = Quaternion.Euler(0, 90, Do);
+                            Chain[i].transform.rotation = Quaternion.Euler(0, 0, Do) * Quaternion.Euler(0, -90, 0);
                         }
 
                     }
                     //振り子じゃない
                     else
                     {
-                        Chain[i].transform.position = Vector3.Lerp(StartPos, EndPos, (float)i / (ChainNum - 1));
+                        Chain[i].transform.position = Vector3.Lerp(BulletPos, PlayerPos, (float)i / (ChainNum - 1));
 
-                        float Radian = Mathf.Atan2(EndPos.y - StartPos.y, EndPos.x - StartPos.x);
+                        float Radian = Mathf.Atan2(PlayerPos.y - BulletPos.y, PlayerPos.x - BulletPos.x);
                         float Do = Radian / Mathf.PI * 180 + 90;
                         if (i % 2 == 0)
                         {
@@ -152,7 +195,7 @@ public class ChainManager : MonoBehaviour
                         }
                         else
                         {
-                            Chain[i].transform.rotation = Quaternion.Euler(0, 90, Do);
+                            Chain[i].transform.rotation =  Quaternion.Euler(0, 0, Do) * Quaternion.Euler(0, -90, 0);
                         }
                     }
                     //////ここまで移動、回転

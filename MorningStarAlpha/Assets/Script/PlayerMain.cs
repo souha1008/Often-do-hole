@@ -65,11 +65,21 @@ public enum EnumPlayerState
     STAN,      //スタン状態
 }
 
-
+/// <summary>
+///アニメーションコントローラー用の文字列をindexにして格納
+/// </summary>
 public struct AnimHash{
     public int onGround;
     public int isRunning;
+    public int isShot;
+    public int isSwing;
+    public int wallKick;
+    public int NockBack;
+    public int BoostFlag;
+    public int shotdirType;
     public int RunSpeed;
+    public int rareWaitTrigger;
+    public int rareWaitType;
 }
 
 
@@ -274,7 +284,29 @@ public class PlayerMain : MonoBehaviour
     {
         animHash.onGround = Animator.StringToHash("onGround");
         animHash.isRunning = Animator.StringToHash("isRunning");
+        animHash.isShot = Animator.StringToHash("isShot");
+        animHash.isSwing = Animator.StringToHash("isSwing");
+        animHash.wallKick = Animator.StringToHash("wallKick");
+        animHash.NockBack = Animator.StringToHash("NockBack");
+        animHash.BoostFlag = Animator.StringToHash("BoostFlag");
+        animHash.shotdirType = Animator.StringToHash("shotdirType");
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
+        animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
+        animHash.rareWaitType = Animator.StringToHash("rareWaitType");
+    }   
+
+    public void AnimVariableReset()
+    {
+        animator.SetBool(animHash.isShot, false);
+        animator.SetBool(animHash.isSwing, false);
+    }
+
+    public void AnimTriggerReset()
+    {
+        animator.ResetTrigger(animHash.wallKick);
+        animator.ResetTrigger(animHash.NockBack);
+        animator.ResetTrigger(animHash.BoostFlag);
+        animator.ResetTrigger(animHash.rareWaitTrigger);
     }
 
 
@@ -350,10 +382,16 @@ public class PlayerMain : MonoBehaviour
         {
             if (stickCanShotRange)
             {
-                adjustLeftStick = vec;
+                adjustLeftStick = (Vector2)vec;
+            }
+            else
+            {
+                adjustLeftStick = Vector2.zero;
             }
         }
 
+
+        Debug.Log(adjustLeftStick);
     }
 
     /// <summary>
@@ -428,6 +466,10 @@ public class PlayerMain : MonoBehaviour
             //フラグクリア
             forciblyFollowFlag = false;
             forciblySwingFlag = false;
+        }
+        else if(refState == EnumPlayerState.SWING)
+        {
+            endSwing = true;
         }
     }
 
@@ -511,7 +553,7 @@ public class PlayerMain : MonoBehaviour
         //ショット中に壁にあたったときの処理
         if (refState == EnumPlayerState.SHOT)
         {
-            if (collision.gameObject.CompareTag("Platform"))
+            if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
             {
                 switch (shotState)
                 {
@@ -561,7 +603,7 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                if (collision.gameObject.CompareTag("Platform"))
+                if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {

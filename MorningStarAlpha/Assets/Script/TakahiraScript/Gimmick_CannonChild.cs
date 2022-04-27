@@ -88,7 +88,6 @@ public class Gimmick_CannonChild : Gimmick_Main
             // Ž€–S
             Death();
         }
-
         // Ž€–S
         Death();
     }
