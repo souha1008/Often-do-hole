@@ -51,7 +51,7 @@ public class PlayerStateStan : PlayerState
             }
             else
             {
-                PlayerScript.mode = new PlayerStateMidair(true);
+                PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
             }
         }
     }

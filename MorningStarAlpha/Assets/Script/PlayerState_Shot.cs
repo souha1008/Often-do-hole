@@ -2,14 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ShotDir
-{
-    UP,
-    LATERAL,
-    DIAGONAL_60,
-    DIAGONAL_30
-}
-
 
 /// <summary>
 /// 弾を撃った状態(一度紐が伸び切ったら長さ固定のもの)
@@ -21,7 +13,6 @@ public class PlayerStateShot : PlayerState
     float countTime;               //発射からの時間
 
     bool finishFlag;
-    private ShotDir shotDir;
     private bool releaseButton;
     private bool onceAnimReturn;
     private Vector3 followStartdiff;
@@ -34,7 +25,6 @@ public class PlayerStateShot : PlayerState
     private void Init()
     {
         countTime = 0.0f;
-        shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
         onceAnimReturn = false;
@@ -50,9 +40,12 @@ public class PlayerStateShot : PlayerState
         PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
         PlayerScript.vel.x *= 0.4f;
-        PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
-        
+
         //アニメーション用
+        PlayerScript.ResetAnimation();
+        PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
+        PlayerScript.animator.Play("Shot.throw");
+
         if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
         {
             //横投げ
@@ -62,16 +55,6 @@ public class PlayerStateShot : PlayerState
         {
             //斜め投げ
             PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 2);
-        }
-
-        //アニメーション・回転用　真上
-        if(Mathf.Abs(PlayerScript.adjustLeftStick.x) < 0.1f)
-        {
-            shotDir = ShotDir.UP;
-        }
-        else
-        {
-            shotDir = ShotDir.LATERAL;
         }
     }
 
@@ -334,7 +317,7 @@ public class PlayerStateShot : PlayerState
                     PlayerScript.shotState = ShotState.STRAINED;
                     PlayerScript.vel = Vector3.zero;
 
-                    //PlayerScript.useVelocity = false;
+                    PlayerScript.animator.Play("Shot.roop_midair");
                 }
 
                 debug_timer += Time.fixedDeltaTime;
@@ -441,7 +424,7 @@ public class PlayerStateShot : PlayerState
             }
             else //そうでないなら空中
             {
-                PlayerScript.mode = new PlayerStateMidair(recoverCanShot);
+                PlayerScript.mode = new PlayerStateMidair(recoverCanShot ,MidairState.NORMAL);
             }
         }
 

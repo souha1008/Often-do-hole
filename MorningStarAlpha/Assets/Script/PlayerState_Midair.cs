@@ -10,22 +10,35 @@ using UnityEngine;
 public class PlayerStateMidair : PlayerState
 {
     private bool shotButton;
+    private float boostTimer;
+
     private void Init()
     {
         PlayerScript.refState = EnumPlayerState.MIDAIR;
-        PlayerScript.midairState = MidairState.NORMAL;
         shotButton = false;
-        PlayerScript.canShotState = false;
+        boostTimer = 0.0f;
 
         BulletScript.InvisibleBullet();
 
+        RotationStand();
+        //アニメ用
+        PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, false);
     }
 
-    public PlayerStateMidair(bool can_shot)//コンストラクタ
+    public PlayerStateMidair(bool can_shot, MidairState first_state)//コンストラクタ
     {
         Init();
-        PlayerScript.canShotState = can_shot;
+        PlayerScript.midairState = first_state;
+        if(PlayerScript.midairState == MidairState.NORMAL)
+        {
+            PlayerScript.canShotState = can_shot;
+        }
+        else if (PlayerScript.midairState == MidairState.BOOST)
+        {
+            PlayerScript.canShotState = false;
+        }
+        
     }
 
 
@@ -80,11 +93,27 @@ public class PlayerStateMidair : PlayerState
         }
 
         //自由落下
-        if (PlayerScript.midairState == MidairState.NORMAL)
+        //if (PlayerScript.midairState == MidairState.NORMAL)
+        //{
+        PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
+        PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+        //}
+
+        if (PlayerScript.midairState == MidairState.BOOST)
         {
-            PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
-            PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+            boostTimer += Time.fixedDeltaTime;
+            if(boostTimer > 0.1f)
+            {
+                BoostEnd();    
+            }
         }
+    }
+
+    private void BoostEnd()
+    {
+        boostTimer = 0.0f;
+        PlayerScript.midairState = MidairState.NORMAL;
+        PlayerScript.canShotState = true;
     }
 
 

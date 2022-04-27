@@ -22,8 +22,9 @@ public enum OnGroundState {
 /// </summary>
 public enum MidairState
 {
-    NONE,      //空中状態ではない
+    NONE,     //空中状態ではない
     NORMAL,   //通常時
+    BOOST,    //ブースト
 }
 
 
@@ -75,7 +76,7 @@ public struct AnimHash{
     public int isSwing;
     public int wallKick;
     public int NockBack;
-    public int BoostFlag;
+    public int isBoost;
     public int shotdirType;
     public int RunSpeed;
     public int rareWaitTrigger;
@@ -154,7 +155,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
 
-
+    public float GameSpeed = 1.0f;
     void Awake()
     {
         instance = this;
@@ -167,6 +168,9 @@ public class PlayerMain : MonoBehaviour
          }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+
+
+        Time.timeScale = GameSpeed;
     }
 
     private void Start()
@@ -288,7 +292,7 @@ public class PlayerMain : MonoBehaviour
         animHash.isSwing = Animator.StringToHash("isSwing");
         animHash.wallKick = Animator.StringToHash("wallKick");
         animHash.NockBack = Animator.StringToHash("NockBack");
-        animHash.BoostFlag = Animator.StringToHash("BoostFlag");
+        animHash.isBoost = Animator.StringToHash("isBoost");
         animHash.shotdirType = Animator.StringToHash("shotdirType");
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
@@ -305,10 +309,15 @@ public class PlayerMain : MonoBehaviour
     {
         animator.ResetTrigger(animHash.wallKick);
         animator.ResetTrigger(animHash.NockBack);
-        animator.ResetTrigger(animHash.BoostFlag);
+        animator.ResetTrigger(animHash.isBoost);
         animator.ResetTrigger(animHash.rareWaitTrigger);
     }
 
+    public void ResetAnimation()
+    {
+        AnimVariableReset();
+        AnimTriggerReset();
+    }
 
     public RaycastHit getFootHit()
     {
@@ -703,6 +712,14 @@ public class PlayerMain : MonoBehaviour
         }
 
         
+    }
+
+    /// <summary>
+    /// トリガー類はすぐに遷移しない場合リセット
+    /// </summary>
+    private void OnAnimatorMove()
+    {
+        AnimTriggerReset();
     }
 
 

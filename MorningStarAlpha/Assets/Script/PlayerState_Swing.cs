@@ -944,6 +944,8 @@ public class PlayerStateSwing_Vel : PlayerState
 
         PlayerScript.useVelocity = true;
 
+
+        PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, true);
 
         CalculateStartVariable();
@@ -1473,7 +1475,7 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, false);
             PlayerScript.swingState = SwingState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(true);
+            PlayerScript.mode = new PlayerStateMidair(true, MidairState.BOOST);
         }
     }
 
