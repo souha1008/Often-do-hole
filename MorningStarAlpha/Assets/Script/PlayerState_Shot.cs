@@ -21,7 +21,7 @@ public class PlayerStateShot : PlayerState
     private Queue<Vector3> Vecs = new Queue<Vector3>();
     private int beforeFrame;
     bool recoverCanShot;
-
+    bool onceAnim;
     private void Init()
     {
         countTime = 0.0f;
@@ -33,6 +33,7 @@ public class PlayerStateShot : PlayerState
         debug_timer = 0.0f;
         beforeFrame = 0;
         recoverCanShot = false;
+        onceAnim = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
         PlayerScript.shotState = ShotState.GO;
@@ -317,7 +318,7 @@ public class PlayerStateShot : PlayerState
                     PlayerScript.shotState = ShotState.STRAINED;
                     PlayerScript.vel = Vector3.zero;
 
-                    PlayerScript.animator.Play("Shot.roop_midair");
+                               
                 }
 
                 debug_timer += Time.fixedDeltaTime;
@@ -327,6 +328,14 @@ public class PlayerStateShot : PlayerState
             case ShotState.STRAINED:
                 Debug.Log(debug_timer);
                 StrainedStop();
+                if(onceAnim == false)
+                {
+                    onceAnim = true;
+                    RotationPlayer();
+                    PlayerScript.animator.Play("Shot.roop_midair");
+                }
+
+
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
 
