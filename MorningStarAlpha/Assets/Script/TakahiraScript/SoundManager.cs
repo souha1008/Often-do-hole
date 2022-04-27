@@ -258,6 +258,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     private List<NOW_PLAY_SOUND> NowPlaySoundList = new List<NOW_PLAY_SOUND>(); // 再生中のサウンド管理用リスト
 
+    private bool SoundLoadFlag = true;
+
     
     private void Awake()
     {
@@ -320,15 +322,15 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             AudioSource_OBJECT[i].AudioSource.rolloffMode = AudioRolloffMode.Linear; // 音の減衰を直線にする
             AudioSource_OBJECT[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離
         }
-    }
 
-    private void Start()
-    {
         // サウンドデータ読み込み処理
         StartCoroutine(SetSEData());
         StartCoroutine(SetBGMData());
         StartCoroutine(SetOBJECTData());
+    }
 
+    private void Start()
+    {
         // セーブデータから音量データ読み込み
         if (SaveDataManager.Instance != null)
         {
@@ -408,6 +410,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             Debug.Log("BGMデータの読み込み失敗");
         }
+        SoundLoadFlag = false;
     }
 
     private IEnumerator SetOBJECTData()
@@ -561,6 +564,18 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
+        StartCoroutine(PlaySoundIE(SoundName, Volume, PlayTime, SoundObject, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop));
+    }
+
+    private IEnumerator PlaySoundIE(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
+    {
+        do
+        {
+            //Debug.Log("読み込み中");
+            yield return null;
+        }
+        while (SoundLoadFlag);
+
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
         // オーディオの名前と合うもの取得
@@ -575,7 +590,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
 
         if (Sound_Clip.AudioClip == null)
-            return;
+            yield break;
+
 
         // 音量の範囲指定
         Mathf.Clamp(Volume, 0.0f, 1.0f);
@@ -599,12 +615,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                 {
                     if (!AudioSource_BGM[i].isUse)
                     {
-                        NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));                     
+                        NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));
 
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
-                        return;
+                        yield break;
                     }
                 }
                 Debug.LogWarning("BGMが最大再生数を超えた為、再生出来ませんでした");
@@ -619,7 +635,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, false, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
-                        return;
+                        yield break;
                     }
                 }
                 Debug.LogWarning("SEが最大再生数を超えた為、再生出来ませんでした");
@@ -634,7 +650,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
-                        return;
+                        yield break;
                     }
                 }
                 Debug.LogWarning("OBJECT音が最大再生数を超えた為、再生出来ませんでした");
