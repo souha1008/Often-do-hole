@@ -17,10 +17,11 @@ public class DataFile
 
 
     [System.Serializable]
-    public struct StageData
+    public class StageData
     {
-        public int Rank;    // ランク
-        public float Time;  // 時間
+        public int Rank = 0;    // ランク
+        public float Time = 0;  // 時間
+        public Coin coin = null;   // コイン
     }
 
     public StageData[] Stage;   // ステージ分の配列
