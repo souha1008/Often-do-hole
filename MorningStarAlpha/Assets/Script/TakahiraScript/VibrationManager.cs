@@ -36,15 +36,16 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
             Debug.LogWarning("Aボタン押した");
             SoundManager.Instance.PlaySound("決定音");
         }
-        //// B ボタンが押されたら
-        //else if (gamepad.bButton.wasPressedThisFrame)
-        //{
-        //    // 低周波（左）モーターの強さを 0、
-        //    // 高周波（右）モーターの強さを 1、
-        //    // 0.3f秒間かけて振動させる
-        //    StartCoroutine(Vibration(0, 1, 0.3f));
-        //    Debug.LogWarning("Bボタン押した");
-        //}
+        // B ボタンが押されたら
+        else if (gamepad.bButton.wasPressedThisFrame)
+        {
+            // 低周波（左）モーターの強さを 0、
+            // 高周波（右）モーターの強さを 1、
+            // 0.3f秒間かけて振動させる
+            StartCoroutine(Vibration(0, 1, 0.3f));
+            Debug.LogWarning("Bボタン押した");
+            SoundManager.Instance.PlaySound("決定音");
+        }
 
 
         // ここまで
