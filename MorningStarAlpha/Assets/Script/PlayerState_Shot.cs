@@ -332,7 +332,7 @@ public class PlayerStateShot : PlayerState
                 {
                     onceAnim = true;
                     RotationPlayer();
-                    PlayerScript.animator.Play("Shot.roop_midair");
+                    PlayerScript.animator.Play("Shot.midair_roop");
                 }
 
 

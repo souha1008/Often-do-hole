@@ -33,10 +33,12 @@ public class PlayerStateMidair : PlayerState
         if(PlayerScript.midairState == MidairState.NORMAL)
         {
             PlayerScript.canShotState = can_shot;
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isBoost, false);
         }
         else if (PlayerScript.midairState == MidairState.BOOST)
         {
             PlayerScript.canShotState = false;
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isBoost, true);
         }
         
     }

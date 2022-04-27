@@ -154,7 +154,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
-
+    [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
     public float GameSpeed = 1.0f;
     void Awake()
     {
@@ -303,13 +303,13 @@ public class PlayerMain : MonoBehaviour
     {
         animator.SetBool(animHash.isShot, false);
         animator.SetBool(animHash.isSwing, false);
+        animator.SetBool(animHash.isBoost, false);
     }
 
     public void AnimTriggerReset()
     {
         animator.ResetTrigger(animHash.wallKick);
         animator.ResetTrigger(animHash.NockBack);
-        animator.ResetTrigger(animHash.isBoost);
         animator.ResetTrigger(animHash.rareWaitTrigger);
     }
 
@@ -504,6 +504,11 @@ public class PlayerMain : MonoBehaviour
             forciblyRleaseFlag = false;
             forciblyFollowFlag = false;
         }
+    }
+
+    public void RecoverBullet()
+    {
+        recoverBullet = true;
     }
 
     private void OnCollisionEnter(Collision collision)

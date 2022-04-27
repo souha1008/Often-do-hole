@@ -41,11 +41,9 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.x < 1 && VecPower.x > -1) VecPower.x = 0;  // è¨Ç≥Ç¢ílÇÕåÎç∑Ç∆ÇµÇƒ0Ç…Ç∑ÇÈ
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
-
             PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.BOOST);
+            //PlayerMain.instance.ForciblyReleaseMode(false);
 
-            PlayerMain.instance.ForciblyReleaseMode(false);
-            PlayerMain.instance.endSwing = true;
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;

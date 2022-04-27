@@ -1182,6 +1182,12 @@ public class PlayerStateSwing_Vel : PlayerState
         }
     }
 
+    public void AnimFrameSetting()
+    {
+        float frame = 60;
+        PlayerScript.animator.Play("Swing.normalSwing", 0, frame);
+    }
+
     public override void UpdateState()
     {
         //Ø‚è—£‚µ
@@ -1189,6 +1195,8 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             //Ø‚è—£‚µ“ü—Í
             InputButton();
+
+            AnimFrameSetting();
 
             if (PlayerScript.endSwing)
             {
@@ -1337,7 +1345,7 @@ public class PlayerStateSwing_Vel : PlayerState
             
                 //‘O‰ñŒvZŒã‚ÌAfterAngle‚ğ‚Á‚Ä‚­‚é
                 LastBtoP_Angle = AfterBtoP_Angle;
-
+                
 
                 //Œü‚«‚É‚æ‚Á‚Ä‰ñ“]•ûŒü‚ªˆá‚¤
 
