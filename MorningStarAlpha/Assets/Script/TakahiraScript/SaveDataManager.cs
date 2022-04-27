@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
@@ -13,6 +11,10 @@ public class DataFile
     public DataFile()
     {
         Stage = new StageData[30];  // 一応30ステージ分生成
+        SoundVolumeMaster = 1.0f;
+        SoundVolumeBGM = 1.0f;
+        SoundVolumeSE = 1.0f;
+        SoundVolumeOBJECT = 1.0f;
     }
 
 
@@ -25,6 +27,7 @@ public class DataFile
     }
 
     public StageData[] Stage;   // ステージ分の配列
+    public float SoundVolumeMaster, SoundVolumeBGM, SoundVolumeSE, SoundVolumeOBJECT;   // サウンドボリューム
 }
 
 public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
@@ -44,12 +47,12 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
             return;
         }
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
+
+        LoadData();
     }
 
     public void Start()
     {
-        LoadData();
-
         //Debug.Log(MainData.Stage[0].Rank);
         //Debug.Log(MainData.Stage[0].Time);
         //Debug.Log(MainData.Stage[1].Rank);
