@@ -98,7 +98,7 @@ public class Title_p1_manager : MonoBehaviour
             //        SceneManager.LoadScene("Title_part2");
             //    }));
 
-            camera.transform.DORotate(new Vector3(0, -1, 0), 5.0f, RotateMode.Fast)
+            camera.transform.DORotate(new Vector3(0, -1, 0), 10.0f, RotateMode.Fast)
                 .SetEase(Ease.OutCirc)
                 .OnComplete(() =>
                 {
