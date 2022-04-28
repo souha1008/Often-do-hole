@@ -4329,8 +4329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4627aedb8aa75294ca48a72b0a060b99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volume: 0.348
-  play_flame: 25
+  volume: 0.261
+  play_flame: 30
   playerMain: {fileID: 1907481520}
 --- !u!4 &352657918
 Transform:
@@ -29208,6 +29208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 1907481520}
   Bullet: {fileID: 1422196806259275374}
+  PlayerAngle: {x: 0, y: 0, z: 0}
 --- !u!4 &2105489618
 Transform:
   m_ObjectHideFlags: 0
@@ -30028,6 +30029,7 @@ MonoBehaviour:
   isTouched: 0
   onceFlag: 0
   StopVelChange: 0
+  isInside: 0
   STRAIGHT_FLAME_CNT: 10
   BULLET_SPEED: 50
   BULLET_SPEED_MAX: 55
