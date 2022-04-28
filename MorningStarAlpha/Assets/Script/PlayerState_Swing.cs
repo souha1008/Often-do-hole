@@ -1199,7 +1199,6 @@ public class PlayerStateSwing_Vel : PlayerState
             InputButton();
 
             AnimFrameSetting();
-
             if (PlayerScript.endSwing)
             {
                 finishFlag = true;

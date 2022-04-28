@@ -187,24 +187,46 @@ public class BulletMain : MonoBehaviour
         //プレイヤー強制処理フラグクリア
         PlayerScript.ClearModeTransitionFlag();
 
+        const float lateral_multiple = 1.1f;
 
         //弾の初期化
         rb.velocity = Vector3.zero;
         vel = Vector3.zero;
         isTouched = false;
-        vel += vec * BULLET_SPEED * BULLET_SPEED_MULTIPLE;
+
+        if(vec.y < 0.3f)
+        {
+            vel += vec * BULLET_SPEED * lateral_multiple * BULLET_SPEED_MULTIPLE;
+        }
+        else {
+            vel += vec * BULLET_SPEED * BULLET_SPEED_MULTIPLE;
+        }
 
         if (vel.x * PlayerScript.vel.x > 0) //飛ばす方向とプレイヤーの方向が同じだったら
         {
             vel.x += PlayerScript.vel.x;
         }
 
-        if(vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE)
+        if (vec.y < 0.3f)
         {
-            float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
-            Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
-            vel *= adjustVec;
+            if (vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE * lateral_multiple)
+            {
+                float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE * lateral_multiple) / vel.magnitude;
+                Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
+                vel *= adjustVec;
+            }
         }
+        else
+        {
+
+            if (vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE)
+            {
+                float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
+                Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
+                vel *= adjustVec;
+            }
+        }
+      
     }
 
     public void ReturnBullet()
