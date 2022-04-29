@@ -1,17 +1,33 @@
 using UnityEngine;
 
+public enum BulletRefState
+{
+    READY,
+    GO,
+    RETURN,
+    STOP,
+}
+
+
+
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
     [System.NonSerialized] public Collider co;
 
+    private PlayerMain PlayerScript;
     [SerializeField] private GameObject Player;
     [SerializeField] private SkinnedMeshRenderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
-    //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
+                                                       //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
 
-    
+    // 高平追加
+    [System.NonSerialized] public static BulletMain instance;
+    [ReadOnly] public EnumBulletState NowBulletState;
+    private BulletState mode;
+    [ReadOnly] public bool CanShotFlag;
 
-    private PlayerMain PlayerScript;
+
+    [ReadOnly] BulletRefState bulletRefState;
     [ReadOnly] public Vector3 vel;
     [ReadOnly] public Vector3 colPoint;
     [ReadOnly] public bool isTouched; //弾がなにかに触れたか
@@ -31,33 +47,39 @@ public class BulletMain : MonoBehaviour
     [SerializeField] public float BULLET_SPEED_MULTIPLE; //GOとSTRAINEDの倍率（この設定でgoの時間を短くする）
     [SerializeField] private float BULLET_START_DISTANCE; //弾の発射位置
     [SerializeField] public float  BULLET_ROPE_LENGTH; //紐の長さ
-    private float BULLET_MAXFALLSPEED = 35.0f;
-    private float fixedAdjust;
+    public float BULLET_MAXFALLSPEED = 35.0f;
+    [System.NonSerialized] public float fixedAdjust;
 
+  
 
     void Awake()
     {
+        // 高平追加
+        instance = this;
+        BulletState.BulletScript = this;
+        PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
         co = GetComponent<Collider>();
-        PlayerState.BulletScript = this;
+
     }
 
     private void Start()
     {
-        PlayerScript = Player.GetComponent<PlayerMain>();
+        BulletState.PlayerScript = PlayerMain.instance;
+        PlayerScript = PlayerMain.instance;
+        CanShotFlag = true;
         ExitFlameCnt = 0;
         colPoint = Vector3.zero;
         isInside = false;
 
         fixedAdjust = Time.fixedDeltaTime * 50;
         InvisibleBullet();
+
+        mode = new BulletReady(); // 初期ステート 
     }
 
     public void InvisibleBullet()
     {
-        rb.isKinematic = true;
-        co.enabled = false;
-        isInside = true;
         for (int i = 0; i < Part.Length; i++)
         {
             Part[i].enabled = false;         
@@ -90,6 +112,68 @@ public class BulletMain : MonoBehaviour
         //}
     }
 
+    // 錨のステート変更
+    public void SetBulletState(EnumBulletState bulletState)
+    {
+    //    BulletState state = null;
+
+    //    switch (NowBulletState)
+    //    {
+    //        case EnumBulletState.READY:
+
+    //            if (bulletState == EnumBulletState.GO)
+    //                state = GetBulletState(bulletState);
+
+    //            break;
+    //        case EnumBulletState.GO:
+
+    //            if (bulletState == EnumBulletState.STOP ||
+    //                bulletState == EnumBulletState.RETURN ||
+    //                bulletState == EnumBulletState.BulletReturnFollow)
+    //                state = GetBulletState(bulletState);
+
+    //            break;
+    //        case EnumBulletState.STOP:
+
+    //            if (bulletState == EnumBulletState.RETURN ||
+    //                bulletState == EnumBulletState.BulletReturnFollow)
+    //                state = GetBulletState(bulletState);
+
+    //            break;
+    //        case EnumBulletState.RETURN:
+    //        case EnumBulletState.BulletReturnFollow:
+    //            if (bulletState == EnumBulletState.READY)
+    //                state = GetBulletState(bulletState);
+    //            break;
+    //    }
+
+    //    state = GetBulletState(bulletState);
+
+    //    if (state != null)
+    //    {
+    //        mode = state;
+    //    }
+
+        mode = GetBulletState(bulletState);
+    }
+
+    // 錨のステート生成
+    private BulletState GetBulletState(EnumBulletState bulletState)
+    {
+        switch (bulletState)
+        {
+            case EnumBulletState.READY:
+                return new BulletReady();
+            case EnumBulletState.GO:
+                return new BulletGo();
+            case EnumBulletState.STOP:
+                return new BulletStop();
+            case EnumBulletState.RETURN:
+                return new BulletReturn();
+        }
+        return null;
+    }
+
     public void ShotBullet()
     {
         rb.isKinematic = false;
@@ -103,84 +187,100 @@ public class BulletMain : MonoBehaviour
         //プレイヤー強制処理フラグクリア
         PlayerScript.ClearModeTransitionFlag();
 
+        const float lateral_multiple = 1.05f;
 
         //弾の初期化
         rb.velocity = Vector3.zero;
         vel = Vector3.zero;
         isTouched = false;
-        vel += vec * BULLET_SPEED * BULLET_SPEED_MULTIPLE;
+
+        if(vec.y < 0.3f)
+        {
+            vel += vec * BULLET_SPEED * lateral_multiple * BULLET_SPEED_MULTIPLE;
+        }
+        else {
+            vel += vec * BULLET_SPEED * BULLET_SPEED_MULTIPLE;
+        }
 
         if (vel.x * PlayerScript.vel.x > 0) //飛ばす方向とプレイヤーの方向が同じだったら
         {
             vel.x += PlayerScript.vel.x;
         }
 
-        if(vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE)
+        if (vec.y < 0.3f)
         {
-            float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
-            Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
-            vel *= adjustVec;
+            if (vel.magnitude > (BULLET_SPEED * lateral_multiple + 5) * BULLET_SPEED_MULTIPLE)
+            {
+                float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE * lateral_multiple) / vel.magnitude;
+                Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
+                vel *= adjustVec;
+            }
+        }
+        else
+        {
+
+            if (vel.magnitude > (BULLET_SPEED + 5) * BULLET_SPEED_MULTIPLE)
+            {
+                float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
+                Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
+                vel *= adjustVec;
+            }
+        }
+      
+    }
+
+    public void ReturnBullet()
+    {
+        if ((NowBulletState == EnumBulletState.STOP) || (NowBulletState == EnumBulletState.GO))
+        {
+            SetBulletState(EnumBulletState.RETURN);
         }
     }
 
-    // 消去
-    //public void ShotSlideJumpBullet()
-    //{
-    //    rb.isKinematic = false;
-    //    onceFlag = false;
-    //    StopVelChange = false;
-    //    swingEnd = false;
-    //    followEnd = false;
-    //    Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-
-    //    //弾の初期化
-    //    rb.velocity = Vector3.zero;
-    //    vel = Vector3.zero;
-    //    isTouched = false;
-    //    vel += vec * BULLET_SPEED * 0.8f;
-
-       
-    //     vel += PlayerScript.vel *= 0.6f;
-    //}
+    private void Update()
+    {
+        // 高平追加
+        mode.Update();
+    }
 
     void FixedUpdate()
     {
         if (ReferenceEquals(Player, null) == false)
         {
-            if (StopVelChange == false)
-            {
-                RotateBullet();
-                ExitFlameCnt++;
-                //定数秒以上経ってたら
-                if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
-                {
-                    //重力加算
-                    vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * (fixedAdjust);
-                }            
+            // 高平追加
+            mode.Move();
 
-                Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
-            }
-            else
-            {
-                ExitFlameCnt = 0;
-            }
+           
             rb.velocity = vel;
         }
     }
 
-    public void ReturnBullet()
-    {
-        if (ReferenceEquals(Player, null) == false)
-        {
-            isTouched = false;
-            StopVelChange = true;
-            rb.isKinematic = false;
-            GetComponent<Collider>().isTrigger = true;
-            rb.velocity = Vector3.zero;
-            vel = Vector3.zero;
-            //ExitFlameCnt = 0;
-        }
-    }
+    //void FixedUpdate()
+    //{
+    //    if (ReferenceEquals(Player, null) == false)
+    //    {
+    //        if (StopVelChange == false)
+    //        {
+    //            RotateBullet();
+    //            ExitFlameCnt++;
+    //            //定数秒以上経ってたら
+    //            if(ExitFlameCnt > STRAIGHT_FLAME_CNT)
+    //            {
+    //                //重力加算
+    //                vel += Vector3.down * PlayerScript.STRAINED_GRAVITY * (fixedAdjust);
+    //            }            
+
+    //            Mathf.Max(vel.y, BULLET_MAXFALLSPEED * -1);
+    //        }
+    //        else
+    //        {
+    //            ExitFlameCnt = 0;
+    //        }
+    //        rb.velocity = vel;
+    //    }
+    //}
+
+
 
     public void FollowedPlayer()
     {
@@ -195,7 +295,7 @@ public class BulletMain : MonoBehaviour
         }
     }
 
-    void RotateBullet()
+    public void RotateBullet()
     {
         Quaternion quaternion = Quaternion.LookRotation(vel.normalized);
         Quaternion adjustQua = Quaternion.Euler(0, 90, -90); //補正用クオータニオン
@@ -231,7 +331,7 @@ public class BulletMain : MonoBehaviour
 
     }
 
-    private void StopBullet()
+    public void StopBullet()
     {
         isTouched = true;
         GetComponent<Collider>().isTrigger = true;
@@ -258,16 +358,16 @@ public class BulletMain : MonoBehaviour
                 {
                     case "Platform":
                         onceFlag = true;
-                        StopBullet();
-
-                      
+                        isTouched = true;
                         //各種演出
                         CameraShake.instance.Shake(rb.velocity);
                         colPoint = collision.GetContact(0).point;
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
 
+                        
                         //面計算
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+   
                         if (colAspect == Aspect_8.UP)
                         {
                             //FOLLOW状態に移行
@@ -286,7 +386,7 @@ public class BulletMain : MonoBehaviour
                         else
                         {
                             //SWING状態に移行
-                            PlayerScript.ForciblySwingMode();
+                            PlayerScript.ForciblySwingMode(false);
                         }
                      
 
@@ -294,6 +394,8 @@ public class BulletMain : MonoBehaviour
 
                     case "Iron":
                         onceFlag = true;
+                        isTouched = true;
+
                         if (PlayerScript.isOnGround)
                         {
                             PlayerScript.ForciblyReleaseMode(false);
@@ -301,31 +403,30 @@ public class BulletMain : MonoBehaviour
                         else
                         {
                             PlayerScript.ForciblyReleaseMode(true);
-                        }                        
+                        }
                         break;
 
                     case "Conveyor":
                         onceFlag = true;
-                        StopBullet();
+                        isTouched = true;
+                        SetBulletState(EnumBulletState.STOP);
+
 
                         //面計算
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
                         if ((colAspect == Aspect_8.DOWN) || (colAspect == Aspect_8.DOWN_LEFT) || (colAspect == Aspect_8.DOWN_RIGHT))
                         {
                             //SWING状態に移行
-                            PlayerScript.ForciblySwingMode();
-                            Debug.Log("swing");                          
+                            PlayerScript.ForciblySwingMode(false);                       
                         }
                         else if ((colAspect == Aspect_8.UP) || (colAspect == Aspect_8.UP_LEFT) || (colAspect == Aspect_8.UP_RIGHT))
                         {
                             //FOLLOW状態に移行
                             PlayerScript.ForciblyFollowMode(false);
-                            Debug.Log("follow");
                         }
                         else
                         {
                             PlayerScript.ForciblyReleaseMode(true);
-                            Debug.Log("release");
                         }
 
                         break;
@@ -358,16 +459,25 @@ public class BulletMain : MonoBehaviour
             if (onceFlag == false)
             {
                 //collsion先のtagで場合分け
-                string tag = other.gameObject.tag;
-                switch (tag)
+                if(PlayerScript.refState == EnumPlayerState.SHOT)
+                if (NowBulletState == EnumBulletState.GO)
                 {
-                    case "WireMesh":
-                    case "SpringBoard":
-                        onceFlag = true;
-                        StopBullet();
-                        PlayerScript.ForciblyFollowMode(true);
+                    string tag = other.gameObject.tag;
+                    switch (tag)
+                    {
+                        case "WireMesh":                     
+                            isTouched = true;
+                            onceFlag = true;
+                            PlayerScript.ForciblySwingMode(true);
+                            PlayerMain.instance.RecoverBullet();
+                                break;
 
-                        break;
+                        case "SpringBoard":
+                            isTouched = true;
+                            onceFlag = true;
+                            PlayerScript.ForciblyFollowMode(true);
+                                break;
+                    }
                 }
             }
         }

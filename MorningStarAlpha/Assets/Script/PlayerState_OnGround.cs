@@ -12,20 +12,15 @@ public class PlayerStateOnGround : PlayerState
     private const float SLIDE_END_TIME = 0.5f;
     private float slideEndTimer;
     private float rareMotionTimer;
-    private bool isRunning;
 
     public PlayerStateOnGround()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
-        isRunning = false;
         PlayerScript.vel.y = 0;
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
         rareMotionTimer = 0.0f;
-
-        //ボール関連
-        BulletScript.InvisibleBullet();
 
         RotationStand();
 
@@ -41,12 +36,13 @@ public class PlayerStateOnGround : PlayerState
         }
 
         //アニメ用
+        PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
 
     public override void UpdateState()
     {
-        BulletAdjust();
+        //BulletAdjust();
 
         if (PlayerScript.ReleaseMode)
         {
@@ -95,7 +91,6 @@ public class PlayerStateOnGround : PlayerState
 
         if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
-            isRunning = true;
             float slide_Weaken = 0.5f;
 
             if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
@@ -142,7 +137,6 @@ public class PlayerStateOnGround : PlayerState
         {
             if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {       
-                isRunning = true;
                 PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
               
 
@@ -159,7 +153,6 @@ public class PlayerStateOnGround : PlayerState
             }
             else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
             { 
-                isRunning = true;
                 PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
                
                
@@ -175,7 +168,6 @@ public class PlayerStateOnGround : PlayerState
             }
             else //減衰
             {
-                isRunning = false;
                 PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
                
                 PlayerScript.vel *= PlayerScript.RUN_FRICTION;
@@ -195,16 +187,14 @@ public class PlayerStateOnGround : PlayerState
     {
         if (PlayerScript.isOnGround == false)
         {
-            isRunning = false;
             PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
 
             PlayerScript.onGroundState = OnGroundState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(true);
+            PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
         }
 
         if (shotButton)
         {
-            isRunning = false;
             PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
 
             PlayerScript.onGroundState = OnGroundState.NONE;
@@ -212,11 +202,11 @@ public class PlayerStateOnGround : PlayerState
             //スライド中で投げる方向が進行方向と同じなら
             if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
             {
-                PlayerScript.mode = new PlayerStateShot();
+                PlayerScript.mode = new PlayerStateShot(false);
             }
             else
             {
-                PlayerScript.mode = new PlayerStateShot();
+                PlayerScript.mode = new PlayerStateShot(false);
             }
         }
     }

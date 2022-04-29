@@ -22,8 +22,9 @@ public enum OnGroundState {
 /// </summary>
 public enum MidairState
 {
-    NONE,      //空中状態ではない
+    NONE,     //空中状態ではない
     NORMAL,   //通常時
+    BOOST,    //ブースト
 }
 
 
@@ -34,7 +35,6 @@ public enum SwingState
 {
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
-    RELEASED,  //切り離した状態
 }
 
 /// <summary>
@@ -45,7 +45,6 @@ public enum ShotState
     NONE,       //弾射出されていない
     GO,         //引っ張られずに飛んでいる
     STRAINED,  //プレイヤーを引っ張りながら飛んでいる
-    RETURN,     //弾がプレイヤーに戻って終了
     FOLLOW,     //弾に勢いよく飛んでいき終了
 }
 
@@ -75,7 +74,7 @@ public struct AnimHash{
     public int isSwing;
     public int wallKick;
     public int NockBack;
-    public int BoostFlag;
+    public int isBoost;
     public int shotdirType;
     public int RunSpeed;
     public int rareWaitTrigger;
@@ -149,12 +148,12 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾についていくときのフラグ")] public bool forciblyFollowFlag;
     [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
-
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingNextFollow;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
-
-
+    [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
+    public float GameSpeed = 1.0f;
     void Awake()
     {
         instance = this;
@@ -167,6 +166,9 @@ public class PlayerMain : MonoBehaviour
          }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+
+
+        Time.timeScale = GameSpeed;
     }
 
     private void Start()
@@ -240,8 +242,7 @@ public class PlayerMain : MonoBehaviour
     private void FixedUpdate()
     {
         if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-        {         
-
+        {
             if (mode != null)
             {
                 mode.Move();
@@ -266,7 +267,7 @@ public class PlayerMain : MonoBehaviour
 
             if (Mathf.Abs(addVel.magnitude) > 10.0f)
             {
-                addVel *= 0.96f;
+                addVel *= 0.98f;
             }
             else
             {
@@ -288,7 +289,7 @@ public class PlayerMain : MonoBehaviour
         animHash.isSwing = Animator.StringToHash("isSwing");
         animHash.wallKick = Animator.StringToHash("wallKick");
         animHash.NockBack = Animator.StringToHash("NockBack");
-        animHash.BoostFlag = Animator.StringToHash("BoostFlag");
+        animHash.isBoost = Animator.StringToHash("isBoost");
         animHash.shotdirType = Animator.StringToHash("shotdirType");
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
@@ -299,16 +300,21 @@ public class PlayerMain : MonoBehaviour
     {
         animator.SetBool(animHash.isShot, false);
         animator.SetBool(animHash.isSwing, false);
+        animator.SetBool(animHash.isBoost, false);
     }
 
     public void AnimTriggerReset()
     {
         animator.ResetTrigger(animHash.wallKick);
         animator.ResetTrigger(animHash.NockBack);
-        animator.ResetTrigger(animHash.BoostFlag);
         animator.ResetTrigger(animHash.rareWaitTrigger);
     }
 
+    public void ResetAnimation()
+    {
+        AnimVariableReset();
+        AnimTriggerReset();
+    }
 
     public RaycastHit getFootHit()
     {
@@ -389,9 +395,6 @@ public class PlayerMain : MonoBehaviour
                 adjustLeftStick = Vector2.zero;
             }
         }
-
-
-        Debug.Log(adjustLeftStick);
     }
 
     /// <summary>
@@ -448,6 +451,7 @@ public class PlayerMain : MonoBehaviour
         forciblySwingFlag = false;
         forciblyReleaseSaveVelocity = false;
         forciblyFollowVelToward = false;
+        forciblySwingNextFollow = false;
     }
 
     /// <summary>
@@ -466,6 +470,7 @@ public class PlayerMain : MonoBehaviour
             //フラグクリア
             forciblyFollowFlag = false;
             forciblySwingFlag = false;
+
         }
         else if(refState == EnumPlayerState.SWING)
         {
@@ -485,16 +490,21 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    public void ForciblySwingMode()
+    public void ForciblySwingMode(bool nextFollow)
     {
         if (refState == EnumPlayerState.SHOT)
         {
             forciblySwingFlag = true;
-
+            forciblySwingNextFollow = nextFollow;
             //フラグクリア
             forciblyRleaseFlag = false;
             forciblyFollowFlag = false;
         }
+    }
+
+    public void RecoverBullet()
+    {
+        recoverBullet = true;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -525,29 +535,6 @@ public class PlayerMain : MonoBehaviour
                         break;
                 }
         }
-        else if (refState == EnumPlayerState.SWING)
-        {
-            if(swingState == SwingState.RELEASED)
-            {
-                switch (asp)
-                {
-                    case Aspect.LEFT:
-                    case Aspect.RIGHT:
-                        vel.x *= 0.0f;
-                        if (vel.y > 1.0f)
-                        {
-                            vel.y *= 0.0f;
-                        }
-                        break;
-
-                    case Aspect.DOWN:
-                        vel.x *= 1.0f;
-                        vel.y *= 0.0f;
-                        break;
-                }
-            }
-        }
-
 
 
         //ショット中に壁にあたったときの処理
@@ -574,7 +561,6 @@ public class PlayerMain : MonoBehaviour
                         break;
 
                     case ShotState.GO:
-                    case ShotState.RETURN:
                         //勢い殺す
                         switch (asp)
                         {
@@ -703,6 +689,14 @@ public class PlayerMain : MonoBehaviour
         }
 
         
+    }
+
+    /// <summary>
+    /// トリガー類はすぐに遷移しない場合リセット
+    /// </summary>
+    private void OnAnimatorMove()
+    {
+        AnimTriggerReset();
     }
 
 

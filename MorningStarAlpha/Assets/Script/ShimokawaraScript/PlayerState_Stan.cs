@@ -30,7 +30,7 @@ public class PlayerStateStan : PlayerState
 
     public override void UpdateState()
     {
-        BulletAdjust();
+        //BulletAdjust();
 
         
     }
@@ -51,7 +51,7 @@ public class PlayerStateStan : PlayerState
             }
             else
             {
-                PlayerScript.mode = new PlayerStateMidair(true);
+                PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
             }
         }
     }

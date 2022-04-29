@@ -22,17 +22,17 @@ public class PlayerState
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
 
-    /// <summary>
-    /// バレットの位置を常にスティック方向に調整
-    /// </summary>
-    protected void BulletAdjust()
-    {
-        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        vec = vec * 2;
-        Vector3 adjustPos = PlayerScript.transform.position + vec;
+    ///// <summary>
+    ///// バレットの位置を常にスティック方向に調整
+    ///// </summary>
+    //protected void BulletAdjust()
+    //{
+    //    Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+    //    vec = vec * 2;
+    //    Vector3 adjustPos = PlayerScript.transform.position + vec;
 
-        BulletScript.transform.position = adjustPos;
-    }
+    //    BulletScript.transform.position = adjustPos;
+    //}
 
     protected void RotationStand()
     {
