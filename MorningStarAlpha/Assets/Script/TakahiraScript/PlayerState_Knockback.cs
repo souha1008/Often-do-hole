@@ -28,9 +28,7 @@ public class PlayerState_Knockback : PlayerState
         PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
 
         // 錨引き戻し
-        BulletScript.ReturnBullet();
-        PlayerScript.useVelocity = true;
-        BulletReturnFlag = true;
+        BulletScript.SetBulletState(EnumBulletState.RETURN);
 
 
         Knockback(); // ノックバック処理
@@ -51,8 +49,8 @@ public class PlayerState_Knockback : PlayerState
 
         // 錨引き戻し
         BulletScript.ReturnBullet();
-        PlayerScript.useVelocity = true;
-        BulletReturnFlag = true;
+        //PlayerScript.useVelocity = true;
+        //BulletReturnFlag = true;
 
 
         Knockback(); // ノックバック処理
@@ -98,7 +96,7 @@ public class PlayerState_Knockback : PlayerState
                 }
                 else
                 {
-                    PlayerScript.mode = new PlayerStateMidair(true);
+                    PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
                 }
             }
         }

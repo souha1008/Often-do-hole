@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gimmick_SpringBoard : Gimmick_Main
@@ -43,17 +41,16 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.x < 1 && VecPower.x > -1) VecPower.x = 0;  // ¬‚³‚¢’l‚ÍŒë·‚Æ‚µ‚Ä0‚É‚·‚é
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
+            PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.BOOST);
+            BulletMain.instance.ReturnBullet();
+            PlayerMain.instance.RecoverBullet();
 
-            PlayerMain.instance.mode = new PlayerStateMidair(true);
-
-            PlayerMain.instance.ForciblyReleaseMode(false);
-            PlayerMain.instance.endSwing = true;
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
-
-            SoundManager.Instance.PlaySound("Œˆ’è‰¹");
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("Œˆ’è‰¹");
 
             VibrationManager.Instance.StartVibration(1, 1, 0.2f);
 

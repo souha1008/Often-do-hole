@@ -2,14 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ShotDir
-{
-    UP,
-    LATERAL,
-    DIAGONAL_60,
-    DIAGONAL_30
-}
-
 
 /// <summary>
 /// 弾を撃った状態(一度紐が伸び切ったら長さ固定のもの)
@@ -21,7 +13,6 @@ public class PlayerStateShot : PlayerState
     float countTime;               //発射からの時間
 
     bool finishFlag;
-    private ShotDir shotDir;
     private bool releaseButton;
     private bool onceAnimReturn;
     private Vector3 followStartdiff;
@@ -30,11 +21,12 @@ public class PlayerStateShot : PlayerState
     private Queue<Vector3> Vecs = new Queue<Vector3>();
     private int beforeFrame;
     bool recoverCanShot;
+    bool onceAnim;
+
 
     private void Init()
     {
         countTime = 0.0f;
-        shotDir = ShotDir.UP;
         finishFlag = false;
         releaseButton = false;
         onceAnimReturn = false;
@@ -43,16 +35,20 @@ public class PlayerStateShot : PlayerState
         debug_timer = 0.0f;
         beforeFrame = 0;
         recoverCanShot = false;
+        onceAnim = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
-        PlayerScript.shotState = ShotState.GO;
+
         PlayerScript.canShotState = false;
         PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
         PlayerScript.vel.x *= 0.4f;
-        PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
-        
+
         //アニメーション用
+        PlayerScript.ResetAnimation();
+        PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
+        PlayerScript.animator.Play("Shot.throw");
+
         if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
         {
             //横投げ
@@ -63,28 +59,26 @@ public class PlayerStateShot : PlayerState
             //斜め投げ
             PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 2);
         }
-
-        //アニメーション・回転用　真上
-        if(Mathf.Abs(PlayerScript.adjustLeftStick.x) < 0.1f)
-        {
-            shotDir = ShotDir.UP;
-        }
-        else
-        {
-            shotDir = ShotDir.LATERAL;
-        }
     }
 
-    //消去
-    public PlayerStateShot()//コンストラクタ
+    public PlayerStateShot(bool isFollow)//コンストラクタ
     {
         Init();
         //弾の発射
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
 
-      
-        BulletScript.ShotBullet();
+
+        if (isFollow)
+        {
+            BulletScript.SetBulletState(EnumBulletState.STOP);
+            PlayerScript.shotState = ShotState.FOLLOW;
+        }
+        else
+        {
+            BulletScript.SetBulletState(EnumBulletState.GO);
+            PlayerScript.shotState = ShotState.GO;
+        }
 
         Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
     }
@@ -108,19 +102,8 @@ public class PlayerStateShot : PlayerState
                 }
                 break;
 
-            case ShotState.RETURN:
-                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
-                {
-                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 90, 0));
-                }
-                else if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {
-                    PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -90, 0));
-                }
-                break;
+        
         }
-
-
     }
 
     /// <summary>
@@ -143,7 +126,7 @@ public class PlayerStateShot : PlayerState
 
     private Vector3 ReleaseForceCalicurate()
     {
-        if(Vecs.Count == 0) 
+        if (Vecs.Count == 0)
         {
             Debug.LogWarning("No Vecs IN Queue");
             return BulletScript.vel;
@@ -156,24 +139,10 @@ public class PlayerStateShot : PlayerState
             float minVecPower = Mathf.Min(returnVec.magnitude, 60.0f);
             returnVec = returnVec * (60.0f / minVecPower);
 
-            //入力方向にやや補正
-            //if(PlayerScript.isOnGround == false)
-            //{
-            //    if((PlayerScript.dir == PlayerMoveDir.RIGHT) && PlayerScript.sourceLeftStick.x > 0.1f)
-            //    {
-            //        returnVec.x *= 1.1f;
-            //    }
-            //    if ((PlayerScript.dir == PlayerMoveDir.LEFT) && PlayerScript.sourceLeftStick.x < -0.1f)
-            //    {
-            //        returnVec.x *= 1.1f;
-            //    }
-            //}
-
             return returnVec;
         }
-      
-    }
 
+    }
 
     private void intoVecsQueue()
     {
@@ -211,23 +180,53 @@ public class PlayerStateShot : PlayerState
         //アンカーが刺さらない壁にあたったときなど、外部契機で引き戻しに移行
         if (PlayerScript.forciblyRleaseFlag)
         {
-            PlayerScript.forciblyRleaseFlag = false;
-
-            if (PlayerScript.forciblyReleaseSaveVelocity)
+            if (BulletScript.isTouched)
             {
-                PlayerScript.vel = ReleaseForceCalicurate();
-                ;
-            }
-            else
-            {
-                PlayerScript.vel = Vector3.zero;
-            }
+                PlayerScript.forciblyRleaseFlag = false;
 
-            BulletScript.ReturnBullet();
+                if (PlayerScript.forciblyReleaseSaveVelocity)
+                {
+                    PlayerScript.vel = ReleaseForceCalicurate();
+                    ;
+                }
+                else
+                {
+                    PlayerScript.vel = Vector3.zero;
+                }
 
-            PlayerScript.useVelocity = true;
-            PlayerScript.shotState = ShotState.RETURN;
+                BulletScript.SetBulletState(EnumBulletState.RETURN);
+                PlayerScript.useVelocity = true;
+                finishFlag = true;
+            }
         }
+
+        //follow開始
+        if (PlayerScript.forciblyFollowFlag)
+        {
+            if (BulletScript.isTouched)
+            {
+                BulletScript.SetBulletState(EnumBulletState.STOP);
+
+                PlayerScript.vel = ReleaseForceCalicurate();
+
+                PlayerScript.vel.y += 30.0f;
+
+                if (PlayerScript.forciblyFollowVelToward)
+                {
+                    Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
+                    PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
+                    recoverCanShot = true;
+                }
+
+                PlayerScript.useVelocity = true;
+                PlayerScript.forciblyFollowFlag = false;
+                PlayerScript.forciblyFollowVelToward = false;
+                followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
+
+                PlayerScript.shotState = ShotState.FOLLOW;
+            }
+        }
+        
 
         if (countTime > 0.1f)
         {
@@ -251,12 +250,12 @@ public class PlayerStateShot : PlayerState
                 if (releaseButton) //ボタンが離れていたら
                 {
                     releaseButton = false;
-                    BulletScript.ReturnBullet();
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
 
                     PlayerScript.vel = ReleaseForceCalicurate();
 
                     PlayerScript.useVelocity = true;
-                    PlayerScript.shotState = ShotState.RETURN;
+                    finishFlag = true;
                 }
             }
         }
@@ -285,33 +284,7 @@ public class PlayerStateShot : PlayerState
             }
         }
 
-        //follow開始
-
-        if ((PlayerScript.shotState == ShotState.GO) || (PlayerScript.shotState == ShotState.STRAINED))
-        {
-            if (BulletScript.isTouched)
-            {
-                if (PlayerScript.forciblyFollowFlag)
-                {
-                    BulletScript.FollowedPlayer();
-
-                    PlayerScript.vel = ReleaseForceCalicurate();
-
-                    if (PlayerScript.forciblyFollowVelToward)
-                    {
-                        Vector3 towardVec = BulletScript.rb.position - PlayerScript.rb.position;
-                        PlayerScript.vel = towardVec.normalized * PlayerScript.vel.magnitude;
-                        recoverCanShot = true;
-                    }
-
-                    PlayerScript.useVelocity = true;
-                    PlayerScript.forciblyFollowFlag = false;
-                    PlayerScript.forciblyFollowVelToward = false;
-                    PlayerScript.shotState = ShotState.FOLLOW;
-                    followStartdiff = BulletScript.colPoint - PlayerScript.rb.position;
-                }
-            }
-        }
+      
     }
 
     public override void Move()
@@ -332,9 +305,7 @@ public class PlayerStateShot : PlayerState
                     BulletScript.vel /= BulletScript.BULLET_SPEED_MULTIPLE;
 
                     PlayerScript.shotState = ShotState.STRAINED;
-                    PlayerScript.vel = Vector3.zero;
-
-                    //PlayerScript.useVelocity = false;
+                    PlayerScript.vel = Vector3.zero;            
                 }
 
                 debug_timer += Time.fixedDeltaTime;
@@ -344,6 +315,14 @@ public class PlayerStateShot : PlayerState
             case ShotState.STRAINED:
                 Debug.Log(debug_timer);
                 StrainedStop();
+                if(onceAnim == false)
+                {
+                    onceAnim = true;
+                    RotationPlayer();
+                    PlayerScript.animator.Play("Shot.midair_roop");
+                }
+
+
                 //このとき、移動処理は直にposition変更しているため???????、update内に記述
                 //ここに記述するとカメラがブレる
 
@@ -353,26 +332,6 @@ public class PlayerStateShot : PlayerState
                     PlayerScript.ForciblyReleaseMode(true);
                 }
 
-                break;
-
-            case ShotState.RETURN:
-                //自分へ弾を引き戻す
-                if (onceAnimReturn == false)
-                {
-                    onceAnimReturn = true;
-                    PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
-                }
-
-                Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-                vecToPlayer = vecToPlayer.normalized;
-
-                BulletScript.vel = vecToPlayer * 200.0f;
-
-                //距離が一定以下になったら終了処理フラグを建てる
-                if (interval < 4.0f)
-                {
-                    finishFlag = true;
-                }
                 break;
 
             case ShotState.FOLLOW:
@@ -387,20 +346,23 @@ public class PlayerStateShot : PlayerState
                 if(maxFollowAddvec.magnitude > 80)
                 {
                     PlayerScript.vel *= 0.5f;
-                    PlayerScript.ForciblyReleaseMode(true);
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : over 80");
+                    finishFlag = true;
                 }
                 //ボールに収束しなそうだったら切り離し（回転バグ防止）
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
-                    PlayerScript.ForciblyReleaseMode(true);
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : 収束しない");
+                    finishFlag = true;
                 }
 
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
+                    BulletScript.SetBulletState(EnumBulletState.READY);
                 }
 
                 break;
@@ -410,22 +372,18 @@ public class PlayerStateShot : PlayerState
     public override void StateTransition()
     {
         //ボールが触れたらスイング状態
-        if (BulletScript.isTouched)
+        if (PlayerScript.forciblySwingFlag)
         {
-            PlayerScript.shotState = ShotState.NONE;
-            PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
-
-            if (PlayerScript.forciblySwingFlag)
+            if (BulletScript.isTouched)
             {
+                PlayerScript.shotState = ShotState.NONE;
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, false);
+                BulletScript.SetBulletState(EnumBulletState.STOP);
+
                 PlayerScript.forciblySwingFlag = false;
-                if (PlayerScript.AutoRelease)
-                {
-                    PlayerScript.mode = new PlayerStateSwing_Vel();
-                }
-                else
-                {
-                    PlayerScript.mode = new PlayerStateSwing_Vel();
-                }
+               
+                PlayerScript.mode = new PlayerStateSwing_Vel();
+                
             }
         }
 
@@ -441,7 +399,7 @@ public class PlayerStateShot : PlayerState
             }
             else //そうでないなら空中
             {
-                PlayerScript.mode = new PlayerStateMidair(recoverCanShot);
+                PlayerScript.mode = new PlayerStateMidair(recoverCanShot ,MidairState.NORMAL);
             }
         }
 

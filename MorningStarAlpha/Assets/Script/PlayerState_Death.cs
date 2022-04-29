@@ -17,6 +17,8 @@ public class PlayerStateDeath : PlayerState
         BulletScript.rb.velocity = Vector3.zero;
         BulletScript.vel = Vector3.zero;
         BulletScript.StopVelChange = true;
+
+        PlayerScript.ResetAnimation();
     }
 
     public override void UpdateState()
