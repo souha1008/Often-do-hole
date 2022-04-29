@@ -11,6 +11,9 @@ public class Title_p1_manager : MonoBehaviour
 
     [Tooltip("カメラが動いているフレーム")][SerializeField] int camera_motion = 30;
     [Tooltip("カメラが動く速度")][Range(0.0f, 10.0f)] [SerializeField] float camera_speed = 5.4f;
+    [Tooltip("カメラリセット位置")][SerializeField] float camera_resetPos = 281.0f;
+    [Tooltip("旋回時間")][SerializeField] float duration = 10.0f;
+    [Tooltip("旋回終了から何フレーム経ったか")][SerializeField] int derayFlame = 120;
 
     private bool transition_1;    // 一番目カメラのモーショントリガー
     private bool transition_2;    // 二番目カメラモーショントリガー
@@ -18,28 +21,33 @@ public class Title_p1_manager : MonoBehaviour
     private int flame_count;            // フレームカウント用
 
     private bool once_press;
+    private bool sceneCange;    //シーンチェンジ変数＆シングルトン解決用
 
-    private Sequence sequence;
 
 
     void Awake()
     {
+        // DOTweenキャパシティ警告回避用
+        DOTween.SetTweensCapacity(tweenersCapacity: 800, sequencesCapacity: 200);
+
+        // Playerポジション固定用
         pos = Player.transform.position;
+
+        // 変数初期化
         flame_count = 0;
-        once_press = false;
         transition_1 = false;
         transition_2 = false;
+        once_press = false;
+        sceneCange = false;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
-        sequence = DOTween.Sequence();
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         // PlayerのZ軸補正
         if (transition_1 == false && transition_2 == false)
@@ -55,11 +63,11 @@ public class Title_p1_manager : MonoBehaviour
             once_press = true;
         }
 
+        // カメラ回転処理
         if(transition_1 == true)
         {
             flame_count++;
             Debug.Log(flame_count);
-            //camera.transform.DORotate(new Vector3(0, 359, 0), camera_motion, RotateMode.Fast);
 
             camera.transform.Rotate(new Vector3(0, camera_speed, 0));
 
@@ -68,56 +76,38 @@ public class Title_p1_manager : MonoBehaviour
             {
                 CameraReset();
 
-                // プレイヤー移動
-                //Player.transform.position = new Vector3(-70.0f, 5.8f, 88.5f);
-                //Player.transform.SetPositionAndRotation(new Vector3(-70.0f, 5.8f, 88.5f), 
-                //                                        new Quaternion(0, 13.496f, 0, 0));
-
-                //Vector3 scale;
-                //scale = Player.transform.localScale;
-                //scale = new Vector3(35.1997f, 35.1997f, 35.1997f);
-                //Player.transform.localScale = scale;
-
-                //Player.transform.rotation = ;
-
                 Player.SetActive(false);
 
                 transition_1 = false;
                 transition_2 = true;
+                flame_count = 0;
             }
         }
 
         if(transition_2 == true)
         {
 
-            //sequence = DOTween.Sequence().Append(camera.transform.DORotate(new Vector3(0, -1, 0), 1.0f, RotateMode.Fast)
-            //    .SetEase(Ease.OutCirc)
-            //    .OnComplete(() =>
-            //    {
-            //        Debug.Log("シーン切り替え");
-            //        SceneManager.LoadScene("Title_part2");
-            //    }));
+            camera.transform.DORotate(new Vector3(0, -1, 0), duration, RotateMode.Fast)
+                .SetLink(camera.gameObject)
+                .SetEase(Ease.OutCirc);
 
-            camera.transform.DORotate(new Vector3(0, -1, 0), 10.0f, RotateMode.Fast)
-                .SetEase(Ease.OutCirc)
-                .OnComplete(() =>
-                {
+            flame_count++;
+            if(flame_count >= derayFlame)
+            {
+                sceneCange = true;
+                DOTween.Kill(camera);
+            }
 
-                    Debug.Log("シーン切り替え");
-                    SceneManager.LoadScene("Title_part2");
-                    
-                });
-            //camera.transform.Rotate(new Vector3(0, camera_speed, 0));
-            //if (camera.transform.rotation.y >= 360 || camera.transform.rotation.y <= 0)
-            //{
-            //    SceneManager.LoadScene("Title_part2");
-            //    transition_2 = false;
-            //}
+            if(sceneCange == true)
+            {
+                Debug.Log("シーン切り替え");
+                SceneManager.LoadScene("Title_part2");
+            }
         }
     }
 
     void CameraReset()
     {
-        camera.transform.rotation = new Quaternion(0, 281, 0, 0);
+        camera.transform.rotation = new Quaternion(0, camera_resetPos, 0, 0);
     }
 }
