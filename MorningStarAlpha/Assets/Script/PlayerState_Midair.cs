@@ -30,7 +30,16 @@ public class PlayerStateMidair : PlayerState
         PlayerScript.midairState = first_state;
         if(PlayerScript.midairState == MidairState.NORMAL)
         {
-            PlayerScript.canShotState = can_shot;
+            if (PlayerScript.recoverBullet)
+            {
+                PlayerScript.canShotState = true;
+                PlayerScript.recoverBullet = false;
+            }
+            else
+            {
+                PlayerScript.canShotState = can_shot;
+            }
+
             PlayerScript.animator.SetBool(PlayerScript.animHash.isBoost, false);
         }
         else if (PlayerScript.midairState == MidairState.BOOST)
@@ -121,7 +130,7 @@ public class PlayerStateMidair : PlayerState
         if (shotButton)
         {
             PlayerScript.midairState = MidairState.NONE;
-            PlayerScript.mode = new PlayerStateShot();
+            PlayerScript.mode = new PlayerStateShot(false);
         }
 
         //íÖínÇµÇΩÇÁóßÇ¡ÇƒÇ¢ÇÈèÛë‘Ç…à⁄çs

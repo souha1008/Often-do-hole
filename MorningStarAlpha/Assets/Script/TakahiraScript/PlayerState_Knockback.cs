@@ -28,7 +28,7 @@ public class PlayerState_Knockback : PlayerState
         PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
 
         // 錨引き戻し
-       
+        BulletScript.SetBulletState(EnumBulletState.RETURN);
 
 
         Knockback(); // ノックバック処理

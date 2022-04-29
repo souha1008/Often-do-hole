@@ -202,11 +202,11 @@ public class PlayerStateOnGround : PlayerState
             //スライド中で投げる方向が進行方向と同じなら
             if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
             {
-                PlayerScript.mode = new PlayerStateShot();
+                PlayerScript.mode = new PlayerStateShot(false);
             }
             else
             {
-                PlayerScript.mode = new PlayerStateShot();
+                PlayerScript.mode = new PlayerStateShot(false);
             }
         }
     }

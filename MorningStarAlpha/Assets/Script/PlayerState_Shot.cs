@@ -38,7 +38,7 @@ public class PlayerStateShot : PlayerState
         onceAnim = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
-        PlayerScript.shotState = ShotState.GO;
+
         PlayerScript.canShotState = false;
         PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
@@ -61,16 +61,24 @@ public class PlayerStateShot : PlayerState
         }
     }
 
-    //消去
-    public PlayerStateShot()//コンストラクタ
+    public PlayerStateShot(bool isFollow)//コンストラクタ
     {
         Init();
         //弾の発射
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();
 
-      
-        BulletScript.SetBulletState(EnumBulletState.GO);
+
+        if (isFollow)
+        {
+            BulletScript.SetBulletState(EnumBulletState.STOP);
+            PlayerScript.shotState = ShotState.FOLLOW;
+        }
+        else
+        {
+            BulletScript.SetBulletState(EnumBulletState.GO);
+            PlayerScript.shotState = ShotState.GO;
+        }
 
         Vecs.Enqueue(BulletScript.vel / BulletScript.BULLET_SPEED_MULTIPLE);
     }
@@ -193,8 +201,6 @@ public class PlayerStateShot : PlayerState
         }
 
         //follow開始
-
-   
         if (PlayerScript.forciblyFollowFlag)
         {
             if (BulletScript.isTouched)
@@ -202,6 +208,8 @@ public class PlayerStateShot : PlayerState
                 BulletScript.SetBulletState(EnumBulletState.STOP);
 
                 PlayerScript.vel = ReleaseForceCalicurate();
+
+                PlayerScript.vel.y += 30.0f;
 
                 if (PlayerScript.forciblyFollowVelToward)
                 {
@@ -346,7 +354,6 @@ public class PlayerStateShot : PlayerState
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
-                    PlayerScript.ForciblyReleaseMode(true);
                     BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : 収束しない");
                     finishFlag = true;

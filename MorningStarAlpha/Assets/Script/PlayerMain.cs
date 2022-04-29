@@ -148,7 +148,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾についていくときのフラグ")] public bool forciblyFollowFlag;
     [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
-
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingNextFollow;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
@@ -451,6 +451,7 @@ public class PlayerMain : MonoBehaviour
         forciblySwingFlag = false;
         forciblyReleaseSaveVelocity = false;
         forciblyFollowVelToward = false;
+        forciblySwingNextFollow = false;
     }
 
     /// <summary>
@@ -469,6 +470,7 @@ public class PlayerMain : MonoBehaviour
             //フラグクリア
             forciblyFollowFlag = false;
             forciblySwingFlag = false;
+
         }
         else if(refState == EnumPlayerState.SWING)
         {
@@ -488,12 +490,12 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    public void ForciblySwingMode()
+    public void ForciblySwingMode(bool nextFollow)
     {
         if (refState == EnumPlayerState.SHOT)
         {
             forciblySwingFlag = true;
-
+            forciblySwingNextFollow = nextFollow;
             //フラグクリア
             forciblyRleaseFlag = false;
             forciblyFollowFlag = false;

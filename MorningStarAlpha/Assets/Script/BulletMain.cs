@@ -187,7 +187,7 @@ public class BulletMain : MonoBehaviour
         //プレイヤー強制処理フラグクリア
         PlayerScript.ClearModeTransitionFlag();
 
-        const float lateral_multiple = 1.1f;
+        const float lateral_multiple = 1.05f;
 
         //弾の初期化
         rb.velocity = Vector3.zero;
@@ -209,7 +209,7 @@ public class BulletMain : MonoBehaviour
 
         if (vec.y < 0.3f)
         {
-            if (vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE * lateral_multiple)
+            if (vel.magnitude > (BULLET_SPEED * lateral_multiple + 5) * BULLET_SPEED_MULTIPLE)
             {
                 float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE * lateral_multiple) / vel.magnitude;
                 Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
@@ -219,7 +219,7 @@ public class BulletMain : MonoBehaviour
         else
         {
 
-            if (vel.magnitude > BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE)
+            if (vel.magnitude > (BULLET_SPEED + 5) * BULLET_SPEED_MULTIPLE)
             {
                 float adjustVec = (BULLET_SPEED_MAX * BULLET_SPEED_MULTIPLE) / vel.magnitude;
                 Debug.Log("BulletOverSpeed : adjust Max *= " + adjustVec);
@@ -241,7 +241,6 @@ public class BulletMain : MonoBehaviour
     {
         // 高平追加
         mode.Update();
-        Debug.Log(mode.ToString());
     }
 
     void FixedUpdate()
@@ -387,7 +386,7 @@ public class BulletMain : MonoBehaviour
                         else
                         {
                             //SWING状態に移行
-                            PlayerScript.ForciblySwingMode();
+                            PlayerScript.ForciblySwingMode(false);
                         }
                      
 
@@ -418,7 +417,7 @@ public class BulletMain : MonoBehaviour
                         if ((colAspect == Aspect_8.DOWN) || (colAspect == Aspect_8.DOWN_LEFT) || (colAspect == Aspect_8.DOWN_RIGHT))
                         {
                             //SWING状態に移行
-                            PlayerScript.ForciblySwingMode();                       
+                            PlayerScript.ForciblySwingMode(false);                       
                         }
                         else if ((colAspect == Aspect_8.UP) || (colAspect == Aspect_8.UP_LEFT) || (colAspect == Aspect_8.UP_RIGHT))
                         {
@@ -466,13 +465,18 @@ public class BulletMain : MonoBehaviour
                     string tag = other.gameObject.tag;
                     switch (tag)
                     {
-                        case "WireMesh":
-                        case "SpringBoard":
+                        case "WireMesh":                     
+                            isTouched = true;
                             onceFlag = true;
-                            SetBulletState(EnumBulletState.STOP);
-                            PlayerScript.ForciblyFollowMode(true);
+                            PlayerScript.ForciblySwingMode(true);
+                            PlayerMain.instance.RecoverBullet();
+                                break;
 
-                            break;
+                        case "SpringBoard":
+                            isTouched = true;
+                            onceFlag = true;
+                            PlayerScript.ForciblyFollowMode(true);
+                                break;
                     }
                 }
             }

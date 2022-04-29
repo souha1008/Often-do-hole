@@ -43,6 +43,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
 
             PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.BOOST);
             BulletMain.instance.ReturnBullet();
+            PlayerMain.instance.RecoverBullet();
 
             PlayerMain.instance.vel = Vector3.zero;
             PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
