@@ -275,6 +275,7 @@ public class PlayerStateSwing_Vel : PlayerState
             degree -= 95;
             animFrame = degree / 170;
             animFrame = Mathf.Clamp01(animFrame);
+            animFrame = 1 - animFrame;
         }
         else if(firstDir == PlayerMoveDir.LEFT)
         {
@@ -285,7 +286,17 @@ public class PlayerStateSwing_Vel : PlayerState
 
         Debug.Log(degree);
         Debug.Log("animFrame : " + animFrame);
-        PlayerScript.animator.Play("Swing.normalSwing", -1, animFrame);
+
+        
+        if(firstDir == PlayerScript.dir)
+        {
+            PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
+        }
+        else
+        {
+            animFrame = 1 - animFrame;
+            PlayerScript.animator.Play("Swing.swingBack", -1, animFrame);
+        }
     }
 
     public Vector3 ReleaseForceCalicurale()
