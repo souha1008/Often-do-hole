@@ -42,6 +42,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
             if (Input.GetButtonDown("Button_Select"))
             {
                 EndPause();
+                SoundManager.Instance.UnPauseSound();
             }
 
             oldButton = nowButton;
@@ -51,6 +52,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
             if (Input.GetButtonDown("Button_Select"))
             {
                 StartPause();
+                SoundManager.Instance.PauseSound();
+                VibrationManager.Instance.StopVibration();
             }
         }
     }

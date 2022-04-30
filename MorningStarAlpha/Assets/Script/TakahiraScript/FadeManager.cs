@@ -94,7 +94,10 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), FadeTexture);
     }
 
-    private void Start() { }
+    private void Start() 
+    {
+        SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
+    }
 
     private void Update()
     {
@@ -184,7 +187,9 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private void FadeIn_GameOver()
     {
         // ゲームシーンのリセット
+        SoundManager.Instance.StopSound("BGM_01");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
     }
     // フェードインしたときの処理(シーン変更)
     private void FadeIn_SceneChange()
