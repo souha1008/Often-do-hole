@@ -120,7 +120,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     default:
                         break;
                 }
-                NowTime += Time.deltaTime; // ŽžŠÔ‰ÁŽZ
+                NowTime += Time.unscaledDeltaTime; // ŽžŠÔ‰ÁŽZ
 
                 if (FadeColor.a >= 1.0f)
                 {
@@ -146,7 +146,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     default:
                         break;
                 }
-                NowTime += Time.deltaTime; // ŽžŠÔ‰ÁŽZ
+                NowTime += Time.unscaledDeltaTime; // ŽžŠÔ‰ÁŽZ
 
                 if (FadeColor.a <= 0.0f)
                 {
