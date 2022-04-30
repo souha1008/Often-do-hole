@@ -36,10 +36,7 @@ public class TrailEffectOnOff : MonoBehaviour
             }
             else if(PlayerMain.instance.refState == EnumPlayerState.MIDAIR)
             {
-                if (PlayerMain.instance.midairState == MidairState.FALL)
-                {
-                    pa.Play();
-                }
+
             }
             else if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND)
             {

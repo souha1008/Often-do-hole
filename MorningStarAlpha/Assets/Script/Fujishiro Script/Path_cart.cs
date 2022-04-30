@@ -39,7 +39,7 @@ public class Path_cart : MonoBehaviour
                 .OnComplete(() =>
                 {
                     Debug.Log("Complete");
-                    PlayerState.PlayerScript.mode = new PlayerStateMidair(false);
+                    PlayerState.PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
                 });
                 player.transform
                 .DOPath(player_path, 4.0f);

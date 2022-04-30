@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
     public override void Init()
     {
         Cd.isTrigger = false;
-        Rb.constraints |= RigidbodyConstraints.FreezePositionZ;   // À•WZ‚ÌƒtƒŠ[ƒY‚ğƒIƒ“
+        Rb.constraints |= RigidbodyConstraints.FreezePositionZ;   // åº§æ¨™Zã®ãƒ•ãƒªãƒ¼ã‚ºã‚’ã‚ªãƒ³
         //GravityFlag = true;
     }
 
@@ -27,15 +27,20 @@ public class Gimmick_Enemy2 : Gimmick_Main
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet") ||
+            (collision.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))
         {
-            // ƒqƒbƒgƒXƒgƒbƒv
+            // ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—
             GameSpeedManager.Instance.StartHitStop();
 
-            // €–S
+            // åŠ¹æœéŸ³
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("sound_24_ç ´å£ŠSE_2");
+
+            // æ­»äº¡
             Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.CompareTag("Platform"))
         {
             Vel.y = 0.0f;
         }
@@ -43,14 +48,14 @@ public class Gimmick_Enemy2 : Gimmick_Main
 
     public void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.tag == "Platform")
+        if (collision.gameObject.CompareTag("Platform"))
         {
             Vel.y = 0.0f;
         }
 
-        if (collision.gameObject.tag == "Box")
+        if (collision.gameObject.CompareTag("Box"))
         {
-            // Õ“Ë“_æ“¾
+            // è¡çªç‚¹å–å¾—
             foreach (ContactPoint contact in collision.contacts)
             {
                 if (contact.normal.y < -0.1f || contact.normal.y > 0.1f)

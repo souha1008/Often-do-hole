@@ -217,7 +217,9 @@ public class Gimmick_FallBlock : Gimmick_Main
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
         {
+            PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.NORMAL);
             PlayerMain.instance.ForciblyReleaseMode(true);
+            PlayerMain.instance.endSwing = true;
             PlayerMain.instance.floorVel = Vector3.zero;
         }
 
