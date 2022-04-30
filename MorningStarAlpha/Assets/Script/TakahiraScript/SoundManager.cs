@@ -872,7 +872,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.StartVolume + 
                 (NowPlaySound.Sound_Fade.EndVolume - NowPlaySound.Sound_Fade.StartVolume) * Volume); // 音量セット
 
-            NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
+            NowPlaySound.Sound_Fade.NowTime += Time.deltaTime; // 時間加算
         }
         else
         {
@@ -918,7 +918,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     break;
             }           
 
-            NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
+            NowPlaySound.Sound_Fade.NowTime += Time.deltaTime; // 時間加算
         }
         else
         {
@@ -1125,6 +1125,24 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void Update()
     {
+        // 音量セット
+        UpdateVolume();
+
+        // 現在使用中か判定処理
+        UpdateNowUse();
+
+        // 3Dの音発生座標更新
+        Update3DPos();
+
+        // サウンドのフェード更新
+        UpdateFadeSound();
+
+#if UNITY_EDITOR
+        // サウンドのインスペクター用詳細情報更新
+        UpdateSoundInspector();
+#endif
+
+
         // テスト用入力キー
 
         if (Input.GetKeyDown(KeyCode.A)) // 一時停止
@@ -1176,24 +1194,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void FixedUpdate()
     {
-        // 音量セット
-        UpdateVolume();
-
-        // 現在使用中か判定処理
-        UpdateNowUse();
-
-        // 3Dの音発生座標更新
-        Update3DPos();
-
-        // サウンドのフェード更新
-        UpdateFadeSound();
-
-#if UNITY_EDITOR
-        // サウンドのインスペクター用詳細情報更新
-        UpdateSoundInspector();
-#endif
-
-
         //Debug.Log("ポーズ中：" + AudioSource_BGM[0].isPause);
         //Debug.Log("使っている：" + AudioSource_BGM[0].isUse);
         //Debug.Log("ポーズ中：" + AudioSource_SE[0].isPause);

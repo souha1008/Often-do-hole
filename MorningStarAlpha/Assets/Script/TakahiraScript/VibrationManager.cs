@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
 {
+    Coroutine _Vibration;
+
     private void Awake()
     {
         if (this != Instance)
@@ -32,7 +34,7 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
             // 低周波（左）モーターの強さを 1、
             // 高周波（右）モーターの強さを 0、
             // 0.3f秒間かけて振動させる
-            StartCoroutine(Vibration(1, 0, 0.3f));
+            StartVibration(1, 0, 0.3f);
             Debug.LogWarning("Aボタン押した");
             SoundManager.Instance.PlaySound("決定音");
         }
@@ -42,7 +44,7 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
             // 低周波（左）モーターの強さを 0、
             // 高周波（右）モーターの強さを 1、
             // 0.3f秒間かけて振動させる
-            StartCoroutine(Vibration(0, 1, 0.3f));
+            StartVibration(1, 0, 20f);
             Debug.LogWarning("Bボタン押した");
             SoundManager.Instance.PlaySound("決定音");
         }
@@ -60,7 +62,8 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
     // ==============================================
     public void StartVibration(float lowFrequency, float highFrequency, float VibrationTime)
     {
-        Vibration (lowFrequency, highFrequency, VibrationTime);
+        if (_Vibration != null) StopCoroutine(_Vibration);
+        _Vibration = StartCoroutine(Vibration(lowFrequency, highFrequency, VibrationTime));
     }
 
     //===============================================
@@ -96,7 +99,7 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         }
 
         gamepad.SetMotorSpeeds(lowFrequency, highFrequency);
-        yield return new WaitForSeconds(VibrationTime); // VibrationTime振動させる
+        yield return new WaitForSecondsRealtime(VibrationTime); // VibrationTime振動させる
         gamepad.SetMotorSpeeds(0, 0);
     }
 }
