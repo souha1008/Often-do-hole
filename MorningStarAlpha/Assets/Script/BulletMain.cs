@@ -20,14 +20,10 @@ public class BulletMain : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
                                                        //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
 
-    // 高平追加
     [System.NonSerialized] public static BulletMain instance;
-    [ReadOnly] public EnumBulletState NowBulletState;
     private BulletState mode;
+    [ReadOnly] public EnumBulletState NowBulletState;
     [ReadOnly] public bool CanShotFlag;
-
-
-    [ReadOnly] BulletRefState bulletRefState;
     [ReadOnly] public Vector3 vel;
     [ReadOnly] public Vector3 colPoint;
     [ReadOnly] public bool isTouched; //弾がなにかに触れたか
@@ -226,7 +222,16 @@ public class BulletMain : MonoBehaviour
                 vel *= adjustVec;
             }
         }
-      
+
+        if (vec.y < 0.3f)
+        {
+            PlayerScript.animator.Play("Shot.throw_15");
+
+        }
+        else
+        {
+            PlayerScript.animator.Play("Shot.throw_65");
+        }
     }
 
     public void ReturnBullet()
