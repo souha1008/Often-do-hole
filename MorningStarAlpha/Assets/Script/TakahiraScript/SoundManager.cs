@@ -872,7 +872,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.StartVolume + 
                 (NowPlaySound.Sound_Fade.EndVolume - NowPlaySound.Sound_Fade.StartVolume) * Volume); // ‰¹—ÊƒZƒbƒg
 
-            NowPlaySound.Sound_Fade.NowTime += Time.deltaTime; // ŽžŠÔ‰ÁŽZ
+            NowPlaySound.Sound_Fade.NowTime += Time.unscaledDeltaTime; // ŽžŠÔ‰ÁŽZ
         }
         else
         {
@@ -918,7 +918,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     break;
             }           
 
-            NowPlaySound.Sound_Fade.NowTime += Time.deltaTime; // ŽžŠÔ‰ÁŽZ
+            NowPlaySound.Sound_Fade.NowTime += Time.unscaledDeltaTime; // ŽžŠÔ‰ÁŽZ
         }
         else
         {
