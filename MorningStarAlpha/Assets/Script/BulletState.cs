@@ -118,6 +118,9 @@ public class BulletStop : BulletState
 // 引き戻しステート
 public class BulletReturn : BulletState
 {
+    float ratio;
+    Vector3 maxPos;
+
     public BulletReturn()
     {
         // 初期化
@@ -130,21 +133,38 @@ public class BulletReturn : BulletState
         BulletScript.co.isTrigger = true;
         BulletScript.StopVelChange = true;
         BulletScript.CanShotFlag = false;
+
+        ratio = 0.0f;
+
+
+        maxPos = PlayerScript.rb.position + ((BulletScript.rb.position - PlayerScript.rb.position).normalized * BulletScript.BULLET_ROPE_LENGTH);
+
     }
 
     public override void Move()
     {
-        //自分へ弾を引き戻す
-        Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-        vecToPlayer = vecToPlayer.normalized;
-        BulletScript.vel = vecToPlayer * 200;
-
+        ratio += 0.05f;
+        float easeRatio = Easing.Linear(ratio, 1.0f, 0.0f, 1.0f);
+        //弾と自分の位置で補完 
+        Vector3 BulletPosition = maxPos * (1 - easeRatio) + PlayerScript.rb.position * easeRatio;
+        BulletScript.rb.position = BulletPosition;
 
         //距離が一定以下になったら終了
-        if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
+        if (easeRatio >= 0.8f)
         {
             BulletScript.SetBulletState(EnumBulletState.READY);
         }
+
+        ////自分へ弾を引き戻す
+        //Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
+        //vecToPlayer = vecToPlayer.normalized;
+        //BulletScript.vel = vecToPlayer * 200;
+
+        ////距離が一定以下になったら終了
+        //if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
+        //{
+        //    BulletScript.SetBulletState(EnumBulletState.READY);
+        //}
     }
 }
 

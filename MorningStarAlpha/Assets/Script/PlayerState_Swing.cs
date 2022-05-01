@@ -281,7 +281,7 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             degree -= 95;
             animFrame = degree / 170;
-            animFrame =  Mathf.Clamp01(animFrame);
+            animFrame = Mathf.Clamp01(animFrame);
         }
 
         Debug.Log(degree);
@@ -597,7 +597,7 @@ public class PlayerStateSwing_Vel : PlayerState
             }
             else
             {
-                PlayerScript.mode = new PlayerStateMidair(true, MidairState.BOOST);
+                PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
             }
         }
     }

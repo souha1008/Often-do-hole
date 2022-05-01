@@ -1,15 +1,5 @@
 using UnityEngine;
 
-public enum BulletRefState
-{
-    READY,
-    GO,
-    RETURN,
-    STOP,
-}
-
-
-
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;

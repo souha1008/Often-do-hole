@@ -407,34 +407,8 @@ public class PlayerMain : MonoBehaviour
         StartPos = rb.position;
         StartPos.y += 1.0f;
 
-#if false
-
-        RaycastHit hit;
-        if (Physics.Raycast(StartPos, adjustLeftStick, out hit, 3.0f))
-        {
-            if (hit.collider.CompareTag("Platform"))
-            {
-                CanShotColBlock = false;
-            }
-            else
-            {
-                CanShotColBlock = true;
-            }
-        }
-        else
-        {
-            CanShotColBlock = true;
-        }
-        StartPos.z += 2.0f;
-        Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
-
-#else
-        CanShotColBlock = true;
-
-#endif
-
         //ç≈èIìIÇ…ë≈ÇƒÇÈÇ©ÇÃåàíË
-        if (canShotState && stickCanShotRange && CanShotColBlock)
+        if (canShotState && stickCanShotRange && BulletScript.CanShotFlag)
         {
             canShot = true;
         }

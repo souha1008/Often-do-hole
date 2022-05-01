@@ -19,6 +19,7 @@ public class PlayerStateMidair : PlayerState
         boostTimer = 0.0f;
 
         RotationStand();
+
         //ƒAƒjƒ—p
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, false);

@@ -24,6 +24,7 @@ public class PlayerStateOnGround : PlayerState
 
         RotationStand();
 
+
         //スライド処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
@@ -222,20 +223,20 @@ public class PlayerStateOnGround : PlayerState
 
     public override void Animation()
     {
-        ////速度を参照
-        //float animBlend = Mathf.Abs(PlayerScript.vel.x);
-        //animBlend = Mathf.Clamp(animBlend, 0.0f, PlayerScript.MAX_RUN_SPEED);
-        //PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), animBlend);
+        //速度を参照
+        float animBlend = Mathf.Abs(PlayerScript.vel.x);
+        animBlend = Mathf.Clamp(animBlend, 0.0f, PlayerScript.MAX_RUN_SPEED);
+        PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), animBlend);
 
-        //速度依存でない一時増加
-        if (Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
-        {
-            PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 1.0f, 0.2f, Time.deltaTime);
-        }
-        else
-        {
-            PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 0.0f, 0.2f, Time.deltaTime);
-        }
+        ////速度依存でない一時増加
+        //if (Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
+        //{
+        //    PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 1.0f, 0.2f, Time.deltaTime);
+        //}
+        //else
+        //{
+        //    PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 0.0f, 0.2f, Time.deltaTime);
+        //}
 
 
         if (PlayerScript.animator.GetBool(PlayerScript.animHash.isRunning) == false)
