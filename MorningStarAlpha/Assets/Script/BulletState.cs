@@ -9,7 +9,7 @@ public enum EnumBulletState
     GO,
     STOP,
     RETURN,
-    BulletReturnFollow
+    //BulletReturnFollow
 }
 
 
@@ -70,7 +70,10 @@ public class BulletGo : BulletState
         BulletScript.co.isTrigger = false;
         BulletScript.CanShotFlag = false;
 
-        BulletScript.ShotBullet();   
+        BulletScript.ShotBullet();
+
+        // ”­Ë‰¹Ä¶
+        SoundManager.Instance.PlaySound("sound_12_ƒ`ƒF[ƒ“L‚Ñ‚éSE", 1.0f, 0.03f);
     }
 
     public override void Move()
@@ -105,7 +108,9 @@ public class BulletStop : BulletState
         BulletScript.CanShotFlag = false;
         BulletScript.co.isTrigger = true;
         BulletScript.StopBullet();
-        
+
+        // ‚¢‚©‚è‰ñû‰¹Ä¶
+        SoundManager.Instance.PlaySound("sound_18_‚¢‚©‚è‰ñûSE", 1.0f, 0.03f);
     }
 
     public override void Move()
@@ -130,6 +135,9 @@ public class BulletReturn : BulletState
         BulletScript.co.isTrigger = true;
         BulletScript.StopVelChange = true;
         BulletScript.CanShotFlag = false;
+
+        // ‚¢‚©‚è‰ñû‰¹Ä¶
+        SoundManager.Instance.PlaySound("sound_18_‚¢‚©‚è‰ñûSE", 1.0f, 0.03f);
     }
 
     public override void Move()
