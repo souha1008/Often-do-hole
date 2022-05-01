@@ -137,33 +137,51 @@ public class PlayerStateOnGround : PlayerState
         {
             if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
             {       
-                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
-              
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
 
-                if (PlayerScript.vel.x < -0.2f)
+                if (PlayerScript.vel.x < 5.0f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * 2 * (fixedAdjust);
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED  * 2 * (fixedAdjust);
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * (fixedAdjust);
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED  * (fixedAdjust);
                 }
 
+
+                if (PlayerScript.adjustLeftStick.x < 0.5f)
+                {
+                    if(PlayerScript.vel.x > PlayerScript.MAX_RUN_SPEED / 2)
+                    {
+                        PlayerScript.vel.x -= PlayerScript.ADD_RUN_SPEED * 3 *(fixedAdjust);
+                    }
+                }
+
+                //限度
                 PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
             }
             else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
             { 
-                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
-               
-               
-                if (PlayerScript.vel.x > 0.2f)
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
+
+                if (PlayerScript.vel.x > -5.0f)
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * -1 * 2 * (fixedAdjust);
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2 * (fixedAdjust);
                 }
                 else
                 {
-                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * -1 * (fixedAdjust);
+                    PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * (fixedAdjust);
                 }
+
+                if (PlayerScript.adjustLeftStick.x > -0.5f)
+                {             
+                    if (PlayerScript.vel.x < (PlayerScript.MAX_RUN_SPEED / 2 ) * -1)
+                    {
+                        PlayerScript.vel.x -= PlayerScript.ADD_RUN_SPEED * -1 * 3 * (fixedAdjust);
+                    }
+                }
+
+                //限度
                 PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
             else //減衰
@@ -197,17 +215,8 @@ public class PlayerStateOnGround : PlayerState
         {
             PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
 
-            PlayerScript.onGroundState = OnGroundState.NONE;
-
-            //スライド中で投げる方向が進行方向と同じなら
-            if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
-            {
-                PlayerScript.mode = new PlayerStateShot(false);
-            }
-            else
-            {
-                PlayerScript.mode = new PlayerStateShot(false);
-            }
+            PlayerScript.onGroundState = OnGroundState.NONE;      
+            PlayerScript.mode = new PlayerStateShot(false);
         }
     }
 

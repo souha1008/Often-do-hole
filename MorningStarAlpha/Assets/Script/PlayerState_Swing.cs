@@ -49,6 +49,7 @@ public class PlayerStateSwing_Vel : PlayerState
         CalculateStartVariable();
     }
 
+
     /// <summary>
     /// 振り子制御用の各種変数を計算
     /// </summary>

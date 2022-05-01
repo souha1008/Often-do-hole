@@ -47,18 +47,6 @@ public class PlayerStateShot : PlayerState
         //アニメーション用
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
-        PlayerScript.animator.Play("Shot.throw");
-
-        if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
-        {
-            //横投げ
-            PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 1);
-        }
-        else
-        {
-            //斜め投げ
-            PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 2);
-        }
     }
 
     public PlayerStateShot(bool isFollow)//コンストラクタ
@@ -354,6 +342,7 @@ public class PlayerStateShot : PlayerState
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
+
                     BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : 収束しない");
                     finishFlag = true;
