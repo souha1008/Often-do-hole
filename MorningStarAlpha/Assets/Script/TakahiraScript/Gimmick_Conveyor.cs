@@ -285,6 +285,7 @@ public class ConveyorUp : ConveyorState
         }
         else
         {
+            PlayerMain.instance.ForciblyReleaseMode(true);
             ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
         }
     }
@@ -312,6 +313,7 @@ public class ConveyorDown : ConveyorState
         }
         else
         {
+            PlayerMain.instance.ForciblyReleaseMode(true);
             ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
         }
     }
@@ -339,11 +341,13 @@ public class ConveyorRight : ConveyorState
                 //    StateChange(new ConveyorDown());
                 //else
                 //    StateChange(new ConveyorUp());
+                PlayerMain.instance.ForciblyReleaseMode(true);
                 ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
             }
         }
         else
         {
+            PlayerMain.instance.ForciblyReleaseMode(true);
             ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
         }
     }
@@ -371,11 +375,13 @@ public class ConveyorLeft : ConveyorState
                 //    StateChange(new ConveyorUp());
                 //else
                 //    StateChange(new ConveyorDown());
+                PlayerMain.instance.ForciblyReleaseMode(true);
                 ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
             }
         }
         else
         {
+            PlayerMain.instance.ForciblyReleaseMode(true);
             ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
         }
     }
