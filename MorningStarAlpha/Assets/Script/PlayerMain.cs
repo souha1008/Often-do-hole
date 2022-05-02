@@ -96,9 +96,6 @@ public class PlayerMain : MonoBehaviour
   
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
-    [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
-    [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
-    [SerializeField, Tooltip("チェックが入っていたら振り子時紐が長くなる")] public bool LongRope;
 
     [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
     [System.NonSerialized] public float coliderDistance = 1.8f; //
@@ -106,23 +103,22 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
     [System.NonSerialized] public float HcoliderDistance = 0.6f; //頭判定用ray中心点から頭までのオフセット
 
-    [SerializeField] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
-    [SerializeField] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット
+    [System.NonSerialized] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
+    [System.NonSerialized] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
-    [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
-    [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
-    [Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
-    [Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED;           // 走り一フレームで上がるスピード
-    [Tooltip("振り子切り離し時加算")] public float 　　　　　　 RELEASE_FORCE;
-    [Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED;          // 重力による最低速度
-    [Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
-    [Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
-    [Range(0.1f, 1.0f), Tooltip("地上速度減衰率")] public float　RUN_FRICTION;            // 走りの減衰率
+    [System.NonSerialized, Tooltip("左右移動開始のスティックしきい値")] public float LATERAL_MOVE_THRESHORD = 0.2f;   // 走り左右移動時の左スティックしきい値
+    [System.NonSerialized, Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED = 30.0f;           // 走り最高速度
+    [System.NonSerialized, Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED = 2.0f;　　　　　 // 走り最低速度（下回ったら速度0）
+    [System.NonSerialized, Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED = 4.0f;           // 走り一フレームで上がるスピード
+    [System.NonSerialized, Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED = 70.0f;          // 重力による最低速度
+    [System.NonSerialized, Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY = 2.7f;            // プレイヤーが空中にいるときの重力加速度
+    [System.NonSerialized, Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY = 2.5f;　　　　// プレイヤーが引っ張られているときの重力加速度
+    [System.NonSerialized, Tooltip("地上速度減衰率")] public float　RUN_FRICTION = 0.92f;            // 走りの減衰率
 
 
-    [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
-    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION;         // 空中の速度減衰率
+    [System.NonSerialized, Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED = 1.5f;        // 空中一秒間で上がるスピード
+    [System.NonSerialized, Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION = 0.982f;         // 空中の速度減衰率
     //----------プレイヤー物理挙動関連の定数終わり----------------------
 
     [ Header("[以下実行時変数確認用：変更不可]")]
@@ -306,6 +302,8 @@ public class PlayerMain : MonoBehaviour
         animator.SetBool(animHash.isShot, false);
         animator.SetBool(animHash.isSwing, false);
         animator.SetBool(animHash.isBoost, false);
+        animator.SetBool(animHash.IsDead, false);
+
     }
 
     public void AnimTriggerReset()

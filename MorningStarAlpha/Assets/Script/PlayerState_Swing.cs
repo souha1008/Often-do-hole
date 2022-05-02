@@ -196,10 +196,10 @@ public class PlayerStateSwing_Vel : PlayerState
             endAngle = Mathf.Clamp(endAngle, 220, 265);
         }
 
-        if (PlayerScript.AutoRelease == false)
-        {
-            minAnglerVel = 0.4f;
-        }
+        //if (PlayerScript.AutoRelease == false)
+        //{
+        //    minAnglerVel = 0.4f;
+        //}
     }
 
     public void RotationPlayer()
@@ -243,25 +243,11 @@ public class PlayerStateSwing_Vel : PlayerState
 
     public void InputButton()
     {
-
-        if (PlayerScript.ReleaseMode)
+        if (PlayerScript.swingState == SwingState.TOUCHED)
         {
-            if (PlayerScript.swingState == SwingState.TOUCHED)
+            if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
             {
-                if (Input.GetButtonUp("Button_R")) //ボタンを押して話したら
-                {
-                    releaseButton = true;
-                }
-            }
-        }
-        else
-        {
-            if (PlayerScript.swingState == SwingState.TOUCHED)
-            {
-                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-                {
-                    releaseButton = true;
-                }
+                releaseButton = true;
             }
         }
     }

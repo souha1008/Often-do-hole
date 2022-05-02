@@ -46,29 +46,14 @@ public class PlayerStateOnGround : PlayerState
     public override void UpdateState()
     {
         //BulletAdjust();
-
-        if (PlayerScript.ReleaseMode)
+   
+        if (Input.GetButtonDown("Button_R"))
         {
-            if (Input.GetButtonUp("Button_R"))
+            if (PlayerScript.canShot)
             {
-                if (PlayerScript.canShot)
-                {
-                    shotButton = true;
-                }
+                shotButton = true;
             }
         }
-        else
-        {
-            if (Input.GetButtonDown("Button_R"))
-            {
-                if (PlayerScript.canShot)
-                {
-                    shotButton = true;
-                }
-            }
-        }
-
-
 
         //ÉvÉåÉCÉÑÅ[å¸Ç´âÒì]èàóù
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)

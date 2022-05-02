@@ -218,20 +218,11 @@ public class PlayerStateShot : PlayerState
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
-                if (PlayerScript.ReleaseMode)
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
                 {
-                    if (Input.GetButtonUp("Button_R")) //ボタンが離れていたら
-                    {
-                        releaseButton = true;
-                    }
+                    releaseButton = true;
                 }
-                else
-                {
-                    if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-                    {
-                        releaseButton = true;
-                    }
-                }
+                
 
                 if (releaseButton) //ボタンが離れていたら
                 {

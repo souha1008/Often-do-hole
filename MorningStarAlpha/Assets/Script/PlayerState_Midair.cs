@@ -68,26 +68,15 @@ public class PlayerStateMidair : PlayerState
             PlayerScript.rb.rotation = Quaternion.Euler(0, -90, 0);
         }
 
-        if (PlayerScript.ReleaseMode)
+
+        if (Input.GetButtonDown("Button_R"))
         {
-            if (Input.GetButtonUp("Button_R"))
+            if (PlayerScript.canShot)
             {
-                if (PlayerScript.canShot)
-                {
-                    shotButton = true;
-                }
+                shotButton = true;
             }
         }
-        else
-        {
-            if (Input.GetButtonDown("Button_R"))
-            {
-                if (PlayerScript.canShot)
-                {
-                    shotButton = true;
-                }
-            }
-        }
+        
     }
 
     public override void Move()
