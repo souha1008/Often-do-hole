@@ -179,7 +179,9 @@ public class BulletMain : MonoBehaviour
         vel = Vector3.zero;
         isTouched = false;
 
-        if(vec.y < 0.3f)
+        EffectManager.instance.ShotEffect(PlayerScript.rb.position, vec);
+
+        if (vec.y < 0.3f)
         {
             vel += vec * BULLET_SPEED * lateral_multiple * BULLET_SPEED_MULTIPLE;
         }
