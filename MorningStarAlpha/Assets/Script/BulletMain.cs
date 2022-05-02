@@ -400,7 +400,7 @@ public class BulletMain : MonoBehaviour
                         }
                         break;
 
-                    case "Conveyor":
+                    case "Conveyor_Yoko":
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
@@ -423,6 +423,30 @@ public class BulletMain : MonoBehaviour
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
+                        break;
+
+                    case "Conveyor_Tate":
+                        onceFlag = true;
+                        isTouched = true;
+                        SetBulletState(EnumBulletState.STOP);
+
+
+                        //ñ åvéZ
+                        colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+                        if (colAspect == Aspect_8.UP)
+                        {
+                            //FOLLOWèÛë‘Ç…à⁄çs
+                            PlayerScript.ForciblyReleaseMode(true);
+                        }
+                        //SWINGèÛë‘Ç…à⁄çs
+                        else if (colAspect == Aspect_8.DOWN)
+                        {
+                            PlayerScript.ForciblyReleaseMode(true);
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblySwingMode(false);
+                        }
                         break;
 
                     case "Player":
