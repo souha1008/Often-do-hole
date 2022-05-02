@@ -95,9 +95,6 @@ public class PlayerMain : MonoBehaviour
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
 
-    [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
-    [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
-
     [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
     [System.NonSerialized] public float coliderDistance = 1.8f; //
                                                                  //
@@ -420,81 +417,81 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    private void InputStick()
-    {
-        //初期化
-        sourceLeftStick = adjustLeftStick = Vector2.zero;
+    //private void InputStick()
+    //{
+    //    //初期化
+    //    sourceLeftStick = adjustLeftStick = Vector2.zero;
 
-        //入力取得
-        sourceLeftStick.x = adjustLeftStick.x = Input.GetAxis("Horizontal");
-        sourceLeftStick.y = adjustLeftStick.y = Input.GetAxis("Vertical");
+    //    //入力取得
+    //    sourceLeftStick.x = adjustLeftStick.x = Input.GetAxis("Horizontal");
+    //    sourceLeftStick.y = adjustLeftStick.y = Input.GetAxis("Vertical");
 
-        //スティックの入力が一定以上ない場合は撃てない
-        if (Mathf.Abs(sourceLeftStick.magnitude) > 0.7f)
-        {
-            stickCanShotRange = true;
-        }
-        else
-        {
-            stickCanShotRange = false;
-        }
+    //    //スティックの入力が一定以上ない場合は撃てない
+    //    if (Mathf.Abs(sourceLeftStick.magnitude) > 0.7f)
+    //    {
+    //        stickCanShotRange = true;
+    //    }
+    //    else
+    //    {
+    //        stickCanShotRange = false;
+    //    }
 
-        //スティックの角度を求める
-        float rad = Mathf.Atan2(adjustLeftStick.x, adjustLeftStick.y);
-        float degree = rad * Mathf.Rad2Deg;
-        if (degree < 0)//上方向を基準に時計回りに0~360の値に補正
-        {
-            degree += 360;
-        }
-        float angle = 0.0f;
+    //    //スティックの角度を求める
+    //    float rad = Mathf.Atan2(adjustLeftStick.x, adjustLeftStick.y);
+    //    float degree = rad * Mathf.Rad2Deg;
+    //    if (degree < 0)//上方向を基準に時計回りに0~360の値に補正
+    //    {
+    //        degree += 360;
+    //    }
+    //    float angle = 0.0f;
 
-        //AjustAngles内の一番近い値にスティックを補正
-        float minDif = 9999.0f;
-        float dif;
+    //    //AjustAngles内の一番近い値にスティックを補正
+    //    float minDif = 9999.0f;
+    //    float dif;
 
-        for (int i = 0; i < AdjustAngles.Length; i++)
-        {
-            dif = Mathf.Abs(AdjustAngles[i] - degree);
-            if (dif < minDif)
-            {
-                minDif = dif;
-                angle = AdjustAngles[i];
-            }
+    //    for (int i = 0; i < AdjustAngles.Length; i++)
+    //    {
+    //        dif = Mathf.Abs(AdjustAngles[i] - degree);
+    //        if (dif < minDif)
+    //        {
+    //            minDif = dif;
+    //            angle = AdjustAngles[i];
+    //        }
 
-            dif = Mathf.Abs(AdjustAngles[i] + 360 - degree);
-            if (dif < minDif)
-            {
-                minDif = dif;
-                angle = AdjustAngles[i];
-            }
-        }
+    //        dif = Mathf.Abs(AdjustAngles[i] + 360 - degree);
+    //        if (dif < minDif)
+    //        {
+    //            minDif = dif;
+    //            angle = AdjustAngles[i];
+    //        }
+    //    }
 
-        //角度を読める値に調整
-        if (angle > 180)
-        {
-            angle -= 360;
-        }
-        angle *= -1;
-        angle += 90;
-        rad = angle * Mathf.Deg2Rad;
+    //    //角度を読める値に調整
+    //    if (angle > 180)
+    //    {
+    //        angle -= 360;
+    //    }
+    //    angle *= -1;
+    //    angle += 90;
+    //    rad = angle * Mathf.Deg2Rad;
 
-        //角度からベクトルにする
-        Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
-        vec = vec.normalized;
+    //    //角度からベクトルにする
+    //    Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
+    //    vec = vec.normalized;
 
-        //分割処理
-        if (SplitStick)
-        {
-            if (stickCanShotRange)
-            {
-                adjustLeftStick = (Vector2)vec;
-            }
-            else
-            {
-                adjustLeftStick = Vector2.zero;
-            }
-        }
-    }
+    //    //分割処理
+    //    if (SplitStick)
+    //    {
+    //        if (stickCanShotRange)
+    //        {
+    //            adjustLeftStick = (Vector2)vec;
+    //        }
+    //        else
+    //        {
+    //            adjustLeftStick = Vector2.zero;
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// 弾をうてる状態なのかをチェックする
