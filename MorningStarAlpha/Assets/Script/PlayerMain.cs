@@ -90,10 +90,11 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public Animator animator;
     [System.NonSerialized] public AnimHash animHash;
 
+
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
-  
+
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
 
@@ -133,7 +134,8 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("プレイヤーの速度:ギミックでの反発によるもの")] public Vector3 addVel;                           // ギミック等で追加される速度
     [ReadOnly, Tooltip("プレイヤーの速度:移動床によるもの")] public Vector3 floorVel;                         // 動く床等でのベロシティ
     [ReadOnly, Tooltip("スティック入力角（調整前）")] public Vector2 sourceLeftStick;                        // 左スティック  
-    [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック  
+    [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック
+    [ReadOnly, Tooltip("最後のな入力角")] public float oldStickAngle;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
     [ReadOnly, Tooltip("打てる可能性があるか")] public bool canShotState;                             // 打てる状態か
     [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
@@ -184,6 +186,7 @@ public class PlayerMain : MonoBehaviour
         addVel = Vector3.zero;
         floorVel = Vector3.zero;
         sourceLeftStick = adjustLeftStick = new Vector2(0.0f, 0.0f);
+        oldStickAngle = -1;
         canShotState = true;
         stickCanShotRange = false;
         CanShotColBlock = false;
@@ -342,6 +345,7 @@ public class PlayerMain : MonoBehaviour
         else
         {
             stickCanShotRange = false;
+            oldStickAngle = -1;
         }
 
 
@@ -353,33 +357,45 @@ public class PlayerMain : MonoBehaviour
         
         if(angle < 5)
         {
-            adjustAngle = 0;
+            adjustAngle = oldStickAngle;
         }
         else if(angle < 45)
         {
             adjustAngle = 25;
+            oldStickAngle = 25;
         }
-        else if (angle <= 100)
+        else if (angle <= 120)
         {
             adjustAngle = 75;
+            oldStickAngle = 75;
         }
-        else if (angle < 260)
+        else if (angle < 240)
         {
-            adjustAngle = 0;
+            oldStickAngle = -1;
+            adjustAngle = oldStickAngle;
         }
         else if (angle < 315)
         {
             adjustAngle = 285;
+            oldStickAngle = 285;
         }
         else if (angle <= 355)
         {
             adjustAngle = 335;
+            oldStickAngle = 335;
         }
         else
         {
-            adjustAngle = 0;
+            adjustAngle = oldStickAngle;
         }
+    
+        if(oldStickAngle < 0)
+        {
+            stickCanShotRange = false;
+        }
+
         Debug.Log("Adust angle :" + adjustAngle);
+
 
         //角度を読める値に調整
         if (adjustAngle > 180)

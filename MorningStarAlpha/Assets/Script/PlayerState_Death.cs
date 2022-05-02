@@ -15,10 +15,15 @@ public class PlayerStateDeath : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.DEATH;
         PlayerScript.canShotState = false;
-
-
+        PlayerScript.rb.velocity = Vector3.zero;
+        PlayerScript.vel = Vector3.zero;
+        PlayerScript.useVelocity = false;
 
         Timer = 0.0f;
+
+        PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
+        PlayerScript.animator.SetFloat("NockbackSpeed", 8.0f);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
     }
 
     public override void UpdateState()

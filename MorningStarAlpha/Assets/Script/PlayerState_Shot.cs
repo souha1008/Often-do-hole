@@ -173,7 +173,6 @@ public class PlayerStateShot : PlayerState
                 if (PlayerScript.forciblyReleaseSaveVelocity)
                 {
                     PlayerScript.vel = ReleaseForceCalicurate();
-                    ;
                 }
                 else
                 {
