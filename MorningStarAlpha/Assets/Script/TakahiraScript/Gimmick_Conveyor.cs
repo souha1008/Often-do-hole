@@ -57,7 +57,8 @@ public class Gimmick_Conveyor : Gimmick_Main
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (PlayerMain.instance.getFootHit().collider != null &&
+            if (!MoveTateFlag &&
+                PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
                 conveyorStateMain.PlayerMoveFlag = true;
@@ -103,7 +104,8 @@ public class Gimmick_Conveyor : Gimmick_Main
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (PlayerMain.instance.getFootHit().collider != null &&
+            if (!MoveTateFlag &&
+                PlayerMain.instance.getFootHit().collider != null &&
                  PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
             {
                 conveyorStateMain.PlayerMoveFlag = true;
@@ -205,14 +207,19 @@ public class ConveyorNone : ConveyorState
     {
         if (ConveyorMain.PlayerMoveFlag)
         {
-            if (ConveyorMain.Conveyor.MoveRight)
+            if (!ConveyorMain.Conveyor.MoveTateFlag)
             {
-                ConveyorMain.StateChange(new ConveyorPlayerMoveRight(ConveyorMain)); // プレイヤー右移動
+                if (ConveyorMain.Conveyor.MoveRight)
+                {
+                    ConveyorMain.StateChange(new ConveyorPlayerMoveRight(ConveyorMain)); // プレイヤー右移動
+                }
+                else
+                {
+                    ConveyorMain.StateChange(new ConveyorPlayerMoveLeft(ConveyorMain)); // プレイヤー左移動
+                }
             }
             else
-            {
-                ConveyorMain.StateChange(new ConveyorPlayerMoveLeft(ConveyorMain)); // プレイヤー左移動
-            }
+                ConveyorMain.PlayerMoveFlag = false;
         }
         if (ConveyorMain.BulletMoveFlag)
         {
@@ -233,38 +240,52 @@ public class ConveyorNone : ConveyorState
                     ConveyorMain.BulletMoveFlag = false;
                     break;
                 case TOUCH_SIDE.DOWN:
-                    if (ConveyorMain.Conveyor.MoveRight) // 右回転なら左移動
+                    // 縦移動でないなら
+                    if (!ConveyorMain.Conveyor.MoveTateFlag)
                     {
-                        ConveyorMain.StateChange(new ConveyorLeft(ConveyorMain));
+                        if (ConveyorMain.Conveyor.MoveRight) // 右回転なら左移動
+                        {
+                            ConveyorMain.StateChange(new ConveyorLeft(ConveyorMain));
+                        }
+                        else // 左回転なら右移動
+                        {
+                            ConveyorMain.StateChange(new ConveyorRight(ConveyorMain));
+                        }
                     }
-                    else // 左回転なら右移動
-                    {
-                        ConveyorMain.StateChange(new ConveyorRight(ConveyorMain));
-                    }
+                    else
+                        ConveyorMain.BulletMoveFlag = false;
                     break;
                 case TOUCH_SIDE.RIGHT:
-                    //if (Conveyor.MoveRight)
-                    //{
-                    //    StateChange(new ConveyorDown());
-                    //}
-                    //else
-                    //{
-                    //    StateChange(new ConveyorUp());
-                    //}
-                    //PlayerMain.instance.ForciblyReleaseMode(true);
-                    ConveyorMain.BulletMoveFlag = false;
+                    // 縦移動なら
+                    if (ConveyorMain.Conveyor.MoveTateFlag)
+                    {
+                        if (ConveyorMain.Conveyor.MoveRight)
+                        {
+                            ConveyorMain.StateChange(new ConveyorDown(ConveyorMain));
+                        }
+                        else
+                        {
+                            ConveyorMain.StateChange(new ConveyorUp(ConveyorMain));
+                        }
+                    }
+                    else
+                        ConveyorMain.BulletMoveFlag = false;
                     break;
                 case TOUCH_SIDE.LEFT:
-                    //if (Conveyor.MoveRight)
-                    //{
-                    //    StateChange(new ConveyorUp());
-                    //}
-                    //else
-                    //{
-                    //    StateChange(new ConveyorDown());
-                    //}
-                    //PlayerMain.instance.ForciblyReleaseMode(true);
-                    ConveyorMain.BulletMoveFlag = false;
+                    // 縦移動なら
+                    if (ConveyorMain.Conveyor.MoveTateFlag)
+                    {
+                        if (ConveyorMain.Conveyor.MoveRight)
+                        {
+                            ConveyorMain.StateChange(new ConveyorUp(ConveyorMain));
+                        }
+                        else
+                        {
+                            ConveyorMain.StateChange(new ConveyorDown(ConveyorMain));
+                        }
+                    }
+                    else
+                        ConveyorMain.BulletMoveFlag = false;
                     break;
             }
         }
@@ -282,13 +303,18 @@ public class ConveyorUp : ConveyorState
             PlayerMain.instance.BulletScript.transform.position += new Vector3(0, ConveyorMain.Conveyor.MovePower * Time.fixedDeltaTime, 0);
             PlayerMain.instance.floorVel = new Vector3(0, ConveyorMain.Conveyor.MovePower * Time.fixedDeltaTime, 0) * 1 / Time.fixedDeltaTime;
 
+            if (PlayerMain.instance.BulletScript.transform.position.y > ConveyorMain.Conveyor.transform.position.y + ConveyorMain.Conveyor.transform.lossyScale.y * 0.5f)
+                ConveyorMain.BulletMoveFlag = false;
+
             if (!ConveyorMain.BulletMoveFlag)
             {
                 PlayerMain.instance.BulletScript.transform.position -= new Vector3(0, ConveyorMain.Conveyor.MovePower * Time.fixedDeltaTime, 0);
-                if (ConveyorMain.Conveyor.MoveRight)
-                    ConveyorMain.StateChange(new ConveyorRight(ConveyorMain));
-                else
-                    ConveyorMain.StateChange(new ConveyorLeft(ConveyorMain));
+                //if (ConveyorMain.Conveyor.MoveRight)
+                //    ConveyorMain.StateChange(new ConveyorRight(ConveyorMain));
+                //else
+                //    ConveyorMain.StateChange(new ConveyorLeft(ConveyorMain));
+                PlayerMain.instance.ForciblyReleaseMode(true);
+                ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
             }
         }
         else
@@ -310,13 +336,18 @@ public class ConveyorDown : ConveyorState
             PlayerMain.instance.BulletScript.transform.position += new Vector3(0, ConveyorMain.Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
             PlayerMain.instance.floorVel = new Vector3(0, ConveyorMain.Conveyor.MovePower * Time.fixedDeltaTime * -1, 0) * 1 / Time.fixedDeltaTime;
 
+            if (PlayerMain.instance.BulletScript.transform.position.y < ConveyorMain.Conveyor.transform.position.y - ConveyorMain.Conveyor.transform.lossyScale.y * 0.5f)
+                ConveyorMain.BulletMoveFlag = false;
+
             if (!ConveyorMain.BulletMoveFlag)
             {
                 PlayerMain.instance.BulletScript.transform.position -= new Vector3(0, ConveyorMain.Conveyor.MovePower * Time.fixedDeltaTime * -1, 0);
-                if (ConveyorMain.Conveyor.MoveRight)
-                    ConveyorMain.StateChange(new ConveyorLeft(ConveyorMain));
-                else
-                    ConveyorMain.StateChange(new ConveyorRight(ConveyorMain));
+                //if (ConveyorMain.Conveyor.MoveRight)
+                //    ConveyorMain.StateChange(new ConveyorLeft(ConveyorMain));
+                //else
+                //    ConveyorMain.StateChange(new ConveyorRight(ConveyorMain));
+                PlayerMain.instance.ForciblyReleaseMode(true);
+                ConveyorMain.StateChange(new ConveyorNone(ConveyorMain));
             }
         }
         else
