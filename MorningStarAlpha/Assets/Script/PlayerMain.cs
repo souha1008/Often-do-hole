@@ -221,7 +221,8 @@ public class PlayerMain : MonoBehaviour
     {
         if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
-            InputStick();
+            InputStick_Fixed();
+            //InputStick();
             CheckCanShot();
             CheckMidAir();
 
@@ -322,6 +323,85 @@ public class PlayerMain : MonoBehaviour
     public RaycastHit getFootHit()
     {
         return footHit;
+    }
+
+    void InputStick_Fixed()
+    {
+        //初期化
+        sourceLeftStick = adjustLeftStick = Vector2.zero;
+
+        //入力取得
+        sourceLeftStick.x = adjustLeftStick.x = Input.GetAxis("Horizontal");
+        sourceLeftStick.y = adjustLeftStick.y = Input.GetAxis("Vertical");
+
+        //スティックの入力が一定以上ない場合は撃てない
+        if (Mathf.Abs(sourceLeftStick.magnitude) > 0.7f)
+        {
+            stickCanShotRange = true;
+        }
+        else
+        {
+            stickCanShotRange = false;
+        }
+
+
+        float angle = CalculationScript.TwoPointAngle360(Vector3.zero, sourceLeftStick);
+
+        Debug.Log("Stick angle :" + angle);
+        float adjustAngle = 0;
+        //angleを固定(25.75.285.335)
+        
+        if(angle < 5)
+        {
+            adjustAngle = 0;
+        }
+        else if(angle < 45)
+        {
+            adjustAngle = 25;
+        }
+        else if (angle <= 100)
+        {
+            adjustAngle = 75;
+        }
+        else if (angle < 260)
+        {
+            adjustAngle = 0;
+        }
+        else if (angle < 315)
+        {
+            adjustAngle = 285;
+        }
+        else if (angle <= 355)
+        {
+            adjustAngle = 335;
+        }
+        else
+        {
+            adjustAngle = 0;
+        }
+        Debug.Log("Adust angle :" + adjustAngle);
+
+        //角度を読める値に調整
+        if (adjustAngle > 180)
+        {
+            adjustAngle -= 360;
+        }
+        adjustAngle *= -1;
+        adjustAngle += 90;
+        float rad = adjustAngle * Mathf.Deg2Rad;
+
+        //角度からベクトルにする
+        Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
+        vec = vec.normalized;
+
+        if (stickCanShotRange)
+        {
+            adjustLeftStick = (Vector2)vec;
+        }
+        else
+        {
+            adjustLeftStick = Vector2.zero;
+        }
     }
 
     private void InputStick()
