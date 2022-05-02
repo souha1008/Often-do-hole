@@ -1191,7 +1191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7484967012900574964, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
       propertyPath: m_TagString
-      value: Conveyor
+      value: Conveyor_Yoko
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
@@ -2758,7 +2758,7 @@ MonoBehaviour:
   AudioSource_SE_Max: 20
   AudioSource_OBJECT_Max: 50
   SoundVolumeMaster: 1
-  SoundVolumeBGM: 1
+  SoundVolumeBGM: 0
   SoundVolumeSE: 1
   SoundVolumeOBJECT: 1
   SoundMaxDistance3D: 500
@@ -7287,18 +7287,14 @@ MonoBehaviour:
   - {fileID: 698903595462196291}
   - {fileID: 1560426193822622571}
   - {fileID: 3634752445433827864}
+  NowBulletState: 0
+  CanShotFlag: 0
   vel: {x: 0, y: 0, z: 0}
   colPoint: {x: 0, y: 0, z: 0}
   isTouched: 0
   onceFlag: 0
   StopVelChange: 0
   isInside: 0
-  STRAIGHT_FLAME_CNT: 0
-  BULLET_SPEED: 55
-  BULLET_SPEED_MAX: 55
-  BULLET_SPEED_MULTIPLE: 4
-  BULLET_START_DISTANCE: 3
-  BULLET_ROPE_LENGTH: 13
 --- !u!54 &1084616124875840369
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12514,22 +12510,6 @@ MonoBehaviour:
   - 270
   - 300
   - 330
-  ReleaseMode: 0
-  AutoRelease: 0
-  LongRope: 0
-  SwingcolliderRadius: 1.5
-  SwingcoliderDistance: 1.75
-  LATERAL_MOVE_THRESHORD: 0.1
-  MAX_RUN_SPEED: 30
-  MIN_RUN_SPEED: 2
-  ADD_RUN_SPEED: 2
-  RELEASE_FORCE: 50
-  MAX_FALL_SPEED: 70
-  FALL_GRAVITY: 2.7
-  STRAINED_GRAVITY: 2.5
-  RUN_FRICTION: 0.92
-  ADD_MIDAIR_SPEED: 0.5
-  MIDAIR_FRICTION: 0.982
   refState: 0
   onGroundState: 0
   midairState: 0
@@ -12552,6 +12532,8 @@ MonoBehaviour:
   forciblyFollowFlag: 0
   forciblyFollowVelToward: 0
   forciblySwingFlag: 0
+  forciblySwingNextFollow: 0
+  forciblySwingSaveVelocity: 0
   endSwing: 0
   SlideSwing: 0
   conuterSwing: 0
@@ -23075,7 +23057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7484967012900574964, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}
       propertyPath: m_TagString
-      value: Conveyor
+      value: Conveyor_Yoko
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94c667f03fdd7b46913844f84792cbb, type: 3}

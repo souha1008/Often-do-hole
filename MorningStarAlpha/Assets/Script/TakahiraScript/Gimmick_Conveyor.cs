@@ -6,6 +6,8 @@ public class Gimmick_Conveyor : Gimmick_Main
     public MOVE_DIRECTION_X MoveDirection_X;   // 回転方向
     [Label("移動量")]
     public float MovePower = 30;                // 移動量
+    [Label("縦ならチェック")]
+    public bool MoveTateFlag = false;                // コンベア縦移動フラグ
 
 
     [HideInInspector] public ConveyorStateMain conveyorStateMain;
@@ -28,6 +30,12 @@ public class Gimmick_Conveyor : Gimmick_Main
 
         // 角度を0度固定
         transform.rotation = Quaternion.identity;
+
+        // コンベア縦なら
+        if (MoveTateFlag)
+            this.gameObject.tag = "Conveyor_Tate";
+        else
+            this.gameObject.tag = "Conveyor_Yoko";
     }
 
     public override void FixedMove()
