@@ -86,9 +86,7 @@ public class PlayerStateShot : PlayerState
                     quaternion *= adjustQua;
                     PlayerScript.rb.rotation = quaternion;
                 }
-                break;
-
-        
+                break;     
         }
     }
 
@@ -127,7 +125,6 @@ public class PlayerStateShot : PlayerState
 
             return returnVec;
         }
-
     }
 
     private void intoVecsQueue()

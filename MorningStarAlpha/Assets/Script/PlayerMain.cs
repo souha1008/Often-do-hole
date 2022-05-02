@@ -165,7 +165,7 @@ public class PlayerMain : MonoBehaviour
          }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-
+        gameObject.tag = "Player";
 
         Time.timeScale = GameSpeed;
     }
