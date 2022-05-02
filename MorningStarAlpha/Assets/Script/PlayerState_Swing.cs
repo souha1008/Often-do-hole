@@ -284,10 +284,6 @@ public class PlayerStateSwing_Vel : PlayerState
             animFrame = Mathf.Clamp01(animFrame);
         }
 
-        Debug.Log(degree);
-        Debug.Log("animFrame : " + animFrame);
-
-        
         if(firstDir == PlayerScript.dir)
         {
             PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
@@ -383,6 +379,14 @@ public class PlayerStateSwing_Vel : PlayerState
             if (PlayerScript.endSwing)
             {
                 finishFlag = true;
+                if (PlayerScript.forciblySwingSaveVelocity)
+                {
+                    PlayerScript.vel = ReleaseForceCalicurale();
+                }
+                else
+                {
+                    PlayerScript.vel = Vector3.zero;
+                }
             }
 
             if (releaseButton == true)

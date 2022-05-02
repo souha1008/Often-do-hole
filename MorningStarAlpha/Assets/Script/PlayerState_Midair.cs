@@ -20,6 +20,8 @@ public class PlayerStateMidair : PlayerState
 
         RotationStand();
 
+        BulletScript.ReturnBullet();
+
         //ÉAÉjÉÅóp
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, false);

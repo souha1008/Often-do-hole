@@ -22,6 +22,8 @@ public class PlayerStateOnGround : PlayerState
         slideEndTimer = 0.0f;
         rareMotionTimer = 0.0f;
 
+        BulletScript.ReturnBullet();
+
         RotationStand();
 
 

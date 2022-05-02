@@ -79,6 +79,7 @@ public struct AnimHash{
     public int RunSpeed;
     public int rareWaitTrigger;
     public int rareWaitType;
+    public int IsDead;
 }
 
 
@@ -149,11 +150,14 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingNextFollow;
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
     [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
     public float GameSpeed = 1.0f;
+
+
     void Awake()
     {
         instance = this;
@@ -294,6 +298,7 @@ public class PlayerMain : MonoBehaviour
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
         animHash.rareWaitType = Animator.StringToHash("rareWaitType");
+        animHash.IsDead = Animator.StringToHash("IsDead");
     }   
 
     public void AnimVariableReset()
@@ -402,10 +407,6 @@ public class PlayerMain : MonoBehaviour
     /// </summary>
     private void CheckCanShot()
     {
-        //デバッグログ
-        Vector3 StartPos;
-        StartPos = rb.position;
-        StartPos.y += 1.0f;
 
         //最終的に打てるかの決定
         if (canShotState && stickCanShotRange && BulletScript.CanShotFlag)
@@ -426,6 +427,7 @@ public class PlayerMain : MonoBehaviour
         forciblyReleaseSaveVelocity = false;
         forciblyFollowVelToward = false;
         forciblySwingNextFollow = false;
+        forciblySwingSaveVelocity = false;
     }
 
     /// <summary>
@@ -436,43 +438,37 @@ public class PlayerMain : MonoBehaviour
     /// </param>
     public void ForciblyReleaseMode(bool saveVelocity)
     {
+        ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
             forciblyRleaseFlag = true;
             forciblyReleaseSaveVelocity = saveVelocity;
 
-            //フラグクリア
-            forciblyFollowFlag = false;
-            forciblySwingFlag = false;
-
         }
         else if(refState == EnumPlayerState.SWING)
         {
             endSwing = true;
+            forciblySwingSaveVelocity = saveVelocity;
         }
     }
 
     public void ForciblyFollowMode(bool velTowardBullet)
     {
+        ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
             forciblyFollowFlag = true;
             forciblyFollowVelToward = velTowardBullet;
-            //フラグクリア
-            forciblySwingFlag = false;
-            forciblyRleaseFlag = false;
         }
     }
 
     public void ForciblySwingMode(bool nextFollow)
     {
+        ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
             forciblySwingFlag = true;
             forciblySwingNextFollow = nextFollow;
-            //フラグクリア
-            forciblyRleaseFlag = false;
-            forciblyFollowFlag = false;
         }
     }
 

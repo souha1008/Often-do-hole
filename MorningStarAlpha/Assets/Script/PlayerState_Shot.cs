@@ -14,7 +14,6 @@ public class PlayerStateShot : PlayerState
 
     bool finishFlag;
     private bool releaseButton;
-    private bool onceAnimReturn;
     private Vector3 followStartdiff;
     private Vector3 maxFollowAddvec;
     private float debug_timer;
@@ -29,7 +28,6 @@ public class PlayerStateShot : PlayerState
         countTime = 0.0f;
         finishFlag = false;
         releaseButton = false;
-        onceAnimReturn = false;
         followStartdiff = Vector3.zero;
         maxFollowAddvec = Vector3.zero;
         debug_timer = 0.0f;

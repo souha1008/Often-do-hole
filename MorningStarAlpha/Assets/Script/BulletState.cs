@@ -25,7 +25,15 @@ public abstract class BulletState
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
 
-    
+    protected void AdjustBulletPos()
+    {
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+        vec = vec * 1.0f;
+        vec.y += 1.0f;
+        Vector3 adjustPos = PlayerScript.rb.position + vec;
+
+        BulletScript.rb.position = adjustPos;
+    }
 }
 
 
@@ -46,12 +54,7 @@ public class BulletReady : BulletState
     public override void Move()
     {
         // バレットの位置を常にスティック方向に調整
-        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        vec = vec * 3;
-        vec.y += 1.0f;
-        Vector3 adjustPos = PlayerScript.transform.position + vec;
-
-        BulletScript.transform.position = adjustPos;
+        AdjustBulletPos();
     }
 }
 
@@ -69,6 +72,8 @@ public class BulletGo : BulletState
         BulletScript.co.enabled = true;
         BulletScript.co.isTrigger = false;
         BulletScript.CanShotFlag = false;
+
+        AdjustBulletPos();
 
         BulletScript.ShotBullet();   
     }
@@ -143,6 +148,8 @@ public class BulletReturn : BulletState
 
     public override void Move()
     {
+
+#if true
         ratio += 0.05f;
         float easeRatio = Easing.Linear(ratio, 1.0f, 0.0f, 1.0f);
         //弾と自分の位置で補完 
@@ -155,16 +162,19 @@ public class BulletReturn : BulletState
             BulletScript.SetBulletState(EnumBulletState.READY);
         }
 
-        ////自分へ弾を引き戻す
-        //Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
-        //vecToPlayer = vecToPlayer.normalized;
-        //BulletScript.vel = vecToPlayer * 200;
+#else
+        //自分へ弾を引き戻す
+        Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
+        vecToPlayer = vecToPlayer.normalized;
+        BulletScript.vel = vecToPlayer * 200;
 
-        ////距離が一定以下になったら終了
-        //if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
-        //{
-        //    BulletScript.SetBulletState(EnumBulletState.READY);
-        //}
+        //距離が一定以下になったら終了
+        if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
+        {
+            BulletScript.SetBulletState(EnumBulletState.READY);
+        }
+
+#endif
     }
 }
 
