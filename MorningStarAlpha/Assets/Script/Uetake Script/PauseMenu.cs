@@ -11,9 +11,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 {
-    [SerializeField]
-    private Canvas PauseCanvas;
+    [SerializeField] private Canvas PauseCanvas;
+    [SerializeField] private Canvas SoundVolumeCanvas;
     [SerializeField, Tooltip("最初に選択されるボタン")] private Selectable FirstSelect;
+    [SerializeField, Tooltip("サウンドで最初に選択されるボタン")] private Selectable FirstSelectSound;
+    private GameObject OldSelectPause;
     private GameObject oldButton;
     private GameObject nowButton;
 
@@ -21,7 +23,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     private void Awake()
     {
         PauseCanvas.gameObject.SetActive(false);
-        oldButton = nowButton = EventSystem.current.gameObject;
+        SoundVolumeCanvas.gameObject.SetActive(false);
+        oldButton = nowButton = OldSelectPause = EventSystem.current.gameObject;
     }
 
     // Update is called once per frame
@@ -48,9 +51,30 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         }
         else //ポーズメニューが非アクティブなら
         {
-            if (Input.GetButtonDown("Button_Select"))
+            // サウンドボリュームがアクティブなら
+            if (SoundVolumeCanvas.gameObject.activeSelf)
             {
-                StartPause();
+                nowButton = EventSystem.current.currentSelectedGameObject;
+
+                if (Object.ReferenceEquals(nowButton, oldButton) == false)
+                {
+                    oldButton.GetComponent<Image>().color = Color.white;
+                    nowButton.GetComponent<Image>().color = Color.red;
+                }
+
+                if (Input.GetButtonDown("Button_Select"))
+                {
+                    EndPause();
+                }
+
+                oldButton = nowButton;
+            }
+            else
+            {
+                if (Input.GetButtonDown("Button_Select"))
+                {
+                    StartPause();
+                }
             }
         }
     }
@@ -60,8 +84,10 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         GameStateManager.SetGameState(GAME_STATE.PLAY);
         PauseCanvas.gameObject.SetActive(false);
+        SoundVolumeCanvas.gameObject.SetActive(false);
         Time.timeScale = 1.0f;
         EventSystem.current.SetSelectedGameObject(null);
+        SoundManager.Instance.UnPauseSound();
     }
 
     void StartPause()
@@ -72,6 +98,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         Time.timeScale = 0.0f;
         oldButton = nowButton = EventSystem.current.currentSelectedGameObject;
         FirstSelect.gameObject.GetComponent<Image>().color = Color.red;
+        SoundManager.Instance.PauseSound();
+        VibrationManager.Instance.StopVibration();
     }
 
     public void ClickResume()
@@ -88,5 +116,20 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         EndPause();
         SceneManager.LoadScene("StageSelectScene");
+    }
+
+    public void ClickSoundVolume()
+    {
+        PauseCanvas.gameObject.SetActive(false);
+        SoundVolumeCanvas.gameObject.SetActive(true);
+        OldSelectPause = EventSystem.current.currentSelectedGameObject;
+        EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
+    }
+
+    public void ClickReturnSoundVolume()
+    {
+        PauseCanvas.gameObject.SetActive(true);
+        SoundVolumeCanvas.gameObject.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(OldSelectPause);
     }
 }

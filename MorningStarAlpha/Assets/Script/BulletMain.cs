@@ -1,15 +1,5 @@
 using UnityEngine;
 
-public enum BulletRefState
-{
-    READY,
-    GO,
-    RETURN,
-    STOP,
-}
-
-
-
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
@@ -32,31 +22,24 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool isInside; //弾が内側にある状態
 
 
-    //下川原
-    private int ExitFlameCnt = 0;//存在し始めてからのカウント
-    public int STRAIGHT_FLAME_CNT;//まっすぐ進むフレーム数
-
-
-   //弾関係定数
-    [SerializeField] public float BULLET_SPEED; //弾の初速
-    [SerializeField] private float BULLET_SPEED_MAX; //弾の初速(最大値）
-    [SerializeField] public float BULLET_SPEED_MULTIPLE; //GOとSTRAINEDの倍率（この設定でgoの時間を短くする）
-    [SerializeField] private float BULLET_START_DISTANCE; //弾の発射位置
-    [SerializeField] public float  BULLET_ROPE_LENGTH; //紐の長さ
-    public float BULLET_MAXFALLSPEED = 35.0f;
+    //弾関係定数
+    [System.NonSerialized] public float BULLET_SPEED = 50; //弾の初速
+    [System.NonSerialized] private float BULLET_SPEED_MAX = 55; //弾の初速(最大値）
+    [System.NonSerialized] public float BULLET_SPEED_MULTIPLE = 4; //GOとSTRAINEDの倍率（この設定でgoの時間を短くする）
+    [System.NonSerialized] public float  BULLET_ROPE_LENGTH = 13; //紐の長さ
+    [System.NonSerialized] public float BULLET_MAXFALLSPEED = 35;
+    [System.NonSerialized] public int STRAIGHT_FLAME_CNT = 10;//まっすぐ進むフレーム数
     [System.NonSerialized] public float fixedAdjust;
 
   
 
     void Awake()
     {
-        // 高平追加
         instance = this;
         BulletState.BulletScript = this;
         PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
         co = GetComponent<Collider>();
-
     }
 
     private void Start()
@@ -64,7 +47,6 @@ public class BulletMain : MonoBehaviour
         BulletState.PlayerScript = PlayerMain.instance;
         PlayerScript = PlayerMain.instance;
         CanShotFlag = true;
-        ExitFlameCnt = 0;
         colPoint = Vector3.zero;
         isInside = false;
 
@@ -111,46 +93,53 @@ public class BulletMain : MonoBehaviour
     // 錨のステート変更
     public void SetBulletState(EnumBulletState bulletState)
     {
-    //    BulletState state = null;
+        //BulletState state = null;
 
-    //    switch (NowBulletState)
-    //    {
-    //        case EnumBulletState.READY:
+        //switch (NowBulletState)
+        //{
+        //    case EnumBulletState.READY:
 
-    //            if (bulletState == EnumBulletState.GO)
-    //                state = GetBulletState(bulletState);
+        //        if (bulletState == EnumBulletState.GO)
+        //            state = GetBulletState(bulletState);
 
-    //            break;
-    //        case EnumBulletState.GO:
+        //        break;
+        //    case EnumBulletState.GO:
 
-    //            if (bulletState == EnumBulletState.STOP ||
-    //                bulletState == EnumBulletState.RETURN ||
-    //                bulletState == EnumBulletState.BulletReturnFollow)
-    //                state = GetBulletState(bulletState);
+        //        if (bulletState == EnumBulletState.STOP ||
+        //            bulletState == EnumBulletState.RETURN ||
+        //            bulletState == EnumBulletState.BulletReturnFollow)
+        //            state = GetBulletState(bulletState);
 
-    //            break;
-    //        case EnumBulletState.STOP:
+        //        break;
+        //    case EnumBulletState.STOP:
 
-    //            if (bulletState == EnumBulletState.RETURN ||
-    //                bulletState == EnumBulletState.BulletReturnFollow)
-    //                state = GetBulletState(bulletState);
+        //        if (bulletState == EnumBulletState.RETURN ||
+        //            bulletState == EnumBulletState.BulletReturnFollow)
+        //            state = GetBulletState(bulletState);
 
-    //            break;
-    //        case EnumBulletState.RETURN:
-    //        case EnumBulletState.BulletReturnFollow:
-    //            if (bulletState == EnumBulletState.READY)
-    //                state = GetBulletState(bulletState);
-    //            break;
-    //    }
+        //        break;
+        //    case EnumBulletState.RETURN:
+        //    case EnumBulletState.BulletReturnFollow:
+        //        if (bulletState == EnumBulletState.READY)
+        //            state = GetBulletState(bulletState);
+        //        break;
+        //}
 
-    //    state = GetBulletState(bulletState);
+        //state = GetBulletState(bulletState);
 
-    //    if (state != null)
-    //    {
-    //        mode = state;
-    //    }
+        //if (state != null)
+        //{
+        //    mode = state;
+        //}
 
-        mode = GetBulletState(bulletState);
+        if (bulletState != NowBulletState)
+        {
+            mode = GetBulletState(bulletState);
+        }
+        else
+        {
+            Debug.LogWarning("同じステートに遷移しようとしています");
+        }
     }
 
     // 錨のステート生成
@@ -190,7 +179,9 @@ public class BulletMain : MonoBehaviour
         vel = Vector3.zero;
         isTouched = false;
 
-        if(vec.y < 0.3f)
+        EffectManager.instance.ShotEffect();
+
+        if (vec.y < 0.3f)
         {
             vel += vec * BULLET_SPEED * lateral_multiple * BULLET_SPEED_MULTIPLE;
         }
@@ -368,8 +359,7 @@ public class BulletMain : MonoBehaviour
                         CameraShake.instance.Shake(rb.velocity);
                         colPoint = collision.GetContact(0).point;
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
-
-                        
+   
                         //面計算
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
    
@@ -411,7 +401,7 @@ public class BulletMain : MonoBehaviour
                         }
                         break;
 
-                    case "Conveyor":
+                    case "Conveyor_Yoko":
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
@@ -434,6 +424,30 @@ public class BulletMain : MonoBehaviour
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
+                        break;
+
+                    case "Conveyor_Tate":
+                        onceFlag = true;
+                        isTouched = true;
+                        SetBulletState(EnumBulletState.STOP);
+
+
+                        //面計算
+                        colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
+                        if (colAspect == Aspect_8.UP)
+                        {
+                            //FOLLOW状態に移行
+                            PlayerScript.ForciblyReleaseMode(true);
+                        }
+                        //SWING状態に移行
+                        else if (colAspect == Aspect_8.DOWN)
+                        {
+                            PlayerScript.ForciblyReleaseMode(true);
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblySwingMode(false);
+                        }
                         break;
 
                     case "Player":

@@ -22,7 +22,7 @@ public class Direction_UI : MonoBehaviour
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
         //打てる可能性があるステートなら表示
-        if (PlayerScript.refState == EnumPlayerState.ON_GROUND || PlayerScript.refState == EnumPlayerState.MIDAIR)
+        if ((PlayerScript.refState == EnumPlayerState.ON_GROUND || PlayerScript.refState == EnumPlayerState.MIDAIR) && BulletMain.instance.CanShotFlag)
         {
             //クールタイム回復したら表示
             if (PlayerScript.canShotState)

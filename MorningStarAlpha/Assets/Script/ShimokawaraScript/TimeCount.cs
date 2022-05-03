@@ -19,8 +19,6 @@ public class TimeCount : MonoBehaviour
 
     public float YokoKankaku;
 
-    float fltTime;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -51,8 +49,6 @@ public class TimeCount : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        fltTime = Mathf.Max(0, 300.0f - Time.time) ;
-
         NumSet();
     }
 
@@ -60,7 +56,7 @@ public class TimeCount : MonoBehaviour
     {
         for (int i = 0; i < Num.Length; i++)
         {
-            int TempNum = (int)fltTime;
+            int TempNum = (int)GameStateManager.GetGameTime();
 
             //ˆê”Ô‰º‚Ì‚¯‚½‚ðŽg‚¤
             for(int j = 0; j < i; j++)

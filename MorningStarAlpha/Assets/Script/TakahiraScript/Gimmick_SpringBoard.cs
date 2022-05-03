@@ -49,8 +49,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("Œˆ’è‰¹");
+            SoundManager.Instance.PlaySound("Œˆ’è‰¹");
 
             VibrationManager.Instance.StartVibration(1, 1, 0.2f);
 

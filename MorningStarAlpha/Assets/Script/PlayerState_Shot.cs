@@ -14,7 +14,6 @@ public class PlayerStateShot : PlayerState
 
     bool finishFlag;
     private bool releaseButton;
-    private bool onceAnimReturn;
     private Vector3 followStartdiff;
     private Vector3 maxFollowAddvec;
     private float debug_timer;
@@ -29,7 +28,6 @@ public class PlayerStateShot : PlayerState
         countTime = 0.0f;
         finishFlag = false;
         releaseButton = false;
-        onceAnimReturn = false;
         followStartdiff = Vector3.zero;
         maxFollowAddvec = Vector3.zero;
         debug_timer = 0.0f;
@@ -88,9 +86,7 @@ public class PlayerStateShot : PlayerState
                     quaternion *= adjustQua;
                     PlayerScript.rb.rotation = quaternion;
                 }
-                break;
-
-        
+                break;     
         }
     }
 
@@ -129,7 +125,6 @@ public class PlayerStateShot : PlayerState
 
             return returnVec;
         }
-
     }
 
     private void intoVecsQueue()
@@ -175,7 +170,6 @@ public class PlayerStateShot : PlayerState
                 if (PlayerScript.forciblyReleaseSaveVelocity)
                 {
                     PlayerScript.vel = ReleaseForceCalicurate();
-                    ;
                 }
                 else
                 {
@@ -220,20 +214,11 @@ public class PlayerStateShot : PlayerState
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
-                if (PlayerScript.ReleaseMode)
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
                 {
-                    if (Input.GetButtonUp("Button_R")) //ボタンが離れていたら
-                    {
-                        releaseButton = true;
-                    }
+                    releaseButton = true;
                 }
-                else
-                {
-                    if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-                    {
-                        releaseButton = true;
-                    }
-                }
+                
 
                 if (releaseButton) //ボタンが離れていたら
                 {

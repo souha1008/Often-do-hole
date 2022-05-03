@@ -27,9 +27,8 @@ public class UIDirection : MonoBehaviour
 
 
         //打てる可能性があるステートなら表示
-        if (PlayerScript.refState == EnumPlayerState.ON_GROUND || PlayerScript.refState == EnumPlayerState.MIDAIR)
+        if ((PlayerScript.refState == EnumPlayerState.ON_GROUND || PlayerScript.refState == EnumPlayerState.MIDAIR) && BulletMain.instance.CanShotFlag)
         {
-            //クールタイム回復したら色つける
             if (PlayerScript.canShotState)
             {
                 lr.startColor = activeScol;

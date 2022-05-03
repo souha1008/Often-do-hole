@@ -79,6 +79,7 @@ public struct AnimHash{
     public int RunSpeed;
     public int rareWaitTrigger;
     public int rareWaitType;
+    public int IsDead;
 }
 
 
@@ -89,15 +90,10 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public Animator animator;
     [System.NonSerialized] public AnimHash animHash;
 
+
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
-  
-    [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
-    [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
-    [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
-    [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
-    [SerializeField, Tooltip("チェックが入っていたら振り子時紐が長くなる")] public bool LongRope;
 
     [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
     [System.NonSerialized] public float coliderDistance = 1.8f; //
@@ -105,23 +101,22 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
     [System.NonSerialized] public float HcoliderDistance = 0.6f; //頭判定用ray中心点から頭までのオフセット
 
-    [SerializeField] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
-    [SerializeField] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット
+    [System.NonSerialized] public  float SwingcolliderRadius = 1.5f;   //スイングスライド判定用ray半径
+    [System.NonSerialized] public  float SwingcoliderDistance = 1.75f; //スイングスライドray中心点から頭までのオフセット
 
     //----------↓プレイヤー物理挙動関連の定数↓----------------------
-    [Range(0.1f, 1.0f), Tooltip("左右移動開始のスティックしきい値")] public float  LATERAL_MOVE_THRESHORD;   // 走り左右移動時の左スティックしきい値
-    [Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED;           // 走り最高速度
-    [Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED;　　　　　 // 走り最低速度（下回ったら速度0）
-    [Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED;           // 走り一フレームで上がるスピード
-    [Tooltip("振り子切り離し時加算")] public float 　　　　　　 RELEASE_FORCE;
-    [Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED;          // 重力による最低速度
-    [Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY;            // プレイヤーが空中にいるときの重力加速度
-    [Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY;　　　　// プレイヤーが引っ張られているときの重力加速度
-    [Range(0.1f, 1.0f), Tooltip("地上速度減衰率")] public float　RUN_FRICTION;            // 走りの減衰率
+    [System.NonSerialized, Tooltip("左右移動開始のスティックしきい値")] public float LATERAL_MOVE_THRESHORD = 0.2f;   // 走り左右移動時の左スティックしきい値
+    [System.NonSerialized, Tooltip("走り最高速度")] public float                      MAX_RUN_SPEED = 30.0f;           // 走り最高速度
+    [System.NonSerialized, Tooltip("走り最低速度（下回ったら速度0）")] public float   MIN_RUN_SPEED = 2.0f;　　　　　 // 走り最低速度（下回ったら速度0）
+    [System.NonSerialized, Tooltip("走り一フレームで上がるスピード")] public float    ADD_RUN_SPEED = 4.0f;           // 走り一フレームで上がるスピード
+    [System.NonSerialized, Tooltip("落下速度制限")] public float                      MAX_FALL_SPEED = 70.0f;          // 重力による最低速度
+    [System.NonSerialized, Tooltip("空中にいるときの重力加速度")] public float        FALL_GRAVITY = 2.7f;            // プレイヤーが空中にいるときの重力加速度
+    [System.NonSerialized, Tooltip("引っ張られているときの重力加速度")] public float  STRAINED_GRAVITY = 2.5f;　　　　// プレイヤーが引っ張られているときの重力加速度
+    [System.NonSerialized, Tooltip("地上速度減衰率")] public float　RUN_FRICTION = 0.92f;            // 走りの減衰率
 
 
-    [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
-    [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION;         // 空中の速度減衰率
+    [System.NonSerialized, Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED = 1.5f;        // 空中一秒間で上がるスピード
+    [System.NonSerialized, Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION = 0.982f;         // 空中の速度減衰率
     //----------プレイヤー物理挙動関連の定数終わり----------------------
 
     [ Header("[以下実行時変数確認用：変更不可]")]
@@ -136,7 +131,8 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("プレイヤーの速度:ギミックでの反発によるもの")] public Vector3 addVel;                           // ギミック等で追加される速度
     [ReadOnly, Tooltip("プレイヤーの速度:移動床によるもの")] public Vector3 floorVel;                         // 動く床等でのベロシティ
     [ReadOnly, Tooltip("スティック入力角（調整前）")] public Vector2 sourceLeftStick;                        // 左スティック  
-    [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック  
+    [ReadOnly, Tooltip("スティック入力角（調整後）")] public Vector2 adjustLeftStick;                        // 左スティック
+    [ReadOnly, Tooltip("最後のな入力角")] public float oldStickAngle;                        // 左スティック  
     [ReadOnly, Tooltip("地面と接触しているか")] public bool isOnGround;                          // 地面に触れているか（onCollisionで変更）
     [ReadOnly, Tooltip("打てる可能性があるか")] public bool canShotState;                             // 打てる状態か
     [ReadOnly, Tooltip("スティックの入力が一定以上あるか：ある場合は打てる")] public bool stickCanShotRange;
@@ -149,11 +145,14 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
     [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingNextFollow;
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingSaveVelocity;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
     [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
     public float GameSpeed = 1.0f;
+
+
     void Awake()
     {
         instance = this;
@@ -166,7 +165,7 @@ public class PlayerMain : MonoBehaviour
          }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-
+        gameObject.tag = "Player";
 
         Time.timeScale = GameSpeed;
     }
@@ -184,6 +183,7 @@ public class PlayerMain : MonoBehaviour
         addVel = Vector3.zero;
         floorVel = Vector3.zero;
         sourceLeftStick = adjustLeftStick = new Vector2(0.0f, 0.0f);
+        oldStickAngle = -1;
         canShotState = true;
         stickCanShotRange = false;
         CanShotColBlock = false;
@@ -221,7 +221,8 @@ public class PlayerMain : MonoBehaviour
     {
         if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
-            InputStick();
+            InputStick_Fixed();
+            //InputStick();
             CheckCanShot();
             CheckMidAir();
 
@@ -294,6 +295,7 @@ public class PlayerMain : MonoBehaviour
         animHash.RunSpeed = Animator.StringToHash("RunSpeed");
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
         animHash.rareWaitType = Animator.StringToHash("rareWaitType");
+        animHash.IsDead = Animator.StringToHash("IsDead");
     }   
 
     public void AnimVariableReset()
@@ -301,6 +303,8 @@ public class PlayerMain : MonoBehaviour
         animator.SetBool(animHash.isShot, false);
         animator.SetBool(animHash.isSwing, false);
         animator.SetBool(animHash.isBoost, false);
+        animator.SetBool(animHash.IsDead, false);
+
     }
 
     public void AnimTriggerReset()
@@ -321,7 +325,7 @@ public class PlayerMain : MonoBehaviour
         return footHit;
     }
 
-    private void InputStick()
+    void InputStick_Fixed()
     {
         //初期化
         sourceLeftStick = adjustLeftStick = Vector2.zero;
@@ -338,103 +342,165 @@ public class PlayerMain : MonoBehaviour
         else
         {
             stickCanShotRange = false;
+            oldStickAngle = -1;
         }
 
-        //スティックの角度を求める
-        float rad = Mathf.Atan2(adjustLeftStick.x, adjustLeftStick.y);
-        float degree = rad * Mathf.Rad2Deg;
-        if (degree < 0)//上方向を基準に時計回りに0~360の値に補正
+
+        float angle = CalculationScript.TwoPointAngle360(Vector3.zero, sourceLeftStick);
+
+        Debug.Log("Stick angle :" + angle);
+        float adjustAngle = 0;
+        //angleを固定(25.75.285.335)
+        
+        if(angle < 5)
         {
-            degree += 360;
+            adjustAngle = oldStickAngle;
         }
-        float angle = 0.0f;
-
-        //AjustAngles内の一番近い値にスティックを補正
-        float minDif = 9999.0f;
-        float dif;
-
-        for (int i = 0; i < AdjustAngles.Length; i++)
+        else if(angle < 45)
         {
-            dif = Mathf.Abs(AdjustAngles[i] - degree);
-            if (dif < minDif)
-            {
-                minDif = dif;
-                angle = AdjustAngles[i];
-            }
-
-            dif = Mathf.Abs(AdjustAngles[i] + 360 - degree);
-            if (dif < minDif)
-            {
-                minDif = dif;
-                angle = AdjustAngles[i];
-            }
+            adjustAngle = 25;
+            oldStickAngle = 25;
         }
+        else if (angle <= 120)
+        {
+            adjustAngle = 75;
+            oldStickAngle = 75;
+        }
+        else if (angle < 240)
+        {
+            oldStickAngle = -1;
+            adjustAngle = oldStickAngle;
+        }
+        else if (angle < 315)
+        {
+            adjustAngle = 285;
+            oldStickAngle = 285;
+        }
+        else if (angle <= 355)
+        {
+            adjustAngle = 335;
+            oldStickAngle = 335;
+        }
+        else
+        {
+            adjustAngle = oldStickAngle;
+        }
+    
+        if(oldStickAngle < 0)
+        {
+            stickCanShotRange = false;
+        }
+
+        Debug.Log("Adust angle :" + adjustAngle);
+
 
         //角度を読める値に調整
-        if (angle > 180)
+        if (adjustAngle > 180)
         {
-            angle -= 360;
+            adjustAngle -= 360;
         }
-        angle *= -1;
-        angle += 90;
-        rad = angle * Mathf.Deg2Rad;
+        adjustAngle *= -1;
+        adjustAngle += 90;
+        float rad = adjustAngle * Mathf.Deg2Rad;
 
         //角度からベクトルにする
         Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
         vec = vec.normalized;
 
-        //分割処理
-        if (SplitStick)
+        if (stickCanShotRange)
         {
-            if (stickCanShotRange)
-            {
-                adjustLeftStick = (Vector2)vec;
-            }
-            else
-            {
-                adjustLeftStick = Vector2.zero;
-            }
+            adjustLeftStick = (Vector2)vec;
+        }
+        else
+        {
+            adjustLeftStick = Vector2.zero;
         }
     }
+
+    //private void InputStick()
+    //{
+    //    //初期化
+    //    sourceLeftStick = adjustLeftStick = Vector2.zero;
+
+    //    //入力取得
+    //    sourceLeftStick.x = adjustLeftStick.x = Input.GetAxis("Horizontal");
+    //    sourceLeftStick.y = adjustLeftStick.y = Input.GetAxis("Vertical");
+
+    //    //スティックの入力が一定以上ない場合は撃てない
+    //    if (Mathf.Abs(sourceLeftStick.magnitude) > 0.7f)
+    //    {
+    //        stickCanShotRange = true;
+    //    }
+    //    else
+    //    {
+    //        stickCanShotRange = false;
+    //    }
+
+    //    //スティックの角度を求める
+    //    float rad = Mathf.Atan2(adjustLeftStick.x, adjustLeftStick.y);
+    //    float degree = rad * Mathf.Rad2Deg;
+    //    if (degree < 0)//上方向を基準に時計回りに0~360の値に補正
+    //    {
+    //        degree += 360;
+    //    }
+    //    float angle = 0.0f;
+
+    //    //AjustAngles内の一番近い値にスティックを補正
+    //    float minDif = 9999.0f;
+    //    float dif;
+
+    //    for (int i = 0; i < AdjustAngles.Length; i++)
+    //    {
+    //        dif = Mathf.Abs(AdjustAngles[i] - degree);
+    //        if (dif < minDif)
+    //        {
+    //            minDif = dif;
+    //            angle = AdjustAngles[i];
+    //        }
+
+    //        dif = Mathf.Abs(AdjustAngles[i] + 360 - degree);
+    //        if (dif < minDif)
+    //        {
+    //            minDif = dif;
+    //            angle = AdjustAngles[i];
+    //        }
+    //    }
+
+    //    //角度を読める値に調整
+    //    if (angle > 180)
+    //    {
+    //        angle -= 360;
+    //    }
+    //    angle *= -1;
+    //    angle += 90;
+    //    rad = angle * Mathf.Deg2Rad;
+
+    //    //角度からベクトルにする
+    //    Vector3 vec = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), 0);
+    //    vec = vec.normalized;
+
+    //    //分割処理
+    //    if (SplitStick)
+    //    {
+    //        if (stickCanShotRange)
+    //        {
+    //            adjustLeftStick = (Vector2)vec;
+    //        }
+    //        else
+    //        {
+    //            adjustLeftStick = Vector2.zero;
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// 弾をうてる状態なのかをチェックする
     /// </summary>
     private void CheckCanShot()
     {
-        //デバッグログ
-        Vector3 StartPos;
-        StartPos = rb.position;
-        StartPos.y += 1.0f;
-
-#if false
-
-        RaycastHit hit;
-        if (Physics.Raycast(StartPos, adjustLeftStick, out hit, 3.0f))
-        {
-            if (hit.collider.CompareTag("Platform"))
-            {
-                CanShotColBlock = false;
-            }
-            else
-            {
-                CanShotColBlock = true;
-            }
-        }
-        else
-        {
-            CanShotColBlock = true;
-        }
-        StartPos.z += 2.0f;
-        Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
-
-#else
-        CanShotColBlock = true;
-
-#endif
 
         //最終的に打てるかの決定
-        if (canShotState && stickCanShotRange && CanShotColBlock)
+        if (canShotState && stickCanShotRange && BulletScript.CanShotFlag)
         {
             canShot = true;
         }
@@ -452,6 +518,7 @@ public class PlayerMain : MonoBehaviour
         forciblyReleaseSaveVelocity = false;
         forciblyFollowVelToward = false;
         forciblySwingNextFollow = false;
+        forciblySwingSaveVelocity = false;
     }
 
     /// <summary>
@@ -462,43 +529,37 @@ public class PlayerMain : MonoBehaviour
     /// </param>
     public void ForciblyReleaseMode(bool saveVelocity)
     {
+        ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
             forciblyRleaseFlag = true;
             forciblyReleaseSaveVelocity = saveVelocity;
 
-            //フラグクリア
-            forciblyFollowFlag = false;
-            forciblySwingFlag = false;
-
         }
         else if(refState == EnumPlayerState.SWING)
         {
             endSwing = true;
+            forciblySwingSaveVelocity = saveVelocity;
         }
     }
 
     public void ForciblyFollowMode(bool velTowardBullet)
     {
+        ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
             forciblyFollowFlag = true;
             forciblyFollowVelToward = velTowardBullet;
-            //フラグクリア
-            forciblySwingFlag = false;
-            forciblyRleaseFlag = false;
         }
     }
 
     public void ForciblySwingMode(bool nextFollow)
     {
+        ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
             forciblySwingFlag = true;
             forciblySwingNextFollow = nextFollow;
-            //フラグクリア
-            forciblyRleaseFlag = false;
-            forciblyFollowFlag = false;
         }
     }
 
@@ -540,7 +601,8 @@ public class PlayerMain : MonoBehaviour
         //ショット中に壁にあたったときの処理
         if (refState == EnumPlayerState.SHOT)
         {
-            if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
+            if (collision.gameObject.CompareTag("Platform") || 
+                collision.gameObject.CompareTag("Conveyor_Tate") || collision.gameObject.CompareTag("Conveyor_Yoko"))
             {
                 switch (shotState)
                 {
@@ -589,7 +651,8 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
+                if (collision.gameObject.CompareTag("Platform") || 
+                    collision.gameObject.CompareTag("Conveyor_Tate") || collision.gameObject.CompareTag("Conveyor_Yoko"))
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
@@ -641,6 +704,8 @@ public class PlayerMain : MonoBehaviour
                 {
                     isOnGround = true;
                     animator.SetBool(animHash.onGround, true);
+
+                    EffectManager.instance.landEffect(collision.contacts[0].point);
                  }
             //}
         }
