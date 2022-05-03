@@ -11,7 +11,8 @@ public class Title_p1_manager : MonoBehaviour
 
     [Tooltip("カメラが動いているフレーム")][SerializeField] int camera_motion = 30;
     [Tooltip("カメラが動く速度")][Range(0.0f, 10.0f)] [SerializeField] float camera_speed = 5.4f;
-    [Tooltip("カメラリセット位置")][SerializeField] float camera_resetPos = 281.0f;
+    [Tooltip("カメラリセット角度")][SerializeField] float camera_resetRot = 281.0f;
+    [Tooltip("カメラリセット位置")][SerializeField] Vector3 camera_RestPos = new Vector3(3.09f, -1, -9.29f);
     [Tooltip("旋回時間")][SerializeField] float duration = 10.0f;
     [Tooltip("旋回終了から何フレーム経ったか")][SerializeField] int derayFlame = 120;
 
@@ -86,7 +87,6 @@ public class Title_p1_manager : MonoBehaviour
 
         if(transition_2 == true)
         {
-
             camera.transform.DORotate(new Vector3(0, -1, 0), duration, RotateMode.Fast)
                 .SetLink(camera.gameObject)
                 .SetEase(Ease.OutCirc);
@@ -108,6 +108,7 @@ public class Title_p1_manager : MonoBehaviour
 
     void CameraReset()
     {
-        camera.transform.rotation = new Quaternion(0, camera_resetPos, 0, 0);
+        camera.transform.rotation = new Quaternion(0, camera_resetRot, 0, 0);
+        camera.transform.position = camera_RestPos;
     }
 }

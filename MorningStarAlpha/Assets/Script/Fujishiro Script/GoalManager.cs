@@ -12,6 +12,7 @@ public class GoalManager : MonoBehaviour
     [SerializeField] GameObject MainCam;
     [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
+    [SerializeField] GameObject Canvas;
 
     [SerializeField][Range(1.0f, 100.0f)] float AlphaSpeed; // “§–¾“x‚ÌÝ’è
     [SerializeField][Range(0.0f, 1.0f)] float CameraRotateSpeed;
@@ -20,6 +21,13 @@ public class GoalManager : MonoBehaviour
     [SerializeField][ReadOnly] private float alpha;
 
     private bool AngleChange;
+
+    void Awake()
+    {
+        //DontDestroyOnLoad(Canvas);
+        //DontDestroyOnLoad(ClearCam);
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -52,9 +60,8 @@ public class GoalManager : MonoBehaviour
         }
 
         // ƒŠƒUƒ‹ƒg‰æ–Ê‚Ö‚Ì‘JˆÚ”»’è
-        if (alpha > 0.01)
+        if (alpha > 0.025f)
         {
-            
             SceneManager.LoadScene("ResultScene");
         }
     }

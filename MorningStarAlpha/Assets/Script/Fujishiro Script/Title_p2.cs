@@ -10,6 +10,9 @@ public class Title_p2 : MonoBehaviour
     [Tooltip("MainCamera")][SerializeField] GameObject mainCamera;
     [Tooltip("CameraCenterX")][SerializeField] GameObject centerX;
     [Tooltip("Canvas")][SerializeField] GameObject Canvas;
+    [Tooltip("足場")][SerializeField] GameObject Plane_Parent;
+
+    [System.NonSerialized] public static Title_p2 instance;
 
     [Tooltip("カメラトランジション時間")][SerializeField] float cam_transition = 2.0f;
     [Tooltip("プレイヤーローテーション時間")][SerializeField] float player_Rotation = 2.0f;
@@ -18,11 +21,24 @@ public class Title_p2 : MonoBehaviour
 
     private bool once_press;
 
+    public bool changeScene;
+
+    void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        
         pos = Player.transform.position;
         once_press = false;
+        Plane_Parent.SetActive(false);
+        PlayerMain.instance.mode = new PlayerState_Title();
+
+        // 変数初期化
+        changeScene = false;
     }
 
     // Update is called once per frame
@@ -36,6 +52,7 @@ public class Title_p2 : MonoBehaviour
         { 
             Canvas.SetActive(false);
             once_press = true;
+            Plane_Parent.SetActive(true);
         }
 
         if (once_press == true)
@@ -57,9 +74,14 @@ public class Title_p2 : MonoBehaviour
                 .SetEase(Ease.OutCubic)
                 .OnComplete(() =>
                 {
-                    SceneManager.LoadScene("Menu");
+                    changeScene = true;
                 });
 
+            // シーンチェンジ
+            if(changeScene == true)
+            {
+                SceneManager.LoadScene("Menu");
+            }
         }
     }
 }

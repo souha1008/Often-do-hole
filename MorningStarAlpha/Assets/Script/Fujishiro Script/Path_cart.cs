@@ -33,9 +33,14 @@ public class Path_cart : MonoBehaviour
             if(Rall_Start == true && Rall_Now == false)
             {
                 PlayerState.PlayerScript.mode = new PlayerState_Rail(); // ステートをレール状態に移行
+                ikari.transform.Rotate(new Vector3(0, 0, 180));
                 ikari.transform
                 .DOPath(path, 4.0f, PathType.Linear)
                 .SetLookAt(0.001f, Vector3.left)
+                .OnUpdate(() =>
+                {
+                    ikari.transform.Rotate(new Vector3(0, 0, 180));
+                })
                 .OnComplete(() =>
                 {
                     Debug.Log("Complete");
