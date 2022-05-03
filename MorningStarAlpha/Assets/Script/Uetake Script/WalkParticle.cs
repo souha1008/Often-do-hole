@@ -27,7 +27,6 @@ public class WalkParticle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Rotate();
         if (isPlaying) //パーティクル再生していない
         {
             if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND && Mathf.Abs(PlayerMain.instance.vel.x) > 20.0f)
@@ -52,29 +51,29 @@ public class WalkParticle : MonoBehaviour
     }
 
 
-    private void Rotate()
-    {
-        Vector3 scale = Vector3.one;
-        if (PlayerMain.instance.dir == PlayerMoveDir.RIGHT)
-        {
-            for (int i = 0; i < childlen.Length; i++)
-            {
-                scale.x = -1;
+    //private void Rotate()
+    //{
+    //    Vector3 scale = Vector3.one;
+    //    if (PlayerMain.instance.dir == PlayerMoveDir.RIGHT)
+    //    {
+    //        for (int i = 0; i < childlen.Length; i++)
+    //        {
+    //            scale.x = -1;
 
-                childlen[i].localScale = scale;
-            }                                                        
-        }                                                            
-        else                                                         
-        {                                                            
-            for (int i = 0; i < childlen.Length; i++)                
-            {
+    //            childlen[i].localScale = scale;
+    //        }                                                        
+    //    }                                                            
+    //    else                                                         
+    //    {                                                            
+    //        for (int i = 0; i < childlen.Length; i++)                
+    //        {
                
-                scale.x = 1;
+    //            scale.x = 1;
 
-                childlen[i].localScale = scale;
-            }
-        }
-    }
+    //            childlen[i].localScale = scale;
+    //        }
+    //    }
+    //}
 
     private void Switch()
     {
