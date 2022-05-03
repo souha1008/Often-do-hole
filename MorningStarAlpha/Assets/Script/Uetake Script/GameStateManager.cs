@@ -22,8 +22,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Awake()
     {
-        GameTime = MAX_TIME;
-        SetGameState(GAME_STATE.PLAY);
+        Init();
 
         if (this != Instance)
         {
@@ -34,15 +33,16 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         DontDestroyOnLoad(this.gameObject); // ÉVÅ[ÉìÇ™ïœÇÌÇ¡ÇƒÇ‡éÄÇ»Ç»Ç¢
     }
 
-    private void Start()
+    public void Init()
     {
-        GameTime = 300.0f;
+        GameTime = MAX_TIME;
         SetGameState(GAME_STATE.PLAY);
     }
 
     private void CountDown()
     {
-        GameTime = Mathf.Max(0, MAX_TIME - Time.time);
+        GameTime -= Time.deltaTime;
+        GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
         Debug.Log(GameTime);
     }
 
