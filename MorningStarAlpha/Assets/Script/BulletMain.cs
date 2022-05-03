@@ -179,7 +179,7 @@ public class BulletMain : MonoBehaviour
         vel = Vector3.zero;
         isTouched = false;
 
-        EffectManager.instance.ShotEffect(PlayerScript.rb.position, vec);
+        EffectManager.instance.ShotEffect();
 
         if (vec.y < 0.3f)
         {
@@ -359,8 +359,7 @@ public class BulletMain : MonoBehaviour
                         CameraShake.instance.Shake(rb.velocity);
                         colPoint = collision.GetContact(0).point;
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
-
-                        
+   
                         //–ÊŒvŽZ
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
    

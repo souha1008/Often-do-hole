@@ -12,14 +12,17 @@ public enum GAME_STATE {
 
 
 /// <summary>
-/// ゲームの状態を管理
+/// ゲームの状態を管理,時間を管理
 /// </summary>
-public class GameStateManager : SingletonMonoBehaviour<GameSpeedManager>
+public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
-    public static GAME_STATE GameState;
+    private const float MAX_TIME = 300.0f;
+    private static GAME_STATE GameState;
+    private static float GameTime;
 
     private void Awake()
     {
+        GameTime = MAX_TIME;
         SetGameState(GAME_STATE.PLAY);
 
         if (this != Instance)
@@ -31,10 +34,23 @@ public class GameStateManager : SingletonMonoBehaviour<GameSpeedManager>
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
     }
 
+    private void Start()
+    {
+        GameTime = 300.0f;
+        SetGameState(GAME_STATE.PLAY);
+    }
+
+    private void CountDown()
+    {
+        GameTime = Mathf.Max(0, MAX_TIME - Time.time);
+        Debug.Log(GameTime);
+    }
+
+
 
     private void Update()
     {
-        Debug.Log(GetGameState());
+        CountDown();
     }
 
     public static GAME_STATE GetGameState()
@@ -47,4 +63,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameSpeedManager>
         GameState = game_state;
     }
 
+    public static float GetGameTime()
+    {
+        return GameTime;
+    }
 }

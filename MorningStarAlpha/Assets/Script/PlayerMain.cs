@@ -704,6 +704,8 @@ public class PlayerMain : MonoBehaviour
                 {
                     isOnGround = true;
                     animator.SetBool(animHash.onGround, true);
+
+                    EffectManager.instance.landEffect(collision.contacts[0].point);
                  }
             //}
         }
