@@ -68,7 +68,7 @@ public class BulletMain : MonoBehaviour
             Part[i].enabled = false;         
         }
 
-        PlayerScript.VisibleAnimBullet();
+        PlayerScript.VisibleAnimBullet(true);
 
 
         rb.isKinematic = true;
@@ -87,7 +87,7 @@ public class BulletMain : MonoBehaviour
             Part[i].enabled = true;
         }
 
-        PlayerScript.InVisibleAnimBullet();
+        PlayerScript.VisibleAnimBullet(false);
     }
 
     // 錨のステート変更

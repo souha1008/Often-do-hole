@@ -221,19 +221,11 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    public void VisibleAnimBullet()
+    public void VisibleAnimBullet(bool on_off)
     {
         for (int i = 0; i < 3; i++) 
         {
-            animBullet[i].SetActive(true);
-        }
-    }
-
-    public void InVisibleAnimBullet()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            animBullet[i].SetActive(false);
+            animBullet[i].SetActive(on_off);
         }
     }
 
