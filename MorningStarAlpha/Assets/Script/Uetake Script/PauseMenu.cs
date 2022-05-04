@@ -27,7 +27,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     private RectTransform WakuImageRect;
 
-    private RectTransform nowBottunRect;
+    private RectTransform nowButtunRect;
 
 
     private void Awake()
@@ -37,7 +37,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         oldButton = nowButton = OldSelectPause = EventSystem.current.gameObject;
         VibrationSlider = VibrationObject.GetComponent<Slider>();
         WakuImageRect = WakuImage.GetComponent<RectTransform>();
-        nowBottunRect = nowButton.GetComponent<RectTransform>();
+        nowButtunRect = nowButton.GetComponent<RectTransform>();
         VibrationSliderOldvalue = VibrationSlider.value;
     }
 
@@ -55,14 +55,15 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                 //    oldButton.GetComponent<Image>().color = Color.white;
                 //if (nowButton.GetComponent<Image>() != null)
                 //    nowButton.GetComponent<Image>().color = Color.red;
-                nowBottunRect = nowButton.GetComponent<RectTransform>();
+                nowButtunRect = nowButton.GetComponent<RectTransform>();
             }
-            // 枠の位置変更
-            WakuImageRect.position = nowBottunRect.position;
-            WakuImageRect.sizeDelta = new Vector2(nowBottunRect.sizeDelta.x + 40.0f, nowBottunRect.sizeDelta.y + 5.0f);
-            WakuImageRect.localScale = nowBottunRect.localScale;
 
-            if (Input.GetButtonDown("Button_Select"))
+            // 枠の位置変更
+            WakuImageRect.position = nowButtunRect.position;
+            WakuImageRect.sizeDelta = new Vector2(nowButtunRect.sizeDelta.x + 40.0f, nowButtunRect.sizeDelta.y + 5.0f);
+            WakuImageRect.localScale = nowButtunRect.localScale;
+
+            if (Input.GetButtonDown("Button_Select") || Input.GetButtonDown("ButtonB"))
             {
                 EndPause();
             }
@@ -82,25 +83,29 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                     //    oldButton.GetComponent<Image>().color = Color.white;
                     //if (nowButton.GetComponent<Image>() != null)
                     //    nowButton.GetComponent<Image>().color = Color.red;
-                    nowBottunRect = nowButton.GetComponent<RectTransform>();
+                    nowButtunRect = nowButton.GetComponent<RectTransform>();
                 }
 
                 // 枠の位置変更
-                WakuImageRect.position = nowBottunRect.position;
-                WakuImageRect.sizeDelta = new Vector2(nowBottunRect.sizeDelta.x + 40.0f, nowBottunRect.sizeDelta.y + 5.0f);
-                WakuImageRect.localScale = nowBottunRect.localScale;
+                WakuImageRect.position = nowButtunRect.position;
+                WakuImageRect.sizeDelta = new Vector2(nowButtunRect.sizeDelta.x + 40.0f, nowButtunRect.sizeDelta.y + 5.0f);
+                WakuImageRect.localScale = nowButtunRect.localScale;
 
                 // 振動ONOFFボタンクリック
                 if (Input.GetButtonDown("ButtonA") && VibrationObject == EventSystem.current.currentSelectedGameObject)
                 {
                     ClickVibrationONOFF();
-                    VibrationSliderOldvalue = VibrationSlider.value;
                 }
                 // 振動ONOFFボタンクリック(左右入力)
                 if (VibrationSlider.value != VibrationSliderOldvalue)
                 {
-                    ClickVibrationONOFF();
-                    VibrationSliderOldvalue = VibrationSlider.value;                   
+                    ClickVibrationONOFF();                 
+                }
+
+                // Bボタンクリック
+                if (Input.GetButtonDown("ButtonB"))
+                {
+                    ClickReturnSoundVolume();
                 }
 
                 if (Input.GetButtonDown("Button_Select") && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
@@ -139,6 +144,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         GameStateManager.SetGameState(GAME_STATE.PAUSE);
         PauseCanvas.gameObject.SetActive(true);
+        SoundVolumeCanvas.gameObject.SetActive(false);
         WakuImage.gameObject.transform.parent = PauseCanvas.gameObject.transform;
         EventSystem.current.SetSelectedGameObject(FirstSelect.gameObject);
         Time.timeScale = 0.0f;
@@ -173,8 +179,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         WakuImage.gameObject.transform.parent = SoundVolumeCanvas.gameObject.transform;
         OldSelectPause = EventSystem.current.currentSelectedGameObject;
         EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
-        //if (nowButton.GetComponent<Image>() != null)
-        //    nowButton.GetComponent<Image>().color = Color.white;
         nowButton = EventSystem.current.currentSelectedGameObject;
     }
 
@@ -185,6 +189,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         WakuImage.gameObject.transform.parent = PauseCanvas.gameObject.transform;
         EventSystem.current.SetSelectedGameObject(OldSelectPause);
         nowButton = EventSystem.current.currentSelectedGameObject;
+        nowButtunRect = nowButton.GetComponent<RectTransform>();
     }
 
     public void ClickVibrationONOFF()
@@ -206,5 +211,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         // 振動更新
         VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.VibrationFlag);
-    }
+        VibrationSliderOldvalue = VibrationSlider.value;
+}
 }
