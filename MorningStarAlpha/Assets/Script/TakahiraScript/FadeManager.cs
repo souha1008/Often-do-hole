@@ -51,6 +51,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private float TimeSceneChange;
     private float TimeStageChange;
 
+    private string NextSceneName;
+
     private void Awake()
     {
         if (this != Instance)
@@ -94,7 +96,10 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), FadeTexture);
     }
 
-    private void Start() { }
+    private void Start() 
+    {
+        SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+    }
 
     private void Update()
     {
@@ -117,7 +122,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     default:
                         break;
                 }
-                NowTime += Time.deltaTime; // 時間加算
+                NowTime += Time.unscaledDeltaTime; // 時間加算
 
                 if (FadeColor.a >= 1.0f)
                 {
@@ -143,7 +148,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     default:
                         break;
                 }
-                NowTime += Time.deltaTime; // 時間加算
+                NowTime += Time.unscaledDeltaTime; // 時間加算
 
                 if (FadeColor.a <= 0.0f)
                 {
@@ -184,15 +189,20 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private void FadeIn_GameOver()
     {
         // ゲームシーンのリセット
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SoundManager.Instance.StopSound("BGM_01");
+        SceneManager.LoadScene(NextSceneName);
+        SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
+        GameStateManager.SetGameState(GAME_STATE.PLAY);
+        Time.timeScale = 1.0f;
     }
     // フェードインしたときの処理(シーン変更)
-    private void FadeIn_SceneChange()
+    public void FadeIn_SceneChange()
     {
-        // ※後で別の処理に任せる予定
+        SceneManager.LoadScene(NextSceneName);
     }
+
     // フェードインしたときの処理(ステージ変更)
-    private void FadeIn_StageChange()
+    public void FadeIn_StageChange()
     {
         // ※後で別の処理に任せる予定
     }
@@ -201,12 +211,28 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     //
     // 引数１：フェード状態の種類(今のところフェードアウトのみ)
     // 引数２：何のフェードか(ゲームオーバー,シーンチェンジetc...)
-    public void SetNextFade(FADE_STATE NextFadeState, FADE_KIND FadeKind)
+    public void FadeStart(string nextFadeName, FADE_KIND FadeKind)
     {
         if (NowFadeState == FADE_STATE.FADE_NONE)
         {
-            NowFadeState = NextFadeState;
+            NowFadeState = FADE_STATE.FADE_OUT;
             NowFadeKind = FadeKind;
+
+            NowTime = 0.0f;
+
+            TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
+            TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
+            TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+        }
+    }
+
+    public void FadeGameOver()
+    {
+        if (NowFadeState == FADE_STATE.FADE_NONE)
+        {
+            NextSceneName = SceneManager.GetActiveScene().name;
+            NowFadeState = FADE_STATE.FADE_OUT;
+            NowFadeKind = FADE_KIND.FADE_GAMOVER;
 
             NowTime = 0.0f;
 

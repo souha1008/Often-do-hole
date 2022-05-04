@@ -49,6 +49,7 @@ public class CoinObject : MonoBehaviour
         // プレイヤーと接触時コイン取得
         if (collider.gameObject.CompareTag("Player"))
         {
+            SoundManager.Instance.PlaySound("決定音");
             CoinInfo.GetCoinFlag = true;
             CoinManager.Instance.SetCoinInfo(CoinInfo);
             Death();

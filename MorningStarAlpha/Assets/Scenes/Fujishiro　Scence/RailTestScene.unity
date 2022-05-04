@@ -362,7 +362,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &23150271
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2946,7 +2945,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &211545596
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3026,7 +3024,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7522019961897629184, guid: 3e790c0a6a4911f46b9d63b171e8af77, type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 7522019961897629184, guid: 3e790c0a6a4911f46b9d63b171e8af77, type: 3}
       propertyPath: m_LocalScale.x
@@ -5220,7 +5218,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 436905375}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -34.4, y: 81.7, z: 1.2667694}
+  m_LocalPosition: {x: -34.4, y: 81.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1088192070}
@@ -6732,6 +6730,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569239506}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &576920313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4703207421186132940, guid: c71f9e24e9e70054b9c449da2de28f6a, type: 3}
+  m_PrefabInstance: {fileID: 1234997479}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 576920314}
+  m_Layer: 0
+  m_Name: 'Thorn_1 (Missing Prefab with guid: c71f9e24e9e70054b9c449da2de28f6a)'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &576920314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4703207421186132983, guid: c71f9e24e9e70054b9c449da2de28f6a, type: 3}
+  m_PrefabInstance: {fileID: 1234997479}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576920313}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &581804591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7721,7 +7749,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &648810561
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8291,21 +8318,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40773fd0b2a48134494b21da3a2243e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
+  Player: {fileID: 591067629}
   Part:
   - {fileID: 1087888452}
   - {fileID: 728601027}
   - {fileID: 2013220672}
+  NowBulletState: 0
+  CanShotFlag: 0
   vel: {x: 0, y: 0, z: 0}
+  colPoint: {x: 0, y: 0, z: 0}
   isTouched: 0
   onceFlag: 0
   StopVelChange: 0
-  swingEnd: 0
-  followEnd: 0
+  isInside: 0
   STRAIGHT_FLAME_CNT: 10
   BULLET_SPEED: 80
+  BULLET_SPEED_MAX: 90
+  BULLET_SPEED_MULTIPLE: 4
   BULLET_START_DISTANCE: 3
   BULLET_ROPE_LENGTH: 15
+  BULLET_MAXFALLSPEED: 35
 --- !u!4 &685086434
 Transform:
   m_ObjectHideFlags: 0
@@ -9501,7 +9533,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &755926618
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10981,7 +11012,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 847377487}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -34.4, y: 92.4, z: 1.2667694}
+  m_LocalPosition: {x: -34.4, y: 92.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1043494493}
@@ -11532,7 +11563,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &888196952
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11848,7 +11878,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &917882949
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13376,7 +13405,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1050079407
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13820,7 +13848,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1081213652
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17064,7 +17091,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1275833768
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17875,6 +17901,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9365ac830ac64e46bbbb64e99902a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Obj: {fileID: 0}
+  isReturn: 1
 --- !u!114 &1348309816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19732,7 +19760,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1544574918
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21504,7 +21531,7 @@ MonoBehaviour:
   path: []
   player_path: []
   ikari: {fileID: 685086432}
-  player: {fileID: 0}
+  player: {fileID: 591067629}
   Rall_Start: 0
 --- !u!65 &1623045179
 BoxCollider:
@@ -21814,7 +21841,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f836c368a2c8e941b96c0dcf052df17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Result_sprite: {fileID: 241458439}
+  ClearCam: {fileID: 0}
+  MainCam: {fileID: 0}
+  PostProssece: {fileID: 0}
+  RawImage: {fileID: 0}
 --- !u!65 &1645113612
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23591,7 +23621,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1796970907
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24899,7 +24928,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveInfo:
     Vel: {x: 0, y: 0, z: 0}
-    TotalMoveVel: {x: 0, y: 0, z: 0}
 --- !u!65 &1980922493
 BoxCollider:
   m_ObjectHideFlags: 0

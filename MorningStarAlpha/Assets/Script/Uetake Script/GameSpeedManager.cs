@@ -28,7 +28,7 @@ public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
     // Update is called once per frame
     void Update()
     {
-        if (GameStateManager.GameState == GAME_STATE.PLAY)
+        if (GameStateManager.GetGameState() == GAME_STATE.PLAY)
         {
             if (isHitStop)
             {

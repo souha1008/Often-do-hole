@@ -16,42 +16,47 @@ public class PlayerState_Knockback : PlayerState
 
     private bool isDeath;
 
-    public PlayerState_Knockback(Vector3 HitObjectPos)
-    {
-        PlayerScript.refState = EnumPlayerState.NOCKBACK;
-        NowTime = 0.0f;
-        HitPos = HitObjectPos;
-        isDeath = false;
-        PlayerScript.midairState = MidairState.NORMAL;
+    //public PlayerState_Knockback(Vector3 HitObjectPos)
+    //{
+    //    PlayerScript.refState = EnumPlayerState.NOCKBACK;
+    //    NowTime = 0.0f;
+    //    HitPos = HitObjectPos;
+    //    isDeath = false;
+    //    PlayerScript.midairState = MidairState.NORMAL;
 
-        PlayerScript.AnimVariableReset();
-        PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
+    //    PlayerScript.AnimVariableReset();
+    //    PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
 
-        // 錨引き戻し
-        BulletScript.SetBulletState(EnumBulletState.RETURN);
+    //    // 錨引き戻し
+    //    BulletScript.ReturnBullet();
 
 
-        Knockback(); // ノックバック処理
-    }
+    //    Knockback(); // ノックバック処理
+    //}
 
     public PlayerState_Knockback(Vector3 HitObjectPos, bool is_death)
     {
         PlayerScript.refState = EnumPlayerState.NOCKBACK;
         NowTime = 0.0f;
         HitPos = HitObjectPos;
-
         isDeath = is_death;
-
-        PlayerScript.midairState = MidairState.NORMAL;
 
         PlayerScript.AnimVariableReset();
         PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
 
+
+        if (is_death)
+        {
+            PlayerScript.animator.SetFloat("NockbackSpeed", 2.0f); 
+            PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
+        }
+        else
+        {
+            PlayerScript.animator.SetFloat("NockbackSpeed", 0.15f);
+        }
+
         // 錨引き戻し
         BulletScript.ReturnBullet();
-        //PlayerScript.useVelocity = true;
-        //BulletReturnFlag = true;
-
 
         Knockback(); // ノックバック処理
     }
@@ -66,30 +71,33 @@ public class PlayerState_Knockback : PlayerState
         // 減衰処理
         PlayerSpeedDown();
 
-        //自分へ弾を引き戻す
-        if (BulletReturnFlag)
-        {
-            float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-            Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
-            vec = vec.normalized;
-            BulletScript.vel = vec * 200.0f;
-            //距離が一定以下になったら弾を非アクティブ
-            if (interval < 4.0f)
-            { 
-                BulletReturnFlag = false;
-            }
-        }
-
-
-        // 時間経過でステート変更
-        if (NowTime > KnockbackTime && !BulletReturnFlag)
-        {
-            if (isDeath)
+        ////自分へ弾を引き戻す
+        //if (BulletReturnFlag)
+        //{
+        //    float interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
+        //    Vector3 vec = PlayerScript.rb.position - BulletScript.rb.position;
+        //    vec = vec.normalized;
+        //    BulletScript.vel = vec * 200.0f;
+        //    //距離が一定以下になったら弾を非アクティブ
+        //    if (interval < 4.0f)
+        //    { 
+        //        BulletReturnFlag = false;
+        //    }
+        //}
+        if (isDeath)
+        { // 時間経過でステート変更
+            if (NowTime > 0.3f)
             {
                 PlayerScript.mode = new PlayerStateDeath();
             }
-            else
+        }
+        else
+        {
+            // 時間経過でステート変更
+            if (NowTime > KnockbackTime)
             {
+
+
                 if (PlayerScript.isOnGround)
                 {
                     PlayerScript.mode = new PlayerStateOnGround();
@@ -98,6 +106,7 @@ public class PlayerState_Knockback : PlayerState
                 {
                     PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
                 }
+
             }
         }
 
@@ -141,17 +150,15 @@ public class PlayerState_Knockback : PlayerState
         PlayerScript.vel.x *= PlayerScript.MIDAIR_FRICTION;
         if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * (fixedAdjust);
+            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * (fixedAdjust) * 0.2f;
         }
         else if (PlayerScript.adjustLeftStick.x < -PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1 * (fixedAdjust);
+            PlayerScript.vel.x += PlayerScript.ADD_MIDAIR_SPEED * -1 * (fixedAdjust) * 0.2f;
         }
 
-          if (PlayerScript.midairState == MidairState.NORMAL)
-            {
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
-                PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
-            }
+        PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
+        PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+       
     }
 }
