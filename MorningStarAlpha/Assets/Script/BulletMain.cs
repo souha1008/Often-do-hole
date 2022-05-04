@@ -7,7 +7,7 @@ public class BulletMain : MonoBehaviour
 
     private PlayerMain PlayerScript;
     [SerializeField] private GameObject Player;
-    [SerializeField] private SkinnedMeshRenderer[] Part; //構成パーツ、　レンダラーがアタッチされているもの
+    [System.NonSerialized] private SkinnedMeshRenderer[] Part = new SkinnedMeshRenderer[3]; //構成パーツ、　レンダラーがアタッチされているもの
                                                        //[SerializeField] private SkinnedMeshRenderer[] animPart; //構成パーツ、　レンダラーがアタッチされているもの
 
     [System.NonSerialized] public static BulletMain instance;
@@ -40,6 +40,10 @@ public class BulletMain : MonoBehaviour
         PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
         co = GetComponent<Collider>();
+        
+        Part[0] = transform.Find("body/Anchor_body/anchor_body").GetComponent<SkinnedMeshRenderer>();
+        Part[1] = transform.Find("body/Anchor_body/anchor_L_needle").GetComponent<SkinnedMeshRenderer>();
+        Part[2] = transform.Find("body/Anchor_body/anchor_R_needle").GetComponent<SkinnedMeshRenderer>();
     }
 
     private void Start()
@@ -53,6 +57,7 @@ public class BulletMain : MonoBehaviour
         fixedAdjust = Time.fixedDeltaTime * 50;
         InvisibleBullet();
 
+
         mode = new BulletReady(); // 初期ステート 
     }
 
@@ -63,10 +68,8 @@ public class BulletMain : MonoBehaviour
             Part[i].enabled = false;         
         }
 
-        //for (int i = 0; i < animPart.Length; i++)
-        //{
-        //    animPart[i].enabled = true;
-        //}
+        PlayerScript.VisibleAnimBullet(true);
+
 
         rb.isKinematic = true;
         rb.velocity = Vector3.zero;
@@ -84,10 +87,7 @@ public class BulletMain : MonoBehaviour
             Part[i].enabled = true;
         }
 
-        //for (int i = 0; i < animPart.Length; i++)
-        //{
-        //    animPart[i].enabled = false;
-        //}
+        PlayerScript.VisibleAnimBullet(false);
     }
 
     // 錨のステート変更
@@ -246,7 +246,6 @@ public class BulletMain : MonoBehaviour
             // 高平追加
             mode.Move();
 
-           
             rb.velocity = vel;
         }
     }
