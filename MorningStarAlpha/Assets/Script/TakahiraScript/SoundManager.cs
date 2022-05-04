@@ -69,10 +69,10 @@ public class SoundManagerEditor : Editor
 
         EditorGUILayout.LabelField("[音のボリューム]");
         EditorGUILayout.Space(3);
-        Sound.SoundVolumeMaster = EditorGUILayout.Slider("マスターボリューム", (int)(Sound.SoundVolumeMaster * 100), 0, 100) / 100.0f;
-        Sound.SoundVolumeBGM = EditorGUILayout.Slider("BGMボリューム", (int)(Sound.SoundVolumeBGM * 100), 0, 100) / 100.0f;
-        Sound.SoundVolumeSE = EditorGUILayout.Slider("SEボリューム", (int)(Sound.SoundVolumeSE * 100), 0, 100) / 100.0f;
-        Sound.SoundVolumeOBJECT = EditorGUILayout.Slider("OBJECTボリューム", (int)(Sound.SoundVolumeOBJECT * 100), 0, 100) / 100.0f;
+        Sound.SoundVolumeMaster = EditorGUILayout.Slider("マスターボリューム", (float)(Sound.SoundVolumeMaster * 100), 0, 100) * 0.01f;
+        Sound.SoundVolumeBGM = EditorGUILayout.Slider("BGMボリューム", (float)(Sound.SoundVolumeBGM * 100), 0, 100) * 0.01f;
+        Sound.SoundVolumeSE = EditorGUILayout.Slider("SEボリューム", (float)(Sound.SoundVolumeSE * 100), 0, 100) * 0.01f;
+        Sound.SoundVolumeOBJECT = EditorGUILayout.Slider("OBJECTボリューム", (float)(Sound.SoundVolumeOBJECT * 100), 0, 100) * 0.01f;
         EditorGUILayout.Space(15);
 
 
@@ -89,8 +89,6 @@ public class SoundManagerEditor : Editor
         EditorGUILayout.IntField("現在再生中のSE数", Sound.NowPlaySoundSE);
         EditorGUILayout.IntField("現在再生中のOBJECT数", Sound.NowPlaySoundOBJECT);
         GUI.enabled = true;  // 入力可能
-
-
 
 
         // エディターの変更確認
@@ -332,14 +330,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private void Start()
     {
         // セーブデータから音量データ読み込み
-        if (SaveDataManager.Instance != null)
-        {
-            //Debug.LogWarning("音量読み込み");
-            SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
-            SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
-            SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
-            SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
-        }
+
+        // デバッグの為一旦コメントアウト
+        //SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
+        //SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
+        //SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
+        //SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
+        //Debug.LogWarning("音量読み込み");
 
         // 音量セット
         UpdateVolume();
@@ -952,12 +949,19 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     //===========================================
     public void UpdateVolume()
     {
+        float VolMaster, VolBGM, VolSE, VolOBJECT;
+
         Mathf.Clamp(SoundVolumeMaster, 0.0f, 1.0f);
         Mathf.Clamp(SoundVolumeBGM, 0.0f, 1.0f);
         Mathf.Clamp(SoundVolumeSE, 0.0f, 1.0f);
         Mathf.Clamp(SoundVolumeOBJECT, 0.0f, 1.0f);
 
-        AudioListener.volume = SoundVolumeMaster;
+        VolMaster = CalculationScript.GetLoudnessVolume(SoundVolumeMaster);
+        VolBGM = CalculationScript.GetLoudnessVolume(SoundVolumeBGM);
+        VolSE = CalculationScript.GetLoudnessVolume(SoundVolumeSE);
+        VolOBJECT = CalculationScript.GetLoudnessVolume(SoundVolumeOBJECT);
+
+        AudioListener.volume = VolMaster;
         for (int i = 0; i < NowPlaySoundList.Count; i++)
         {
             float SoundVol = 0.0f;
@@ -965,13 +969,13 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             switch (NowPlaySoundList[i].Sound_Clip.SoundType)
             {
                 case SOUND_TYPE.BGM:
-                    SoundVol = SoundVolumeBGM;
+                    SoundVol = VolBGM;
                     break;
                 case SOUND_TYPE.SE:
-                    SoundVol = SoundVolumeSE;
+                    SoundVol = VolSE;
                     break;
                 case SOUND_TYPE.OBJECT:
-                    SoundVol = SoundVolumeOBJECT;
+                    SoundVol = VolOBJECT;
                     break;
                 default:
                     break;
@@ -990,6 +994,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         SaveDataManager.Instance.MainData.SoundVolumeBGM = SoundVolumeBGM;
         SaveDataManager.Instance.MainData.SoundVolumeSE = SoundVolumeSE;
         SaveDataManager.Instance.MainData.SoundVolumeOBJECT = SoundVolumeOBJECT;
+
+        Debug.LogWarning(SoundVolumeMaster);
     }
 
 
