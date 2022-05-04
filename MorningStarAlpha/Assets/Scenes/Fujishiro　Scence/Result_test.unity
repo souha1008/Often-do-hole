@@ -3493,6 +3493,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e790c0a6a4911f46b9d63b171e8af77, type: 3}
+--- !u!114 &307922499 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1084616123403366921, guid: cb62e5590b01f16419eb7b00e556386a, type: 3}
+  m_PrefabInstance: {fileID: 17205983}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40773fd0b2a48134494b21da3a2243e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &311532494
 GameObject:
   m_ObjectHideFlags: 0
@@ -5475,7 +5486,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 518779739}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1200.9, y: -202.7, z: 0}
+  m_LocalPosition: {x: -1200.9, y: -205.29, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2001932594}
@@ -5498,8 +5509,10 @@ MonoBehaviour:
   PostProssece: {fileID: 2113406852}
   RawImage: {fileID: 1786111347}
   Canvas: {fileID: 1802540024}
-  AlphaSpeed: 69.5
-  CameraRotateSpeed: 0.604
+  AlphaSpeed: 74.2
+  CameraRotateSpeed: 0.558
+  alpha_Flag: 0.02
+  parsent: 1000000
   alpha: 0
 --- !u!65 &518779742
 BoxCollider:
@@ -6298,6 +6311,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4052905262649915965, guid: ba7d8c708cba4f743826057696cb342f, type: 3}
+      propertyPath: BulletScript
+      value: 
+      objectReference: {fileID: 307922499}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba7d8c708cba4f743826057696cb342f, type: 3}
 --- !u!1001 &567314284
@@ -20128,7 +20145,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1929, y: 1080}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1786111347
 MonoBehaviour:
@@ -20524,7 +20541,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 963194227}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -23093,7 +23110,7 @@ MonoBehaviour:
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
   m_Cameras: []
-  m_RendererIndex: -1
+  m_RendererIndex: 1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
