@@ -92,7 +92,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         GameTime -= Time.deltaTime;
         GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
-        Debug.Log(GameTime);
+        //Debug.Log(GameTime);
     }
 
 

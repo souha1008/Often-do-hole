@@ -10,11 +10,13 @@ public class SelectManager : MonoBehaviour
     [SerializeField] private GameObject SelectObj;
     [SerializeField] private float PosDistance;
 
+#if false
     string[] SceneName = { "Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
+#endif
 
-    int Max;
+    //int Max;
     public int NowStage = 0;
     int OldStage = -1;
 
@@ -29,13 +31,15 @@ public class SelectManager : MonoBehaviour
     public int LONG_PUSH_PITCH;
 
     int CanStage = 14;//えらべるステージ
+    bool CanStart = true;//移動中は開始できない
+
 
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
 
-        Max = StageObj.Length - 1;
+        //Max = StageObj.Length - 1;
         //NowStage = 0;
         OldStage = -1;
 
@@ -44,6 +48,8 @@ public class SelectManager : MonoBehaviour
 
         RightPushCnt = 0;
         LeftPushCnt = 0;
+
+        CanStart = true;
 
 
         ChangeStageCheck();
@@ -76,12 +82,23 @@ public class SelectManager : MonoBehaviour
 
         //最後にチェック
         ChangeStageCheck();
+
+        //ステージ侵入
+        if(CanStart && Input.GetKey(KeyCode.Return))
+        {
+            GameStateManager.LoadStage(NowStage);
+            
+        }
+        //Debug.Log(CanStart);
     }
 
     void ChangeStageCheck()
     {
         if(NowStage != OldStage)
         {
+            //変わったタイミングはスタート受け付けない
+            CanStart = false;
+
             Vector3 TempPos = StageObj[NowStage].transform.position;
             TempPos.y += PosDistance;
 
@@ -185,7 +202,13 @@ public class SelectManager : MonoBehaviour
         }
     }
 
+    public void SetCanStart (bool flag)
+    {
+        CanStart = flag;
+    }
+
     //ステージクリア時に呼んで情報セット
+#if false
     public void SetStage(string scene_name)
     {
         if(scene_name == "Tutrial")
@@ -222,5 +245,6 @@ public class SelectManager : MonoBehaviour
             }
         }
     }
+#endif
 
 }
