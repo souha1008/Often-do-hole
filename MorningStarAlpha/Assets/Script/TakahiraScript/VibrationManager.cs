@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
 {
-    Coroutine _Vibration;
+    public bool VibrationFlag = true;   // 振動フラグ
+    private Coroutine _Vibration;
 
     private void Awake()
     {
@@ -43,8 +44,8 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         {
             // 低周波（左）モーターの強さを 0、
             // 高周波（右）モーターの強さを 1、
-            // 0.3f秒間かけて振動させる
-            StartVibration(1, 0, 20f);
+            // 3.0f秒間かけて振動させる
+            StartVibration(1, 0, 3f);
             Debug.LogWarning("Bボタン押した");
             SoundManager.Instance.PlaySound("決定音");
         }
@@ -63,7 +64,7 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
     public void StartVibration(float lowFrequency, float highFrequency, float VibrationTime)
     {
         if (_Vibration != null) StopCoroutine(_Vibration);
-        _Vibration = StartCoroutine(Vibration(lowFrequency, highFrequency, VibrationTime));
+        if (VibrationFlag) _Vibration = StartCoroutine(Vibration(lowFrequency, highFrequency, VibrationTime));
     }
 
     //===============================================

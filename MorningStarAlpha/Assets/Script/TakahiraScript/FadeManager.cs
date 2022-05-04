@@ -192,6 +192,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         SoundManager.Instance.StopSound("BGM_01");
         SceneManager.LoadScene(NextSceneName);
         SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
+        GameStateManager.SetGameState(GAME_STATE.PLAY);
+        Time.timeScale = 1.0f;
     }
     // フェードインしたときの処理(シーン変更)
     public void FadeIn_SceneChange()
