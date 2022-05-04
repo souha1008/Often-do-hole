@@ -1,0 +1,62 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class StageSelectCamera : MonoBehaviour
+{
+    public static StageSelectCamera instance;
+
+    [SerializeField] private GameObject CenterObj;
+    public float MASU_DISTANCE;
+    // Start is called before the first frame update
+    void Start()
+    {
+        instance = this;
+    }
+
+    public void ManualStart()
+    {
+        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position + CenterToVector * MASU_DISTANCE;
+
+        //今の場所からGoPosへのベクトルを取得
+        //Vector3 GoAngle = GoPos - this.transform.position;
+
+        transform.position = GoPos;
+
+
+        //真ん中を向く
+        transform.LookAt(CenterObj.transform.position);
+    }
+
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        //at点（中央）から次マスまでのアングルを正規化
+        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position + CenterToVector * MASU_DISTANCE;
+
+        //今の場所からGoPosへのベクトルを取得
+        //Vector3 GoAngle = GoPos - this.transform.position;
+
+        transform.position = Vector3.Lerp(transform.position, GoPos, 0.1f);
+
+
+        //真ん中を向く
+        transform.LookAt(CenterObj.transform.position);
+
+#if false
+        // ターゲット方向のベクトルを取得
+        Vector3 relativePos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - this.transform.position;
+        // 方向を、回転情報に変換
+        Quaternion rotation = Quaternion.LookRotation(relativePos);
+        // 現在の回転情報と、ターゲット方向の回転情報を補完する
+        transform.rotation = Quaternion.Slerp(this.transform.rotation, rotation, 0.3f);
+#endif
+    }
+
+    public void ChangeStage()
+    {
+
+    }
+}
