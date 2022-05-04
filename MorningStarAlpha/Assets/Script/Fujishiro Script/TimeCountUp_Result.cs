@@ -10,12 +10,10 @@ public class TimeCountUp_Result : MonoBehaviour
 
     int flame_time = 0;     // フレームカウント
     bool anim_start;
-    bool anim_end;
 
     void Awake()
     {
         anim_start = false;
-        anim_end = false;
     }
 
     // Start is called before the first frame update
@@ -31,16 +29,12 @@ public class TimeCountUp_Result : MonoBehaviour
 
         if(flame_time >= anim_exitFlame)
         {
-            //(TimeAnimetion(1f, GameStateManager.GetGameTime(), 4f));
             if (anim_start == false)
             {
+                //StartCoroutine(TimeAnimetion(1f, 185.0f, 4f));
                 StartCoroutine(TimeAnimetion(1f, 185.0f, 4f));
                 anim_start = true;
             }
-            //if(anim_end == true)
-            //{
-            //    timeText.text = 
-            //}
         }
     }
 
@@ -61,5 +55,6 @@ public class TimeCountUp_Result : MonoBehaviour
         } while (Time.time < endtime);
 
         timeText.text = endScoreTime.ToString("f5");
+        ResultManager.instance.anim_end = true;
     }
 }
