@@ -246,7 +246,6 @@ public class BulletMain : MonoBehaviour
             // çÇïΩí«â¡
             mode.Move();
 
-           
             rb.velocity = vel;
         }
     }
