@@ -69,10 +69,10 @@ public class SoundManagerEditor : Editor
 
         EditorGUILayout.LabelField("[音のボリューム]");
         EditorGUILayout.Space(3);
-        Sound.SoundVolumeMaster = EditorGUILayout.Slider("マスターボリューム", (float)(Sound.SoundVolumeMaster * 100), 0, 100) * 0.01f;
-        Sound.SoundVolumeBGM = EditorGUILayout.Slider("BGMボリューム", (float)(Sound.SoundVolumeBGM * 100), 0, 100) * 0.01f;
-        Sound.SoundVolumeSE = EditorGUILayout.Slider("SEボリューム", (float)(Sound.SoundVolumeSE * 100), 0, 100) * 0.01f;
-        Sound.SoundVolumeOBJECT = EditorGUILayout.Slider("OBJECTボリューム", (float)(Sound.SoundVolumeOBJECT * 100), 0, 100) * 0.01f;
+        Sound.SoundVolumeMaster = EditorGUILayout.IntSlider("マスターボリューム", (int)(Sound.SoundVolumeMaster), 0, 100);
+        Sound.SoundVolumeBGM = EditorGUILayout.IntSlider("BGMボリューム", (int)(Sound.SoundVolumeBGM), 0, 100);
+        Sound.SoundVolumeSE = EditorGUILayout.IntSlider("SEボリューム", (int)(Sound.SoundVolumeSE), 0, 100);
+        Sound.SoundVolumeOBJECT = EditorGUILayout.IntSlider("OBJECTボリューム", (int)(Sound.SoundVolumeOBJECT), 0, 100);
         EditorGUILayout.Space(15);
 
 
@@ -230,10 +230,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public int AudioSource_SE_Max = 10;     // オーディオソースSEの最大数(インスペクターで表示)
     public int AudioSource_OBJECT_Max = 100; // オーディオソースOBJECTの最大数(インスペクターで表示)
 
-    public float SoundVolumeMaster = 0.8f;  // ゲーム全体の音量
-    public float SoundVolumeBGM = 0.8f;     // BGMの音量
-    public float SoundVolumeSE = 0.8f;      // SEの音量   
-    public float SoundVolumeOBJECT = 0.8f;  // OBJECTの音量
+    public float SoundVolumeMaster = 80.0f;  // ゲーム全体の音量(最大100.0f)
+    public float SoundVolumeBGM = 80.0f;     // BGMの音量
+    public float SoundVolumeSE = 80.0f;      // SEの音量   
+    public float SoundVolumeOBJECT = 80.0f;  // OBJECTの音量
 
     public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
 
@@ -951,15 +951,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         float VolMaster, VolBGM, VolSE, VolOBJECT;
 
-        Mathf.Clamp(SoundVolumeMaster, 0.0f, 1.0f);
-        Mathf.Clamp(SoundVolumeBGM, 0.0f, 1.0f);
-        Mathf.Clamp(SoundVolumeSE, 0.0f, 1.0f);
-        Mathf.Clamp(SoundVolumeOBJECT, 0.0f, 1.0f);
+        VolMaster = Mathf.Clamp(SoundVolumeMaster, 0.0f, 100.0f) * 0.01f;
+        VolBGM = Mathf.Clamp(SoundVolumeBGM, 0.0f, 100.0f) * 0.01f;
+        VolSE = Mathf.Clamp(SoundVolumeSE, 0.0f, 100.0f) * 0.01f;
+        VolOBJECT = Mathf.Clamp(SoundVolumeOBJECT, 0.0f, 100.0f) * 0.01f;
 
-        VolMaster = CalculationScript.GetLoudnessVolume(SoundVolumeMaster);
-        VolBGM = CalculationScript.GetLoudnessVolume(SoundVolumeBGM);
-        VolSE = CalculationScript.GetLoudnessVolume(SoundVolumeSE);
-        VolOBJECT = CalculationScript.GetLoudnessVolume(SoundVolumeOBJECT);
+
+        VolMaster = CalculationScript.GetLoudnessVolume(VolMaster);
+        VolBGM = CalculationScript.GetLoudnessVolume(VolBGM);
+        VolSE = CalculationScript.GetLoudnessVolume(VolSE);
+        VolOBJECT = CalculationScript.GetLoudnessVolume(VolOBJECT);
 
         AudioListener.volume = VolMaster;
         for (int i = 0; i < NowPlaySoundList.Count; i++)
@@ -994,8 +995,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         SaveDataManager.Instance.MainData.SoundVolumeBGM = SoundVolumeBGM;
         SaveDataManager.Instance.MainData.SoundVolumeSE = SoundVolumeSE;
         SaveDataManager.Instance.MainData.SoundVolumeOBJECT = SoundVolumeOBJECT;
-
-        Debug.LogWarning(SoundVolumeMaster);
     }
 
 

@@ -51,11 +51,16 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
             if (Object.ReferenceEquals(nowButton, oldButton) == false)
             {
-                if (oldButton.GetComponent<Image>() != null)
-                    oldButton.GetComponent<Image>().color = Color.white;
-                if (nowButton.GetComponent<Image>() != null)
-                    nowButton.GetComponent<Image>().color = Color.red;
+                //if (oldButton.GetComponent<Image>() != null)
+                //    oldButton.GetComponent<Image>().color = Color.white;
+                //if (nowButton.GetComponent<Image>() != null)
+                //    nowButton.GetComponent<Image>().color = Color.red;
+                nowBottunRect = nowButton.GetComponent<RectTransform>();
             }
+            // 枠の位置変更
+            WakuImageRect.position = nowBottunRect.position;
+            WakuImageRect.sizeDelta = new Vector2(nowBottunRect.sizeDelta.x + 40.0f, nowBottunRect.sizeDelta.y + 5.0f);
+            WakuImageRect.localScale = nowBottunRect.localScale;
 
             if (Input.GetButtonDown("Button_Select"))
             {
@@ -118,22 +123,27 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     void EndPause()
     {
-        GameStateManager.SetGameState(GAME_STATE.PLAY);
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(false);
-        Time.timeScale = 1.0f;
         EventSystem.current.SetSelectedGameObject(null);
-        SoundManager.Instance.UnPauseSound();
+        if (FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        {
+            GameStateManager.SetGameState(GAME_STATE.PLAY);
+            Time.timeScale = 1.0f;            
+            SoundManager.Instance.UnPauseSound();
+        }
+        
     }
 
     void StartPause()
     {
         GameStateManager.SetGameState(GAME_STATE.PAUSE);
         PauseCanvas.gameObject.SetActive(true);
+        WakuImage.gameObject.transform.parent = PauseCanvas.gameObject.transform;
         EventSystem.current.SetSelectedGameObject(FirstSelect.gameObject);
         Time.timeScale = 0.0f;
         nowButton = EventSystem.current.currentSelectedGameObject;
-        FirstSelect.gameObject.GetComponent<Image>().color = Color.red;
+        //FirstSelect.gameObject.GetComponent<Image>().color = Color.red;
         SoundManager.Instance.PauseSound();
         VibrationManager.Instance.StopVibration();
         VibrationSliderChange();    // 振動更新
@@ -146,7 +156,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void ClickRetry()
     {
-        FadeManager.Instance.FadeStart(SceneManager.GetActiveScene().name, FADE_KIND.FADE_SCENECHANGE);
+        FadeManager.Instance.FadeGameOver();
+        EndPause();
     }
 
     public void ClickBackStageSelect()
@@ -159,10 +170,11 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(true);
+        WakuImage.gameObject.transform.parent = SoundVolumeCanvas.gameObject.transform;
         OldSelectPause = EventSystem.current.currentSelectedGameObject;
         EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
-        if (nowButton.GetComponent<Image>() != null)
-            nowButton.GetComponent<Image>().color = Color.white;
+        //if (nowButton.GetComponent<Image>() != null)
+        //    nowButton.GetComponent<Image>().color = Color.white;
         nowButton = EventSystem.current.currentSelectedGameObject;
     }
 
@@ -170,6 +182,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         PauseCanvas.gameObject.SetActive(true);
         SoundVolumeCanvas.gameObject.SetActive(false);
+        WakuImage.gameObject.transform.parent = PauseCanvas.gameObject.transform;
         EventSystem.current.SetSelectedGameObject(OldSelectPause);
         nowButton = EventSystem.current.currentSelectedGameObject;
     }
