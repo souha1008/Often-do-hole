@@ -34,7 +34,7 @@ public class PlayerStateDeath : PlayerState
 
         if (Timer > 0.6)
         {
-            FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
+            FadeManager.Instance.FadeGameOver();
         }
     }
 

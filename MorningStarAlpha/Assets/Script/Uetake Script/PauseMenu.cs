@@ -146,7 +146,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void ClickRetry()
     {
-        FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
+        FadeManager.Instance.FadeStart(SceneManager.GetActiveScene().name, FADE_KIND.FADE_SCENECHANGE);
     }
 
     public void ClickBackStageSelect()

@@ -89,7 +89,7 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public static PlayerMain instance;
     [System.NonSerialized] public Animator animator;
     [System.NonSerialized] public AnimHash animHash;
-
+    [System.NonSerialized] public GameObject[] animBullet = new GameObject[3];
 
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
@@ -167,6 +167,10 @@ public class PlayerMain : MonoBehaviour
         animator = GetComponent<Animator>();
         gameObject.tag = "Player";
 
+        animBullet[0] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_body").gameObject;
+        animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
+        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;
+
         Time.timeScale = GameSpeed;
     }
 
@@ -214,6 +218,14 @@ public class PlayerMain : MonoBehaviour
             mode.Animation();
             mode.StateTransition();
             mode.Move();
+        }
+    }
+
+    public void VisibleAnimBullet(bool on_off)
+    {
+        for (int i = 0; i < 3; i++) 
+        {
+            animBullet[i].SetActive(on_off);
         }
     }
 
