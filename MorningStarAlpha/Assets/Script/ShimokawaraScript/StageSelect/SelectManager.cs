@@ -28,7 +28,7 @@ public class SelectManager : MonoBehaviour
     public int LONG_PUSH_COOL_TIME;
     public int LONG_PUSH_PITCH;
 
-    int CanStage = 7;//えらべるステージ
+    int CanStage = 14;//えらべるステージ
 
     // Start is called before the first frame update
     void Start()
