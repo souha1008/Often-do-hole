@@ -341,6 +341,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
         }
 
+        // セーブデータから音量データ読み込み
+        if (SaveDataManager.Instance != null)
+        {
+            //Debug.LogWarning("音量読み込み");
+            SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
+            SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
+            SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
+            SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
+        }
+
         // 音量セット
         UpdateVolume();
     }
