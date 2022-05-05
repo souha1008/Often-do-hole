@@ -16,23 +16,22 @@ public class PlayerStateStan : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.STAN;
         shotButton = false;
-        PlayerScript.vel.y = 0;
+        PlayerScript.vel = Vector3.zero;
         PlayerScript.canShotState = false;
         slideEndTimer = 0.0f;
-
         StartTime = Time.time;
 
+        RotationStand();
+
         //ボール関連
-        BulletScript.InvisibleBullet();
+        BulletScript.ReturnBullet();
         //アニメ用
         //PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
 
     public override void UpdateState()
     {
-        //BulletAdjust();
 
-        
     }
 
     public override void Move()

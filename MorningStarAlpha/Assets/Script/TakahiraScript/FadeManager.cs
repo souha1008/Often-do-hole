@@ -215,6 +215,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     {
         if (NowFadeState == FADE_STATE.FADE_NONE)
         {
+            NextSceneName = nextFadeName;
+
             NowFadeState = FADE_STATE.FADE_OUT;
             NowFadeKind = FadeKind;
 
