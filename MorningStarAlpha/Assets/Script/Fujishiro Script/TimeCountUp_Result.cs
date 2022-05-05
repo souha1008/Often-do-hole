@@ -7,6 +7,12 @@ public class TimeCountUp_Result : MonoBehaviour
 {
     [SerializeField] Text timeText;
     [SerializeField] int anim_exitFlame = 120;     // アニメーション終了フレーム
+    [SerializeField] float duration;
+    [SerializeField] float PlusCount;       // １フレームにカウントアップされる数
+
+    [Header("デバッグ用")]
+    [SerializeField] bool debug_Fixedtime;
+    [SerializeField] float debug_maxTime;
 
     int flame_time = 0;     // フレームカウント
     bool anim_start;
@@ -31,21 +37,27 @@ public class TimeCountUp_Result : MonoBehaviour
         {
             if (anim_start == false)
             {
-                //StartCoroutine(TimeAnimetion(1f, 185.0f, 4f));
-                StartCoroutine(TimeAnimetion(1f, 185.0f, 4f));
+                //StartCoroutine(TimeAnimetion(1f, , 4f));
+
+                // デバッグ用
+                if (debug_Fixedtime)
+                {
+                    StartCoroutine(TimeAnimetion(PlusCount, 185.0f, duration));
+                }
+
                 anim_start = true;
             }
         }
     }
 
-    private IEnumerator TimeAnimetion(float startScoreTime, float endScoreTime, float duratino)
+    private IEnumerator TimeAnimetion(float startScoreTime, float endScoreTime, float duration)
     {
         float starttime = Time.time;
-        float endtime = starttime + duratino;
+        float endtime = starttime + duration;
 
         do
         {
-            float timeRate = (Time.time - starttime) / duratino;
+            float timeRate = (Time.time - starttime) / duration;
 
             float updateValue = (float)((endScoreTime - startScoreTime) * timeRate + startScoreTime);
 
