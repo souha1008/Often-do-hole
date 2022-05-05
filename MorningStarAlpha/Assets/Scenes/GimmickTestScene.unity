@@ -1579,7 +1579,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2405149954357362124, guid: 50fff490c58a5174f97a15fad0f7bbe2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 57.600002
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 2405149954357362124, guid: 50fff490c58a5174f97a15fad0f7bbe2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9104,17 +9104,21 @@ MonoBehaviour:
   - {fileID: 1483605858}
   - {fileID: 2013714260}
   - {fileID: 717095050}
+  NowBulletState: 0
+  CanShotFlag: 0
   vel: {x: 0, y: 0, z: 0}
   colPoint: {x: 0, y: 0, z: 0}
   isTouched: 0
   onceFlag: 0
   StopVelChange: 0
+  isInside: 0
   STRAIGHT_FLAME_CNT: 10
   BULLET_SPEED: 50
   BULLET_SPEED_MAX: 55
   BULLET_SPEED_MULTIPLE: 4
   BULLET_START_DISTANCE: 3
   BULLET_ROPE_LENGTH: 13
+  BULLET_MAXFALLSPEED: 35
 --- !u!54 &1701169405
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11002,6 +11006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 187927663}
   Bullet: {fileID: 1701169404}
+  PlayerAngle: {x: 0, y: 0, z: 0}
 --- !u!4 &1940598103
 Transform:
   m_ObjectHideFlags: 0
