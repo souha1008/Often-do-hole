@@ -6,22 +6,30 @@ public class WalkParticle : MonoBehaviour
 {
     private ParticleSystem pa;
     private bool isPlaying;
+    private Transform[] childlen;
+
     // Start is called before the first frame update
     void Start()
     {
         pa = GetComponent<ParticleSystem>();
         isPlaying = false;
         pa.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-    }
 
+        childlen = new Transform[transform.childCount];
+
+        for (int i = 0; i < childlen.Length; i++)
+        {
+            childlen[i] = this.transform.GetChild(i);
+            Debug.LogWarning(childlen[i].name);
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
-        Rotate();
         if (isPlaying) //パーティクル再生していない
         {
-            if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND)
+            if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND && Mathf.Abs(PlayerMain.instance.vel.x) > 20.0f)
             {
                 Switch();
             }
@@ -32,22 +40,40 @@ public class WalkParticle : MonoBehaviour
             {
                 Switch();
             }
+            else
+            {
+                if(Mathf.Abs(PlayerMain.instance.vel.x) < 20.0f)
+                {
+                    Switch();
+                }
+            }
         }
     }
 
 
-    private void Rotate()
-    {
-        if(PlayerMain.instance.dir == PlayerMoveDir.RIGHT)
-        {
-            transform.localRotation = Quaternion.Euler(0, 90, 0);
-        }
-        else
-        {
+    //private void Rotate()
+    //{
+    //    Vector3 scale = Vector3.one;
+    //    if (PlayerMain.instance.dir == PlayerMoveDir.RIGHT)
+    //    {
+    //        for (int i = 0; i < childlen.Length; i++)
+    //        {
+    //            scale.x = -1;
 
-            transform.localRotation = Quaternion.Euler(0, -90, 0);
-        }
-    }
+    //            childlen[i].localScale = scale;
+    //        }                                                        
+    //    }                                                            
+    //    else                                                         
+    //    {                                                            
+    //        for (int i = 0; i < childlen.Length; i++)                
+    //        {
+               
+    //            scale.x = 1;
+
+    //            childlen[i].localScale = scale;
+    //        }
+    //    }
+    //}
 
     private void Switch()
     {

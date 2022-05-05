@@ -18,9 +18,12 @@ public class PlayerStateDeath : PlayerState
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
         PlayerScript.useVelocity = false;
-
         Timer = 0.0f;
 
+        BulletScript.ReturnBullet();
+        RotationStand();
+
+        //ƒAƒjƒ—p
         PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
         PlayerScript.animator.SetFloat("NockbackSpeed", 8.0f);
         PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
@@ -34,7 +37,7 @@ public class PlayerStateDeath : PlayerState
 
         if (Timer > 0.6)
         {
-            FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
+            FadeManager.Instance.FadeGameOver();
         }
     }
 

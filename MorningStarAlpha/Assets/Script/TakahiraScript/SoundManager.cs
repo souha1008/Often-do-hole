@@ -232,10 +232,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public int AudioSource_SE_Max = 10;     // オーディオソースSEの最大数(インスペクターで表示)
     public int AudioSource_OBJECT_Max = 100; // オーディオソースOBJECTの最大数(インスペクターで表示)
 
-    public float SoundVolumeMaster = 1.0f;  // ゲーム全体の音量
-    public float SoundVolumeBGM = 1.0f;     // BGMの音量
-    public float SoundVolumeSE = 1.0f;      // SEの音量   
-    public float SoundVolumeOBJECT = 1.0f;  // OBJECTの音量
+    public float SoundVolumeMaster = 0.8f;  // ゲーム全体の音量
+    public float SoundVolumeBGM = 0.8f;     // BGMの音量
+    public float SoundVolumeSE = 0.8f;      // SEの音量   
+    public float SoundVolumeOBJECT = 0.8f;  // OBJECTの音量
 
     public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
 
@@ -331,6 +331,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     private void Start()
     {
+        // セーブデータから音量データ読み込み
+        if (SaveDataManager.Instance != null)
+        {
+            //Debug.LogWarning("音量読み込み");
+            SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
+            SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
+            SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
+            SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
+        }
+
         // セーブデータから音量データ読み込み
         if (SaveDataManager.Instance != null)
         {
@@ -984,6 +994,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 音の聞こえる最大距離更新
             NowPlaySoundList[i].Sound_Source.AudioSource.maxDistance = SoundMaxDistance3D;
         }
+
+        // 音量をセーブデータにセット
+        SaveDataManager.Instance.MainData.SoundVolumeMaster= SoundVolumeMaster;
+        SaveDataManager.Instance.MainData.SoundVolumeBGM = SoundVolumeBGM;
+        SaveDataManager.Instance.MainData.SoundVolumeSE = SoundVolumeSE;
+        SaveDataManager.Instance.MainData.SoundVolumeOBJECT = SoundVolumeOBJECT;
     }
 
 
@@ -1125,7 +1141,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void Update()
     {
-        // 音量セット
+        // 音量セット　※　最終的に音量オプションで変更させる予定
         UpdateVolume();
 
         // 現在使用中か判定処理

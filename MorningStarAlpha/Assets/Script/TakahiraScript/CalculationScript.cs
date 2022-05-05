@@ -97,6 +97,15 @@ static public class CalculationScript
             return -1.0f;
     }
 
+    // trueなら1.0fをfalseなら0.0fを返す
+    public static int OneZeroChange(bool TrueorFalse)
+    {
+        if (TrueorFalse)
+            return 1;
+        else
+            return 0;
+    }
+
 
     // <summary>
     /// 球の内側か
@@ -130,5 +139,25 @@ static public class CalculationScript
         var perlinNoise = Mathf.PerlinNoise(offset + speed * time, 0.0f);
         // 0.0〜1.0 -> -1.0〜1.0に変換して返却
         return (perlinNoise - 0.5f) * 2.0f;
+    }
+
+
+    /// <summary>
+    /// ラウドネス(人間の耳で聞いたときに感じる音量の指標)
+    ///     を考慮したボリュームを計算して取得
+    /// </summary>
+    /// <param name="volLvRatio">ボリュームレベル比率 (0.0-1.0)</param>
+    /// <returns>ラウドネスを考慮したボリューム (0.0-1.0)</returns>
+    public static float GetLoudnessVolume(float volLvRatio)
+    {
+        float Vol = Mathf.Clamp(volLvRatio, 0.0f, 1.0f);
+        if (Vol <= 0.0f || Vol >= 1.0f)
+        {
+            return Vol;
+        }
+        else
+        {
+            return Mathf.Pow(10.0f, -Mathf.Log(1.0f / Vol, 2.0f) / 2.0f);
+        }
     }
 }

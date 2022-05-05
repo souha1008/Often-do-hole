@@ -24,6 +24,7 @@ public class DataFile
         public int Rank = 0;    // ランク
         public float Time = 0;  // 時間
         public Coin coin = null;   // コイン
+        public bool Clear = false;
     }
 
     public StageData[] Stage;   // ステージ分の配列
