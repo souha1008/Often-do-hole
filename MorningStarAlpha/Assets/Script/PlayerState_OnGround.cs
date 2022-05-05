@@ -9,8 +9,9 @@ using UnityEngine;
 public class PlayerStateOnGround : PlayerState
 {
     private bool shotButton;
-    private const float SLIDE_END_TIME = 0.3f;
+    private const float SLIDE_END_TIME = 0.5f;
     private float slideEndTimer;
+    private float rareMotionTimer;
 
     public PlayerStateOnGround()//コンストラクタ
     {
@@ -19,16 +20,14 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.vel.y = 0;
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
+        rareMotionTimer = 0.0f;
 
-        //ボール関連
-        BulletScript.InvisibleBullet();
-        //PlayerScript.animator.SetBool("isRunning", false);
-        //PlayerScript.animator.SetTrigger("onGroundTrigger");
-        
+        RotationStand();
 
-        //スライド発射処理
+        //スライド処理
         if (Mathf.Abs(PlayerScript.vel.x) > 40.0f)
         {
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
             PlayerScript.onGroundState = OnGroundState.SLIDE;
         }
         else
@@ -37,12 +36,13 @@ public class PlayerStateOnGround : PlayerState
         }
 
         //アニメ用
-        PlayerScript.animator.SetBool("onGround", true);
+        PlayerScript.ResetAnimation();
+        PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
 
     public override void UpdateState()
     {
-        BulletAdjust();
+        //BulletAdjust();
 
         if (PlayerScript.ReleaseMode)
         {
@@ -120,7 +120,6 @@ public class PlayerStateOnGround : PlayerState
                 //PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
 
-
             //減衰
             {
                 PlayerScript.vel *= 0.97f;
@@ -137,7 +136,10 @@ public class PlayerStateOnGround : PlayerState
         else //!isSlide
         {
             if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
-            {
+            {       
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
+              
+
                 if (PlayerScript.vel.x < -0.2f)
                 {
                     PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * 2 * (fixedAdjust);
@@ -150,8 +152,10 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
             }
             else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
-            {
-
+            { 
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true); 
+               
+               
                 if (PlayerScript.vel.x > 0.2f)
                 {
                     PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * Mathf.Pow(Mathf.Abs(PlayerScript.adjustLeftStick.x), 3) * -1 * 2 * (fixedAdjust);
@@ -164,9 +168,18 @@ public class PlayerStateOnGround : PlayerState
             }
             else //減衰
             {
+                PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
+               
                 PlayerScript.vel *= PlayerScript.RUN_FRICTION;
+
+                //ある程度下回ったら0にする処理
+                
             }
         }
+
+
+        //バグ防止用にほんの少しだけ弱い重力を与える
+        PlayerScript.vel.y = -0.1f;
     }
 
 
@@ -174,39 +187,63 @@ public class PlayerStateOnGround : PlayerState
     {
         if (PlayerScript.isOnGround == false)
         {
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
+
             PlayerScript.onGroundState = OnGroundState.NONE;
-            PlayerScript.mode = new PlayerStateMidair(true);
+            PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
         }
 
         if (shotButton)
         {
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
+
+            PlayerScript.onGroundState = OnGroundState.NONE;
+
             //スライド中で投げる方向が進行方向と同じなら
             if ((PlayerScript.onGroundState == OnGroundState.SLIDE) && (PlayerScript.adjustLeftStick.x * PlayerScript.vel.x > 0))
             {
-                PlayerScript.onGroundState = OnGroundState.NONE;
-                PlayerScript.mode = new PlayerStateShot();
+                PlayerScript.mode = new PlayerStateShot(false);
             }
             else
             {
-                PlayerScript.onGroundState = OnGroundState.NONE;
-                PlayerScript.mode = new PlayerStateShot();
+                PlayerScript.mode = new PlayerStateShot(false);
             }
         }
     }
 
     public override void Animation()
     {
-        if(Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
+        ////速度を参照
+        //float animBlend = Mathf.Abs(PlayerScript.vel.x);
+        //animBlend = Mathf.Clamp(animBlend, 0.0f, PlayerScript.MAX_RUN_SPEED);
+        //PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), animBlend);
+
+        //速度依存でない一時増加
+        if (Mathf.Abs(PlayerScript.adjustLeftStick.x) > PlayerScript.LATERAL_MOVE_THRESHORD)
         {
-            //PlayerScript.animator.SetBool("isRunning", true);   //走る
-            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 1.0f, 0.1f, Time.deltaTime);
-            //PlayerScript.animator.SetFloat("RunSpeed", 1.0f);
+            PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 1.0f, 0.2f, Time.deltaTime);
         }
         else
         {
-            //PlayerScript.animator.SetBool("isRunning", false); //走らない
-            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), 0.0f, 0.1f, Time.deltaTime);
-            //PlayerScript.animator.SetFloat("RunSpeed", 0.0f);
+            PlayerScript.animator.SetFloat(PlayerScript.animHash.RunSpeed, 0.0f, 0.2f, Time.deltaTime);
+        }
+
+
+        if (PlayerScript.animator.GetBool(PlayerScript.animHash.isRunning) == false)
+        {
+            rareMotionTimer += Time.deltaTime;
+            if (rareMotionTimer > 10.0f)
+            {
+                rareMotionTimer = 0.0f;
+                PlayerScript.animator.SetTrigger(PlayerScript.animHash.rareWaitTrigger);
+
+                int motionType = Random.Range(0, 2);
+                PlayerScript.animator.SetInteger(PlayerScript.animHash.rareWaitType, motionType);
+            }
+        }
+        else
+        {
+            rareMotionTimer = 0.0f;
         }
     }
 }

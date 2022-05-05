@@ -35,6 +35,20 @@ public class CameraMainShimokawara: MonoBehaviour
         TraceObj();
     }
 
+    public void CameraReturn()
+    {
+        if (isRail)
+        {
+            if (VirtualCamera.instance. isReturn)
+            {
+                Vector3 Temp = TempCamera.instance.transform.position;
+                Temp.z -= CAMERA_DISTANCE;
+
+                transform.position = Temp;
+            }
+        }
+    }
+
     //private void FixedUpdate()
     //{
     //    TracePlayer();

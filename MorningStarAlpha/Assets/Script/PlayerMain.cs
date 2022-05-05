@@ -22,9 +22,9 @@ public enum OnGroundState {
 /// </summary>
 public enum MidairState
 {
-    NONE,      //空中状態ではない
+    NONE,     //空中状態ではない
     NORMAL,   //通常時
-    FALL, 　  //急降下
+    BOOST,    //ブースト
 }
 
 
@@ -35,8 +35,6 @@ public enum SwingState
 {
     NONE,      //スイング状態ではない
     TOUCHED,   //捕まっている状態
-    RELEASED,  //切り離した状態
-    HANGING,   //ぶら下がり状態
 }
 
 /// <summary>
@@ -47,7 +45,6 @@ public enum ShotState
     NONE,       //弾射出されていない
     GO,         //引っ張られずに飛んでいる
     STRAINED,  //プレイヤーを引っ張りながら飛んでいる
-    RETURN,     //弾がプレイヤーに戻って終了
     FOLLOW,     //弾に勢いよく飛んでいき終了
 }
 
@@ -64,11 +61,24 @@ public enum EnumPlayerState
     RAILING,   //レール状態
     NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
+    STAN,      //スタン状態
 }
 
-public struct ShortenSwing {
-    public bool isShort;
-    public float length;
+/// <summary>
+///アニメーションコントローラー用の文字列をindexにして格納
+/// </summary>
+public struct AnimHash{
+    public int onGround;
+    public int isRunning;
+    public int isShot;
+    public int isSwing;
+    public int wallKick;
+    public int NockBack;
+    public int isBoost;
+    public int shotdirType;
+    public int RunSpeed;
+    public int rareWaitTrigger;
+    public int rareWaitType;
 }
 
 
@@ -77,19 +87,20 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public Rigidbody rb;      // [System.NonSerialized] インスペクタ上で表示させたくない
     [System.NonSerialized] public static PlayerMain instance;
     [System.NonSerialized] public Animator animator;
+    [System.NonSerialized] public AnimHash animHash;
+
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
-    private RaycastHit footHit;                      // Ge
-    private float killVeltimer;                      //壁ぶつかりで速度を殺すときのチャタリング防止用
-
+    private RaycastHit footHit;                      // 下に当たっているものの情報格納
+  
     [SerializeField, Tooltip("チェックが入っていたら入力分割")] private bool SplitStick;        //これにチェックが入っていたら分割
     [SerializeField, Tooltip("スティック方向を補正する（要素数で分割）\n値は上が0で時計回りに増加。0~360の範囲")] private float[] AdjustAngles;   //スティック方向を補正する（要素数で分割）値は上が0で時計回りに増加。0~360の範囲
     [SerializeField, Tooltip("チェックが入っていたらボタン離しで発射")] public bool ReleaseMode;
     [SerializeField, Tooltip("チェックが入っていたら振り子自動で切り離し")] public bool AutoRelease;
     [SerializeField, Tooltip("チェックが入っていたら振り子時紐が長くなる")] public bool LongRope;
 
-    [System.NonSerialized] public float colliderRadius = 1.1f;   //接地判定用ray半径
-    [System.NonSerialized] public float coliderDistance = 2.1f; //
+    [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
+    [System.NonSerialized] public float coliderDistance = 1.8f; //
                                                                  //
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
     [System.NonSerialized] public float HcoliderDistance = 0.6f; //頭判定用ray中心点から頭までのオフセット
@@ -111,7 +122,6 @@ public class PlayerMain : MonoBehaviour
 
     [Tooltip("空中一フレームで上がるスピード")] public float                      ADD_MIDAIR_SPEED;        // 空中一秒間で上がるスピード
     [Range(0.1f, 1.0f), Tooltip("空中速度減衰率")] public float                   MIDAIR_FRICTION;         // 空中の速度減衰率
-    [Tooltip("空中で再び球が打てるようになる時間")]public float                   BULLET_RECAST_TIME;      // 空中で再び球が打てるようになる時間（秒）
     //----------プレイヤー物理挙動関連の定数終わり----------------------
 
     [ Header("[以下実行時変数確認用：変更不可]")]
@@ -133,13 +143,17 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("壁の近くにいる場合は撃てない")] public bool CanShotColBlock;                           // スティック入力の先に壁が
     [ReadOnly, Tooltip("最終的に打てるかどうか")] public bool canShot;                             // 打てる状態か
     [ReadOnly, Tooltip("velocityでの移動かposition直接変更による移動か")] public bool useVelocity;                         // 移動がvelocityか直接position変更かステートによっては直接位置を変更する時があるため
-    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyReturnBulletFlag;            // 強制的に弾を戻させるフラグ
-    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReturnSaveVelocity;
+    [ReadOnly, Tooltip("強制的に弾を戻させるフラグ")] public bool forciblyRleaseFlag;            // 強制的に弾を戻させるフラグ
+    [ReadOnly, Tooltip("強制的に弾を戻させるときに現在の速度を保存するか")] public bool forciblyReleaseSaveVelocity;
+    [ReadOnly, Tooltip("強制的に弾についていくときのフラグ")] public bool forciblyFollowFlag;
+    [ReadOnly, Tooltip("強制的に弾についていくときにvelocityの向きを弾方向に変換する")] public bool forciblyFollowVelToward;
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingFlag;
+    [ReadOnly, Tooltip("強制的にswing開始するフラグ")] public bool forciblySwingNextFollow;
     [ReadOnly, Tooltip("スイング強制終了用")] public bool endSwing;
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
-    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool hangingSwing;
-
-
+    [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
+    [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
+    public float GameSpeed = 1.0f;
     void Awake()
     {
         instance = this;
@@ -152,6 +166,9 @@ public class PlayerMain : MonoBehaviour
          }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+
+
+        Time.timeScale = GameSpeed;
     }
 
     private void Start()
@@ -174,18 +191,17 @@ public class PlayerMain : MonoBehaviour
         isOnGround = true;
         useVelocity = true;
 
-        forciblyReturnBulletFlag = false;
-        forciblyReturnSaveVelocity = false;
+        ClearModeTransitionFlag();
+        SetAnimHash();
+
 
         endSwing = false;
         SlideSwing = false;
         
-        hangingSwing = false;
-        killVeltimer = 0.0f;
+        conuterSwing = false;
 
         Ray footray = new Ray(rb.position, Vector3.down);
         Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
-
 
 
         rb.sleepThreshold = -1; //リジッドボディが静止していてもonCollision系を呼ばせたい
@@ -195,7 +211,7 @@ public class PlayerMain : MonoBehaviour
         if (mode != null)
         {
             mode.UpdateState();
-            //mode.Animation();
+            mode.Animation();
             mode.StateTransition();
             mode.Move();
         }
@@ -251,20 +267,53 @@ public class PlayerMain : MonoBehaviour
 
             if (Mathf.Abs(addVel.magnitude) > 10.0f)
             {
-                addVel *= 0.96f;
+                addVel *= 0.98f;
             }
             else
             {
                 addVel = Vector3.zero;
             }
 
-            killVeltimer = Mathf.Clamp(killVeltimer += Time.fixedDeltaTime, 0.0f, 2.0f);
-
 #if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
                 //mode.DebugMessage();
 #endif
             
         }
+    }
+
+    private void SetAnimHash()
+    {
+        animHash.onGround = Animator.StringToHash("onGround");
+        animHash.isRunning = Animator.StringToHash("isRunning");
+        animHash.isShot = Animator.StringToHash("isShot");
+        animHash.isSwing = Animator.StringToHash("isSwing");
+        animHash.wallKick = Animator.StringToHash("wallKick");
+        animHash.NockBack = Animator.StringToHash("NockBack");
+        animHash.isBoost = Animator.StringToHash("isBoost");
+        animHash.shotdirType = Animator.StringToHash("shotdirType");
+        animHash.RunSpeed = Animator.StringToHash("RunSpeed");
+        animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
+        animHash.rareWaitType = Animator.StringToHash("rareWaitType");
+    }   
+
+    public void AnimVariableReset()
+    {
+        animator.SetBool(animHash.isShot, false);
+        animator.SetBool(animHash.isSwing, false);
+        animator.SetBool(animHash.isBoost, false);
+    }
+
+    public void AnimTriggerReset()
+    {
+        animator.ResetTrigger(animHash.wallKick);
+        animator.ResetTrigger(animHash.NockBack);
+        animator.ResetTrigger(animHash.rareWaitTrigger);
+    }
+
+    public void ResetAnimation()
+    {
+        AnimVariableReset();
+        AnimTriggerReset();
     }
 
     public RaycastHit getFootHit()
@@ -339,10 +388,13 @@ public class PlayerMain : MonoBehaviour
         {
             if (stickCanShotRange)
             {
-                adjustLeftStick = vec;
+                adjustLeftStick = (Vector2)vec;
+            }
+            else
+            {
+                adjustLeftStick = Vector2.zero;
             }
         }
-        
     }
 
     /// <summary>
@@ -354,6 +406,8 @@ public class PlayerMain : MonoBehaviour
         Vector3 StartPos;
         StartPos = rb.position;
         StartPos.y += 1.0f;
+
+#if false
 
         RaycastHit hit;
         if (Physics.Raycast(StartPos, adjustLeftStick, out hit, 3.0f))
@@ -374,9 +428,13 @@ public class PlayerMain : MonoBehaviour
         StartPos.z += 2.0f;
         Debug.DrawRay(StartPos, adjustLeftStick * 3.0f, Color.red);
 
+#else
+        CanShotColBlock = true;
+
+#endif
 
         //最終的に打てるかの決定
-        if(canShotState && stickCanShotRange && CanShotColBlock)
+        if (canShotState && stickCanShotRange && CanShotColBlock)
         {
             canShot = true;
         }
@@ -386,30 +444,103 @@ public class PlayerMain : MonoBehaviour
         }
     } 
 
+    public void ClearModeTransitionFlag()
+    {
+        forciblyRleaseFlag = false;
+        forciblyFollowFlag = false;
+        forciblySwingFlag = false;
+        forciblyReleaseSaveVelocity = false;
+        forciblyFollowVelToward = false;
+        forciblySwingNextFollow = false;
+    }
+
     /// <summary>
-    /// 強制的に弾を引き戻させる
+    /// 弾を引き戻させる
     /// </summary>
     /// <param name="saveVelocity">true:引き戻し時にもとのベロシティを保持
     ///　false:引き戻し時にもとのベロシティを殺す
     /// </param>
-    public void ForciblyReturnBullet(bool saveVelocity)
+    public void ForciblyReleaseMode(bool saveVelocity)
     {
-        forciblyReturnBulletFlag = true;
-        forciblyReturnSaveVelocity = saveVelocity;
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblyRleaseFlag = true;
+            forciblyReleaseSaveVelocity = saveVelocity;
+
+            //フラグクリア
+            forciblyFollowFlag = false;
+            forciblySwingFlag = false;
+
+        }
+        else if(refState == EnumPlayerState.SWING)
+        {
+            endSwing = true;
+        }
     }
 
+    public void ForciblyFollowMode(bool velTowardBullet)
+    {
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblyFollowFlag = true;
+            forciblyFollowVelToward = velTowardBullet;
+            //フラグクリア
+            forciblySwingFlag = false;
+            forciblyRleaseFlag = false;
+        }
+    }
+
+    public void ForciblySwingMode(bool nextFollow)
+    {
+        if (refState == EnumPlayerState.SHOT)
+        {
+            forciblySwingFlag = true;
+            forciblySwingNextFollow = nextFollow;
+            //フラグクリア
+            forciblyRleaseFlag = false;
+            forciblyFollowFlag = false;
+        }
+    }
+
+    public void RecoverBullet()
+    {
+        recoverBullet = true;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
 
 
-        
+        //空中で壁にぶつかったとき速度をなくす
+        if (refState == EnumPlayerState.MIDAIR)
+        {
+                switch (asp)
+                {
+                    case Aspect.LEFT:
+                    case Aspect.RIGHT:
+                        vel.x *= 0.0f;
+                        if (vel.y > 1.0f)
+                        {
+                            vel.y *= 0.0f;
+                        }
+
+                        break;
+
+                    case Aspect.DOWN:
+                        vel.x *= 1.0f;
+                        vel.y *= 0.0f;
+
+                        
+                        break;
+                }
+        }
+
 
         //ショット中に壁にあたったときの処理
-        if(refState == EnumPlayerState.SHOT)
+        if (refState == EnumPlayerState.SHOT)
         {
-            if (collision.gameObject.CompareTag("Platform"))
+            if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
             {
                 switch (shotState)
                 {
@@ -425,12 +556,11 @@ public class PlayerMain : MonoBehaviour
                     case ShotState.FOLLOW: //紐に引っ張られ
                         if (asp == Aspect.DOWN)
                         {
-                            ForciblyReturnBullet(false);
+                            ForciblyReleaseMode(false);
                         }
                         break;
 
                     case ShotState.GO:
-                    case ShotState.RETURN:
                         //勢い殺す
                         switch (asp)
                         {
@@ -444,7 +574,7 @@ public class PlayerMain : MonoBehaviour
                                 break;
 
                             case Aspect.DOWN:
-                                vel.x *= 0.2f;
+                                vel.x *= 1.0f;
                                 vel.y *= 0.0f;
                                 break;
                         }
@@ -459,15 +589,15 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                if (collision.gameObject.CompareTag("Platform"))
+                if (collision.gameObject.CompareTag("Platform") || collision.gameObject.CompareTag("Conveyor"))
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
                     else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
                     {
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
                     else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
                     {
@@ -480,7 +610,7 @@ public class PlayerMain : MonoBehaviour
                     else　if (asp == Aspect.DOWN)
                     {
                         Debug.Log("collision Platform down: swing end");
-                        hangingSwing = true;
+                        conuterSwing = true;
                     }
 
                 }
@@ -496,7 +626,6 @@ public class PlayerMain : MonoBehaviour
         Aspect asp = DetectAspect.DetectionAspect(collision.contacts[0].normal);
         Collider col = GetComponent<Collider>();
 
-
         //footHit格納用
         Ray footray = new Ray(rb.position, Vector3.down);
         Physics.SphereCast(footray, colliderRadius, out footHit, coliderDistance, LayerMask.GetMask("Platform"));
@@ -511,35 +640,9 @@ public class PlayerMain : MonoBehaviour
                 if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
                 {
                     isOnGround = true;
-                }
+                    animator.SetBool(animHash.onGround, true);
+                 }
             //}
-        }
-
-        
-        //空中で壁にぶつかったとき速度をなくす
-        if (refState == EnumPlayerState.MIDAIR)
-        {
-            if (killVeltimer > 0.1f)
-            {
-                switch (asp)
-                {
-                    case Aspect.LEFT:
-                    case Aspect.RIGHT:
-                        vel.x *= 0.0f;
-                        if (vel.y > 1.0f)
-                        {
-                            vel.y *= 0.0f;
-                        }
-                        
-                        break;
-
-                    case Aspect.DOWN:
-                        vel.x *= 0.2f;
-                        vel.y *= 0.0f;
-                        break;
-                }
-                killVeltimer = 0.0f;
-            }
         }
 
         //swing中に壁にぶつかったときの処理(スライド)
@@ -588,6 +691,14 @@ public class PlayerMain : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// トリガー類はすぐに遷移しない場合リセット
+    /// </summary>
+    private void OnAnimatorMove()
+    {
+        AnimTriggerReset();
+    }
+
 
     //接地判定を計算
     private void CheckMidAir()
@@ -598,6 +709,7 @@ public class PlayerMain : MonoBehaviour
             if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")) == false)
             {
                 isOnGround = false;
+                animator.SetBool(animHash.onGround, false);
             }
         }
     }

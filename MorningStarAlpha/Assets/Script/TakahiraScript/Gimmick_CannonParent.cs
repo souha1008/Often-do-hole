@@ -157,7 +157,7 @@ public class Gimmick_CannonParent : Gimmick_Main
         if (CannonChild != null)
         {
             VecQuaternion vecQuaternion = 
-                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(gameObject.transform.lossyScale.x * 0.5f, 0, 0), gameObject.transform.rotation.eulerAngles.z, Vector3.forward);
+                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(gameObject.transform.lossyScale.x * 0.7f, 0, 0), gameObject.transform.rotation.eulerAngles.z, Vector3.forward);
 
 
             GameObject Child = Instantiate(CannonChild, vecQuaternion.Pos, this.gameObject.transform.rotation); // íeê∂ê¨

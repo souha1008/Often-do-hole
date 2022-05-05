@@ -68,10 +68,19 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Bullet") ||
+            (collider.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))
         {
             // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
+            GameSpeedManager.Instance.StartHitStop(0.1f);
+
+            // 死亡
+            Death();
+        }
+        else if (collider.gameObject.CompareTag("Player"))
+        {
+            // ヒットストップ
+            //GameSpeedManager.Instance.StartHitStop(0.1f);
 
             // プレイヤーを死亡状態に変更
             PlayerMain.instance.mode = new PlayerStateDeath();
@@ -80,13 +89,7 @@ public class Gimmick_CannonChild : Gimmick_Main
             Death();
         }
 
-        if (collider.gameObject.CompareTag("Bullet"))
-        {
-            // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
-
-            // 死亡
-            Death();
-        }
+        // 死亡
+        Death();
     }
 }
