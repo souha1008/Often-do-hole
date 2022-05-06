@@ -17,7 +17,6 @@ public class PlayerState_Clear : PlayerState
 
     ClearState state;
     GameObject goal;
-    bool goRight;
 
     public PlayerState_Clear()
     {
@@ -25,7 +24,6 @@ public class PlayerState_Clear : PlayerState
         PlayerScript.canShotState = false;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel.x = 0.0f;
-
 
 
         goal = GameObject.Find("Gole");
@@ -62,15 +60,6 @@ public class PlayerState_Clear : PlayerState
                 state = ClearState.WALK;
 
                 PlayerScript.vel.y = 0.0f;
-                ////GoRight‚¾‚¯‚Å‚æ‚­‚Ë
-                //if (PlayerScript.rb.position.x - goal.transform.position.x < 0.0f)
-                //{
-                //    goRight = true;
-                //}
-                //else
-                //{
-                //    goRight = false;
-                //}
             }
         }
         else if(state == ClearState.WALK)
@@ -82,10 +71,13 @@ public class PlayerState_Clear : PlayerState
             //“ž’…‚µ‚½‚ç
             if (Vector3.Distance(PlayerScript.rb.position, goal.transform.position) < AnimStartDistance)
             {
-                state = ClearState.ANIMMOTION;
+                state = ClearState.ANIMMOTION;            
+                PlayerScript.vel.x = 0.0f;
+
                 PlayerScript.animator.SetBool("isRunning", false);
                 PlayerScript.animator.SetTrigger("ClearTrigger");
-                PlayerScript.vel.x = 0.0f;
+
+                goal.GetComponent<Animator>().SetTrigger("OpenTrigger");
             }
         }
         else if (state == ClearState.ANIMMOTION)
