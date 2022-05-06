@@ -13,7 +13,6 @@ public class GoalManager : MonoBehaviour
     [SerializeField] GameObject MainCam;
     [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
-    [SerializeField] GameObject Canvas;
 
     [SerializeField][Range(1.0f, 100.0f)] float AlphaSpeed; // ìßñæìxÇÃê›íË
     [SerializeField][Range(0.0f, 1.0f)] float CameraRotateSpeed;
