@@ -42,8 +42,13 @@ public class TimeCountUp_Result : MonoBehaviour
                 // デバッグ用
                 if (debug_Fixedtime)
                 {
-                    StartCoroutine(TimeAnimetion(PlusCount, 185.0f, duration));
+                    StartCoroutine(TimeAnimetion(PlusCount, debug_maxTime, duration));
                 }
+                else
+                {
+                    StartCoroutine(TimeAnimetion(PlusCount, GameStateManager.GetGameTime(), duration));
+                }
+
 
                 anim_start = true;
             }
