@@ -62,6 +62,7 @@ public enum EnumPlayerState
     NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
     STAN,      //スタン状態
+    CLEAR,     //クリア状態
 }
 
 /// <summary>
