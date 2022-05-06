@@ -219,14 +219,14 @@ public class ResultManager : MonoBehaviour
             switch (ui_command)
             {
                 case UI_COMMAND.NextStage:
-                    if (Input.GetButton("Fire1") || Input.GetButton("Jump"))
+                    if (Input.GetButton("Jump"))
                     {
                         GameStateManager.LoadNextStage();
                     }
                     break;
 
                 case UI_COMMAND.StageSelect:
-                    if (Input.GetButton("Fire1") || Input.GetButton("Jump"))
+                    if (Input.GetButton("Jump"))
                     {
                         SceneManager.LoadScene("StageSelectScene");
                     }
