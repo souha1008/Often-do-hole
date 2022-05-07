@@ -15,8 +15,8 @@ public class GoalManager : MonoBehaviour
     [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
 
-    float AlphaSpeed = 90.0f; // ìßñæìxÇÃê›íË
-    float CameraRotateSpeed = 0.558f;
+    [SerializeField] float AlphaSpeed = 90.0f; // ìßñæìxÇÃê›íË
+    [SerializeField][Range(0.0f, 0.1f)]float CameraRotateSpeed = 0.558f;
     float alpha_Flag = 0.02f;
     int parsent = 1000000;
 
@@ -53,7 +53,7 @@ public class GoalManager : MonoBehaviour
     {
         if (AngleChange == true)
         {
-            MainCam.transform.DORotate(new Vector3(-78.0f, 0, 0), 0.08f, RotateMode.Fast)
+            MainCam.transform.DORotate(new Vector3(-78.0f, 0, 0), CameraRotateSpeed, RotateMode.Fast)
                 .SetLink(MainCam)
                 .SetEase(Ease.InCirc);
             //MainCam.transform.Rotate(new Vector3(-CameraRotateSpeed, 0, 0));
