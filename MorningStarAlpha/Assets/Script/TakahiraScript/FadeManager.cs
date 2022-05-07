@@ -189,9 +189,10 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private void FadeIn_GameOver()
     {
         // ゲームシーンのリセット
-        SoundManager.Instance.StopSound("BGM_01");
+        SoundManager.Instance.StopSound();
         SceneManager.LoadScene(NextSceneName);
-        SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
+        SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+        //SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
         GameStateManager.SetGameState(GAME_STATE.PLAY);
         Time.timeScale = 1.0f;
     }
@@ -225,6 +226,12 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
             TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
             TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+
+            // チェックポイントのリセット
+            if (FadeKind != FADE_KIND.FADE_GAMOVER)
+            {
+                CheckPointManager.Instance.ResetCheckPoint();
+            }
         }
     }
 
