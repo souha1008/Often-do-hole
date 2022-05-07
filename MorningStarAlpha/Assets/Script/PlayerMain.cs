@@ -358,8 +358,6 @@ public class PlayerMain : MonoBehaviour
 
 
         float angle = CalculationScript.TwoPointAngle360(Vector3.zero, sourceLeftStick);
-
-        Debug.Log("Stick angle :" + angle);
         float adjustAngle = 0;
         //angle‚ğŒÅ’è(25.75.285.335)
         
@@ -438,8 +436,6 @@ public class PlayerMain : MonoBehaviour
         {
             stickCanShotRange = false;
         }
-
-        Debug.Log("Adust angle :" + adjustAngle);
 
 
         //Šp“x‚ğ“Ç‚ß‚é’l‚É’²®

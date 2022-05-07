@@ -343,6 +343,8 @@ public class BulletMain : MonoBehaviour
             //錨が刺さる場所を壁ピッタリにする処理
             //AdjustColPoint(colAspect, colPoint);
             Aspect_8 colAspect;
+            colPoint = collision.GetContact(0).point;
+
 
             if (onceFlag == false)
             { 
@@ -356,7 +358,7 @@ public class BulletMain : MonoBehaviour
                         isTouched = true;
                         //各種演出
                         CameraShake.instance.Shake(rb.velocity);
-                        colPoint = collision.GetContact(0).point;
+                        
                         EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
    
                         //面計算
