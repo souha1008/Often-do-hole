@@ -11,7 +11,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     [Label("現在のリスポーン座標")]    
     public Vector3 NowRespawnPos;       // 現在のリスポーン座標(見るだけ)
 
-    public static Vector3 RespawnPos = Vector3.zero;   // リスポーン座標
+    public static Vector3 RespawnPos;   // リスポーン座標
 
     private void Awake()
     {

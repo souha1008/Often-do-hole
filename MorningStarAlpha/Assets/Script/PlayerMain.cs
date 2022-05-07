@@ -173,8 +173,8 @@ public class PlayerMain : MonoBehaviour
 
     private void Start()
     {
-        //出現位置の設定
-        transform.position = CheckPointManager.Instance.GetCheckPointPos();
+        ////出現位置の設定
+        //transform.position = CheckPointManager.Instance.GetCheckPointPos();
 
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
