@@ -51,7 +51,7 @@ public class GoalManager : MonoBehaviour
     {
         if (AngleChange == true)
         {
-            MainCam.transform.DORotate(new Vector3(-78.0f, 0, 0), CameraRotateSpeed, RotateMode.Fast)
+            MainCam.transform.DORotate(new Vector3(-78.0f, 0, 0), 0.08f, RotateMode.Fast)
                 .SetLink(MainCam)
                 .SetEase(Ease.InCirc);
             //MainCam.transform.Rotate(new Vector3(-CameraRotateSpeed, 0, 0));
