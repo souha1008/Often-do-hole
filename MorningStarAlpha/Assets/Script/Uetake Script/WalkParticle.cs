@@ -14,14 +14,6 @@ public class WalkParticle : MonoBehaviour
         pa = GetComponent<ParticleSystem>();
         isPlaying = false;
         pa.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-        childlen = new Transform[transform.childCount];
-
-        for (int i = 0; i < childlen.Length; i++)
-        {
-            childlen[i] = this.transform.GetChild(i);
-            Debug.LogWarning(childlen[i].name);
-        }
     }
 
     // Update is called once per frame

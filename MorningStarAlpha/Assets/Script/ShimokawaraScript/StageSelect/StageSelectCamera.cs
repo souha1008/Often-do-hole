@@ -14,6 +14,7 @@ public class StageSelectCamera : MonoBehaviour
         instance = this;
     }
 
+#if false
     public void ManualStart()
     {
         Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
@@ -28,22 +29,49 @@ public class StageSelectCamera : MonoBehaviour
         //真ん中を向く
         transform.LookAt(CenterObj.transform.position);
     }
+#endif
+
+    public void ManualStart()
+    {
+        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterToVector * MASU_DISTANCE;
+
+        //今の場所からGoPosへのベクトルを取得
+        //Vector3 GoAngle = GoPos - this.transform.position;
+
+        transform.position = GoPos;
+
+
+        //プレイヤーの視点から向く
+        Vector3 PtoCameraVector = transform.position - CenterObj.transform.position;
+
+
+        transform.rotation = Quaternion.LookRotation(PtoCameraVector);
+    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         //at点（中央）から次マスまでのアングルを正規化
         Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
-        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position + CenterToVector * MASU_DISTANCE;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterToVector * MASU_DISTANCE;
 
         //今の場所からGoPosへのベクトルを取得
         //Vector3 GoAngle = GoPos - this.transform.position;
 
         transform.position = Vector3.Lerp(transform.position, GoPos, 0.1f);
+        //ピッタリ合えばスタート可能
+        if((transform.position - GoPos).magnitude < 0.1f)
+        {
+            SelectManager.instance.SetCanStart(true);
+            //Debug.Log("ぴったり");
+        }
+
+        //プレイヤーの視点から向く
+        Vector3 PtoCameraVector = transform.position - CenterObj.transform.position;
 
 
-        //真ん中を向く
-        transform.LookAt(CenterObj.transform.position);
+        transform.rotation = Quaternion.LookRotation(PtoCameraVector);
 
 #if false
         // ターゲット方向のベクトルを取得

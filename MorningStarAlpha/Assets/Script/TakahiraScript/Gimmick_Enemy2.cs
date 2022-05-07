@@ -31,7 +31,7 @@ public class Gimmick_Enemy2 : Gimmick_Main
             (collision.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))
         {
             // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
+            GameSpeedManager.Instance.StartHitStop(0.1f);
 
             // 効果音
             SoundManager.Instance.PlaySound("sound_24_破壊SE_2", 0.8f);

@@ -16,23 +16,30 @@ public class PlayerStateStan : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.STAN;
         shotButton = false;
-        PlayerScript.vel.y = 0;
+        PlayerScript.vel = Vector3.zero;
         PlayerScript.canShotState = false;
         slideEndTimer = 0.0f;
-
         StartTime = Time.time;
 
+        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+        {
+            PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 140, 0));
+        }
+        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+        {
+            PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -140, 0));
+        }
+
+
         //ボール関連
-        BulletScript.InvisibleBullet();
+        BulletScript.ReturnBullet();
         //アニメ用
-        //PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
+        PlayerScript.animator.SetTrigger("StanTrigger");
     }
 
     public override void UpdateState()
     {
-        //BulletAdjust();
 
-        
     }
 
     public override void Move()
@@ -45,6 +52,9 @@ public class PlayerStateStan : PlayerState
     {
         if(Time.time > StartTime + TIME_LENGTH)
         {
+            RotationStand();
+
+
             if (PlayerScript.isOnGround == true)
             {
                 PlayerScript.mode = new PlayerStateOnGround();

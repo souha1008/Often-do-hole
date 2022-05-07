@@ -19,12 +19,14 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 15;
     private const float MAX_TIME = 300.0f;
-    private string[] StageNames = new string[STAGE_MAX_NUM];
+    private string[] StageNames = { "Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
+    "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
+    "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
 
 
     private GAME_STATE GameState;
     private float GameTime;
-    private int NowStage = 1;
+    private int NowStage = 0;
 
     private void Awake()
     {
@@ -43,18 +45,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         GameTime = MAX_TIME;
         SetGameState(GAME_STATE.PLAY);
-        SetStageName();
     }
-
-    private void SetStageName()
-    {
-        StageNames[0] = "Stage1-1";
-        StageNames[1] = "Stage1-2";
-        StageNames[2] = "Stage1-3";
-
-        ///—ª
-    }
-
   
     private void Update()
     {
@@ -62,6 +53,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         {
             CountDown();
         }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            PlayerMain.instance.mode = new PlayerStateStan();
+        }
+
     }
 
     public static GAME_STATE GetGameState()
@@ -101,7 +98,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         GameTime -= Time.deltaTime;
         GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
-        Debug.Log(GameTime);
+        //Debug.Log(GameTime);
     }
 
 

@@ -62,6 +62,7 @@ public enum EnumPlayerState
     NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
     STAN,      //スタン状態
+    CLEAR,     //クリア状態
 }
 
 /// <summary>
@@ -315,7 +316,6 @@ public class PlayerMain : MonoBehaviour
         animator.SetBool(animHash.isSwing, false);
         animator.SetBool(animHash.isBoost, false);
         animator.SetBool(animHash.IsDead, false);
-
     }
 
     public void AnimTriggerReset()
@@ -363,9 +363,38 @@ public class PlayerMain : MonoBehaviour
         float adjustAngle = 0;
         //angleを固定(25.75.285.335)
         
-        if(angle < 5)
+
+        if(angle == 0)
         {
-            adjustAngle = oldStickAngle;
+            if (oldStickAngle == -1)
+            {
+                if (dir == PlayerMoveDir.RIGHT)
+                {
+                    adjustAngle = 25;
+                    oldStickAngle = 25;
+                }
+                else if (dir == PlayerMoveDir.LEFT)
+                {
+                    adjustAngle = 335;
+                    oldStickAngle = 335;
+                }
+            }
+            else
+            {
+                adjustAngle = oldStickAngle;
+            }
+        }
+        else if(angle < 5)
+        {
+            if(oldStickAngle == -1)
+            {
+                adjustAngle = 25;
+                oldStickAngle = 25;
+            }
+            else
+            {
+                adjustAngle = oldStickAngle;
+            }
         }
         else if(angle < 45)
         {
@@ -394,7 +423,15 @@ public class PlayerMain : MonoBehaviour
         }
         else
         {
-            adjustAngle = oldStickAngle;
+            if (oldStickAngle == -1)
+            {
+                adjustAngle = 335;
+                oldStickAngle = 335;
+            }
+            else
+            {
+                adjustAngle = oldStickAngle;
+            }
         }
     
         if(oldStickAngle < 0)
@@ -662,8 +699,7 @@ public class PlayerMain : MonoBehaviour
         {
             if (swingState == SwingState.TOUCHED)
             {
-                if (collision.gameObject.CompareTag("Platform") || 
-                    collision.gameObject.CompareTag("Conveyor_Tate") || collision.gameObject.CompareTag("Conveyor_Yoko"))
+                if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
                 {
                     if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                     {
