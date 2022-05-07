@@ -62,6 +62,7 @@ public enum EnumPlayerState
     NOCKBACK,  //ノックバック状態
     DEATH,     //死亡状態
     STAN,      //スタン状態
+    CLEAR,     //クリア状態
 }
 
 /// <summary>
@@ -159,10 +160,6 @@ public class PlayerMain : MonoBehaviour
         PlayerState.PlayerScript = this;  //PlayerState側で参照できるようにする
         PlayerState.Player = gameObject;
 
-        //出現位置の設定
-        if (CheckPointManager.isTouchCheckPos() == true) {
-            transform.position = CheckPointManager.GetCheckPointPos();
-         }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         gameObject.tag = "Player";
@@ -176,6 +173,9 @@ public class PlayerMain : MonoBehaviour
 
     private void Start()
     {
+        ////出現位置の設定
+        //transform.position = CheckPointManager.Instance.GetCheckPointPos();
+
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
         midairState = MidairState.NONE;
