@@ -21,9 +21,14 @@ public class CameraMainShimokawara: MonoBehaviour
     EnumPlayerState PlayerState;
     EnumPlayerState OldPlayerState;
 
-    private void Start()
+    private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        
         CameraTrueCnt = CAMERA_RETURN_FLAME;
         TraceObj();
 
