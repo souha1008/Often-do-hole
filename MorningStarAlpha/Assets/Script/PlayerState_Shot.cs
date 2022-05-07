@@ -36,11 +36,11 @@ public class PlayerStateShot : PlayerState
         onceAnim = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
-
         PlayerScript.canShotState = false;
         PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
         PlayerScript.vel.x *= 0.4f;
+        NoFloorVel();
 
         //アニメーション用
         PlayerScript.ResetAnimation();
@@ -260,13 +260,17 @@ public class PlayerStateShot : PlayerState
       
     }
 
+
     public override void Move()
     {
+      
+
         float interval;
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-  
+        
         RotationPlayer();
         intoVecsQueue();
+        NoFloorVel();
 
         switch (PlayerScript.shotState)
         {           

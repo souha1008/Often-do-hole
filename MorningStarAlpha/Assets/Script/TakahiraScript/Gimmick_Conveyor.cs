@@ -38,15 +38,42 @@ public class Gimmick_Conveyor : Gimmick_Main
             this.gameObject.tag = "Conveyor_Yoko";
     }
 
+    public override void UpdateMove()
+    {
+
+    }
+
     public override void FixedMove()
     {
         MoveRight = MoveDirectionBoolChangeX(MoveDirection_X); // 回転方向更新
+
+        //接地判定
+        conveyorStateMain.PlayerMoveFlag = IsPlayerOnFloor();
 
         // コンベアの動き処理
         conveyorStateMain.Move();
         //Debug.LogWarning(conveyorStateMain.ConveyorState); // 現在のコンベアのステート
     }
 
+    //植竹追加
+    private bool IsPlayerOnFloor()
+    {
+        bool returnBool = false;
+
+        if (!MoveTateFlag)
+        {
+            if (PlayerMain.instance.isOnGround)
+            {
+                if (PlayerMain.instance.getFootHit().collider != null &&
+                PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+                {
+                    returnBool = true;
+                }
+            }
+        }
+
+        return returnBool;
+    }
 
     public override void Death()
     {
@@ -55,15 +82,15 @@ public class Gimmick_Conveyor : Gimmick_Main
 
     public override void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (!MoveTateFlag &&
-                PlayerMain.instance.getFootHit().collider != null &&
-                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
-            {
-                conveyorStateMain.PlayerMoveFlag = true;
-            }
-        }
+        //if (collision.gameObject.CompareTag("Player"))
+        //{
+        //    if (!MoveTateFlag &&
+        //        PlayerMain.instance.getFootHit().collider != null &&
+        //         PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+        //    {
+        //        conveyorStateMain.PlayerMoveFlag = true;
+        //    }
+        //}
 
         if (collision.gameObject.CompareTag("Bullet"))
         {
@@ -100,30 +127,26 @@ public class Gimmick_Conveyor : Gimmick_Main
         }
     }
 
-    public void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (!MoveTateFlag &&
-                PlayerMain.instance.getFootHit().collider != null &&
-                 PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
-            {
-                conveyorStateMain.PlayerMoveFlag = true;
-            }
-        }
-    }
+    //public void OnCollisionStay(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        if (!MoveTateFlag &&
+    //            PlayerMain.instance.getFootHit().collider != null &&
+    //             PlayerMain.instance.getFootHit().collider.gameObject == this.gameObject)
+    //        {
+    //            conveyorStateMain.PlayerMoveFlag = true;
+    //        }
+    //    }
+    //}
 
-    public void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            conveyorStateMain.PlayerMoveFlag = false;
-        }
-        //if (collision.gameObject.CompareTag("Bullet"))
-        //{
-        //    ConveyorState.BulletMoveFlag = false;
-        //}
-    }
+    //public void OnCollisionExit(Collision collision)
+    //{
+    //    //if (collision.gameObject.CompareTag("Bullet"))
+    //    //{
+    //    //    ConveyorState.BulletMoveFlag = false;
+    //    //}
+    //}
 
     public bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
     {
@@ -201,7 +224,6 @@ public class ConveyorNone : ConveyorState
         ConveyorMain.TouchSide = TOUCH_SIDE.NONE;
         ConveyorMain.PlayerMoveFlag = false;
         ConveyorMain.BulletMoveFlag = false;
-        PlayerMain.instance.floorVel = Vector3.zero;
     }
     public override void Move()
     {

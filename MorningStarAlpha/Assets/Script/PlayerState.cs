@@ -46,6 +46,23 @@ public class PlayerState
         }
     }
 
+    protected void NoFloorVel()
+    {
+        PlayerScript.floorVel = Vector3.zero;
+
+    }
+
+    protected void WeakenFlourVel()
+    {
+        if (PlayerScript.floorVel.x > 5.0f)
+        {
+            PlayerScript.floorVel *= 0.9f;
+        }
+        else
+        {
+            PlayerScript.floorVel = Vector3.zero;
+        }
+    }
 }
 
 
