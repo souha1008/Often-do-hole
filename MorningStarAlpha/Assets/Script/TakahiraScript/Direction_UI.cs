@@ -7,13 +7,14 @@ public class Direction_UI : MonoBehaviour
 
     [SerializeField] private float Length = 6.0f;       // ƒvƒŒƒCƒ„[‚Æ‚Ì‹——£
 
-    private RectTransform MyRectTf;
     private Image DirectionUI;
+    private RectTransform MyRectTf;
 
     void Start()
     {
         MyRectTf = GetComponent<RectTransform>();
         DirectionUI = GetComponent<Image>();
+
         DirectionUI.enabled = false;
     }
 
