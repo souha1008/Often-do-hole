@@ -53,6 +53,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         {
             CountDown();
         }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            PlayerMain.instance.mode = new PlayerStateStan();
+        }
+
     }
 
     public static GAME_STATE GetGameState()
@@ -68,6 +74,15 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     public static void LoadStage(int num)
     {
         Instance.NowStage = num;
+        FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
+    }
+
+    //リトライ時に使用
+    public static void LoadNowStage()
+    {
+        //ここにチェックポイント初期化
+
+
         FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
     }
 

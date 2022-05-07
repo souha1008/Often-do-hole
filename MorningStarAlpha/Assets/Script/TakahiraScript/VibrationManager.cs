@@ -44,8 +44,8 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         {
             // 低周波（左）モーターの強さを 0、
             // 高周波（右）モーターの強さを 1、
-            // 3.0f秒間かけて振動させる
-            StartVibration(1, 0, 3f);
+            // 0.3f秒間かけて振動させる
+            StartVibration(1, 0, 0.3f);
             Debug.LogWarning("Bボタン押した");
             SoundManager.Instance.PlaySound("決定音");
         }

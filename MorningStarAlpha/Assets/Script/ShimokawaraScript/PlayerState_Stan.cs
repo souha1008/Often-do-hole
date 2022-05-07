@@ -21,12 +21,20 @@ public class PlayerStateStan : PlayerState
         slideEndTimer = 0.0f;
         StartTime = Time.time;
 
-        RotationStand();
+        if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+        {
+            PlayerScript.rb.MoveRotation(Quaternion.Euler(0, 140, 0));
+        }
+        else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+        {
+            PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -140, 0));
+        }
+
 
         //ボール関連
         BulletScript.ReturnBullet();
         //アニメ用
-        //PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
+        PlayerScript.animator.SetTrigger("StanTrigger");
     }
 
     public override void UpdateState()
@@ -44,6 +52,9 @@ public class PlayerStateStan : PlayerState
     {
         if(Time.time > StartTime + TIME_LENGTH)
         {
+            RotationStand();
+
+
             if (PlayerScript.isOnGround == true)
             {
                 PlayerScript.mode = new PlayerStateOnGround();

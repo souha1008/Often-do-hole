@@ -10,6 +10,16 @@ public class CheckPoint : MonoBehaviour
     [Label("メッシュ切り替え用スクリプトがついたオブジェクト")]
     [SerializeField] private GameObject MeshOnOffObject;        // メッシュの表示非表示切り替え用
 
+    private void Awake()
+    {
+        // 初期リスセット
+        if (MeshOnOffObject.GetComponent<MeshOnOff>().InitCheckPoint)
+        {
+            CheckPointManager.Instance.SetCheckPoint(this);
+        }
+    }
+
+
     // Start is called before the first frame update
     private void Start()
     {
