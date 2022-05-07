@@ -80,9 +80,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     //リトライ時に使用
     public static void LoadNowStage()
     {
-        //ここにチェックポイント初期化
-
-
         FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
     }
 
