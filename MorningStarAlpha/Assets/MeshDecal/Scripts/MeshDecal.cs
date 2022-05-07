@@ -291,7 +291,7 @@ public class MeshDecal : MonoBehaviour
 
 	void OnValidate ()
 	{
-		Recalculate();
+		//Recalculate();
 	}
 
 	bool IsInsideUnitCube (Vector3 p)

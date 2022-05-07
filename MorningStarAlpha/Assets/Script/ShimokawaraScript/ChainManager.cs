@@ -38,7 +38,7 @@ public class ChainManager : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (Player.refState == EnumPlayerState.SHOT || Player.refState == EnumPlayerState.SWING)
+        if (BulletMain.instance.NowBulletState != EnumBulletState.READY)
         {
             //始点と終点を探索
             Vector3 BulletPos = Bullet.transform.position;

@@ -14,7 +14,6 @@ public class PlayerStateShot : PlayerState
 
     bool finishFlag;
     private bool releaseButton;
-    private bool onceAnimReturn;
     private Vector3 followStartdiff;
     private Vector3 maxFollowAddvec;
     private float debug_timer;
@@ -29,7 +28,6 @@ public class PlayerStateShot : PlayerState
         countTime = 0.0f;
         finishFlag = false;
         releaseButton = false;
-        onceAnimReturn = false;
         followStartdiff = Vector3.zero;
         maxFollowAddvec = Vector3.zero;
         debug_timer = 0.0f;
@@ -47,18 +45,6 @@ public class PlayerStateShot : PlayerState
         //アニメーション用
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
-        PlayerScript.animator.Play("Shot.throw");
-
-        if (Mathf.Abs(PlayerScript.adjustLeftStick.y) < 0.1f)
-        {
-            //横投げ
-            PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 1);
-        }
-        else
-        {
-            //斜め投げ
-            PlayerScript.animator.SetInteger(PlayerScript.animHash.shotdirType, 2);
-        }
     }
 
     public PlayerStateShot(bool isFollow)//コンストラクタ
@@ -100,9 +86,7 @@ public class PlayerStateShot : PlayerState
                     quaternion *= adjustQua;
                     PlayerScript.rb.rotation = quaternion;
                 }
-                break;
-
-        
+                break;     
         }
     }
 
@@ -141,7 +125,6 @@ public class PlayerStateShot : PlayerState
 
             return returnVec;
         }
-
     }
 
     private void intoVecsQueue()
@@ -187,7 +170,6 @@ public class PlayerStateShot : PlayerState
                 if (PlayerScript.forciblyReleaseSaveVelocity)
                 {
                     PlayerScript.vel = ReleaseForceCalicurate();
-                    ;
                 }
                 else
                 {
@@ -232,20 +214,11 @@ public class PlayerStateShot : PlayerState
         {
             if (PlayerScript.shotState == ShotState.STRAINED)
             {
-                if (PlayerScript.ReleaseMode)
+                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
                 {
-                    if (Input.GetButtonUp("Button_R")) //ボタンが離れていたら
-                    {
-                        releaseButton = true;
-                    }
+                    releaseButton = true;
                 }
-                else
-                {
-                    if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-                    {
-                        releaseButton = true;
-                    }
-                }
+                
 
                 if (releaseButton) //ボタンが離れていたら
                 {
@@ -354,6 +327,7 @@ public class PlayerStateShot : PlayerState
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
                 if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
                 {
+
                     BulletScript.SetBulletState(EnumBulletState.RETURN);
                     Debug.Log("FOLLOW END : 収束しない");
                     finishFlag = true;

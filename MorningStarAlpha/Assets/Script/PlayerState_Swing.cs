@@ -49,6 +49,7 @@ public class PlayerStateSwing_Vel : PlayerState
         CalculateStartVariable();
     }
 
+
     /// <summary>
     /// 振り子制御用の各種変数を計算
     /// </summary>
@@ -195,10 +196,10 @@ public class PlayerStateSwing_Vel : PlayerState
             endAngle = Mathf.Clamp(endAngle, 220, 265);
         }
 
-        if (PlayerScript.AutoRelease == false)
-        {
-            minAnglerVel = 0.4f;
-        }
+        //if (PlayerScript.AutoRelease == false)
+        //{
+        //    minAnglerVel = 0.4f;
+        //}
     }
 
     public void RotationPlayer()
@@ -242,25 +243,11 @@ public class PlayerStateSwing_Vel : PlayerState
 
     public void InputButton()
     {
-
-        if (PlayerScript.ReleaseMode)
+        if (PlayerScript.swingState == SwingState.TOUCHED)
         {
-            if (PlayerScript.swingState == SwingState.TOUCHED)
+            if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
             {
-                if (Input.GetButtonUp("Button_R")) //ボタンを押して話したら
-                {
-                    releaseButton = true;
-                }
-            }
-        }
-        else
-        {
-            if (PlayerScript.swingState == SwingState.TOUCHED)
-            {
-                if (Input.GetButton("Button_R") == false) //ボタンが離れていたら
-                {
-                    releaseButton = true;
-                }
+                releaseButton = true;
             }
         }
     }
@@ -274,17 +261,24 @@ public class PlayerStateSwing_Vel : PlayerState
             degree -= 95;
             animFrame = degree / 170;
             animFrame = Mathf.Clamp01(animFrame);
+            animFrame = 1 - animFrame;
         }
         else if(firstDir == PlayerMoveDir.LEFT)
         {
             degree -= 95;
             animFrame = degree / 170;
-            animFrame =  Mathf.Clamp01(animFrame);
+            animFrame = Mathf.Clamp01(animFrame);
         }
 
-        Debug.Log(degree);
-        Debug.Log("animFrame : " + animFrame);
-        PlayerScript.animator.Play("Swing.normalSwing", -1, animFrame);
+        if(firstDir == PlayerScript.dir)
+        {
+            PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
+        }
+        else
+        {
+            animFrame = 1 - animFrame;
+            PlayerScript.animator.Play("Swing.swingBack", -1, animFrame);
+        }
     }
 
     public Vector3 ReleaseForceCalicurale()
@@ -371,6 +365,14 @@ public class PlayerStateSwing_Vel : PlayerState
             if (PlayerScript.endSwing)
             {
                 finishFlag = true;
+                if (PlayerScript.forciblySwingSaveVelocity)
+                {
+                    PlayerScript.vel = ReleaseForceCalicurale();
+                }
+                else
+                {
+                    PlayerScript.vel = Vector3.zero;
+                }
             }
 
             if (releaseButton == true)
@@ -585,7 +587,7 @@ public class PlayerStateSwing_Vel : PlayerState
             }
             else
             {
-                PlayerScript.mode = new PlayerStateMidair(true, MidairState.BOOST);
+                PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
             }
         }
     }

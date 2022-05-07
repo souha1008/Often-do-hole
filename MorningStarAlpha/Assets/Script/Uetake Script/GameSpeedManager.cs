@@ -28,14 +28,12 @@ public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
     // Update is called once per frame
     void Update()
     {
-        if (GameStateManager.GameState == GAME_STATE.PLAY)
+        if (GameStateManager.GetGameState() == GAME_STATE.PLAY)
         {
             if (isHitStop)
             {
-                TimeCounter += 1.0f / 60;
-                Debug.Log("F" + Time.fixedDeltaTime);
-                Debug.Log("N" + Time.deltaTime);
-
+                TimeCounter += 1.0f / 60.0f;
+                
                 if (TimeCounter > stopTime)
                 {
                     isHitStop = false;
@@ -44,15 +42,6 @@ public class GameSpeedManager : SingletonMonoBehaviour<GameSpeedManager>
                 }
             }
         }
-    }
-
-    public void StartHitStop()
-    {
-        isHitStop = true;
-        TimeCounter = 0;
-        Time.timeScale = 0;
-
-        stopTime = 0.2f;
     }
 
     public void StartHitStop(float StopSecond)

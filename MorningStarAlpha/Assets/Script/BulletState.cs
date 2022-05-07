@@ -9,7 +9,7 @@ public enum EnumBulletState
     GO,
     STOP,
     RETURN,
-    BulletReturnFollow
+    //BulletReturnFollow
 }
 
 
@@ -25,7 +25,15 @@ public abstract class BulletState
     static public PlayerMain PlayerScript;
     static public BulletMain BulletScript;
 
-    
+    protected void AdjustBulletPos()
+    {
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+        vec = vec * 1.0f;
+        vec.y += 1.0f;
+        Vector3 adjustPos = PlayerScript.rb.position + vec;
+
+        BulletScript.rb.position = adjustPos;
+    }
 }
 
 
@@ -46,12 +54,7 @@ public class BulletReady : BulletState
     public override void Move()
     {
         // バレットの位置を常にスティック方向に調整
-        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        vec = vec * 3;
-        vec.y += 1.0f;
-        Vector3 adjustPos = PlayerScript.transform.position + vec;
-
-        BulletScript.transform.position = adjustPos;
+        AdjustBulletPos();
     }
 }
 
@@ -70,7 +73,11 @@ public class BulletGo : BulletState
         BulletScript.co.isTrigger = false;
         BulletScript.CanShotFlag = false;
 
+        AdjustBulletPos();
+
         BulletScript.ShotBullet();   
+        // 発射音再生
+        SoundManager.Instance.PlaySound("sound_12_チェーン伸びるSE", 1.0f, 0.03f);
     }
 
     public override void Move()
@@ -105,7 +112,6 @@ public class BulletStop : BulletState
         BulletScript.CanShotFlag = false;
         BulletScript.co.isTrigger = true;
         BulletScript.StopBullet();
-        
     }
 
     public override void Move()
@@ -118,6 +124,9 @@ public class BulletStop : BulletState
 // 引き戻しステート
 public class BulletReturn : BulletState
 {
+    float ratio;
+    Vector3 maxPos;
+
     public BulletReturn()
     {
         // 初期化
@@ -130,21 +139,45 @@ public class BulletReturn : BulletState
         BulletScript.co.isTrigger = true;
         BulletScript.StopVelChange = true;
         BulletScript.CanShotFlag = false;
+
+        ratio = 0.0f;
+
+
+        maxPos = PlayerScript.rb.position + ((BulletScript.rb.position - PlayerScript.rb.position).normalized * BulletScript.BULLET_ROPE_LENGTH);
+
+        // いかり回収音再生
+        SoundManager.Instance.PlaySound("sound_18_いかり回収SE", 1.0f, 0.03f);
     }
 
     public override void Move()
     {
+
+#if true
+        ratio += 0.05f;
+        float easeRatio = Easing.Linear(ratio, 1.0f, 0.0f, 1.0f);
+        //弾と自分の位置で補完 
+        Vector3 BulletPosition = maxPos * (1 - easeRatio) + PlayerScript.rb.position * easeRatio;
+        BulletScript.rb.position = BulletPosition;
+
+        //距離が一定以下になったら終了
+        if (easeRatio >= 0.8f)
+        {
+            BulletScript.SetBulletState(EnumBulletState.READY);
+        }
+
+#else
         //自分へ弾を引き戻す
         Vector3 vecToPlayer = PlayerScript.rb.position - BulletScript.rb.position;
         vecToPlayer = vecToPlayer.normalized;
         BulletScript.vel = vecToPlayer * 200;
-
 
         //距離が一定以下になったら終了
         if (Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position) < 4.0f)
         {
             BulletScript.SetBulletState(EnumBulletState.READY);
         }
+
+#endif
     }
 }
 

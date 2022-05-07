@@ -7,29 +7,46 @@ using UnityEngine;
 /// </summary>
 public class PlayerStateDeath : PlayerState
 {
+
+    float Timer;
+
+            
     public PlayerStateDeath()
     {
         PlayerScript.refState = EnumPlayerState.DEATH;
         PlayerScript.canShotState = false;
+        PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
-        PlayerScript.addVel = Vector3.zero;
+        PlayerScript.useVelocity = false;
+        Timer = 0.0f;
 
-        BulletScript.rb.velocity = Vector3.zero;
-        BulletScript.vel = Vector3.zero;
-        BulletScript.StopVelChange = true;
+        BulletScript.ReturnBullet();
+        RotationStand();
 
-        PlayerScript.ResetAnimation();
+        //アニメ用
+        PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
+        PlayerScript.animator.SetFloat("NockbackSpeed", 8.0f);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
     }
 
     public override void UpdateState()
     {
         // フェード処理
-        FadeManager.Instance.SetNextFade(FADE_STATE.FADE_OUT, FADE_KIND.FADE_GAMOVER);
+        Timer += Time.deltaTime;
+
+
+        if (Timer > 0.6)
+        {
+            FadeManager.Instance.FadeGameOver();
+        }
     }
 
     public override void Move()
     {
-        //移動なし
+        PlayerScript.vel.x *= PlayerScript.MIDAIR_FRICTION;
+        PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
+        PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
+
     }
 
     public override void StateTransition()

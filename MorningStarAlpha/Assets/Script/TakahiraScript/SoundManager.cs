@@ -232,10 +232,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     public int AudioSource_SE_Max = 10;     // オーディオソースSEの最大数(インスペクターで表示)
     public int AudioSource_OBJECT_Max = 100; // オーディオソースOBJECTの最大数(インスペクターで表示)
 
-    public float SoundVolumeMaster = 1.0f;  // ゲーム全体の音量
-    public float SoundVolumeBGM = 1.0f;     // BGMの音量
-    public float SoundVolumeSE = 1.0f;      // SEの音量   
-    public float SoundVolumeOBJECT = 1.0f;  // OBJECTの音量
+    public float SoundVolumeMaster = 0.8f;  // ゲーム全体の音量
+    public float SoundVolumeBGM = 0.8f;     // BGMの音量
+    public float SoundVolumeSE = 0.8f;      // SEの音量   
+    public float SoundVolumeOBJECT = 0.8f;  // OBJECTの音量
 
     public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
 
@@ -257,6 +257,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
 
     private List<NOW_PLAY_SOUND> NowPlaySoundList = new List<NOW_PLAY_SOUND>(); // 再生中のサウンド管理用リスト
+
+    private bool SoundLoadFlag = true;
 
     
     private void Awake()
@@ -320,14 +322,24 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             AudioSource_OBJECT[i].AudioSource.rolloffMode = AudioRolloffMode.Linear; // 音の減衰を直線にする
             AudioSource_OBJECT[i].AudioSource.maxDistance = SoundMaxDistance3D;    // 音の聞こえる最大距離
         }
-    }
 
-    private void Start()
-    {
         // サウンドデータ読み込み処理
         StartCoroutine(SetSEData());
         StartCoroutine(SetBGMData());
         StartCoroutine(SetOBJECTData());
+    }
+
+    private void Start()
+    {
+        // セーブデータから音量データ読み込み
+        if (SaveDataManager.Instance != null)
+        {
+            //Debug.LogWarning("音量読み込み");
+            SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
+            SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
+            SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
+            SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
+        }
 
         // セーブデータから音量データ読み込み
         if (SaveDataManager.Instance != null)
@@ -408,6 +420,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             Debug.Log("BGMデータの読み込み失敗");
         }
+        SoundLoadFlag = false;
     }
 
     private IEnumerator SetOBJECTData()
@@ -561,6 +574,18 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void PlaySound(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
     {
+        StartCoroutine(PlaySoundIE(SoundName, Volume, PlayTime, SoundObject, ReverbPreset, FadeType, FadeTime, FadeEndVolume, SoundStop));
+    }
+
+    private IEnumerator PlaySoundIE(string SoundName, float Volume, float PlayTime, GameObject SoundObject, AudioReverbPreset ReverbPreset, SOUND_FADE_TYPE FadeType, float FadeTime, float FadeEndVolume, bool SoundStop)
+    {
+        do
+        {
+            //Debug.Log("読み込み中");
+            yield return null;
+        }
+        while (SoundLoadFlag);
+
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
         // オーディオの名前と合うもの取得
@@ -575,7 +600,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         }
 
         if (Sound_Clip.AudioClip == null)
-            return;
+            yield break;
+
 
         // 音量の範囲指定
         Mathf.Clamp(Volume, 0.0f, 1.0f);
@@ -599,12 +625,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                 {
                     if (!AudioSource_BGM[i].isUse)
                     {
-                        NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));                     
+                        NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));
 
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
-                        return;
+                        yield break;
                     }
                 }
                 Debug.LogWarning("BGMが最大再生数を超えた為、再生出来ませんでした");
@@ -619,7 +645,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, false, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
-                        return;
+                        yield break;
                     }
                 }
                 Debug.LogWarning("SEが最大再生数を超えた為、再生出来ませんでした");
@@ -634,7 +660,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                         StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
-                        return;
+                        yield break;
                     }
                 }
                 Debug.LogWarning("OBJECT音が最大再生数を超えた為、再生出来ませんでした");
@@ -856,7 +882,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SetVolume(NowPlaySound.Sound_Clip.SoundName, NowPlaySound.Sound_Fade.StartVolume + 
                 (NowPlaySound.Sound_Fade.EndVolume - NowPlaySound.Sound_Fade.StartVolume) * Volume); // 音量セット
 
-            NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
+            NowPlaySound.Sound_Fade.NowTime += Time.unscaledDeltaTime; // 時間加算
         }
         else
         {
@@ -902,7 +928,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     break;
             }           
 
-            NowPlaySound.Sound_Fade.NowTime += Time.fixedDeltaTime; // 時間加算
+            NowPlaySound.Sound_Fade.NowTime += Time.unscaledDeltaTime; // 時間加算
         }
         else
         {
@@ -968,6 +994,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             // 音の聞こえる最大距離更新
             NowPlaySoundList[i].Sound_Source.AudioSource.maxDistance = SoundMaxDistance3D;
         }
+
+        // 音量をセーブデータにセット
+        SaveDataManager.Instance.MainData.SoundVolumeMaster= SoundVolumeMaster;
+        SaveDataManager.Instance.MainData.SoundVolumeBGM = SoundVolumeBGM;
+        SaveDataManager.Instance.MainData.SoundVolumeSE = SoundVolumeSE;
+        SaveDataManager.Instance.MainData.SoundVolumeOBJECT = SoundVolumeOBJECT;
     }
 
 
@@ -1109,6 +1141,24 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void Update()
     {
+        // 音量セット　※　最終的に音量オプションで変更させる予定
+        UpdateVolume();
+
+        // 現在使用中か判定処理
+        UpdateNowUse();
+
+        // 3Dの音発生座標更新
+        Update3DPos();
+
+        // サウンドのフェード更新
+        UpdateFadeSound();
+
+#if UNITY_EDITOR
+        // サウンドのインスペクター用詳細情報更新
+        UpdateSoundInspector();
+#endif
+
+
         // テスト用入力キー
 
         if (Input.GetKeyDown(KeyCode.A)) // 一時停止
@@ -1160,24 +1210,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void FixedUpdate()
     {
-        // 音量セット
-        UpdateVolume();
-
-        // 現在使用中か判定処理
-        UpdateNowUse();
-
-        // 3Dの音発生座標更新
-        Update3DPos();
-
-        // サウンドのフェード更新
-        UpdateFadeSound();
-
-#if UNITY_EDITOR
-        // サウンドのインスペクター用詳細情報更新
-        UpdateSoundInspector();
-#endif
-
-
         //Debug.Log("ポーズ中：" + AudioSource_BGM[0].isPause);
         //Debug.Log("使っている：" + AudioSource_BGM[0].isUse);
         //Debug.Log("ポーズ中：" + AudioSource_SE[0].isPause);
