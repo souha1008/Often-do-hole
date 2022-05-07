@@ -17,16 +17,17 @@ public class PlayerState_Clear : PlayerState
 
     ClearState state;
     GameObject goal;
-
+    private float motionTimer;
+    
     public PlayerState_Clear()
     {
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel.x = 0.0f;
+        motionTimer = 0.0f;
 
-
-        goal = GameObject.Find("Gole");
+        goal = GoalManager.Instance.gameObject;
         BulletScript.ReturnBullet();
         PlayerScript.dir = PlayerMoveDir.RIGHT; //ã≠êßâEå¸Ç´
         RotationStand();
@@ -67,6 +68,7 @@ public class PlayerState_Clear : PlayerState
             //âEÇ…ï‡Ç≠
             PlayerScript.vel.x = 10.0f;
             PlayerScript.animator.SetBool("isRunning", true);
+            Debug.Log(Vector3.Distance(PlayerScript.rb.position, goal.transform.position));
 
             //ìûíÖÇµÇΩÇÁ
             if (Vector3.Distance(PlayerScript.rb.position, goal.transform.position) < AnimStartDistance)
@@ -82,7 +84,12 @@ public class PlayerState_Clear : PlayerState
         }
         else if (state == ClearState.ANIMMOTION)
         {
+            motionTimer += Time.fixedDeltaTime;
 
+            if(motionTimer > 10.0f)
+            {
+                GoalManager.Instance.StartMotionBlur();
+            }
         }
 
     }

@@ -9,15 +9,16 @@ using DG.Tweening;
 
 public class GoalManager : MonoBehaviour
 {
+    public static GoalManager Instance;
     [SerializeField] GameObject ClearCam;
     [SerializeField] GameObject MainCam;
     [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
 
-    [SerializeField][Range(1.0f, 100.0f)] float AlphaSpeed; // 透明度の設定
-    [SerializeField][Range(0.0f, 1.0f)] float CameraRotateSpeed;
-    [SerializeField] float alpha_Flag;
-    [SerializeField] int parsent = 1000000;
+    float AlphaSpeed = 90.0f; // 透明度の設定
+    float CameraRotateSpeed = 0.558f;
+    float alpha_Flag = 0.02f;
+    int parsent = 1000000;
 
     private int counter_1; // 調整カウント用
     [SerializeField][ReadOnly] private float alpha;
@@ -26,6 +27,7 @@ public class GoalManager : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         //DontDestroyOnLoad(Canvas);
         //DontDestroyOnLoad(ClearCam);
     }
@@ -72,24 +74,34 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+
+    public void StartMotionBlur()
     {
-        if (other.CompareTag("Player"))
+        AngleChange = true;
+        if (PostProssece == null) Debug.Log("volume is not loading");
+
+        PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
+        //PostProssece.GetComponent<Volume>().TryGetComponent<MotionBlur>(out var motionBlur);
+        //PostProssece.TryGetComponent<MotionBlur>(out var motionBlur);
+        motionBlur.active = true;
+        if (!motionBlur.active) Debug.Log("motionBlur is false");
+
+        ClearCam.SetActive(true);
+        if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
+    }
+
+    public void PlayerChangeClearState()
+    {
+        if (PlayerMain.instance.refState != EnumPlayerState.CLEAR)
         {
-            AngleChange = true;
-            if (PostProssece == null) Debug.Log("volume is not loading");
-
-            PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
-            //PostProssece.GetComponent<Volume>().TryGetComponent<MotionBlur>(out var motionBlur);
-            //PostProssece.TryGetComponent<MotionBlur>(out var motionBlur);
-            motionBlur.active = true;
-            if (!motionBlur.active) Debug.Log("motionBlur is false");
-
-            ClearCam.SetActive(true);
-            if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
-
+            PlayerMain.instance.mode = new PlayerState_Clear();
         }
+    }
 
-        Debug.Log("Goal当たった");
+    private void OnTriggerEnter(Collider other)
+    {
+        PlayerChangeClearState();
     }
 }
+
+
