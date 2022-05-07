@@ -15,7 +15,7 @@ public class GoalManager : MonoBehaviour
     [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
 
-    float AlphaSpeed = 0.9f; // “§–¾“x‚Ìİ’è
+    float AlphaSpeed = 90.0f; // “§–¾“x‚Ìİ’è
     float CameraRotateSpeed = 0.558f;
     float alpha_Flag = 0.02f;
     int parsent = 1000000;
