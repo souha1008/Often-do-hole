@@ -96,8 +96,8 @@ public class PlayerMain : MonoBehaviour
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
 
-    [SerializeField] public float colliderRadius = 1.42f;   //接地判定用ray半径
-    [SerializeField] public float coliderDistance = 1.8f; //
+    [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
+    [System.NonSerializedSS] public float coliderDistance = 1.8f; //
                                                                  //
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
     [System.NonSerialized] public float HcoliderDistance = 0.6f; //頭判定用ray中心点から頭までのオフセット

@@ -54,7 +54,7 @@ public class PlayerState
 
     protected void WeakenFlourVel()
     {
-        if (PlayerScript.floorVel.x > 5.0f)
+        if (Mathf.Abs(PlayerScript.floorVel.x) > 5.0f)
         {
             PlayerScript.floorVel *= 0.9f;
         }
