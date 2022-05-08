@@ -33,8 +33,8 @@ public class StageSelectCamera : MonoBehaviour
 
     public void ManualStart()
     {
-        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
-        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterToVector * MASU_DISTANCE;
+        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CenterObj.transform.position).normalized;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CenterToVector * MASU_DISTANCE;
 
         //今の場所からGoPosへのベクトルを取得
         //Vector3 GoAngle = GoPos - this.transform.position;
@@ -53,8 +53,8 @@ public class StageSelectCamera : MonoBehaviour
     void FixedUpdate()
     {
         //at点（中央）から次マスまでのアングルを正規化
-        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterObj.transform.position).normalized;
-        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowStage].transform.position - CenterToVector * MASU_DISTANCE;
+        Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CenterObj.transform.position).normalized;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CenterToVector * MASU_DISTANCE;
 
         //今の場所からGoPosへのベクトルを取得
         //Vector3 GoAngle = GoPos - this.transform.position;
