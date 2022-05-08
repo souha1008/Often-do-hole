@@ -3,24 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class ResultManager : MonoBehaviour
 {
     [System.NonSerialized] public bool anim_end;
     [System.NonSerialized] public static ResultManager instance;
 
+    // カメラ
+    [Header("手配書揺れ関係")]
+    [SerializeField] Image Wanted_Sprite;
+    [SerializeField][Range(0.0f, 1.0f)] float duration;
+    [SerializeField] float strength;
+    [SerializeField] int vibrato;
+    [SerializeField] float randomness;
+    [SerializeField] bool snapping;
+    [SerializeField] bool fadeOut;
+
+    Tweener shaketeener; // DOTweenのやつ
+    Vector3 initPos;    // 手配書の初期位置
+
     // ステージナンバー
+    [Header("ステージナンバー")]
     [SerializeField] Text StageNo;
 
     // UI
+    [Header("UI")]
     [SerializeField] GameObject UI_Canvas;
     [SerializeField] GameObject Next_UI;
     [SerializeField] GameObject Next_UI_Big;
     [SerializeField] GameObject StageSelect_UI;
     [SerializeField] GameObject StageSelect_UI_Big;
+    [SerializeField] Image Stump_UI;
 
     UI_COMMAND ui_command;
 
+    // アニメータ変数
+    [Header("アニメータ")]
+    [SerializeField]Animator stump_animator;
+    public Animator Wanted_animator;
+
+    // アニメーションパラメータ
+    int Stump_Start;
+    [System.NonSerialized]public int Shake;
+
+    // 他スクリプトで操作する変数
+    [System.NonSerialized]public bool Stump_end;
 
     // デバッグ用
     [Header("以下デバッグコンソール")]
@@ -42,6 +70,7 @@ public class ResultManager : MonoBehaviour
     void Start()
     {
         anim_end = false;
+        Stump_end = false;
         UI_Canvas.SetActive(false);
         ui_command = UI_COMMAND.NextStage;
 
@@ -50,6 +79,13 @@ public class ResultManager : MonoBehaviour
         Next_UI_Big.SetActive(true);
         StageSelect_UI.SetActive(true);
         StageSelect_UI_Big.SetActive(false);
+        Stump_UI.color = new Color(0, 0, 0, 0);
+
+        initPos = Wanted_Sprite.transform.position;
+
+        // アニメパラメータハッシュ
+        Stump_Start = Animator.StringToHash("Stump_Start");
+        Shake = Animator.StringToHash("Shake");
     }
 
     // Update is called once per frame
@@ -188,14 +224,21 @@ public class ResultManager : MonoBehaviour
             }
         }
 
-        // UI操作
-        if(anim_end == true && UI_Canvas.activeSelf == false)
+        if(anim_end == true)
         {
+            stump_animator.SetBool(Stump_Start, true);
+            Stump_UI.color = new Color(1, 1, 1, 1);
+        }
+
+        // UI操作
+        if(Stump_end == true && UI_Canvas.activeSelf == false)
+        {
+            Wanted_animator.SetBool(Shake, true);
             UI_Canvas.SetActive(true);
         }
 
         // アニメーションが終わっていたらUI操作可能
-        if (anim_end == true)
+        if (Stump_end == true)
         {
             // スティック上
             if (Input.GetAxis("Vertical") > 0.8f)
@@ -233,5 +276,16 @@ public class ResultManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    void Wanted_Shake(float duration, float strength, int vibrato, float randomness, bool fadeout)
+    {
+        if(shaketeener != null)
+        {
+            shaketeener.Kill();
+            Wanted_Sprite.transform.position = initPos;
+        }
+
+        shaketeener = Wanted_Sprite.rectTransform.DOShakePosition(duration, strength, vibrato, randomness, false, fadeout);
     }
 }
