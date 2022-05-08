@@ -11,14 +11,21 @@ public enum GAME_STATE {
     RESULT,//ÉäÉUÉãÉgíÜ
 }
 
+public enum GAME_RANK
+{
+    S,
+    A,
+    B,
+}
+
 
 /// <summary>
 /// ÉQÅ[ÉÄÇÃèÛë‘Çä«óù
 /// </summary>
 public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
-    private const int STAGE_MAX_NUM = 15;
-    private const float MAX_TIME = 300.0f;
+    private const int STAGE_MAX_NUM = 16;
+    private const float MAX_TIME = 999.0f;
     private string[] StageNames = { "Stage1-1" ,"Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
@@ -26,6 +33,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private GAME_STATE GameState;
     private float GameTime;
+    private GAME_RANK GameRank;
     private int NowStage = 0;
 
     private void Awake()
@@ -44,6 +52,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private void Init()
     {
         GameTime = MAX_TIME;
+        GameRank = GAME_RANK.S;
         SetGameState(GAME_STATE.PLAY);
     }
   
@@ -69,6 +78,11 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     public static void SetGameState(GAME_STATE game_state)
     {
         Instance.GameState = game_state;
+
+        if(Instance.GameState == GAME_STATE.RESULT)
+        {
+            Instance.CalicurateRank();
+        }
     }
 
     public static void LoadStage(int num)
@@ -98,6 +112,29 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     public static float GetGameTime()
     {
         return Instance.GameTime;
+    }
+
+    public GAME_RANK GetGameRank()
+    {
+        return GameRank;
+    }
+
+    public void CalicurateRank()
+    {
+        //âº
+
+        if(GameTime > 990)
+        {
+            GameRank = GAME_RANK.S;
+        }
+        else if(GameTime > 980)
+        {
+            GameRank = GAME_RANK.A;
+        }
+        if (GameTime > 970)
+        {
+            GameRank = GAME_RANK.B;
+        }
     }
 
     private void CountDown()
