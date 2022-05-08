@@ -50,11 +50,6 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
 
-    private void NoFloorVel()
-    {
-        PlayerScript.floorVel = Vector3.zero;
-
-    }
 
 
     public override void UpdateState()
