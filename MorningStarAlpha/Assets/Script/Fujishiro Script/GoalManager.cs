@@ -102,6 +102,14 @@ public class GoalManager : MonoBehaviour
     {
         PlayerChangeClearState();
     }
+
+    private void OpenParticleStart()
+    {
+        Vector3 StartPos = transform.position;
+
+        StartPos.y += 1.0f;
+        EffectManager.instance.BoxOpen(StartPos);
+    }
 }
 
 

@@ -12,24 +12,12 @@ public class PlayerState_Rail : PlayerState
 
     public PlayerState_Rail()
     {
-        //Init();
-        
+        PlayerScript.refState = EnumPlayerState.RAILING;
+        PlayerScript.canShotState = false;
+        PlayerScript.rb.velocity = Vector3.zero;
+        PlayerScript.vel = Vector3.zero;
 
-
-        ////弾の発射
-        //BulletScript.GetComponent<Collider>().isTrigger = false;
-        //BulletScript.VisibleBullet();
-
-        ////if (is_slide_jump)
-        ////{
-        ////    BulletScript.ShotSlideJumpBullet();
-        ////    Debug.Log("Slide Shot");
-        ////}
-        
-        //{
-        //    BulletScript.ShotBullet();
-        //    Debug.Log("Normal Shot");
-        //}
+        BulletScript.SetBulletState(EnumBulletState.STOP);
     }
 
     public override void UpdateState()
@@ -39,7 +27,17 @@ public class PlayerState_Rail : PlayerState
 
     public override void Move()
     {
-        
+        //レールに応じて回転
+        RotateTowardAngle();
+    }
+
+    private void RotateTowardAngle()
+    {
+        Vector3 vecToPlayer = BulletScript.rb.position - PlayerScript.rb.position;
+        Quaternion quaternion = Quaternion.LookRotation(vecToPlayer);
+        Quaternion adjustQua = Quaternion.Euler(90, 0, 0); //補正用クオータニオン
+        quaternion *= adjustQua;
+        PlayerScript.rb.rotation = quaternion;
     }
 
     public override void StateTransition()
