@@ -11,6 +11,11 @@ public class Coin
     public int AllCoin1;
     public int AllCoin2;
     public int AllCoin3;
+
+    // 合計入手コイン数
+    public int AllGetCoin1;
+    public int AllGetCoin2;
+    public int AllGetCoin3;
 }
 
 
@@ -18,7 +23,7 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
 {
     // 現在のコイン取得状況
     public Coin coin = null;        // ゲーム内でのコイン取得用
-    private Coin OldCoin = null;    // ゲーム内でのコイン取得用(チェックポイント通過してないとき用)
+    private Coin SubCoin = null;    // ゲーム内でのコイン取得用(チェックポイント通過してないとき用)
 
     // コインオブジェクト
     public GameObject Coins1;
@@ -66,10 +71,15 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
                 coin.NowGetCoin2 = new bool[coin.AllCoin2];
                 coin.NowGetCoin3 = new bool[coin.AllCoin3];
 
+                // コインの合計取得数
+                coin.AllGetCoin1 = 0;
+                coin.AllGetCoin2 = 0;
+                coin.AllGetCoin3 = 0;
+
                 //Debug.LogWarning(coin.AllCoin1);
             }
         }
-        OldCoin = coin;
+        SubCoin = coin;
 
         // コインオブジェクトに情報セット
         SetCoinObjectInfo();
@@ -113,21 +123,51 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         switch (stageCoinInfo.CoinGroup)
         {
             case 0:
-                coin.NowGetCoin1[stageCoinInfo.Index] = stageCoinInfo.GetCoinFlag;
+                SubCoin.NowGetCoin1[stageCoinInfo.Index] = stageCoinInfo.GetCoinFlag;
                 break;
             case 1:
-                coin.NowGetCoin2[stageCoinInfo.Index] = stageCoinInfo.GetCoinFlag;
+                SubCoin.NowGetCoin2[stageCoinInfo.Index] = stageCoinInfo.GetCoinFlag;
                 break;
             case 2:
-                coin.NowGetCoin3[stageCoinInfo.Index] = stageCoinInfo.GetCoinFlag;
+                SubCoin.NowGetCoin3[stageCoinInfo.Index] = stageCoinInfo.GetCoinFlag;
                 break;
         }
+
+        // コイン合計入手数更新
+        SetAllGetCoinNum();
     }
+
+    private void SetAllGetCoinNum()
+    {
+        SubCoin.AllGetCoin1 = SubCoin.AllGetCoin2 = SubCoin.AllGetCoin3 = 0;
+        for (int i = 0; i < SubCoin.AllCoin1; i++)
+        {
+            if (SubCoin.NowGetCoin1[i])
+            {
+                SubCoin.AllGetCoin1 += 1;
+            }
+        }
+        for (int i = 0; i < SubCoin.AllCoin2; i++)
+        {
+            if (SubCoin.NowGetCoin2[i])
+            {
+                SubCoin.AllGetCoin2 += 1;
+            }
+        }
+        for (int i = 0; i < SubCoin.AllCoin3; i++)
+        {
+            if (SubCoin.NowGetCoin3[i])
+            {
+                SubCoin.AllGetCoin3 += 1;
+            }
+        }
+    }
+
 
     // チェックポイント＆ゴール通った時のコインデータ更新用
     public void SetCheckPointCoinData()
     {
-        coin = OldCoin;
+        coin = SubCoin;
     }
 
 
@@ -135,7 +175,7 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     public void ResetCoin()
     {
         coin = null;
-        OldCoin = null;
+        SubCoin = null;
     }
 
 
