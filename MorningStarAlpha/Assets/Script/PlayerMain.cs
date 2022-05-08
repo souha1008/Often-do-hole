@@ -231,7 +231,7 @@ public class PlayerMain : MonoBehaviour
 
     private void Update()
     {
-        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
             InputStick_Fixed();
             //InputStick();
@@ -254,7 +254,7 @@ public class PlayerMain : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
             if (mode != null)
             {
