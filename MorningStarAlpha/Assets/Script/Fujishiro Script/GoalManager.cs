@@ -100,7 +100,14 @@ public class GoalManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerChangeClearState();
+        if (other.CompareTag("Player"))
+        {
+            PlayerChangeClearState();
+        }
+        else
+        {
+            Debug.Log("ˆá‚¤‚à‚Ì");
+        }
     }
 
     private void OpenParticleStart()

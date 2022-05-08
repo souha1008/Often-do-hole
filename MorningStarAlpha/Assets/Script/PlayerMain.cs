@@ -96,7 +96,7 @@ public class PlayerMain : MonoBehaviour
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
 
-    [System.NonSerialized] public float colliderRadius = 1.65f;   //接地判定用ray半径
+    [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
     [System.NonSerialized] public float coliderDistance = 1.8f; //
                                                                  //
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
@@ -166,9 +166,7 @@ public class PlayerMain : MonoBehaviour
 
         animBullet[0] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_body").gameObject;
         animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
-        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;
-
-        Time.timeScale = GameSpeed;
+        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject; 
     }
 
     private void Start()
@@ -219,6 +217,8 @@ public class PlayerMain : MonoBehaviour
             mode.StateTransition();
             mode.Move();
         }
+
+        Time.timeScale = GameSpeed;
     }
 
     public void VisibleAnimBullet(bool on_off)
@@ -231,7 +231,7 @@ public class PlayerMain : MonoBehaviour
 
     private void Update()
     {
-        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
             InputStick_Fixed();
             //InputStick();
@@ -254,7 +254,7 @@ public class PlayerMain : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
             if (mode != null)
             {

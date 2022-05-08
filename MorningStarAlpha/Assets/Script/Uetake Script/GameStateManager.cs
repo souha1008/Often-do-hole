@@ -139,8 +139,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void CountDown()
     {
-        GameTime -= Time.deltaTime;
-        GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
+        if (GameState == GAME_STATE.PLAY)
+        {
+            GameTime -= Time.deltaTime;
+            GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
+        }
+
         //Debug.Log(GameTime);
     }
 }
