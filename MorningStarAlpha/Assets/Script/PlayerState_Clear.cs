@@ -70,6 +70,11 @@ public class PlayerState_Clear : PlayerState
             PlayerScript.animator.SetBool("isRunning", true);
             Debug.Log(Vector3.Distance(PlayerScript.rb.position, goal.transform.position));
 
+            //ë¨ìxÇéQè∆
+            float animBlend = Mathf.Abs(PlayerScript.vel.x);
+            animBlend = Mathf.Clamp(animBlend, 0.0f, PlayerScript.MAX_RUN_SPEED);
+            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), animBlend);
+          
             //ìûíÖÇµÇΩÇÁ
             if (Vector3.Distance(PlayerScript.rb.position, goal.transform.position) < AnimStartDistance)
             {

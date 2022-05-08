@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class PlayerStateOnGround : PlayerState
 {
+    private const float AddDownForce = -5.0f;
+
     private bool shotButton;
     private const float SLIDE_END_TIME = 0.5f;
     private float slideEndTimer;
@@ -19,7 +21,7 @@ public class PlayerStateOnGround : PlayerState
     {
         PlayerScript.refState = EnumPlayerState.ON_GROUND;
         shotButton = false;
-        PlayerScript.vel.y = 0;
+        PlayerScript.vel.y = AddDownForce;
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
         rareMotionTimer = 0.0f;
@@ -29,6 +31,7 @@ public class PlayerStateOnGround : PlayerState
         BulletScript.ReturnBullet();
 
         RotationStand();
+        NoFloorVel();
 
 
         //スライド処理
@@ -46,6 +49,8 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
     }
+
+
 
     public override void UpdateState()
     {
@@ -85,7 +90,7 @@ public class PlayerStateOnGround : PlayerState
 
     public override void Move()
     {
-
+        WeakenFlourVel();
         if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
             float slide_Weaken = 0.5f;
@@ -202,7 +207,7 @@ public class PlayerStateOnGround : PlayerState
 
 
         //バグ防止用にほんの少しだけ弱い重力を与える
-        PlayerScript.vel.y = -0.1f;
+        PlayerScript.vel.y = AddDownForce;
     }
 
 

@@ -22,11 +22,14 @@ public class Gimmick_Hole : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
         {
-            // プレイヤーを死亡状態に変更
-            PlayerMain.instance.mode = new PlayerStateDeath();
-            // プレイヤーにダメージエフェクト
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                // プレイヤーを死亡状態に変更
+                PlayerMain.instance.mode = new PlayerStateDeath_Void();
+                // プレイヤーにダメージエフェクト
+            }
         }
     }
 }

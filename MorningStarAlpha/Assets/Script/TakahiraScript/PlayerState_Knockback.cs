@@ -88,7 +88,7 @@ public class PlayerState_Knockback : PlayerState
         { // 時間経過でステート変更
             if (NowTime > 0.3f)
             {
-                PlayerScript.mode = new PlayerStateDeath();
+                PlayerScript.mode = new PlayerStateDeath_Thorn();
             }
         }
         else

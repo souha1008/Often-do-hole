@@ -226,6 +226,12 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
             TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
             TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+
+            // チェックポイントのリセット
+            if (FadeKind != FADE_KIND.FADE_GAMOVER)
+            {
+                CheckPointManager.Instance.ResetCheckPoint();
+            }
         }
     }
 

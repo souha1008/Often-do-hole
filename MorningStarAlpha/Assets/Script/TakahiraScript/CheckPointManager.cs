@@ -11,7 +11,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     [Label("現在のリスポーン座標")]    
     public Vector3 NowRespawnPos;       // 現在のリスポーン座標(見るだけ)
 
-    public static Vector3 RespawnPos;   // リスポーン座標
+    public static Vector3 RespawnPos = Vector3.zero;   // リスポーン座標
 
     private void Awake()
     {
@@ -28,9 +28,14 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
     {
-        RespawnPos = checkpoint.RespawnPointObject.transform.position;
-        RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
-        NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
+        if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
+        {
+            RespawnPos = checkpoint.RespawnPointObject.transform.position;
+            RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
+            NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
+
+            CoinManager.Instance.SetCheckPointCoinData(); // コインの情報を入力
+        }
     }
 
     // 現在のチェックポイントの座標ゲット
@@ -38,5 +43,13 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     {
         Debug.LogWarning(RespawnPos);
         return RespawnPos;
+    }
+
+    // チェックポイントリセット
+    public void ResetCheckPoint()
+    {
+        RespawnPos = Vector3.zero;
+        RespawnObject = null;
+        NowRespawnPos = GetCheckPointPos();
     }
 }

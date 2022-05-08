@@ -96,7 +96,7 @@ public class PlayerMain : MonoBehaviour
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
 
-    [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
+    [System.NonSerialized] public float colliderRadius = 1.65f;   //接地判定用ray半径
     [System.NonSerialized] public float coliderDistance = 1.8f; //
                                                                  //
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
@@ -277,7 +277,6 @@ public class PlayerMain : MonoBehaviour
             resetZo.z = 0.0f;
             rb.position = resetZo;
 
-
             if (Mathf.Abs(addVel.magnitude) > 10.0f)
             {
                 addVel *= 0.98f;
@@ -358,8 +357,6 @@ public class PlayerMain : MonoBehaviour
 
 
         float angle = CalculationScript.TwoPointAngle360(Vector3.zero, sourceLeftStick);
-
-        Debug.Log("Stick angle :" + angle);
         float adjustAngle = 0;
         //angleを固定(25.75.285.335)
         
@@ -438,8 +435,6 @@ public class PlayerMain : MonoBehaviour
         {
             stickCanShotRange = false;
         }
-
-        Debug.Log("Adust angle :" + adjustAngle);
 
 
         //角度を読める値に調整

@@ -36,11 +36,11 @@ public class PlayerStateShot : PlayerState
         onceAnim = false;
 
         PlayerScript.refState = EnumPlayerState.SHOT;
-
         PlayerScript.canShotState = false;
         PlayerScript.ClearModeTransitionFlag();
         PlayerScript.addVel = Vector3.zero;
         PlayerScript.vel.x *= 0.4f;
+        NoFloorVel();
 
         //アニメーション用
         PlayerScript.ResetAnimation();
@@ -260,13 +260,17 @@ public class PlayerStateShot : PlayerState
       
     }
 
+
     public override void Move()
     {
+      
+
         float interval;
         interval = Vector3.Distance(PlayerScript.transform.position, BulletScript.transform.position);
-  
+        
         RotationPlayer();
         intoVecsQueue();
+        NoFloorVel();
 
         switch (PlayerScript.shotState)
         {           
@@ -282,11 +286,9 @@ public class PlayerStateShot : PlayerState
                 }
 
                 debug_timer += Time.fixedDeltaTime;
-                Debug.Log(debug_timer);
                 break;
 
             case ShotState.STRAINED:
-                Debug.Log(debug_timer);
                 StrainedStop();
                 if(onceAnim == false)
                 {
@@ -323,16 +325,31 @@ public class PlayerStateShot : PlayerState
                     Debug.Log("FOLLOW END : over 80");
                     finishFlag = true;
                 }
+
                 //ボールに収束しなそうだったら切り離し（回転バグ防止）
                 Vector3 nowDiff = BulletScript.colPoint - PlayerScript.rb.position;
-                if (followStartdiff.x * nowDiff.x < 0 || followStartdiff.y * nowDiff.y < 0)
+                if (nowDiff.x <= 0 && followStartdiff.x > 0)
                 {
-
                     BulletScript.SetBulletState(EnumBulletState.RETURN);
-                    Debug.Log("FOLLOW END : 収束しない");
+                    finishFlag = true;
+                }
+                else if (nowDiff.x > 0 && followStartdiff.x <= 0)
+                {
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
+                    finishFlag = true;
+                }
+                else if (nowDiff.y <= 0 && followStartdiff.y > 0)
+                {
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
+                    finishFlag = true;
+                }
+                else if ((nowDiff.y > 0 && followStartdiff.y <= 0))
+                {
+                    BulletScript.SetBulletState(EnumBulletState.RETURN);
                     finishFlag = true;
                 }
 
+                //正常終了
                 if (interval < 4.0f)
                 {
                     finishFlag = true;
