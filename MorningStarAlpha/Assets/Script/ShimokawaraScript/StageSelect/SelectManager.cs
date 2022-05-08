@@ -30,7 +30,7 @@ public class SelectManager : MonoBehaviour
     public int LONG_PUSH_COOL_TIME;
     public int LONG_PUSH_PITCH;
 
-    int CanStage = 14;//えらべるステージ
+    int CanStage = 15;//えらべるステージ
     bool CanStart = true;//移動中は開始できない
 
 
