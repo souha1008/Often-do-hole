@@ -6,6 +6,7 @@ public class Stump_Callback : MonoBehaviour
 {
     void Stump_End()
     {
-        ResultManager.instance.Stump_end = true;
+        //ResultManager.instance.stump_animator.SetBool(ResultManager.instance.Stump_Start, false);
+        ResultManager.instance.stump_animator.SetBool(ResultManager.instance.Stump_end, true);
     }
 }

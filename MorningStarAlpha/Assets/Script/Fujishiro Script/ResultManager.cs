@@ -40,15 +40,16 @@ public class ResultManager : MonoBehaviour
 
     // アニメータ変数
     [Header("アニメータ")]
-    [SerializeField]Animator stump_animator;
+    public Animator stump_animator;
     public Animator Wanted_animator;
 
     // アニメーションパラメータ
-    int Stump_Start;
-    [System.NonSerialized]public int Shake;
+    [System.NonSerialized]public int Stump_Start;
+    [System.NonSerialized]public int Stump_end;
+    [System.NonSerialized]public int Shake_Start;
+    [System.NonSerialized] public int Shake_End;
 
     // 他スクリプトで操作する変数
-    [System.NonSerialized]public bool Stump_end;
 
     // デバッグ用
     [Header("以下デバッグコンソール")]
@@ -70,7 +71,6 @@ public class ResultManager : MonoBehaviour
     void Start()
     {
         anim_end = false;
-        Stump_end = false;
         UI_Canvas.SetActive(false);
         ui_command = UI_COMMAND.NextStage;
 
@@ -85,7 +85,9 @@ public class ResultManager : MonoBehaviour
 
         // アニメパラメータハッシュ
         Stump_Start = Animator.StringToHash("Stump_Start");
-        Shake = Animator.StringToHash("Shake");
+        Stump_end = Animator.StringToHash("Stump_End");
+        Shake_Start = Animator.StringToHash("Shake_Start");
+        Shake_End = Animator.StringToHash("Shake_End");
     }
 
     // Update is called once per frame
@@ -231,15 +233,26 @@ public class ResultManager : MonoBehaviour
         }
 
         // UI操作
-        if(Stump_end == true && UI_Canvas.activeSelf == false)
+        if(stump_animator.GetBool(Stump_end) == true && UI_Canvas.activeSelf == false)
         {
-            Wanted_animator.SetBool(Shake, true);
             UI_Canvas.SetActive(true);
+            Wanted_animator.SetBool(Shake_Start, true);
         }
+        //if (stump_animator.GetBool(Shake) == true && UI_Canvas.activeSelf == false)
+        //{
+        //    UI_Canvas.SetActive(true);
+        //}
+        //if (UI_Canvas.activeSelf == false && stump_animator.GetBool(Shake_End) == true)
+        //{
+        //    bool end = ResultManager.instance.Wanted_animator.GetBool(ResultManager.instance.Shake_End);
+        //    Debug.Log("Shake_End:" + end);
+        //    UI_Canvas.SetActive(true);
+        //}
 
         // アニメーションが終わっていたらUI操作可能
-        if (Stump_end == true)
+        if (stump_animator.GetBool(Stump_end) == true)
         {
+
             // スティック上
             if (Input.GetAxis("Vertical") > 0.8f)
             {
