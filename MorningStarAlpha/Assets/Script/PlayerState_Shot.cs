@@ -247,14 +247,8 @@ public class PlayerStateShot : PlayerState
                     PlayerScript.vel = BulletScript.vel * 0.8f;
                 }
             }
-
             //STRAINEDだけど自由移動のタイミング
-            else
-            {
-                //弱めの重力 
-                PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 0.1f * (fixedAdjust);
-                PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
-            }
+           
         }
 
       
@@ -295,6 +289,17 @@ public class PlayerStateShot : PlayerState
                     onceAnim = true;
                     RotationPlayer();
                     PlayerScript.animator.Play("Shot.midair_roop");
+                }
+
+                if (Vector3.Magnitude(PlayerScript.rb.position - BulletScript.rb.position) > BulletScript.BULLET_ROPE_LENGTH)
+                {
+
+                }
+                else
+                {
+                    //弱めの重力 
+                    PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * 0.1f * (fixedAdjust) * 0.5f;
+                    PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
                 }
 
 

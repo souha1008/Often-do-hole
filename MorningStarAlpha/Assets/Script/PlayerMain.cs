@@ -168,7 +168,7 @@ public class PlayerMain : MonoBehaviour
         animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
         animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;
 
-        Time.timeScale = GameSpeed;
+    
     }
 
     private void Start()
@@ -219,6 +219,8 @@ public class PlayerMain : MonoBehaviour
             mode.StateTransition();
             mode.Move();
         }
+
+        Time.timeScale = GameSpeed;
     }
 
     public void VisibleAnimBullet(bool on_off)
