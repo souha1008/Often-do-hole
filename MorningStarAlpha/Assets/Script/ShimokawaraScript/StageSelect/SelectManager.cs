@@ -17,8 +17,8 @@ public class SelectManager : MonoBehaviour
 #endif
 
     //int Max;
-    public int NowStage = 0;
-    int OldStage = -1;
+    public int NowSelectStage = 0;
+    int OldSelectStage = -1;
 
     float StickX;
 
@@ -30,7 +30,7 @@ public class SelectManager : MonoBehaviour
     public int LONG_PUSH_COOL_TIME;
     public int LONG_PUSH_PITCH;
 
-    int CanStage = 15;//えらべるステージ
+    int CanStage = 0;//えらべるステージ
     bool CanStart = true;//移動中は開始できない
 
 
@@ -40,8 +40,8 @@ public class SelectManager : MonoBehaviour
         instance = this;
 
         //Max = StageObj.Length - 1;
-        //NowStage = 0;
-        OldStage = -1;
+        NowSelectStage = GameStateManager.GetNowStage();
+        OldSelectStage = -1;
 
         RightPushFlag = false;
         LeftPushFlag = false;
@@ -51,7 +51,7 @@ public class SelectManager : MonoBehaviour
 
         CanStart = true;
 
-
+        SerchCanStage();
         ChangeStageCheck();
 
         //無理矢理スタートを呼びます
@@ -62,7 +62,7 @@ public class SelectManager : MonoBehaviour
     void FixedUpdate()
     {
         StickX = Input.GetAxis("Horizontal");
-        OldStage = NowStage;
+        OldSelectStage = NowSelectStage;
 
         //ここに更新処理
         if(PushRightMomentOrLongPush())//今押した or 長押しいい感じ
@@ -70,15 +70,15 @@ public class SelectManager : MonoBehaviour
             //関数空呼び
             PushLeftMomentOrLongPush();
 
-            NowStage++;
+            NowSelectStage++;
         }
         else if(PushLeftMomentOrLongPush())//今押した or 長押しいい感じ
         {
-            NowStage--;
+            NowSelectStage--;
         }
 
 
-        NowStage = Mathf.Clamp(NowStage, 0, CanStage);
+        NowSelectStage = Mathf.Clamp(NowSelectStage, 0, CanStage);
 
         //最後にチェック
         ChangeStageCheck();
@@ -86,7 +86,7 @@ public class SelectManager : MonoBehaviour
         //ステージ侵入
         if(CanStart && Input.GetKey(KeyCode.Return))
         {
-            GameStateManager.LoadStage(NowStage);
+            GameStateManager.LoadStage(NowSelectStage);
             
         }
         //Debug.Log(CanStart);
@@ -94,12 +94,12 @@ public class SelectManager : MonoBehaviour
 
     void ChangeStageCheck()
     {
-        if(NowStage != OldStage)
+        if(NowSelectStage != OldSelectStage)
         {
             //変わったタイミングはスタート受け付けない
             CanStart = false;
 
-            Vector3 TempPos = StageObj[NowStage].transform.position;
+            Vector3 TempPos = StageObj[NowSelectStage].transform.position;
             TempPos.y += PosDistance;
 
             SelectObj.transform.position = TempPos;
@@ -205,6 +205,27 @@ public class SelectManager : MonoBehaviour
     public void SetCanStart (bool flag)
     {
         CanStart = flag;
+    }
+
+    void SerchCanStage()
+    {
+        int OldCanStage = -1;//今開放済みステージを格納  
+        if(SaveDataManager.Instance)
+        {
+            for (int i = 0; i < SaveDataManager.Instance.MainData.Stage.Length; i++)
+            {
+                //i番目がクリア済みなら
+                if (SaveDataManager.Instance.MainData.Stage[i].Clear)
+                    OldCanStage = i;
+                //クリアしてない添え字まで来た
+                else
+                    break;
+            }
+        }
+        
+        //クリアしたステージ + 1 が 遊べるステージ   ※1-1未クリアなら (-1 + 1) = 0 番目までが遊べるステージ
+        CanStage = OldCanStage + 1;
+
     }
 
     //ステージクリア時に呼んで情報セット
