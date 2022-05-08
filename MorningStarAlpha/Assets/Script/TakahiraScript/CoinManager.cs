@@ -65,6 +65,7 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
                 coin.NowGetCoin1 = new bool[coin.AllCoin1];
                 coin.NowGetCoin2 = new bool[coin.AllCoin2];
                 coin.NowGetCoin3 = new bool[coin.AllCoin3];
+
                 //Debug.LogWarning(coin.AllCoin1);
             }
         }

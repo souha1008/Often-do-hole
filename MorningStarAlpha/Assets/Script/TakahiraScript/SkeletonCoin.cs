@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class SkeletonCoin : MonoBehaviour
 {
+    private void Awake()
+    {
+        this.gameObject.GetComponent<Collider>().isTrigger = true;  // トリガー
+    }
+
     public void OnTriggerEnter(Collider collider)
     {
         // プレイヤーと接触時コイン取得
