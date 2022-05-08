@@ -21,11 +21,16 @@ public class PlayerState_Clear : PlayerState
     
     public PlayerState_Clear()
     {
+        GameStateManager.SetGameState(GAME_STATE.RESULT);
+
+
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel.x = 0.0f;
         motionTimer = 0.0f;
+
+
 
         goal = GoalManager.Instance.gameObject;
         BulletScript.ReturnBullet();
