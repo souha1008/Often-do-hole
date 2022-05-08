@@ -34,6 +34,8 @@ public class SelectManager : MonoBehaviour
     bool CanStart = true;//移動中は開始できない
 
 
+    public bool DEBUG_ALL_STAGE_SELECT;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -209,22 +211,30 @@ public class SelectManager : MonoBehaviour
 
     void SerchCanStage()
     {
-        int OldCanStage = -1;//今開放済みステージを格納  
-        if(SaveDataManager.Instance)
+        if(DEBUG_ALL_STAGE_SELECT)
         {
-            for (int i = 0; i < SaveDataManager.Instance.MainData.Stage.Length; i++)
-            {
-                //i番目がクリア済みなら
-                if (SaveDataManager.Instance.MainData.Stage[i].Clear)
-                    OldCanStage = i;
-                //クリアしてない添え字まで来た
-                else
-                    break;
-            }
+            CanStage = 15;
         }
-        
-        //クリアしたステージ + 1 が 遊べるステージ   ※1-1未クリアなら (-1 + 1) = 0 番目までが遊べるステージ
-        CanStage = OldCanStage + 1;
+        else
+        {
+            int OldCanStage = -1;//今開放済みステージを格納  
+            if (SaveDataManager.Instance)
+            {
+                for (int i = 0; i < SaveDataManager.Instance.MainData.Stage.Length; i++)
+                {
+                    //i番目がクリア済みなら
+                    if (SaveDataManager.Instance.MainData.Stage[i].Clear)
+                        OldCanStage = i;
+                    //クリアしてない添え字まで来た
+                    else
+                        break;
+                }
+            }
+
+            //クリアしたステージ + 1 が 遊べるステージ   ※1-1未クリアなら (-1 + 1) = 0 番目までが遊べるステージ
+            CanStage = OldCanStage + 1;
+        }
+       
 
     }
 
