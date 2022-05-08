@@ -21,7 +21,7 @@ public class PlayerState_Clear : PlayerState
     
     public PlayerState_Clear()
     {
-        GameStateManager.SetGameState(GAME_STATE.RESULT);
+       //GameStateManager.SetGameState(GAME_STATE.RESULT);
 
 
         PlayerScript.refState = EnumPlayerState.CLEAR;
