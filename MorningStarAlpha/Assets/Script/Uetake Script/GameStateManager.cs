@@ -106,7 +106,4 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
         //Debug.Log(GameTime);
     }
-
-
-
 }

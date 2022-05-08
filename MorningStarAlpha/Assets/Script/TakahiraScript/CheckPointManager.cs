@@ -28,9 +28,14 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
     {
-        RespawnPos = checkpoint.RespawnPointObject.transform.position;
-        RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
-        NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
+        if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
+        {
+            RespawnPos = checkpoint.RespawnPointObject.transform.position;
+            RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
+            NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
+
+            CoinManager.Instance.SetCheckPointCoinData(); // コインの情報を入力
+        }
     }
 
     // 現在のチェックポイントの座標ゲット

@@ -1,40 +1,43 @@
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Runtime.Serialization;
+using System;
 
 
 
 // データファイル
-[System.Serializable]
+[Serializable]
 public class DataFile
 {
     public DataFile()
     {
-        Stage = new StageData[30];  // 一応30ステージ分生成
-        SoundVolumeMaster = 1.0f;
-        SoundVolumeBGM = 1.0f;
-        SoundVolumeSE = 1.0f;
-        SoundVolumeOBJECT = 1.0f;
-    }
+        Stage = new StageData[30];
 
-
-    [System.Serializable]
-    public class StageData
-    {
-        public int Rank = 0;    // ランク
-        public float Time = 0;  // 時間
-        public Coin coin = null;   // コイン
-        public bool Clear = false;
+        SoundVolumeMaster = 0.8f;
+        SoundVolumeBGM = 0.8f;
+        SoundVolumeSE = 0.8f;
+        SoundVolumeOBJECT = 0.8f;
     }
 
     public StageData[] Stage;   // ステージ分の配列
     public float SoundVolumeMaster, SoundVolumeBGM, SoundVolumeSE, SoundVolumeOBJECT;   // サウンドボリューム
 }
 
+[Serializable]
+public class StageData
+{
+    public int Rank = 0;            // ランク
+    public float Time = 0;          // 時間
+    public Coin coin = new Coin();  // コイン
+    public bool Clear = false;      // ステージクリアフラグ
+}
+
+
 public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
 {
     // メインセーブデータ
-    public DataFile MainData = null;
+    public DataFile MainData;
 
     // パス
     static private string Path = "Assets/SaveData/Data";
@@ -49,7 +52,12 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         }
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
 
+        MainData = null;
         LoadData();
+        //Debug.LogWarning("セーブデータ読み込み官僚");
+        //Debug.LogWarning(MainData.Stage[0].Rank);
+        //Debug.LogWarning(MainData.Stage[1].coin.AllCoin1);
+        //Debug.LogWarning(MainData.Stage[0].NowGetCoin1);
     }
 
     public void Start()
@@ -129,16 +137,17 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         }
     }
 
-
     // 空セーブデータを作成
     private DataFile CreateDataFile()
     {
         DataFile Data = new DataFile();
 
+        //Debug.LogWarning(Data.Stage[0]);
         //Data.Stage[0].Rank = 2;
         //Data.Stage[0].Time = 2;
         //Data.Stage[1].Rank = 3;
         //Data.Stage[1].Time = 3;
+        //Data.Stage[1].coin.AllCoin1 = 3;
 
         return Data;
     }
