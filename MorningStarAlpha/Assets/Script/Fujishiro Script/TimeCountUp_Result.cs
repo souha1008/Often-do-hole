@@ -7,8 +7,8 @@ public class TimeCountUp_Result : MonoBehaviour
 {
     [SerializeField] Text timeText;
     [SerializeField] int anim_exitFlame = 120;     // アニメーション終了フレーム
-    [SerializeField] float duration;
-    [SerializeField] float PlusCount;       // １フレームにカウントアップされる数
+    [SerializeField] float duration = 3;         // アニメーション時間
+    [SerializeField] float Start_Time = 999;       // 一番最初の時間
 
     [Header("デバッグ用")]
     [SerializeField] bool debug_Fixedtime;
@@ -42,11 +42,11 @@ public class TimeCountUp_Result : MonoBehaviour
                 // デバッグ用
                 if (debug_Fixedtime)
                 {
-                    StartCoroutine(TimeAnimetion(PlusCount, debug_maxTime, duration));
+                    StartCoroutine(TimeAnimetion(Start_Time, debug_maxTime, duration));
                 }
                 else
                 {
-                    StartCoroutine(TimeAnimetion(PlusCount, GameStateManager.GetGameTime(), duration));
+                    StartCoroutine(TimeAnimetion(Start_Time, GameStateManager.GetGameTime(), duration));
                 }
 
 
