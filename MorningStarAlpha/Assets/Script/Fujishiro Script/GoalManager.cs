@@ -115,7 +115,7 @@ public class GoalManager : MonoBehaviour
         Vector3 StartPos = transform.position;
 
         StartPos.y += 1.0f;
-        EffectManager.instance.BoxOpen(StartPos);
+        EffectManager.Instance.BoxOpen(StartPos);
     }
 }
 

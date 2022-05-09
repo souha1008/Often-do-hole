@@ -745,7 +745,7 @@ public class PlayerMain : MonoBehaviour
             landTimer = 0.0f;
             Vector3 startPos = rb.position;
             startPos.y -= 3.3f;
-            EffectManager.instance.landEffect(startPos);
+            EffectManager.Instance.landEffect(startPos);
         }
     }
 

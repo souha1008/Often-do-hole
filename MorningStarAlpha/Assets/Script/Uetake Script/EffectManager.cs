@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class EffectManager : MonoBehaviour
+public class EffectManager : SingletonMonoBehaviour<EffectManager>
 {
-    public static EffectManager instance;
     private GameObject ShotParticle;
     private GameObject BurstParticle;
     private GameObject LandParticle;
@@ -14,7 +13,6 @@ public class EffectManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
         ShotParticle = (GameObject)Resources.Load("Effect/05_stone_effect_01");
         BurstParticle = (GameObject)Resources.Load("Effect/Shot");
         LandParticle = (GameObject)Resources.Load("Effect/Landing");
