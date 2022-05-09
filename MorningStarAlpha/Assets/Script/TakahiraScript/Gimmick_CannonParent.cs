@@ -17,6 +17,7 @@ public class Gimmick_CannonParentEditor : Editor
     SerializedProperty MoveInfo;
     SerializedProperty CannonChild, StartLength, ShootTime;
     SerializedProperty FixedRadFlag, ChaseFlag, Speed, LifeTime;
+    SerializedProperty WayRight;
 
     void OnEnable()
     {
@@ -31,6 +32,7 @@ public class Gimmick_CannonParentEditor : Editor
         ChaseFlag = serializedObject.FindProperty("ChaseFlag");
         Speed = serializedObject.FindProperty("Speed");
         LifeTime = serializedObject.FindProperty("LifeTime");
+        WayRight = serializedObject.FindProperty("WayRight");
     }
     public override void OnInspectorGUI()
     {
@@ -65,6 +67,13 @@ public class Gimmick_CannonParentEditor : Editor
 
         Speed.floatValue = EditorGUILayout.FloatField("弾の速度", Speed.floatValue);
         LifeTime.floatValue = EditorGUILayout.FloatField("弾の生存時間", LifeTime.floatValue);
+        EditorGUILayout.Space(5);
+
+        // 向き
+        EditorGUILayout.LabelField("[向き]");
+        EditorGUILayout.Space(5);
+
+        WayRight.boolValue = EditorGUILayout.Toggle("右向きか", WayRight.boolValue);
 
 
         // 内部キャッシュに値を保存する
@@ -93,6 +102,10 @@ public class Gimmick_CannonParent : Gimmick_Main
     [Label("弾の生存時間")]
     public float LifeTime = 5;      // 弾の生存時間
 
+    [Header("[向き]")]
+    [Label("右向きか")]
+    public bool WayRight;           // サメの向き
+
 
 
     private bool StartFlag;     // 起動フラグ
@@ -115,6 +128,16 @@ public class Gimmick_CannonParent : Gimmick_Main
 
         // プレイヤーオブジェクト取得
         PlayerObject = GameObject.Find("Player");
+
+        // 向きを合わせる
+        if (WayRight)
+        {
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
+        }
+        else
+        {
+            this.gameObject.transform.rotation = Quaternion.identity;
+        }
     }
 
     public override void UpdateMove()
@@ -136,8 +159,23 @@ public class Gimmick_CannonParent : Gimmick_Main
         {
             if (!FixedRadFlag) // 砲台固定でないなら
             {
-                // プレイヤーの方向に向く
-                this.gameObject.transform.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos));
+                float Rot = CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos);
+                if (WayRight)
+                {
+                    if ((Rot >= 0 && Rot <= 90) || (Rot >= 270 && Rot <= 360))
+                    {
+                        // プレイヤーの方向に向く
+                        this.gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.y, Rot);
+                    }
+                }
+                else
+                {
+                    if ((Rot >= 90 && Rot <= 270))
+                    {
+                        // プレイヤーの方向に向く
+                        this.gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.y, Rot);
+                    }
+                }
             }
 
             // 弾発射処理
