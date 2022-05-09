@@ -1,19 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using DG.Tweening;
+using UnityEngine.Rendering;
 
 public class GoalManager : MonoBehaviour
 {
     public static GoalManager Instance;
     [SerializeField] GameObject ClearCam;
     [SerializeField] GameObject MainCam;
-    [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
+
+    
 
     [SerializeField] float AlphaSpeed = 90.0f; // 透明度の設定
     [SerializeField][Range(0.0f, 0.1f)]float CameraRotateSpeed = 0.558f;
@@ -78,13 +76,14 @@ public class GoalManager : MonoBehaviour
     public void StartMotionBlur()
     {
         AngleChange = true;
-        if (PostProssece == null) Debug.Log("volume is not loading");
+        //if (PostProssece == null) Debug.Log("volume is not loading");
 
-        PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
-        //PostProssece.GetComponent<Volume>().TryGetComponent<MotionBlur>(out var motionBlur);
-        //PostProssece.TryGetComponent<MotionBlur>(out var motionBlur);
-        motionBlur.active = true;
-        if (!motionBlur.active) Debug.Log("motionBlur is false");
+        //PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
+        //motionBlur.active = true;
+        //if (!motionBlur.active) Debug.Log("motionBlur is false");
+
+        // モーションブラーアクティブ
+        //this.GetComponent<Goal_MotionBlurActive>().MotionBlurActive();
 
         ClearCam.SetActive(true);
         if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
