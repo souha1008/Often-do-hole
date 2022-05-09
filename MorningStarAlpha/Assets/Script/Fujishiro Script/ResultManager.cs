@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
@@ -32,7 +33,7 @@ public class ResultManager : MonoBehaviour
     [SerializeField] GameObject Next_UI_Big;
     [SerializeField] GameObject StageSelect_UI;
     [SerializeField] GameObject StageSelect_UI_Big;
-    [SerializeField] Image Stump_UI;
+    [SerializeField] Image Stump_Sprite;
 
     UI_COMMAND ui_command;
 
@@ -88,7 +89,9 @@ public class ResultManager : MonoBehaviour
         Next_UI_Big.SetActive(true);
         StageSelect_UI.SetActive(true);
         StageSelect_UI_Big.SetActive(false);
-        Stump_UI.color = Color.clear;
+
+        Stump_Sprite.color = new Color(0f, 0f, 0f, 0f);
+        Debug.Log(Stump_Sprite.color.a);
 
         initPos = Wanted_Sprite.transform.position;
 
@@ -170,15 +173,15 @@ public class ResultManager : MonoBehaviour
                 switch (clearRank)
                 {
                     case ClearRank.Rank_S:
-                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");
+                    Stump_Sprite.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");
                     break;
 
                     case ClearRank.Rank_A:
-                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_A");
+                    Stump_Sprite.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_A");
                     break;
 
                     case ClearRank.Rank_B:
-                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_B");
+                    Stump_Sprite.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_B");
                     break;
                 }
 
@@ -253,7 +256,7 @@ public class ResultManager : MonoBehaviour
             if (anim_end == true)
             {
                 stump_animator.SetBool(Stump_Start, true);
-                Stump_UI.color = new Color(1, 1, 1, 1);
+                Stump_Sprite.color = new Color(1f, 1f, 1f, 1f);
             }
 
             // UIëÄçÏ
