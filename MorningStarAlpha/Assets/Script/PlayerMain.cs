@@ -95,6 +95,9 @@ public class PlayerMain : MonoBehaviour
     public BulletMain BulletScript;
     public PlayerState mode;                         // ƒXƒe[ƒg
     private RaycastHit footHit;                      // ‰º‚É“–‚½‚Á‚Ä‚¢‚é‚à‚Ì‚Ìî•ñŠi”[
+    private float landTimer;                         //’…’nƒ`ƒƒƒ^ƒŠƒ“ƒO–hŽ~
+    private float counterTimer;                      //U‚èŽqƒ`ƒƒƒ^ƒŠƒ“ƒO–hŽ~
+
 
     [System.NonSerialized] public float colliderRadius = 1.42f;   //Ú’n”»’è—pray”¼Œa
     [System.NonSerialized] public float coliderDistance = 1.8f; //
@@ -166,7 +169,7 @@ public class PlayerMain : MonoBehaviour
 
         animBullet[0] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_body").gameObject;
         animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
-        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject; 
+        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;     
     }
 
     private void Start()
@@ -192,6 +195,8 @@ public class PlayerMain : MonoBehaviour
         canShot = false;
         isOnGround = true;
         useVelocity = true;
+        landTimer = 0.0f;
+        counterTimer = 0.0f;
 
         ClearModeTransitionFlag();
         SetAnimHash();
@@ -229,12 +234,21 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+
+    private void TimerCount()
+    {
+        landTimer = Mathf.Min(landTimer + Time.deltaTime, 10.0f);
+        counterTimer = Mathf.Min(counterTimer + Time.deltaTime, 10.0f);
+
+        Debug.Log(landTimer);
+    }
+
     private void Update()
     {
         if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
+            TimerCount();
             InputStick_Fixed();
-            //InputStick();
             CheckCanShot();
             CheckMidAir();
 
@@ -724,7 +738,16 @@ public class PlayerMain : MonoBehaviour
 
     }
 
-
+    private void LandEffectSound()
+    {
+        if (landTimer > 0.2f)
+        {
+            landTimer = 0.0f;
+            Vector3 startPos = rb.position;
+            startPos.y -= 3.3f;
+            EffectManager.instance.landEffect(startPos);
+        }
+    }
 
     private void OnCollisionStay(Collision collision)
     {
@@ -747,7 +770,7 @@ public class PlayerMain : MonoBehaviour
                     isOnGround = true;
                     animator.SetBool(animHash.onGround, true);
 
-                    EffectManager.instance.landEffect(collision.contacts[0].point);
+                    LandEffectSound();
                  }
             //}
         }

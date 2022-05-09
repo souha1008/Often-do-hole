@@ -27,7 +27,6 @@ public class PlayerStateOnGround : PlayerState
         rareMotionTimer = 0.0f;
         RunMode = false;
         oldMoveDir = PlayerScript.dir;
-
         BulletScript.ReturnBullet();
 
         RotationStand();
