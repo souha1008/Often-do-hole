@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-using UnityEngine.AddressableAssets;
 
 public class ResultManager : MonoBehaviour
 {
@@ -89,7 +88,7 @@ public class ResultManager : MonoBehaviour
         Next_UI_Big.SetActive(true);
         StageSelect_UI.SetActive(true);
         StageSelect_UI_Big.SetActive(false);
-        Stump_UI.color = new Color(0, 0, 0, 0);
+        Stump_UI.color = Color.clear;
 
         initPos = Wanted_Sprite.transform.position;
 
@@ -168,32 +167,22 @@ public class ResultManager : MonoBehaviour
                         StageNo.text = "3-5";
                         break;
                 }
-
                 switch (clearRank)
                 {
                     case ClearRank.Rank_S:
-                    if (SpriteManager.Instance.LoadTexture("Stump_S") != null)
-                    {
-                        Debug.Log(SpriteManager.Instance.LoadTexture("Stump_S"));
-                        Stump_sprite[0] = SpriteManager.Instance.LoadTexture("Stump_S");
-                    }
-                        Debug.Log(Stump_sprite[0]);
-                        Stump_UI.sprite = Stump_sprite[0];
-                        break;
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");
+                    break;
 
                     case ClearRank.Rank_A:
-                        Stump_sprite[1] = SpriteManager.Instance.LoadTexture("Stump_A");
-                        Debug.Log(Stump_sprite[1]);
-                        Stump_UI.sprite = Stump_sprite[1];
-                        break;
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_A");
+                    break;
 
                     case ClearRank.Rank_B:
-                        Stump_sprite[2] = SpriteManager.Instance.LoadTexture("Stump_B");
-                        Debug.Log(Stump_sprite[2]);
-                        Stump_UI.sprite = Stump_sprite[2];
-                        break;
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_B");
+                    break;
                 }
-            }
+
+        }
             else
             {
                 // WANTED画像操作
@@ -287,7 +276,6 @@ public class ResultManager : MonoBehaviour
             // アニメーションが終わっていたらUI操作可能
             if (stump_animator.GetBool(Stump_end) == true)
             {
-
                 // スティック上
                 if (Input.GetAxis("Vertical") > 0.8f)
                 {

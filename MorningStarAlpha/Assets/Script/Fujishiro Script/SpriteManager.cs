@@ -19,16 +19,48 @@ public class SpriteManager : SingletonMonoBehaviour<SpriteManager>
         // スプライトデータ読み込み
         var handleSprite = Addressables.LoadAssetsAsync<Sprite>("Sprite", null);
 
-        do
-        {
-            yield return null;
-        } while (handleSprite.Status != AsyncOperationStatus.Succeeded && handleSprite.Status != AsyncOperationStatus.Failed);
+        yield return handleSprite;
 
-        if(handleSprite.Result != null)
+        if(handleSprite.Status == AsyncOperationStatus.Succeeded)
         {
             sprites = handleSprite.Result;
 
             for(int i = 0; i < sprites.Count; i++)
+            {
+                spritesList[i] = sprites[i];
+            }
+            sprites.Clear();
+
+            if (spritesList != null)
+            {
+                Debug.Log("Sprite読み込み完了");
+            }
+        }
+        else
+        {
+            Debug.Log("Sprite読み込み失敗");
+        }
+        SpriteLoadFlag = false;
+    }
+
+    // コルーチンじゃないバージョン
+    void SetSpriteData_nomal()
+    {
+        IList<Sprite> sprites;
+
+        // スプライトデータ読み込み
+        var handleSprite = Addressables.LoadAssetsAsync<Sprite>("Sprite", null);
+
+        do
+        {
+            ;
+        } while (handleSprite.Status != AsyncOperationStatus.Succeeded && handleSprite.Status != AsyncOperationStatus.Failed);
+
+        if (handleSprite.Result != null)
+        {
+            sprites = handleSprite.Result;
+
+            for (int i = 0; i < sprites.Count; i++)
             {
                 spritesList.Add(sprites[i]);
                 spriteName.Add(sprites[i].name);
@@ -56,6 +88,7 @@ public class SpriteManager : SingletonMonoBehaviour<SpriteManager>
             }
         }
 
+        Debug.Log(sprite_.name);
         return sprite_;
     }
 
@@ -68,6 +101,7 @@ public class SpriteManager : SingletonMonoBehaviour<SpriteManager>
     void Awake()
     {
         StartCoroutine(SetSpriteData());
+        //SetSpriteData_nomal();
     }
 
     // Start is called before the first frame update
