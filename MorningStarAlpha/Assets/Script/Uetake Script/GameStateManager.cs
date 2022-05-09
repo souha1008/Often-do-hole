@@ -62,12 +62,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         {
             CountDown();
         }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            PlayerMain.instance.mode = new PlayerStateStan();
-        }
-
     }
 
     public static GAME_STATE GetGameState()

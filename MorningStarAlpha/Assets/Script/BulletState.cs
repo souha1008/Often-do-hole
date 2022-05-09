@@ -142,8 +142,8 @@ public class BulletReturn : BulletState
 
         ratio = 0.0f;
 
-
-        maxPos = PlayerScript.rb.position + ((BulletScript.rb.position - PlayerScript.rb.position).normalized * BulletScript.BULLET_ROPE_LENGTH);
+        float dist = Vector3.Distance(BulletScript.rb.position, PlayerScript.rb.position);
+        maxPos = PlayerScript.rb.position + ((BulletScript.rb.position - PlayerScript.rb.position).normalized * dist);
 
         // ‚¢‚©‚è‰ñû‰¹Ä¶
         SoundManager.Instance.PlaySound("sound_18_‚¢‚©‚è‰ñûSE", 1.0f, 0.03f);
@@ -153,7 +153,7 @@ public class BulletReturn : BulletState
     {
 
 #if true
-        ratio += 0.05f;
+        ratio += 0.06f;
         float easeRatio = Easing.Linear(ratio, 1.0f, 0.0f, 1.0f);
         //’e‚Æ©•ª‚ÌˆÊ’u‚Å•âŠ® 
         Vector3 BulletPosition = maxPos * (1 - easeRatio) + PlayerScript.rb.position * easeRatio;

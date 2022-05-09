@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class EffectManager : MonoBehaviour
+public class EffectManager : SingletonMonoBehaviour<EffectManager>
 {
-    public static EffectManager instance;
-    [SerializeField] GameObject ShotParticle;
+    private GameObject ShotParticle;
     private GameObject BurstParticle;
     private GameObject LandParticle;
     private GameObject TreasureOpenParticle;
@@ -14,7 +13,7 @@ public class EffectManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        ShotParticle = (GameObject)Resources.Load("Effect/05_stone_effect_01");
         BurstParticle = (GameObject)Resources.Load("Effect/Shot");
         LandParticle = (GameObject)Resources.Load("Effect/Landing");
         TreasureOpenParticle = (GameObject)Resources.Load("Effect/05_Treasure_open");
