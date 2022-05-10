@@ -3,7 +3,7 @@ using UnityEngine;
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
-    [System.NonSerialized] public Collider co;
+    [System.NonSerialized] public SphereCollider co;
 
     private PlayerMain PlayerScript;
     [SerializeField] private GameObject Player;
@@ -39,7 +39,7 @@ public class BulletMain : MonoBehaviour
         BulletState.BulletScript = this;
         PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
-        co = GetComponent<Collider>();
+        co = GetComponent<SphereCollider>();
         
         Part[0] = transform.Find("body/Anchor_body/anchor_body").GetComponent<SkinnedMeshRenderer>();
         Part[1] = transform.Find("body/Anchor_body/anchor_L_needle").GetComponent<SkinnedMeshRenderer>();
