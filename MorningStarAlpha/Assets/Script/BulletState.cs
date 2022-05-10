@@ -50,7 +50,7 @@ public class BulletReady : BulletState
         BulletScript.co.isTrigger = true;
         BulletScript.CanShotFlag = true;
 
-        BulletScript.co.radius *= 0.5f;
+        BulletScript.co.radius = BulletScript.DefaultAnchorRadius * 0.5f;
     }
 
     public override void Move()
@@ -87,7 +87,9 @@ public class BulletGo : BulletState
     public override void Move()
     {
         radiusBigger = Mathf.Min(radiusBigger + 0.1f, 1.0f);
-        BulletScript.co.radius *= radiusBigger;
+        BulletScript.co.radius = BulletScript.DefaultAnchorRadius * radiusBigger;
+
+        Debug.LogWarning(radiusBigger + "aaaa");
         // •d‚Ì“®‚«
         BulletScript.RotateBullet();
         ExitFlameCnt++;

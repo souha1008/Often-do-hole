@@ -658,8 +658,7 @@ public class PlayerMain : MonoBehaviour
         //ÉVÉáÉbÉgíÜÇ…ï«Ç…Ç†ÇΩÇ¡ÇΩÇ∆Ç´ÇÃèàóù
         if (refState == EnumPlayerState.SHOT)
         {
-            if (collision.gameObject.CompareTag("Platform") || 
-                collision.gameObject.CompareTag("Conveyor_Tate") || collision.gameObject.CompareTag("Conveyor_Yoko"))
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
             {
                 switch (shotState)
                 {
@@ -713,7 +712,7 @@ public class PlayerMain : MonoBehaviour
             startPos.y -= 3.3f;
             EffectManager.Instance.landEffect(startPos);
 
-            SoundManager.Instance.PlaySound("sound_19_2_Landing");
+            SoundManager.Instance.PlaySound("sound_16_Landing", 0.3f);
         }
     }
 
@@ -798,15 +797,18 @@ public class PlayerMain : MonoBehaviour
                         if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
                         {
                             conuterSwing = true;
+                            counterTimer = 0.0f;
                         }
                         else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
                         {
                             conuterSwing = true;
+                            counterTimer = 0.0f;
                         }
                         else if (asp == Aspect.DOWN)
                         {
                             Debug.Log("collision Platform down: swing end");
                             conuterSwing = true;
+                            counterTimer = 0.0f;
                         }
 
                     }

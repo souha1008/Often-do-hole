@@ -37,7 +37,7 @@ public class Sound_footsteps : MonoBehaviour
     {
         if(Mathf.Abs(PlayerMain.instance.vel.x) > 15.0f)
         {
-            volume = 0.5f;
+            volume = 0.4f;
             play_flame = 30;
         }
         else
@@ -45,9 +45,6 @@ public class Sound_footsteps : MonoBehaviour
             volume = 0.3f;
             play_flame = 40;
         }
-
-
-
 
         flame_count++;
         if (flame_count >= play_flame)

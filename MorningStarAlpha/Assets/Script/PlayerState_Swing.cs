@@ -8,7 +8,8 @@ public class PlayerStateSwing_Vel : PlayerState
     private bool finishFlag;
     private bool releaseButton;
     private bool countreButton;
-    
+
+
     private float betweenLength; //開始時二点間の距離(距離はスイングstate通して固定)
     private Vector3 startPlayerVel;　　　　　　 //突入時velocity
     private float startAngle;    //開始時の二点間アングル
@@ -18,6 +19,7 @@ public class PlayerStateSwing_Vel : PlayerState
     private float nowAnglerVel;  //現在角速度
     private bool startVelDownFlag; //velocityを減速させるフラグ（真下に到達したら
     private bool LongestLope;    //ロープが最大長になっているかどうか
+    private bool onceSwingSound;
 
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
@@ -49,6 +51,7 @@ public class PlayerStateSwing_Vel : PlayerState
         CalculateStartVariable();
 
         PlayerScript.counterTimer = 1.0f;
+        onceSwingSound = false;
     }
 
 
@@ -354,6 +357,35 @@ public class PlayerStateSwing_Vel : PlayerState
 
     }
 
+    private void soundSwing()
+    {
+        if (onceSwingSound == false)
+        {
+            float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
+            if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+            {
+                if(degree > 240)
+                {
+                    Debug.Log("aaa");
+                    onceSwingSound = true;
+                    SoundManager.Instance.PlaySound("sound_15_Swing", 1.0f);
+                }
+            }
+            else if (PlayerScript.dir == PlayerMoveDir.LEFT)
+            {
+                if (degree < 120)
+                {
+                    Debug.Log("bbb");
+                    onceSwingSound = true;
+                    SoundManager.Instance.PlaySound("sound_15_Swing", 1.0f);
+                }
+            }
+        }
+        else
+        {
+
+        }
+    }
 
     public override void UpdateState()
     {
@@ -364,6 +396,7 @@ public class PlayerStateSwing_Vel : PlayerState
             InputButton();
 
             AnimFrameSetting();
+            soundSwing();
             if (PlayerScript.endSwing)
             {
                 finishFlag = true;
@@ -428,6 +461,7 @@ public class PlayerStateSwing_Vel : PlayerState
                     if (endAngle > degree)
                     {
                         CalculateCounterVariable();
+                        onceSwingSound = false;
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -435,12 +469,14 @@ public class PlayerStateSwing_Vel : PlayerState
                     if (endAngle < degree)
                     {
                         CalculateCounterVariable();
+                        onceSwingSound = false;
                     }
                 }
 
                 //壁跳ね返り処理
                 if (PlayerScript.conuterSwing)
-                {
+                {           
+                    SoundManager.Instance.PlaySound("sound_19_2_Counter", 0.5f);
                     PlayerScript.animator.SetTrigger(PlayerScript.animHash.wallKick);
                     CalculateCounterVariable();
                     PlayerScript.conuterSwing = false;

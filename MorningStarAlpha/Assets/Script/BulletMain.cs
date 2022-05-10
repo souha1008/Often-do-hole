@@ -20,7 +20,7 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool onceFlag; //ˆê‰ñ‚Ì”­Ë‚É•t‚«ÚG‚ª‹N‚±‚é‚Ì‚Íˆê‰ñ
     [ReadOnly] public bool StopVelChange; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
     [ReadOnly] public bool isInside; //’e‚ª“à‘¤‚É‚ ‚éó‘Ô
-
+    [ReadOnly] public float DefaultAnchorRadius; //’e‚ª“à‘¤‚É‚ ‚éó‘Ô
 
     //’eŠÖŒW’è”
     [System.NonSerialized] public float BULLET_SPEED = 50; //’e‚Ì‰‘¬
@@ -40,7 +40,8 @@ public class BulletMain : MonoBehaviour
         PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
         co = GetComponent<SphereCollider>();
-        
+        DefaultAnchorRadius = co.radius;
+
         Part[0] = transform.Find("body/Anchor_body/anchor_body").GetComponent<SkinnedMeshRenderer>();
         Part[1] = transform.Find("body/Anchor_body/anchor_L_needle").GetComponent<SkinnedMeshRenderer>();
         Part[2] = transform.Find("body/Anchor_body/anchor_R_needle").GetComponent<SkinnedMeshRenderer>();
