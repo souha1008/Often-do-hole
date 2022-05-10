@@ -175,7 +175,7 @@ public class PlayerMain : MonoBehaviour
     private void Start()
     {
         ////èoåªà íuÇÃê›íË
-        //transform.position = CheckPointManager.Instance.GetCheckPointPos();
+        transform.position = CheckPointManager.Instance.GetCheckPointPos();
 
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
