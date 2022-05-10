@@ -24,7 +24,7 @@ public class Gimmick_Thorn : Gimmick_Main
         if (collider.gameObject.CompareTag("Player"))
         {
             // プレイヤーを死亡状態に変更
-            PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, true);
+            PlayerMain.instance.mode = new PlayerStateDeath_Void();
             // プレイヤーにダメージエフェクト
         }
     }

@@ -1,22 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using DG.Tweening;
+using UnityEngine.Rendering;
 
 public class GoalManager : MonoBehaviour
 {
     public static GoalManager Instance;
     [SerializeField] GameObject ClearCam;
     [SerializeField] GameObject MainCam;
-    [SerializeField] Volume PostProssece;
     [SerializeField] RawImage RawImage;
 
-    float AlphaSpeed = 90.0f; // 透明度の設定
-    float CameraRotateSpeed = 0.558f;
+    
+
+    [SerializeField] float AlphaSpeed = 90.0f; // 透明度の設定
+    [SerializeField][Range(0.0f, 0.1f)]float CameraRotateSpeed = 0.558f;
     float alpha_Flag = 0.02f;
     int parsent = 1000000;
 
@@ -53,7 +51,7 @@ public class GoalManager : MonoBehaviour
     {
         if (AngleChange == true)
         {
-            MainCam.transform.DORotate(new Vector3(-78.0f, 0, 0), 0.08f, RotateMode.Fast)
+            MainCam.transform.DORotate(new Vector3(-78.0f, 0, 0), CameraRotateSpeed, RotateMode.Fast)
                 .SetLink(MainCam)
                 .SetEase(Ease.InCirc);
             //MainCam.transform.Rotate(new Vector3(-CameraRotateSpeed, 0, 0));
@@ -78,13 +76,14 @@ public class GoalManager : MonoBehaviour
     public void StartMotionBlur()
     {
         AngleChange = true;
-        if (PostProssece == null) Debug.Log("volume is not loading");
+        //if (PostProssece == null) Debug.Log("volume is not loading");
 
-        PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
-        //PostProssece.GetComponent<Volume>().TryGetComponent<MotionBlur>(out var motionBlur);
-        //PostProssece.TryGetComponent<MotionBlur>(out var motionBlur);
-        motionBlur.active = true;
-        if (!motionBlur.active) Debug.Log("motionBlur is false");
+        //PostProssece.profile.TryGet<MotionBlur>(out var motionBlur);
+        //motionBlur.active = true;
+        //if (!motionBlur.active) Debug.Log("motionBlur is false");
+
+        // モーションブラーアクティブ
+        //this.GetComponent<Goal_MotionBlurActive>().MotionBlurActive();
 
         ClearCam.SetActive(true);
         if (!ClearCam.activeSelf) Debug.Log("ClearCam is not Actived");
@@ -100,7 +99,22 @@ public class GoalManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerChangeClearState();
+        if (other.CompareTag("Player"))
+        {
+            PlayerChangeClearState();
+        }
+        else
+        {
+            Debug.Log("違うもの");
+        }
+    }
+
+    private void OpenParticleStart()
+    {
+        Vector3 StartPos = transform.position;
+
+        StartPos.y += 1.0f;
+        EffectManager.Instance.BoxOpen(StartPos);
     }
 }
 

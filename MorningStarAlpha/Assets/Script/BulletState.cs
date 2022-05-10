@@ -29,7 +29,7 @@ public abstract class BulletState
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
         vec = vec * 1.0f;
-        vec.y += 1.0f;
+        vec.y += 3.0f;
         Vector3 adjustPos = PlayerScript.rb.position + vec;
 
         BulletScript.rb.position = adjustPos;
@@ -49,6 +49,8 @@ public class BulletReady : BulletState
         BulletScript.co.enabled = false;
         BulletScript.co.isTrigger = true;
         BulletScript.CanShotFlag = true;
+
+        BulletScript.co.radius = BulletScript.DefaultAnchorRadius * 0.5f;
     }
 
     public override void Move()
@@ -62,11 +64,13 @@ public class BulletReady : BulletState
 // 発射中ステート
 public class BulletGo : BulletState
 {
-    private int ExitFlameCnt = 0;//存在し始めてからのカウント
-
+    private int ExitFlameCnt;//存在し始めてからのカウント
+    float radiusBigger;
     public BulletGo()
     {
         // 初期化
+        ExitFlameCnt = 0;//存在し始めてからのカウント
+        radiusBigger = 0.3f;
         BulletScript.NowBulletState = EnumBulletState.GO;
         BulletScript.VisibleBullet();
         BulletScript.co.enabled = true;
@@ -81,7 +85,11 @@ public class BulletGo : BulletState
     }
 
     public override void Move()
-    {  
+    {
+        radiusBigger = Mathf.Min(radiusBigger + 0.1f, 1.0f);
+        BulletScript.co.radius = BulletScript.DefaultAnchorRadius * radiusBigger;
+
+        Debug.LogWarning(radiusBigger + "aaaa");
         // 錨の動き
         BulletScript.RotateBullet();
         ExitFlameCnt++;
@@ -142,8 +150,8 @@ public class BulletReturn : BulletState
 
         ratio = 0.0f;
 
-
-        maxPos = PlayerScript.rb.position + ((BulletScript.rb.position - PlayerScript.rb.position).normalized * BulletScript.BULLET_ROPE_LENGTH);
+        float dist = Vector3.Distance(BulletScript.rb.position, PlayerScript.rb.position);
+        maxPos = PlayerScript.rb.position + ((BulletScript.rb.position - PlayerScript.rb.position).normalized * dist);
 
         // いかり回収音再生
         SoundManager.Instance.PlaySound("sound_18_いかり回収SE", 1.0f, 0.03f);
@@ -153,7 +161,7 @@ public class BulletReturn : BulletState
     {
 
 #if true
-        ratio += 0.05f;
+        ratio += 0.06f;
         float easeRatio = Easing.Linear(ratio, 1.0f, 0.0f, 1.0f);
         //弾と自分の位置で補完 
         Vector3 BulletPosition = maxPos * (1 - easeRatio) + PlayerScript.rb.position * easeRatio;

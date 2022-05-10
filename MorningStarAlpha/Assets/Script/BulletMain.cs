@@ -3,7 +3,7 @@ using UnityEngine;
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
-    [System.NonSerialized] public Collider co;
+    [System.NonSerialized] public SphereCollider co;
 
     private PlayerMain PlayerScript;
     [SerializeField] private GameObject Player;
@@ -20,7 +20,7 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool onceFlag; //ˆê‰ñ‚Ì”­Ë‚É•t‚«ÚG‚ª‹N‚±‚é‚Ì‚Íˆê‰ñ
     [ReadOnly] public bool StopVelChange; //’e‚ª–ß‚³‚ê‚Äˆø‚Á’£‚ç‚ê‚Ä‚¢‚éó‘Ô
     [ReadOnly] public bool isInside; //’e‚ª“à‘¤‚É‚ ‚éó‘Ô
-
+    [ReadOnly] public float DefaultAnchorRadius; //’e‚ª“à‘¤‚É‚ ‚éó‘Ô
 
     //’eŠÖŒW’è”
     [System.NonSerialized] public float BULLET_SPEED = 50; //’e‚Ì‰‘¬
@@ -39,8 +39,9 @@ public class BulletMain : MonoBehaviour
         BulletState.BulletScript = this;
         PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
-        co = GetComponent<Collider>();
-        
+        co = GetComponent<SphereCollider>();
+        DefaultAnchorRadius = co.radius;
+
         Part[0] = transform.Find("body/Anchor_body/anchor_body").GetComponent<SkinnedMeshRenderer>();
         Part[1] = transform.Find("body/Anchor_body/anchor_L_needle").GetComponent<SkinnedMeshRenderer>();
         Part[2] = transform.Find("body/Anchor_body/anchor_R_needle").GetComponent<SkinnedMeshRenderer>();
@@ -179,7 +180,7 @@ public class BulletMain : MonoBehaviour
         vel = Vector3.zero;
         isTouched = false;
 
-        EffectManager.instance.ShotEffect();
+        EffectManager.Instance.ShotEffect();
 
         if (vec.y < 0.3f)
         {
@@ -343,6 +344,8 @@ public class BulletMain : MonoBehaviour
             //•d‚ªh‚³‚éêŠ‚ğ•Çƒsƒbƒ^ƒŠ‚É‚·‚éˆ—
             //AdjustColPoint(colAspect, colPoint);
             Aspect_8 colAspect;
+            colPoint = collision.GetContact(0).point;
+
 
             if (onceFlag == false)
             { 
@@ -356,8 +359,8 @@ public class BulletMain : MonoBehaviour
                         isTouched = true;
                         //Šeí‰‰o
                         CameraShake.instance.Shake(rb.velocity);
-                        colPoint = collision.GetContact(0).point;
-                        EffectManager.instance.StartShotEffect(colPoint, Quaternion.identity);
+                        
+                        EffectManager.Instance.StartShotEffect(colPoint, Quaternion.identity);
    
                         //–ÊŒvZ
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);

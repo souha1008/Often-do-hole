@@ -21,11 +21,16 @@ public class PlayerState_Clear : PlayerState
     
     public PlayerState_Clear()
     {
+        GameStateManager.SetGameState(GAME_STATE.RESULT);
+
+
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel.x = 0.0f;
         motionTimer = 0.0f;
+
+
 
         goal = GoalManager.Instance.gameObject;
         BulletScript.ReturnBullet();
@@ -70,6 +75,11 @@ public class PlayerState_Clear : PlayerState
             PlayerScript.animator.SetBool("isRunning", true);
             Debug.Log(Vector3.Distance(PlayerScript.rb.position, goal.transform.position));
 
+            //ë¨ìxÇéQè∆
+            float animBlend = Mathf.Abs(PlayerScript.vel.x);
+            animBlend = Mathf.Clamp(animBlend, 0.0f, PlayerScript.MAX_RUN_SPEED);
+            PlayerScript.animator.SetFloat(Animator.StringToHash("RunSpeed"), animBlend);
+          
             //ìûíÖÇµÇΩÇÁ
             if (Vector3.Distance(PlayerScript.rb.position, goal.transform.position) < AnimStartDistance)
             {

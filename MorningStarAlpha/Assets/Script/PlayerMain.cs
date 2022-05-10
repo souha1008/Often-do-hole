@@ -95,6 +95,9 @@ public class PlayerMain : MonoBehaviour
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
+    public float landTimer;                         //着地チャタリング防止
+    public float counterTimer;                      //振り子チャタリング防止
+
 
     [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
     [System.NonSerialized] public float coliderDistance = 1.8f; //
@@ -166,9 +169,7 @@ public class PlayerMain : MonoBehaviour
 
         animBullet[0] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_body").gameObject;
         animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
-        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;
-
-        Time.timeScale = GameSpeed;
+        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;     
     }
 
     private void Start()
@@ -194,6 +195,8 @@ public class PlayerMain : MonoBehaviour
         canShot = false;
         isOnGround = true;
         useVelocity = true;
+        landTimer = 0.0f;
+        counterTimer = 0.0f;
 
         ClearModeTransitionFlag();
         SetAnimHash();
@@ -219,6 +222,8 @@ public class PlayerMain : MonoBehaviour
             mode.StateTransition();
             mode.Move();
         }
+
+        Time.timeScale = GameSpeed;
     }
 
     public void VisibleAnimBullet(bool on_off)
@@ -229,12 +234,21 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+
+    private void TimerCount()
+    {
+        landTimer = Mathf.Min(landTimer + Time.deltaTime, 10.0f);
+        counterTimer = Mathf.Min(counterTimer + Time.deltaTime, 10.0f);
+
+        Debug.Log(landTimer);
+    }
+
     private void Update()
     {
-        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
+            TimerCount();
             InputStick_Fixed();
-            //InputStick();
             CheckCanShot();
             CheckMidAir();
 
@@ -254,7 +268,7 @@ public class PlayerMain : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GameStateManager.GetGameState() == GAME_STATE.PLAY && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        if (GameStateManager.GetGameState() != GAME_STATE.PAUSE && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
             if (mode != null)
             {
@@ -276,7 +290,6 @@ public class PlayerMain : MonoBehaviour
             Vector3 resetZo = rb.position;
             resetZo.z = 0.0f;
             rb.position = resetZo;
-
 
             if (Mathf.Abs(addVel.magnitude) > 10.0f)
             {
@@ -358,8 +371,6 @@ public class PlayerMain : MonoBehaviour
 
 
         float angle = CalculationScript.TwoPointAngle360(Vector3.zero, sourceLeftStick);
-
-        Debug.Log("Stick angle :" + angle);
         float adjustAngle = 0;
         //angleを固定(25.75.285.335)
         
@@ -438,8 +449,6 @@ public class PlayerMain : MonoBehaviour
         {
             stickCanShotRange = false;
         }
-
-        Debug.Log("Adust angle :" + adjustAngle);
 
 
         //角度を読める値に調整
@@ -649,8 +658,7 @@ public class PlayerMain : MonoBehaviour
         //ショット中に壁にあたったときの処理
         if (refState == EnumPlayerState.SHOT)
         {
-            if (collision.gameObject.CompareTag("Platform") || 
-                collision.gameObject.CompareTag("Conveyor_Tate") || collision.gameObject.CompareTag("Conveyor_Yoko"))
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
             {
                 switch (shotState)
                 {
@@ -693,43 +701,20 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-
-        //swing中に壁にぶつかったときの処理(反転、強制終了)
-        if (refState == EnumPlayerState.SWING)
-        {
-            if (swingState == SwingState.TOUCHED)
-            {
-                if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
-                {
-                    if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
-                    {
-                        conuterSwing = true;
-                    }
-                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
-                    {
-                        conuterSwing = true;
-                    }
-                    else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
-                    {
-                        Debug.Log("collision Platform : Wall Jump");
-                    }
-                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.LEFT)
-                    {
-                        Debug.Log("collision Platform : Wall Jump");
-                    }
-                    else　if (asp == Aspect.DOWN)
-                    {
-                        Debug.Log("collision Platform down: swing end");
-                        conuterSwing = true;
-                    }
-
-                }
-            }
-        }
-
     }
 
+    private void LandEffectSound()
+    {
+        if (landTimer > 0.2f)
+        {
+            landTimer = 0.0f;
+            Vector3 startPos = rb.position;
+            startPos.y -= 3.3f;
+            EffectManager.Instance.landEffect(startPos);
 
+            SoundManager.Instance.PlaySound("sound_16_Landing", 0.3f);
+        }
+    }
 
     private void OnCollisionStay(Collision collision)
     {
@@ -752,7 +737,7 @@ public class PlayerMain : MonoBehaviour
                     isOnGround = true;
                     animator.SetBool(animHash.onGround, true);
 
-                    EffectManager.instance.landEffect(collision.contacts[0].point);
+                    LandEffectSound();
                  }
             //}
         }
@@ -800,8 +785,46 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-        
-    }
+        //swing中に壁にぶつかったときの処理(反転、強制終了)
+        if (refState == EnumPlayerState.SWING)
+        {
+            if (counterTimer > 0.05f)
+            {
+                if (swingState == SwingState.TOUCHED)
+                {
+                    if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+                    {
+                        if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
+                        {
+                            conuterSwing = true;
+                            counterTimer = 0.0f;
+                        }
+                        else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
+                        {
+                            conuterSwing = true;
+                            counterTimer = 0.0f;
+                        }
+                        else if (asp == Aspect.DOWN)
+                        {
+                            Debug.Log("collision Platform down: swing end");
+                            conuterSwing = true;
+                            counterTimer = 0.0f;
+                        }
+
+                    }
+                }
+            }
+            else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
+            {
+                Debug.Log("collision Platform : Wall Jump");
+            }
+            else if (dir == PlayerMoveDir.LEFT && asp == Aspect.LEFT)
+            {
+                Debug.Log("collision Platform : Wall Jump");
+            }
+          
+        }
+        }
 
     /// <summary>
     /// トリガー類はすぐに遷移しない場合リセット
@@ -826,48 +849,50 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        //接地ray
-        Ray footRay = new Ray(rb.position, Vector3.down);
-        if (isOnGround)
-        {
-            Gizmos.color = Color.magenta;
-        }
-        else
-        {
-            Gizmos.color = Color.cyan;
-        }
-        Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
+    //private void OnDrawGizmos()
+    //{
+    //    //接地ray
+    //    Ray footRay = new Ray(rb.position, Vector3.down);
+
+    //        if (isOnGround)
+    //        {
+    //            Gizmos.color = Color.magenta;
+    //        }
+    //        else
+    //        {
+    //            Gizmos.color = Color.cyan;
+    //        }
+    //        Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
 
 
-        //頭
-        //if (refState == EnumPlayerState.SHOT)
-        //{
-        //    if (shotState == ShotState.STRAINED)
-        //    {
-                Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
-                vecToPlayer = vecToPlayer.normalized;
+    //        //頭
+    //        //if (refState == EnumPlayerState.SHOT)
+    //        //{
+    //        //    if (shotState == ShotState.STRAINED)
+    //        //    {
+    //        Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
+    //        vecToPlayer = vecToPlayer.normalized;
 
-                Ray headRay = new Ray(rb.position, vecToPlayer);
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
-        //    }
-        //}
+    //        Ray headRay = new Ray(rb.position, vecToPlayer);
+    //        Gizmos.color = Color.yellow;
+    //        Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
+    //        //    }
+    //        //}
 
-        //スイングスライド足元
-        //if(refState == EnumPlayerState.SWING)
-        //{
-        //    if(swingState == SwingState.TOUCHED) 
-        //    {
-                Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
-                vecToPlayerR = vecToPlayerR.normalized;
+    //        //スイングスライド足元
+    //        //if(refState == EnumPlayerState.SWING)
+    //        //{
+    //        //    if(swingState == SwingState.TOUCHED) 
+    //        //    {
+    //        Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
+    //        vecToPlayerR = vecToPlayerR.normalized;
 
-                Ray Ray = new Ray(rb.position, vecToPlayerR);
-                Gizmos.color = Color.black;
-                Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
-        //    }
-        //}   
-    }
+    //        Ray Ray = new Ray(rb.position, vecToPlayerR);
+    //        Gizmos.color = Color.black;
+    //        Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
+    //        //    }
+    //        //}   
+    //    
+    //}
 
 }

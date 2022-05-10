@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class EffectManager : MonoBehaviour
+public class EffectManager : SingletonMonoBehaviour<EffectManager>
 {
-    public static EffectManager instance;
-    [SerializeField] GameObject ShotParticle;
+    private GameObject ShotParticle;
     private GameObject BurstParticle;
     private GameObject LandParticle;
-
+    private GameObject TreasureOpenParticle;
 
 
     private void Awake()
     {
-        instance = this;
+        ShotParticle = (GameObject)Resources.Load("Effect/05_stone_effect_01");
         BurstParticle = (GameObject)Resources.Load("Effect/Shot");
         LandParticle = (GameObject)Resources.Load("Effect/Landing");
+        TreasureOpenParticle = (GameObject)Resources.Load("Effect/05_Treasure_open");
     }
 
     public void StartShotEffect(Vector3 Pos, Quaternion rot)
@@ -58,5 +58,13 @@ public class EffectManager : MonoBehaviour
         pos.y += 1.2f;
         GameObject effect = Instantiate(LandParticle, pos, Quaternion.Euler(-90, 0, 0));
         effect.transform.localScale = Vector3.one * size; //サイズ変更
+    }
+
+    public void BoxOpen(Vector3 pos)
+    {
+        const float size = 4.0f;
+        pos.y += 1.2f;
+        GameObject effect = Instantiate(TreasureOpenParticle, pos, Quaternion.identity);
+        effect.transform.localScale = Vector3.one * size; //サイズ変更s
     }
 }

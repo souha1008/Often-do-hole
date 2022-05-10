@@ -21,9 +21,16 @@ public class CameraMainShimokawara: MonoBehaviour
     EnumPlayerState PlayerState;
     EnumPlayerState OldPlayerState;
 
-    private void Start()
+    private bool stopFlag; //ÉJÉÅÉâí‚é~óp
+
+    private void Awake()
     {
         instance = this;
+    }
+
+    private void Start()
+    {
+        stopFlag = false;
         CameraTrueCnt = CAMERA_RETURN_FLAME;
         TraceObj();
 
@@ -32,7 +39,10 @@ public class CameraMainShimokawara: MonoBehaviour
 
     public void ManualUpdate()
     {
-        TraceObj();
+        if (stopFlag == false)
+        {
+            TraceObj();
+        }
     }
 
     public void CameraReturn()
@@ -130,6 +140,11 @@ public class CameraMainShimokawara: MonoBehaviour
             this.transform.position = TruePos;
         }
 
+    }
+    
+    public void StopCamera()
+    {
+        stopFlag = true;
     }
 
     void FixedUpdate()
