@@ -364,18 +364,16 @@ public class PlayerStateSwing_Vel : PlayerState
             float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
             if (PlayerScript.dir == PlayerMoveDir.RIGHT)
             {
-                if(degree > 240)
+                if(degree > 250)
                 {
-                    Debug.Log("aaa");
                     onceSwingSound = true;
                     SoundManager.Instance.PlaySound("sound_15_Swing", 1.0f);
                 }
             }
             else if (PlayerScript.dir == PlayerMoveDir.LEFT)
             {
-                if (degree < 120)
+                if (degree < 110)
                 {
-                    Debug.Log("bbb");
                     onceSwingSound = true;
                     SoundManager.Instance.PlaySound("sound_15_Swing", 1.0f);
                 }

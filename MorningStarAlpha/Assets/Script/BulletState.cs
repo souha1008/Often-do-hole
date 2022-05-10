@@ -70,7 +70,7 @@ public class BulletGo : BulletState
     {
         // 初期化
         ExitFlameCnt = 0;//存在し始めてからのカウント
-        radiusBigger = 0.5f;
+        radiusBigger = 0.3f;
         BulletScript.NowBulletState = EnumBulletState.GO;
         BulletScript.VisibleBullet();
         BulletScript.co.enabled = true;
