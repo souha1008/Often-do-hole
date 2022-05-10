@@ -175,7 +175,7 @@ public class PlayerMain : MonoBehaviour
     private void Start()
     {
         ////èoåªà íuÇÃê›íË
-        transform.position = CheckPointManager.Instance.GetCheckPointPos();
+        //transform.position = CheckPointManager.Instance.GetCheckPointPos();
 
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
@@ -712,6 +712,8 @@ public class PlayerMain : MonoBehaviour
             Vector3 startPos = rb.position;
             startPos.y -= 3.3f;
             EffectManager.Instance.landEffect(startPos);
+
+            SoundManager.Instance.PlaySound("sound_19_2_Landing");
         }
     }
 
