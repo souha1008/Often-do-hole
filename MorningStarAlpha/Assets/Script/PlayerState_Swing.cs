@@ -47,6 +47,8 @@ public class PlayerStateSwing_Vel : PlayerState
         PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, true);
 
         CalculateStartVariable();
+
+        PlayerScript.counterTimer = 1.0f;
     }
 
 

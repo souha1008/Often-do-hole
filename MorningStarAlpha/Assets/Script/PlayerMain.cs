@@ -95,8 +95,8 @@ public class PlayerMain : MonoBehaviour
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
-    private float landTimer;                         //着地チャタリング防止
-    private float counterTimer;                      //振り子チャタリング防止
+    public float landTimer;                         //着地チャタリング防止
+    public float counterTimer;                      //振り子チャタリング防止
 
 
     [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
@@ -702,40 +702,6 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-
-        //swing中に壁にぶつかったときの処理(反転、強制終了)
-        if (refState == EnumPlayerState.SWING)
-        {
-            if (swingState == SwingState.TOUCHED)
-            {
-                if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
-                {
-                    if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
-                    {
-                        conuterSwing = true;
-                    }
-                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
-                    {
-                        conuterSwing = true;
-                    }
-                    else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
-                    {
-                        Debug.Log("collision Platform : Wall Jump");
-                    }
-                    else if (dir == PlayerMoveDir.LEFT && asp == Aspect.LEFT)
-                    {
-                        Debug.Log("collision Platform : Wall Jump");
-                    }
-                    else　if (asp == Aspect.DOWN)
-                    {
-                        Debug.Log("collision Platform down: swing end");
-                        conuterSwing = true;
-                    }
-
-                }
-            }
-        }
-
     }
 
     private void LandEffectSound()
@@ -818,8 +784,43 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-        
-    }
+        //swing中に壁にぶつかったときの処理(反転、強制終了)
+        if (refState == EnumPlayerState.SWING)
+        {
+            if (counterTimer > 0.05f)
+            {
+                if (swingState == SwingState.TOUCHED)
+                {
+                    if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
+                    {
+                        if (dir == PlayerMoveDir.RIGHT && asp == Aspect.LEFT)
+                        {
+                            conuterSwing = true;
+                        }
+                        else if (dir == PlayerMoveDir.LEFT && asp == Aspect.RIGHT)
+                        {
+                            conuterSwing = true;
+                        }
+                        else if (asp == Aspect.DOWN)
+                        {
+                            Debug.Log("collision Platform down: swing end");
+                            conuterSwing = true;
+                        }
+
+                    }
+                }
+            }
+            else if (dir == PlayerMoveDir.RIGHT && asp == Aspect.RIGHT)
+            {
+                Debug.Log("collision Platform : Wall Jump");
+            }
+            else if (dir == PlayerMoveDir.LEFT && asp == Aspect.LEFT)
+            {
+                Debug.Log("collision Platform : Wall Jump");
+            }
+          
+        }
+        }
 
     /// <summary>
     /// トリガー類はすぐに遷移しない場合リセット
