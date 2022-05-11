@@ -392,6 +392,7 @@ public class BulletMain : MonoBehaviour
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
+                        SoundManager.Instance.PlaySound("sound_30_Iron");
 
                         if (PlayerScript.isOnGround)
                         {
@@ -423,6 +424,7 @@ public class BulletMain : MonoBehaviour
                         }
                         else
                         {
+                            SoundManager.Instance.PlaySound("sound_30_Iron");
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
