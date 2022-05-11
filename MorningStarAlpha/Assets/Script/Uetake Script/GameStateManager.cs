@@ -26,7 +26,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 16;
     private const float MAX_TIME = 999.0f;
-    private string[] StageNames = { "Stage1-1" ,"Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
+    private string[] StageNames = { "UetakeGattai" ,"Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
 
@@ -35,11 +35,10 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private float GameTime;
     private GAME_RANK GameRank;
     private int NowStage = 0;
+    private bool StageSoundFlag = false;
 
     private void Awake()
     {
-        Init();
-
         if (this != Instance)
         {
             Destroy(this);
@@ -61,9 +60,18 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         SetGameState(GAME_STATE.PLAY);
     }
 
-    private void PlayBGM()
+    //プレイヤーで呼んでいる
+    public void PlayGameStageBGM()
     {
+        if (StageSoundFlag)
+        {
+            SoundManager.Instance.StopSound();
 
+            //後にステージ連番によって分岐
+
+            SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+            StageSoundFlag = false;
+        }
     }
 
 
@@ -93,9 +101,11 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     //ここに初期化したい情報書いて
     //ステージセレクトの開始とリトライ時に情報を初期化
+    //ステージの初めから開始する場合に呼ばれる（針等のチェックポイントでは呼ばれない
     private void InitializeStage()
     {
-
+        Init();
+        StageSoundFlag = true;
     }
 
     //ステージセレクトから入るときのみ

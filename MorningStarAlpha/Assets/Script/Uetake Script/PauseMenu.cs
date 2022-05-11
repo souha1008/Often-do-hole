@@ -149,7 +149,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void ClickRetry()
     {
-        FadeManager.Instance.FadeGameOver();
+        //FadeManager.Instance.FadeGameOver();
+        GameStateManager.LoadNowStage();
         EndPause();
     }
 
