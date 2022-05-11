@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerStateStan : PlayerState
 {
-    private bool shotButton;
-    private const float SLIDE_END_TIME = 0.3f;
-    private float slideEndTimer;
 
     float StartTime;
     static public float TIME_LENGTH = 0.5f;
@@ -15,10 +12,7 @@ public class PlayerStateStan : PlayerState
     public PlayerStateStan()//コンストラクタ
     {
         PlayerScript.refState = EnumPlayerState.STAN;
-        shotButton = false;
         PlayerScript.vel = Vector3.zero;
-        PlayerScript.canShotState = false;
-        slideEndTimer = 0.0f;
         StartTime = Time.time;
 
         if (PlayerScript.dir == PlayerMoveDir.RIGHT)
@@ -29,7 +23,6 @@ public class PlayerStateStan : PlayerState
         {
             PlayerScript.rb.MoveRotation(Quaternion.Euler(0, -140, 0));
         }
-
 
         //ボール関連
         BulletScript.ReturnBullet();
@@ -53,7 +46,6 @@ public class PlayerStateStan : PlayerState
         if(Time.time > StartTime + TIME_LENGTH)
         {
             RotationStand();
-
 
             if (PlayerScript.isOnGround == true)
             {

@@ -142,7 +142,7 @@ public class ChainManager : MonoBehaviour
                         Vector3 CenterPos = new Vector3(BulletPos.x + Mathf.Cos(BtoC_angle) * NowLength * CenterWariai, BulletPos.y + Mathf.Sin(BtoC_angle) * NowLength * CenterWariai, 0);
 
 
-                        Chain[i].transform.position = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
+                        Chain[i].transform.position = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / Mathf.Max((ChainNum - 1) , 1));
 
 
 
@@ -152,21 +152,21 @@ public class ChainManager : MonoBehaviour
                         //äpìx
                         if (i == 0)
                         {
-                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
-                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i + 1) / (ChainNum - 1));
+                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / Mathf.Max((ChainNum - 1) , 1));
+                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i + 1) / Mathf.Max((ChainNum - 1) , 1));
                         }
                         else if(i == ChainNum - 1)
                         {
-                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / (ChainNum - 1));
-                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / (ChainNum - 1));
+                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / Mathf.Max((ChainNum - 1) , 1));
+                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i) / Mathf.Max((ChainNum - 1) , 1));
 
                             //ÉvÉåÉCÉÑÅ[Ç…ìnÇ∑Ç‚Ç¬
                             PlayerAngle = AngleStart - AngleEnd;
                         }
                         else
                         {
-                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / (ChainNum - 1));
-                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i + 1) / (ChainNum - 1));
+                            AngleStart = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i - 1) / Mathf.Max((ChainNum - 1) , 1));
+                            AngleEnd = Vezie.Vezie_3(BulletPos, CenterPos, PlayerPos, (float)(i + 1) / Mathf.Max((ChainNum - 1) , 1));
                         }
 
 
@@ -185,7 +185,7 @@ public class ChainManager : MonoBehaviour
                     //êUÇËéqÇ∂Ç·Ç»Ç¢
                     else
                     {
-                        Chain[i].transform.position = Vector3.Lerp(BulletPos, PlayerPos, (float)i / (ChainNum - 1));
+                        Chain[i].transform.position = Vector3.Lerp(BulletPos, PlayerPos, (float)i / Mathf.Max((ChainNum - 1) , 1));
 
                         float Radian = Mathf.Atan2(PlayerPos.y - BulletPos.y, PlayerPos.x - BulletPos.x);
                         float Do = Radian / Mathf.PI * 180 + 90;

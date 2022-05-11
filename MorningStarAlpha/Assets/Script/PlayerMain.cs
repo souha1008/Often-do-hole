@@ -201,7 +201,7 @@ public class PlayerMain : MonoBehaviour
 
         ClearModeTransitionFlag();
         SetAnimHash();
-
+        getFootHit();
 
         endSwing = false;
         SlideSwing = false;

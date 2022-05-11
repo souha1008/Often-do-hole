@@ -480,24 +480,26 @@ public class BulletMain : MonoBehaviour
             if (onceFlag == false)
             {
                 //collsionêÊÇÃtagÇ≈èÍçáï™ÇØ
-                if(PlayerScript.refState == EnumPlayerState.SHOT)
-                if (NowBulletState == EnumBulletState.GO)
+                if (PlayerScript.refState == EnumPlayerState.SHOT)
                 {
-                    string tag = other.gameObject.tag;
-                    switch (tag)
+                    if (NowBulletState == EnumBulletState.GO)
                     {
-                        case "WireMesh":                     
-                            isTouched = true;
-                            onceFlag = true;
-                            PlayerScript.ForciblySwingMode(true);
-                            PlayerMain.instance.RecoverBullet();
+                        string tag = other.gameObject.tag;
+                        switch (tag)
+                        {
+                            case "WireMesh":
+                                isTouched = true;
+                                onceFlag = true;
+                                PlayerScript.ForciblySwingMode(false);
+                                PlayerMain.instance.RecoverBullet();
                                 break;
 
-                        case "SpringBoard":
-                            isTouched = true;
-                            onceFlag = true;
-                            PlayerScript.ForciblyFollowMode(true);
+                            case "SpringBoard":
+                                isTouched = true;
+                                onceFlag = true;
+                                PlayerScript.ForciblyFollowMode(false);
                                 break;
+                        }
                     }
                 }
             }
