@@ -31,7 +31,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
     {
-        if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
+        //if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
         {
             RespawnPos = checkpoint.RespawnPointObject.transform.position;
             RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得

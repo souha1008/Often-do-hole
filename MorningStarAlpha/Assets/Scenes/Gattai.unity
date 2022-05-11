@@ -22168,6 +22168,10 @@ PrefabInstance:
       value: CannonParent
       objectReference: {fileID: 0}
     - target: {fileID: 836616311697601092, guid: 2cd06ed79ea5d4c42b3ea118a567b81d, type: 3}
+      propertyPath: LifeTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 836616311697601092, guid: 2cd06ed79ea5d4c42b3ea118a567b81d, type: 3}
       propertyPath: WayRight
       value: 1
       objectReference: {fileID: 0}
@@ -22185,7 +22189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 836616311697601093, guid: 2cd06ed79ea5d4c42b3ea118a567b81d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -99.7
+      value: -107.6
       objectReference: {fileID: 0}
     - target: {fileID: 836616311697601093, guid: 2cd06ed79ea5d4c42b3ea118a567b81d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -58008,6 +58012,7 @@ MonoBehaviour:
   onceFlag: 0
   StopVelChange: 0
   isInside: 0
+  DefaultAnchorRadius: 0
 --- !u!1 &2148139035877100362
 GameObject:
   m_ObjectHideFlags: 0
@@ -68906,6 +68911,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BulletScript: {fileID: 2148139035877100361}
+  landTimer: 0
+  counterTimer: 0
   refState: 0
   onGroundState: 0
   midairState: 0
