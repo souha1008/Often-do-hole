@@ -27,6 +27,8 @@ public class Raen_Path : MonoBehaviour
       
         if (Rall_Start == true && Rall_Now == false)
         {
+            PlayerMain.instance.mode = new PlayerState_Rail();
+
             positions[0] = BulletMain.instance.gameObject;
             player_postions[0] = PlayerMain.instance.gameObject;
 
