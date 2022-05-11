@@ -31,6 +31,9 @@ public class Coin
         AllGetCoin1 = 0;
         AllGetCoin2 = 0;
         AllGetCoin3 = 0;
+
+        AllCoins = Allcoin1 + Allcoin2 + Allcoin3;
+        AllGetCoins = 0;
     }
 
     // コピー用コンストラクタ
@@ -51,6 +54,9 @@ public class Coin
         AllGetCoin1 = coin.AllGetCoin1;
         AllGetCoin2 = coin.AllGetCoin2;
         AllGetCoin3 = coin.AllGetCoin3;
+
+        AllCoins = coin.AllCoins;
+        AllGetCoins = coin.AllGetCoins;
     }
 
     // 取得コイン
@@ -62,11 +68,13 @@ public class Coin
     public int AllCoin1;
     public int AllCoin2;
     public int AllCoin3;
+    public int AllCoins; // 3分割合計
 
     // 合計入手コイン数
     public int AllGetCoin1;
     public int AllGetCoin2;
     public int AllGetCoin3;
+    public int AllGetCoins; // 3分割合計
 }
 
 

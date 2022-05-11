@@ -31,6 +31,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
     {
+        // 同じチェックポイントだと更新不可のif文
         //if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
         {
             RespawnPos = checkpoint.RespawnPointObject.transform.position;
