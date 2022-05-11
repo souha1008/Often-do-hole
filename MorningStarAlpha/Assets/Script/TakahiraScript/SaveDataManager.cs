@@ -29,7 +29,7 @@ public class StageData
 {
     public int Rank = 0;            // ランク
     public float Time = 0;          // 時間
-    public Coin coin = new Coin();  // コイン
+    public Coin coin = null;  // コイン
     public bool Clear = false;      // ステージクリアフラグ
 }
 

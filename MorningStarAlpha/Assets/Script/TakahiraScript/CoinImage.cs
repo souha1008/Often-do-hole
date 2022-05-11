@@ -72,7 +72,7 @@ public class CoinImage : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            int Num = (int)CoinManager.Instance.coin.AllCoin1 + (int)CoinManager.Instance.coin.AllCoin2 + (int)CoinManager.Instance.coin.AllCoin3;
+            int Num = (int)CoinManager.Instance.SubCoin.AllCoin1 + (int)CoinManager.Instance.SubCoin.AllCoin2 + (int)CoinManager.Instance.SubCoin.AllCoin3;
 
             //ˆê”Ô‰º‚Ì‚¯‚½‚ðŽg‚¤
             for (int j = 0; j < i; j++)
@@ -93,7 +93,7 @@ public class CoinImage : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            int Num = (int)CoinManager.Instance.coin.AllGetCoin1 + (int)CoinManager.Instance.coin.AllGetCoin2 + (int)CoinManager.Instance.coin.AllGetCoin3;
+            int Num = (int)CoinManager.Instance.SubCoin.AllGetCoin1 + (int)CoinManager.Instance.SubCoin.AllGetCoin2 + (int)CoinManager.Instance.SubCoin.AllGetCoin3;
 
             //ˆê”Ô‰º‚Ì‚¯‚½‚ðŽg‚¤
             for (int j = 0; j < i; j++)
