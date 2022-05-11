@@ -19,10 +19,10 @@ public class DataFile
             Stage[i] = new StageData();
         }
 
-        SoundVolumeMaster = 0.8f;
-        SoundVolumeBGM = 0.8f;
-        SoundVolumeSE = 0.8f;
-        SoundVolumeOBJECT = 0.8f;
+        SoundVolumeMaster = 100 * 0.8f;
+        SoundVolumeBGM = 100 * 0.8f;
+        SoundVolumeSE = 100 * 0.8f;
+        SoundVolumeOBJECT = 100 * 0.8f;
     }
 
     public StageData[] Stage;   // ステージ分の配列
