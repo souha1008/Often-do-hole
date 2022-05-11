@@ -45,12 +45,14 @@ public class Raen_Path : MonoBehaviour
              {
                  Debug.Log("Complete");
                  PlayerState.PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
+                 Rall_Start = false;
+                 Rall_Now = false; 
              });
 
             PlayerMain.instance.transform
             .DOPath(player_path, 4.0f);
 
-            Rall_Now = true;                                       // 一回のみ用フラグをオン
+            Rall_Now = true; // 一回のみ用フラグをオン
         }
         
 }
