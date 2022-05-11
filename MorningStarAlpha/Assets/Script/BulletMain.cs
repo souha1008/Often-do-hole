@@ -384,15 +384,16 @@ public class BulletMain : MonoBehaviour
                         {
                             //SWINGèÛë‘Ç…à⁄çs
                             PlayerScript.ForciblySwingMode(false);
+                            SoundManager.Instance.PlaySound("sound_13_wood", 1.4f);                    
                         }
-                     
+
 
                         break;
 
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
-                        SoundManager.Instance.PlaySound("sound_30_Iron");
+                       SoundManager.Instance.PlaySound("sound_30_Iron",1.4f);
 
                         if (PlayerScript.isOnGround)
                         {
