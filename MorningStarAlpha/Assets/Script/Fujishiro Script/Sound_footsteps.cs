@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Sound_footsteps : MonoBehaviour
 {
-    [SerializeField] [Range(0.0f, 1.0f)] float volume;
-    [SerializeField] int play_flame;
+    private float volume;
+    int play_flame;
 
     // [SerializeField] SoundManager soundMane;
-    [SerializeField] PlayerMain playerMain;
 
     SOUND_NO soundNo;
 
@@ -28,15 +27,29 @@ public class Sound_footsteps : MonoBehaviour
     void Start()
     {
         flame_count = 0;
+
+        volume = 0.6f;
+        play_flame = 30;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if(Mathf.Abs(PlayerMain.instance.vel.x) > 15.0f)
+        {
+            volume = 0.4f;
+            play_flame = 30;
+        }
+        else
+        {
+            volume = 0.3f;
+            play_flame = 40;
+        }
+
         flame_count++;
         if (flame_count >= play_flame)
         {
-            if (playerMain.animator.GetBool("isRunning"))
+            if (PlayerMain.instance.animator.GetBool("isRunning"))
             {
                 int random = Random.Range(0, 3 + 1);
                 //Debug.Log("Number:" + random);

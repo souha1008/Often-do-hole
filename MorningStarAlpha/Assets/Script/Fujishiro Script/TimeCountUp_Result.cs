@@ -31,12 +31,27 @@ public class TimeCountUp_Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetButton("Jump") || Input.GetButton("Fire1"))
+        {
+            StopAllCoroutines();
+            if (debug_Fixedtime)
+            {
+                timeText.text = debug_maxTime.ToString("f5");
+            }
+            else
+            {
+                timeText.text = GameStateManager.GetGameTime().ToString("f5");
+            }
+            anim_start = true;
+            ResultManager.instance.anim_end = true;
+        }
+
         flame_time++;
 
-        if(flame_time >= anim_exitFlame)
-        {
-            if (anim_start == false)
-            {
+        if (anim_start == false)
+        { 
+            if(flame_time >= anim_exitFlame)
+            { 
                 //StartCoroutine(TimeAnimetion(1f, , 4f));
 
                 // デバッグ用
@@ -53,6 +68,8 @@ public class TimeCountUp_Result : MonoBehaviour
                 anim_start = true;
             }
         }
+
+
     }
 
     private IEnumerator TimeAnimetion(float startScoreTime, float endScoreTime, float duration)

@@ -90,10 +90,10 @@ public class PlayerStateOnGround : PlayerState
     public override void Move()
     {
 
-        if (PlayerScript.getFootHit().collider.CompareTag("Conveyor_Yoko"))
-        {
+        //if (PlayerScript.getFootHit().collider.CompareTag("Conveyor_Yoko"))
+        //{
             WeakenFlourVel();
-        }
+        //}
 
         if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
