@@ -12,12 +12,17 @@ public class DataFile
 {
     public DataFile()
     {
-        Stage = new StageData[30];
+        Stage = new StageData[15];  // 仮で15ステージ分生成
 
-        SoundVolumeMaster = 0.8f;
-        SoundVolumeBGM = 0.8f;
-        SoundVolumeSE = 0.8f;
-        SoundVolumeOBJECT = 0.8f;
+        for (int i = 0; i < 15; i ++)
+        {
+            Stage[i] = new StageData();
+        }
+
+        SoundVolumeMaster = 100 * 0.8f;
+        SoundVolumeBGM = 100 * 0.8f;
+        SoundVolumeSE = 100 * 0.8f;
+        SoundVolumeOBJECT = 100 * 0.8f;
     }
 
     public StageData[] Stage;   // ステージ分の配列
@@ -27,9 +32,16 @@ public class DataFile
 [Serializable]
 public class StageData
 {
+    public StageData()
+    {
+        Rank = 0;
+        Time = 0;
+        coin = null;
+        Clear = false;
+    }
     public int Rank = 0;            // ランク
     public float Time = 0;          // 時間
-    public Coin coin = new Coin();  // コイン
+    public Coin coin = null;        // コイン
     public bool Clear = false;      // ステージクリアフラグ
 }
 
@@ -37,7 +49,7 @@ public class StageData
 public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
 {
     // メインセーブデータ
-    public DataFile MainData;
+    public DataFile MainData = null;
 
     // パス
     static private string Path = "Assets/SaveData/Data";
@@ -133,6 +145,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         {
             Debug.LogWarning("セーブデータがありません\n 新しいセーブデータを作成します");
             MainData = CreateDataFile();
+
             SaveData();
         }
     }
@@ -141,6 +154,20 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     private DataFile CreateDataFile()
     {
         DataFile Data = new DataFile();
+
+        // ステージコインデータ生成
+        Data.Stage[0].coin = new Coin(3, 3, 3);
+        Data.Stage[1].coin = new Coin(3, 3, 3);
+        Data.Stage[2].coin = new Coin(3, 3, 3);
+        Data.Stage[3].coin = new Coin(3, 3, 3);
+        Data.Stage[4].coin = new Coin(4, 4, 4);
+        Data.Stage[5].coin = new Coin(4, 4, 4);
+        Data.Stage[6].coin = new Coin(4, 4, 4);
+        Data.Stage[7].coin = new Coin(5, 5, 5);
+        Data.Stage[8].coin = new Coin(5, 5, 5);
+        Data.Stage[9].coin = new Coin(5, 5, 5);
+        Data.Stage[10].coin = new Coin(5, 5, 5);
+
 
         //Debug.LogWarning(Data.Stage[0]);
         //Data.Stage[0].Rank = 2;

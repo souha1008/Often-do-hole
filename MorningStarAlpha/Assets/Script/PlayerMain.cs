@@ -175,7 +175,8 @@ public class PlayerMain : MonoBehaviour
     private void Start()
     {
         ////èoåªà íuÇÃê›íË
-        //transform.position = CheckPointManager.Instance.GetCheckPointPos();
+        if(CheckPointManager.Instance.RespawnFlag) 
+            transform.position = CheckPointManager.Instance.GetCheckPointPos();
 
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;
@@ -200,7 +201,7 @@ public class PlayerMain : MonoBehaviour
 
         ClearModeTransitionFlag();
         SetAnimHash();
-
+        getFootHit();
 
         endSwing = false;
         SlideSwing = false;

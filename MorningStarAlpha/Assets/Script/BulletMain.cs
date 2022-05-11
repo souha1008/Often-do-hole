@@ -384,14 +384,16 @@ public class BulletMain : MonoBehaviour
                         {
                             //SWINGèÛë‘Ç…à⁄çs
                             PlayerScript.ForciblySwingMode(false);
+                            SoundManager.Instance.PlaySound("sound_13_wood", 1.4f);                    
                         }
-                     
+
 
                         break;
 
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
+                       SoundManager.Instance.PlaySound("sound_30_Iron",1.4f);
 
                         if (PlayerScript.isOnGround)
                         {
@@ -423,6 +425,7 @@ public class BulletMain : MonoBehaviour
                         }
                         else
                         {
+                            SoundManager.Instance.PlaySound("sound_30_Iron");
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
@@ -480,24 +483,26 @@ public class BulletMain : MonoBehaviour
             if (onceFlag == false)
             {
                 //collsionêÊÇÃtagÇ≈èÍçáï™ÇØ
-                if(PlayerScript.refState == EnumPlayerState.SHOT)
-                if (NowBulletState == EnumBulletState.GO)
+                if (PlayerScript.refState == EnumPlayerState.SHOT)
                 {
-                    string tag = other.gameObject.tag;
-                    switch (tag)
+                    if (NowBulletState == EnumBulletState.GO)
                     {
-                        case "WireMesh":                     
-                            isTouched = true;
-                            onceFlag = true;
-                            PlayerScript.ForciblySwingMode(true);
-                            PlayerMain.instance.RecoverBullet();
+                        string tag = other.gameObject.tag;
+                        switch (tag)
+                        {
+                            case "WireMesh":
+                                isTouched = true;
+                                onceFlag = true;
+                                PlayerScript.ForciblySwingMode(false);
+                                PlayerMain.instance.RecoverBullet();
                                 break;
 
-                        case "SpringBoard":
-                            isTouched = true;
-                            onceFlag = true;
-                            PlayerScript.ForciblyFollowMode(true);
+                            case "SpringBoard":
+                                isTouched = true;
+                                onceFlag = true;
+                                PlayerScript.ForciblyFollowMode(false);
                                 break;
+                        }
                     }
                 }
             }
