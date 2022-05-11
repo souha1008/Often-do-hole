@@ -42,6 +42,12 @@ public class ResultManager : MonoBehaviour
     public Animator stump_animator;
     public Animator Wanted_animator;
 
+    // Skybox
+    [Header("スカイボックス関係")]
+    [SerializeField] Material Day_Skybox;
+    [SerializeField] Material Evening_Skybox;
+    [SerializeField] Material Night_Skybox;
+
     // アニメーションパラメータ
     [System.NonSerialized] public int Stump_Start;
     [System.NonSerialized] public int Stump_end;
@@ -82,6 +88,7 @@ public class ResultManager : MonoBehaviour
     // Start is called before the first frame update
     async void Start()
     {
+
         anim_end = false;
         UI_Canvas.SetActive(false);
         ui_command = UI_COMMAND.NextStage;
@@ -103,6 +110,9 @@ public class ResultManager : MonoBehaviour
 
         // ステージナンバーをUIセット
         StageNo_UISet();
+
+        // スカイボックスセット
+        ChangeSkybox();
 
     }
 
@@ -358,6 +368,143 @@ public class ResultManager : MonoBehaviour
 
                 case 14:
                     StageNo.text = "3-5";
+                    break;
+            }
+        }
+    }
+
+    void ChangeSkybox()
+    {
+        // デバッグ用
+        if (debug_check)
+        {
+            switch (debug_stageNo)
+            {
+                case 0:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 1:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 2:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 3:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 4:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 5:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 6:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 7:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 8:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 9:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 10:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 11:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 12:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 13:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 14:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+            }
+
+        }
+        else
+        {
+            // WANTED画像ステージ部分操作
+            switch (GameStateManager.GetNowStage())
+            {
+                case 0:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 1:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 2:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 3:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 4:
+                    RenderSettings.skybox = Day_Skybox;
+                    break;
+
+                case 5:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 6:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 7:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 8:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 9:
+                    RenderSettings.skybox = Evening_Skybox;
+                    break;
+
+                case 10:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 11:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 12:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 13:
+                    RenderSettings.skybox = Night_Skybox;
+                    break;
+
+                case 14:
+                    RenderSettings.skybox = Night_Skybox;
                     break;
             }
         }
