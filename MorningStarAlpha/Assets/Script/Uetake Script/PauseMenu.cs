@@ -165,7 +165,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SoundVolumeCanvas.gameObject.SetActive(true);
 
         OldSelectPause = EventSystem.current.currentSelectedGameObject;
-        oldButton = nowButton;
         EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
         nowButton = EventSystem.current.currentSelectedGameObject;       
     }
@@ -175,7 +174,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         PauseCanvas.gameObject.SetActive(true);
         SoundVolumeCanvas.gameObject.SetActive(false);
 
-        oldButton = nowButton;
         EventSystem.current.SetSelectedGameObject(OldSelectPause);
         nowButton = EventSystem.current.currentSelectedGameObject;
     }
