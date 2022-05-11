@@ -49,13 +49,24 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
     }
 
+    private void Start()
+    {
+        
+    }
+
     private void Init()
     {
         GameTime = MAX_TIME;
         GameRank = GAME_RANK.S;
         SetGameState(GAME_STATE.PLAY);
     }
-  
+
+    private void PlayBGM()
+    {
+
+    }
+
+
     private void Update()
     {
         if (GetGameState() == GAME_STATE.PLAY)
@@ -79,23 +90,38 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         }
     }
 
+
+    //ここに初期化したい情報書いて
+    //ステージセレクトの開始とリトライ時に情報を初期化
+    private void InitializeStage()
+    {
+
+    }
+
+    //ステージセレクトから入るときのみ
     public static void LoadStage(int num)
     {
         Instance.NowStage = num;
+        Instance.InitializeStage();
         FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
     }
 
-    //リトライ時に使用
+    //ゲームオーバーリトライ及びメニューからリトライ時に使用する
     public static void LoadNowStage()
     {
-        FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
+        LoadStage(Instance.NowStage);
     }
 
-
+    //リザルトから次のステージに行くときのみに使用する
     public static void LoadNextStage()
     {
         Instance.NowStage = Mathf.Min(GetNowStage() + 1, STAGE_MAX_NUM - 1);
-        FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
+        LoadStage(Instance.NowStage);
+    }
+
+    public static void GameOverReloadScene()
+    {
+        FadeManager.Instance.FadeGameOver();
     }
 
     public static int GetNowStage()
@@ -138,7 +164,5 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             GameTime -= Time.deltaTime;
             GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
         }
-
-        //Debug.Log(GameTime);
     }
 }
