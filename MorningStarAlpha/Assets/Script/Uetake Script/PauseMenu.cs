@@ -15,12 +15,13 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     [SerializeField] private Canvas PauseCanvas;
     [SerializeField] private Canvas SoundVolumeCanvas;
     [SerializeField, Tooltip("最初に選択されるボタン")] private Selectable FirstSelect;
+    [SerializeField, Tooltip("サウンドに遷移するためのボタン")] private Selectable PushSound;
     [SerializeField, Tooltip("サウンドで最初に選択されるボタン")] private Selectable FirstSelectSound;
     [SerializeField, Tooltip("振動変更オブジェクト")] private GameObject VibrationObject;
     [SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
     [SerializeField, Tooltip("BGMボリュームスライダー")] private Slider BGMVolumeSlider;
     [SerializeField, Tooltip("SEボリュームスライダー")] private Slider SEVolumeSlider;
-    private GameObject OldSelectPause;
+    private Selectable OldSelectPause;
     private GameObject oldButton;
     private GameObject nowButton;
 
@@ -35,7 +36,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(false);
-        nowButton = OldSelectPause = EventSystem.current.gameObject;
+        nowButton = EventSystem.current.gameObject;
         oldButton = null;
         VibrationSlider = VibrationObject.GetComponent<Slider>();
     }
@@ -57,14 +58,13 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                 {
                     SetSizeDown(oldButton);
                 }
+                oldButton = nowButton;
             }
 
             if (Input.GetButtonDown("Button_Select") || Input.GetButtonDown("ButtonB"))
             {
                 EndPause();
             }
-
-            oldButton = nowButton;
         }
         else //ポーズメニューが非アクティブなら
         {
@@ -82,6 +82,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                     {
                         SetSizeDown(oldButton);
                     }
+                    oldButton = nowButton;
                 }
 
                 // 振動ONOFFボタンクリック
@@ -100,8 +101,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                 {
                     EndPause();
                 }
-
-                oldButton = nowButton;
             }
             else
             {
@@ -165,8 +164,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(true);
 
-        OldSelectPause = EventSystem.current.currentSelectedGameObject;
-        oldButton = nowButton;
         EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
         nowButton = EventSystem.current.currentSelectedGameObject;       
     }
@@ -176,8 +173,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         PauseCanvas.gameObject.SetActive(true);
         SoundVolumeCanvas.gameObject.SetActive(false);
 
-        oldButton = nowButton;
-        EventSystem.current.SetSelectedGameObject(OldSelectPause);
+        EventSystem.current.SetSelectedGameObject(PushSound.gameObject);
         nowButton = EventSystem.current.currentSelectedGameObject;
     }
 
