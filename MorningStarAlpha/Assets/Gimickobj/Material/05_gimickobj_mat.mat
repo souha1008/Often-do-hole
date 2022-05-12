@@ -23,14 +23,14 @@ Material:
   m_Name: 05_gimickobj_mat
   m_Shader: {fileID: 4800000, guid: 766736548846cdf459a9766614dcccab, type: 3}
   m_ShaderKeywords: UTS_USE_RAYTRACING_SHADOW _ _EMISSIVE_SIMPLE _IS_ANGELRING_OFF
-    _IS_OUTLINE_CLIPPING_YES _IS_TRANSCLIPPING_OFF _OUTLINE_NML _SHADINGGRADEMAP
+    _IS_OUTLINE_CLIPPING_YES _IS_TRANSCLIPPING_ON _OUTLINE_NML _SHADINGGRADEMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2449
   stringTagMap:
     IgnoreProjection: False
-    RenderType: Opaque
+    RenderType: TransparentCutout
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -189,11 +189,11 @@ Material:
     - _CameraRolling_Stabilizer: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ClippingMode: 0
-    - _Clipping_Level: 0.215
+    - _ClippingMode: 1
+    - _Clipping_Level: 0.501
     - _ColorShift_Speed: 0
     - _Cull: 2
-    - _CullMode: 2
+    - _CullMode: 0
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -269,11 +269,11 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StencilComp: 0
-    - _StencilMode: 0
+    - _StencilComp: 8
+    - _StencilMode: 2
     - _StencilNo: 1
-    - _StencilOpFail: 0
-    - _StencilOpPass: 0
+    - _StencilOpFail: 2
+    - _StencilOpPass: 2
     - _StepOffset: 0
     - _Surface: 0
     - _TransparentEnabled: 0

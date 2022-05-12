@@ -84,35 +84,23 @@ public class Gimmick_CannonParentEditor : Editor
 
 public class Gimmick_CannonParent : Gimmick_Main
 {
-    [Header("[砲台の設定]")]
-    [Label("打ち出す弾オブジェクト")]
     public GameObject CannonChild;  // 砲台から打ち出す弾オブジェクト
-    [Label("動き出すプレイヤーとの距離")]
     public float StartLength = 15;  // 砲台が動き出すプレイヤーとの距離
-    [Label("打ち出す間隔の時間")]
     public float ShootTime = 5;     // 打ち出す間隔
 
-    [Header("[弾の設定]")]
-    [Label("砲台の角度固定")]
     public bool FixedRadFlag;       // 角度の固定
-    [Label("弾が追尾するか")]
     public bool ChaseFlag;          // 弾が追尾するか
-    [Label("弾の速度")]
     public float Speed = 5;         // 弾の速度
-    [Label("弾の生存時間")]
     public float LifeTime = 5;      // 弾の生存時間
 
-    [Header("[向き]")]
-    [Label("右向きか")]
+    private const float Length = 8;        // 弾の出現位置調整用
+
     public bool WayRight;           // サメの向き
 
 
-
+    private float NowRotateZ;   // 回転Z
     private bool StartFlag;     // 起動フラグ
     private float NowShootTime; // 経過時間
-
-    [HideInInspector] public GameObject PlayerObject; // プレイヤーオブジェクト
-    
 
     public override void Init()
     {
@@ -126,24 +114,21 @@ public class Gimmick_CannonParent : Gimmick_Main
         // リジッドボディ
         Rb.isKinematic = true;
 
-        // プレイヤーオブジェクト取得
-        PlayerObject = GameObject.Find("Player");
-
         // 向きを合わせる
         if (WayRight)
         {
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
+            this.gameObject.transform.rotation = Quaternion.identity;
         }
         else
         {
-            this.gameObject.transform.rotation = Quaternion.identity;
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
         }
     }
 
     public override void UpdateMove()
     {
         // プレイヤーの座標
-        Vector3 PlayerPos = PlayerObject.transform.position;
+        Vector3 PlayerPos = PlayerMain.instance.transform.position;
         Vector3 ThisPos = this.gameObject.transform.position;
 
 
@@ -165,7 +150,8 @@ public class Gimmick_CannonParent : Gimmick_Main
                     if ((Rot >= 0 && Rot <= 90) || (Rot >= 270 && Rot <= 360))
                     {
                         // プレイヤーの方向に向く
-                        this.gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.y, Rot);
+                        this.gameObject.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, Rot);
+                        NowRotateZ = Rot;
                     }
                 }
                 else
@@ -173,7 +159,9 @@ public class Gimmick_CannonParent : Gimmick_Main
                     if ((Rot >= 90 && Rot <= 270))
                     {
                         // プレイヤーの方向に向く
-                        this.gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.y, Rot);
+                        this.gameObject.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, (180.0f - Rot));
+                        NowRotateZ = Rot;
+
                     }
                 }
             }
@@ -195,12 +183,15 @@ public class Gimmick_CannonParent : Gimmick_Main
         if (CannonChild != null)
         {
             VecQuaternion vecQuaternion = 
-                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(gameObject.transform.lossyScale.x * 0.7f, 0, 0), gameObject.transform.rotation.eulerAngles.z, Vector3.forward);
+                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, -1.0f, 0), NowRotateZ, Vector3.forward);
+
+            GameObject Child = 
+                Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾生成
 
 
-            GameObject Child = Instantiate(CannonChild, vecQuaternion.Pos, this.gameObject.transform.rotation); // 弾生成
 
-            Child.GetComponent<Gimmick_CannonChild>().SetCannonChild(PlayerObject, Speed, LifeTime, ChaseFlag); // 弾の値セット
+
+            Child.GetComponent<Gimmick_CannonChild>().SetCannonChild(Speed, LifeTime, ChaseFlag); // 弾の値セット
         }
     }
 

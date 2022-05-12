@@ -98,7 +98,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     private void Start() 
     {
-        SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+    
     }
 
     private void Update()
@@ -189,10 +189,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private void FadeIn_GameOver()
     {
         // ゲームシーンのリセット
-        SoundManager.Instance.StopSound();
         SceneManager.LoadScene(NextSceneName);
-        SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
-        //SoundManager.Instance.PlaySound("BGM_01", 0.6f, AudioReverbPreset.City);
         GameStateManager.SetGameState(GAME_STATE.PLAY);
         Time.timeScale = 1.0f;
     }
