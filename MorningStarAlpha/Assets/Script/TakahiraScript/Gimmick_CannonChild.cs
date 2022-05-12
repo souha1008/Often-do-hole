@@ -10,14 +10,12 @@ public class Gimmick_CannonChild : Gimmick_Main
     //private float ChasePower;   // 追いかける力
 
     private float NowLifeTime;  // 現在の生存時間
-    private GameObject PlayerObject;    // プレイヤーオブジェクト
 
     // 弾情報セット
-    public void SetCannonChild(GameObject playerobject, float speed, float lifetime, bool chaseflag)
+    public void SetCannonChild(float speed, float lifetime, bool chaseflag)
     {
         Speed = speed;
         LifeTime = lifetime;
-        PlayerObject = playerobject;
         ChaseFlag = chaseflag;
     }
 
@@ -44,7 +42,7 @@ public class Gimmick_CannonChild : Gimmick_Main
         // 追尾処理
         if (ChaseFlag)
         {
-            Vector3 PlayerPos = PlayerObject.transform.position;    // プレイヤー座標
+            Vector3 PlayerPos = PlayerMain.instance.transform.position;    // プレイヤー座標
             Vector3 ThisPos = this.gameObject.transform.position;   // 自身の座標
 
             transform.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos));    // 回転角

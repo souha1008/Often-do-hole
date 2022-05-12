@@ -30,6 +30,7 @@ public class PlayerStateDeath_Thorn : PlayerState
 
         BulletScript.ReturnBullet();
         RotationStand();
+        PlayerScript.ResetAnimation();
 
         //ƒAƒjƒ—p
         PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
@@ -45,7 +46,7 @@ public class PlayerStateDeath_Thorn : PlayerState
 
         if (Timer > 0.6)
         {
-            FadeManager.Instance.FadeGameOver();
+            GameStateManager.GameOverReloadScene();
         }
     }
 
@@ -92,7 +93,7 @@ public class PlayerStateDeath_Void : PlayerState
 
         if (Timer > 0.6)
         {
-            FadeManager.Instance.FadeGameOver();
+            GameStateManager.GameOverReloadScene();
         }
     }
 

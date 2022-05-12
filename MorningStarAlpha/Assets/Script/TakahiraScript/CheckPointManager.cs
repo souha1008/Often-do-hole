@@ -12,6 +12,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     public Vector3 NowRespawnPos;       // 現在のリスポーン座標(見るだけ)
 
     public static Vector3 RespawnPos = Vector3.zero;   // リスポーン座標
+    public bool RespawnFlag = false;   // チェックポイントセット確認フラグ
 
     private void Awake()
     {
@@ -22,13 +23,16 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
         }
 
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
+
+        RespawnFlag = false;
     }
 
 
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
     {
-        if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
+        // 同じチェックポイントだと更新不可のif文
+        //if (RespawnPos != checkpoint.RespawnPointObject.transform.position)
         {
             RespawnPos = checkpoint.RespawnPointObject.transform.position;
             RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
@@ -36,12 +40,13 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
 
             CoinManager.Instance.SetCheckPointCoinData(); // コインの情報を入力
         }
+        RespawnFlag = true;
     }
 
     // 現在のチェックポイントの座標ゲット
     public Vector3 GetCheckPointPos()
     {
-        Debug.LogWarning(RespawnPos);
+        //Debug.LogWarning(RespawnPos);
         return RespawnPos;
     }
 
@@ -49,7 +54,8 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     public void ResetCheckPoint()
     {
         RespawnPos = Vector3.zero;
-        RespawnObject = null;
         NowRespawnPos = GetCheckPointPos();
+        RespawnObject = null;
+        RespawnFlag = false;
     }
 }

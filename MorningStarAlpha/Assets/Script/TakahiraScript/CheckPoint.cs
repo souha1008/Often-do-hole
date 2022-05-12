@@ -13,7 +13,7 @@ public class CheckPoint : MonoBehaviour
     private void Awake()
     {
         // 初期リスセット
-        if (MeshOnOffObject.GetComponent<MeshOnOff>().InitCheckPoint && CheckPointManager.Instance.GetCheckPointPos() == Vector3.zero)
+        if (MeshOnOffObject.GetComponent<MeshOnOff>().InitCheckPoint && !CheckPointManager.Instance.RespawnFlag)
         {
             CheckPointManager.Instance.SetCheckPoint(this);
         }
