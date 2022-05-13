@@ -3,7 +3,7 @@ using UnityEngine;
 public class BulletMain : MonoBehaviour
 {
     [System.NonSerialized]public Rigidbody rb;
-    [System.NonSerialized] public Collider co;
+    [System.NonSerialized] public SphereCollider co;
 
     private PlayerMain PlayerScript;
     [SerializeField] private GameObject Player;
@@ -20,7 +20,7 @@ public class BulletMain : MonoBehaviour
     [ReadOnly] public bool onceFlag; //àÍâÒÇÃî≠éÀÇ…ïtÇ´ê⁄êGÇ™ãNÇ±ÇÈÇÃÇÕàÍâÒ
     [ReadOnly] public bool StopVelChange; //íeÇ™ñﬂÇ≥ÇÍÇƒà¯Ç¡í£ÇÁÇÍÇƒÇ¢ÇÈèÛë‘
     [ReadOnly] public bool isInside; //íeÇ™ì‡ë§Ç…Ç†ÇÈèÛë‘
-
+    [ReadOnly] public float DefaultAnchorRadius; //íeÇ™ì‡ë§Ç…Ç†ÇÈèÛë‘
 
     //íeä÷åWíËêî
     [System.NonSerialized] public float BULLET_SPEED = 50; //íeÇÃèâë¨
@@ -39,8 +39,9 @@ public class BulletMain : MonoBehaviour
         BulletState.BulletScript = this;
         PlayerState.BulletScript = this;
         rb = GetComponent<Rigidbody>();
-        co = GetComponent<Collider>();
-        
+        co = GetComponent<SphereCollider>();
+        DefaultAnchorRadius = co.radius;
+
         Part[0] = transform.Find("body/Anchor_body/anchor_body").GetComponent<SkinnedMeshRenderer>();
         Part[1] = transform.Find("body/Anchor_body/anchor_L_needle").GetComponent<SkinnedMeshRenderer>();
         Part[2] = transform.Find("body/Anchor_body/anchor_R_needle").GetComponent<SkinnedMeshRenderer>();
@@ -391,6 +392,7 @@ public class BulletMain : MonoBehaviour
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
+                        SoundManager.Instance.PlaySound("sound_30_Iron");
 
                         if (PlayerScript.isOnGround)
                         {
@@ -422,6 +424,7 @@ public class BulletMain : MonoBehaviour
                         }
                         else
                         {
+                            SoundManager.Instance.PlaySound("sound_30_Iron");
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
@@ -479,24 +482,26 @@ public class BulletMain : MonoBehaviour
             if (onceFlag == false)
             {
                 //collsionêÊÇÃtagÇ≈èÍçáï™ÇØ
-                if(PlayerScript.refState == EnumPlayerState.SHOT)
-                if (NowBulletState == EnumBulletState.GO)
+                if (PlayerScript.refState == EnumPlayerState.SHOT)
                 {
-                    string tag = other.gameObject.tag;
-                    switch (tag)
+                    if (NowBulletState == EnumBulletState.GO)
                     {
-                        case "WireMesh":                     
-                            isTouched = true;
-                            onceFlag = true;
-                            PlayerScript.ForciblySwingMode(true);
-                            PlayerMain.instance.RecoverBullet();
+                        string tag = other.gameObject.tag;
+                        switch (tag)
+                        {
+                            case "WireMesh":
+                                isTouched = true;
+                                onceFlag = true;
+                                PlayerScript.ForciblySwingMode(false);
+                                PlayerMain.instance.RecoverBullet();
                                 break;
 
-                        case "SpringBoard":
-                            isTouched = true;
-                            onceFlag = true;
-                            PlayerScript.ForciblyFollowMode(true);
+                            case "SpringBoard":
+                                isTouched = true;
+                                onceFlag = true;
+                                PlayerScript.ForciblyFollowMode(false);
                                 break;
+                        }
                     }
                 }
             }

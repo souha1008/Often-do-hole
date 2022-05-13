@@ -30,8 +30,6 @@ public class PlayerState_Clear : PlayerState
         PlayerScript.vel.x = 0.0f;
         motionTimer = 0.0f;
 
-
-
         goal = GoalManager.Instance.gameObject;
         BulletScript.ReturnBullet();
         PlayerScript.dir = PlayerMoveDir.RIGHT; //‹­§‰EŒü‚«
