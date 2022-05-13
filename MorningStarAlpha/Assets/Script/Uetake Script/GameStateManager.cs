@@ -106,6 +106,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         Init();
         StageSoundFlag = true;
+        CoinManager.Instance.ResetCoin();               // コインのリセット
+        CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
     }
 
     //ステージセレクトから入るときのみ

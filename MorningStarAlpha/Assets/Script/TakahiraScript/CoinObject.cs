@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 // コインオブジェクト情報
 public class StageCoinInfo
@@ -19,8 +20,9 @@ public class CoinObject : MonoBehaviour
     // コインオブジェクト情報
     private StageCoinInfo CoinInfo;
     
-    [Label("透明コインオブジェクト")]
-    public GameObject SkeletonCoin;     // 透明コイン
+    [SerializeField, Label("透明コインオブジェクト")]
+    private AssetReferenceGameObject SkeletonCoin;
+    //public GameObject SkeletonCoin;     // 透明コイン
 
     public void Start()
     {
@@ -31,7 +33,8 @@ public class CoinObject : MonoBehaviour
         {
             if (CoinInfo.GetCoinFlag)
             {
-                Instantiate(SkeletonCoin, gameObject.transform.position, gameObject.transform.rotation); // 透明コイン生成
+                SkeletonCoin.InstantiateAsync(gameObject.transform.position, gameObject.transform.rotation);    // 透明コイン生成
+                //Instantiate(SkeletonCoin, gameObject.transform.position, gameObject.transform.rotation); // 透明コイン生成
                 Death();
             }              
         }
