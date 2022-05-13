@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2443068608749693694}
   - component: {fileID: 1451219701863055679}
   - component: {fileID: 6434909932841684144}
+  - component: {fileID: 1388819991445784223}
+  - component: {fileID: 5216373418228018696}
   m_Layer: 10
   m_Name: _05_chain_o5bj
   m_TagString: Chain
@@ -81,3 +83,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1388819991445784223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3652868287236803622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9189905bd3f8854da99acefaa3f565d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!136 &5216373418228018696
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3652868287236803622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.774758
+  m_Height: 2.9497929
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

@@ -189,7 +189,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private void FadeIn_GameOver()
     {
         // ゲームシーンのリセット
-        SceneManager.LoadScene(NextSceneName);
+        SceneManager.LoadSceneAsync(NextSceneName);
         GameStateManager.SetGameState(GAME_STATE.PLAY);
         Time.timeScale = 1.0f;
     }
