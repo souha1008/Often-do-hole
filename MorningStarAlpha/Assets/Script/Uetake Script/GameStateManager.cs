@@ -36,6 +36,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private GAME_RANK GameRank;
     private int NowStage = 0;
     private bool StageSoundFlag = false;
+    private bool firstEnter = true; //stage入ったときtrue,いちど死ぬとfalse
 
     private void Awake()
     {
@@ -106,6 +107,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         Init();
         StageSoundFlag = true;
+        firstEnter = true;
+        CoinManager.Instance.ResetCoin();               // コインのリセット
+        CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
     }
 
     //ステージセレクトから入るときのみ
@@ -131,6 +135,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     public static void GameOverReloadScene()
     {
+        Instance.firstEnter = false;
         FadeManager.Instance.FadeGameOver();
     }
 

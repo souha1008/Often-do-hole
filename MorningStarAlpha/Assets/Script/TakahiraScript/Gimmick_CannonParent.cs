@@ -9,7 +9,7 @@ using UnityEditor;
 [CustomEditor(typeof(Gimmick_CannonParent))]
 
 // 複数選択有効
-[CanEditMultipleObjects]
+//[CanEditMultipleObjects]
 
 public class Gimmick_CannonParentEditor : Editor
 {
@@ -93,10 +93,11 @@ public class Gimmick_CannonParent : Gimmick_Main
     public float Speed = 5;         // 弾の速度
     public float LifeTime = 5;      // 弾の生存時間
 
-    private const float Length = 8;        // 弾の出現位置調整用
+    private const float Length = 7;        // 弾の出現位置調整用
 
     public bool WayRight;           // サメの向き
 
+    private Animator animator;
 
     private float NowRotateZ;   // 回転Z
     private bool StartFlag;     // 起動フラグ
@@ -107,6 +108,7 @@ public class Gimmick_CannonParent : Gimmick_Main
         // 初期化
         StartFlag = false;
         NowShootTime = ShootTime; // 最初に1回弾発射
+        //NowShootTime = 0; // 最初に1回弾発射しない
 
         // コライダー
         Cd.isTrigger = false;
@@ -114,14 +116,18 @@ public class Gimmick_CannonParent : Gimmick_Main
         // リジッドボディ
         Rb.isKinematic = true;
 
+        animator = GetComponent<Animator>();
+
         // 向きを合わせる
         if (WayRight)
         {
-            this.gameObject.transform.rotation = Quaternion.identity;
+            //this.gameObject.transform.rotation = Quaternion.identity;
+            NowRotateZ = 0;
         }
         else
         {
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
+            //this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
+            NowRotateZ = 180;
         }
     }
 
@@ -159,17 +165,19 @@ public class Gimmick_CannonParent : Gimmick_Main
                     if ((Rot >= 90 && Rot <= 270))
                     {
                         // プレイヤーの方向に向く
-                        this.gameObject.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, (180.0f - Rot));
+                        this.gameObject.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, Rot + 180);
                         NowRotateZ = Rot;
-
                     }
                 }
             }
 
+            
+
             // 弾発射処理
             if (NowShootTime >= ShootTime)
             {
-                Shoot();
+                animator.Play("05_shark_motion_02", 0);  // アニメーション再生
+                //Shoot(); // アニメーター側で処理を動かしている(アニメーションイベント)
                 NowShootTime = 0.0f; // 経過時間リセット
             }
             else
@@ -182,8 +190,17 @@ public class Gimmick_CannonParent : Gimmick_Main
     {
         if (CannonChild != null)
         {
-            VecQuaternion vecQuaternion = 
-                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, -1.0f, 0), NowRotateZ, Vector3.forward);
+            VecQuaternion vecQuaternion;
+            if (WayRight)
+            {
+                vecQuaternion =
+                    CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, -1.0f, 0), NowRotateZ, Vector3.forward);
+            }
+            else
+            {
+                vecQuaternion =
+                    CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, 1.0f, 0), NowRotateZ, Vector3.forward);
+            }
 
             GameObject Child = 
                 Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾生成

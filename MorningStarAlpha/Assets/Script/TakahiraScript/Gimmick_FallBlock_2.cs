@@ -13,6 +13,11 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     [Label("何秒かけて落下するか")]
     public float FallTime = 3.0f;       // 何秒かけて落下するか
 
+    [Label("リスポーン時間")]
+    public float RespawnTime = 3.0f;       // 何秒で復活するか
+
+    private bool ActiveFlag = true;
+
 
     private bool NowFall;               // 落下中か
     private float NowTime;              // 経過時間
@@ -55,6 +60,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
 
         ShakeFlag = false;
         NowShakeTime = 0.0f;
+        ActiveFlag = true;
 
         // コリジョン
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
@@ -65,90 +71,101 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
 
     public override void FixedMove()
     {
-        // 揺れ開始
-        if (NowFall && NowTime <= 0)
-            StartShake(FallTime * 0.2f, 20.0f, 0.2f);  // 揺れの情報セット
-
-        // 床移動
-        if (NowFall)
+        if (ActiveFlag)
         {
-            Vector3 OldPos = this.gameObject.transform.position;
-            switch (FallType)
+            // 揺れ開始
+            if (NowFall && NowTime <= 0)
+                StartShake(FallTime * 0.2f, 20.0f, 0.2f);  // 揺れの情報セット
+
+            // 床移動
+            if (NowFall)
             {
-                case FALL_TYPE.SINE_IN:
-                    FallPos = new Vector3(StartPos.x, Easing.SineIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
-                    break;
-                case FALL_TYPE.QUAD_IN:
-                    FallPos = new Vector3(StartPos.x, Easing.QuadIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
-                    break;
-                case FALL_TYPE.CUBIC_IN:
-                    FallPos = new Vector3(StartPos.x, Easing.CubicIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
-                    break;
-                case FALL_TYPE.QUART_IN:
-                    FallPos = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
-                    break;
-                case FALL_TYPE.QUINT_IN:
-                    FallPos = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
-                    break;
-            }
-
-
-            // 揺れによる移動
-            if (ShakeFlag)
-            {
-                // 揺れ位置情報更新
-                this.gameObject.transform.position = GetUpdateShakePosition(
-                    Shake,
-                    NowShakeTime,
-                    FallPos);
-
-                // ShakeTime分の時間が経過したら揺らすのを止める
-                NowShakeTime += Time.fixedDeltaTime;
-                if (NowShakeTime >= Shake.ShakeTime)
+                Vector3 OldPos = this.gameObject.transform.position;
+                switch (FallType)
                 {
-                    ShakeFlag = false;
-                    NowShakeTime = 0.0f;
-                    // 初期位置に戻す
-                    this.gameObject.transform.position = FallPos;
+                    case FALL_TYPE.SINE_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.SineIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.QUAD_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.QuadIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.CUBIC_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.CubicIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.QUART_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.QuartIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.QUINT_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
                 }
-            }
-            else
-            {
-                this.gameObject.transform.position = FallPos;
-            }
-
-            // 時間更新
-            NowTime += Time.fixedDeltaTime;
 
 
-            // プレイヤー移動
-            if (PlayerMoveFlag)
-            {
-                PlayerMain.instance.transform.position +=
-                            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
-                //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
-            }
-
-            // 錨移動
-            if (BulletMoveFlag)
-            {
-                if (PlayerMain.instance.BulletScript.isTouched)
+                // 揺れによる移動
+                if (ShakeFlag)
                 {
-                    PlayerMain.instance.BulletScript.transform.position +=
-                        new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
-                    PlayerMain.instance.floorVel =
-                        new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
+                    // 揺れ位置情報更新
+                    this.gameObject.transform.position = GetUpdateShakePosition(
+                        Shake,
+                        NowShakeTime,
+                        FallPos);
+
+                    // ShakeTime分の時間が経過したら揺らすのを止める
+                    NowShakeTime += Time.fixedDeltaTime;
+                    if (NowShakeTime >= Shake.ShakeTime)
+                    {
+                        ShakeFlag = false;
+                        NowShakeTime = 0.0f;
+                        // 初期位置に戻す
+                        this.gameObject.transform.position = FallPos;
+                    }
                 }
                 else
                 {
-                    PlayerMain.instance.floorVel = Vector3.zero;
-                    BulletMoveFlag = false;
+                    this.gameObject.transform.position = FallPos;
+                }
+
+                // 時間更新
+                NowTime += Time.fixedDeltaTime;
+
+
+                // プレイヤー移動
+                if (PlayerMoveFlag)
+                {
+                    PlayerMain.instance.transform.position +=
+                                new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                    //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
+                }
+
+                // 錨移動
+                if (BulletMoveFlag)
+                {
+                    if (PlayerMain.instance.BulletScript.isTouched)
+                    {
+                        PlayerMain.instance.BulletScript.transform.position +=
+                            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                        PlayerMain.instance.floorVel =
+                            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
+                    }
+                    else
+                    {
+                        PlayerMain.instance.floorVel = Vector3.zero;
+                        BulletMoveFlag = false;
+                    }
                 }
             }
+            if (NowTime > FallTime)
+            {
+                Death();
+            }
         }
-        if (NowTime > FallTime)
+        else
         {
-            Death();
+            if (NowTime > RespawnTime)
+            {
+                Active();
+            }
+            NowTime++;
         }
     }
 
@@ -209,10 +226,13 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             PlayerMain.instance.ForciblyReleaseMode(true);
             PlayerMain.instance.endSwing = true;
             PlayerMain.instance.floorVel = Vector3.zero;
-        }  
+        }
 
         // 自分自身を消す
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
+
+        // 非アクティブ化
+        NoActive();
     }
 
     public override void OnCollisionEnter(Collision collision)
@@ -256,5 +276,24 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         {
             PlayerMoveFlag = false;
         }
+    }
+
+    private void NoActive()
+    {
+        // 非アクティブ化
+        Cd.enabled = false;
+        GetComponent<MeshRenderer>().enabled = false;
+        ActiveFlag = false;
+        NowTime = 0;
+        this.gameObject.transform.position = StartPos;
+    }
+
+    private void Active()
+    {
+        // アクティブ化
+        Cd.enabled = true;
+        GetComponent<MeshRenderer>().enabled = true;
+        ActiveFlag = true;
+        NowTime = 0;
     }
 }

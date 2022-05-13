@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 // コインオブジェクト情報
 public class StageCoinInfo
@@ -19,7 +20,7 @@ public class CoinObject : MonoBehaviour
     // コインオブジェクト情報
     private StageCoinInfo CoinInfo;
     
-    [Label("透明コインオブジェクト")]
+    [SerializeField, Label("透明コインオブジェクト")]
     public GameObject SkeletonCoin;     // 透明コイン
 
     public void Start()
