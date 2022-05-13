@@ -177,7 +177,7 @@ public class Gimmick_CannonParent : Gimmick_Main
             if (NowShootTime >= ShootTime)
             {
                 animator.Play("05_shark_motion_02", 0);  // アニメーション再生
-                //Shoot();
+                //Shoot(); // アニメーター側で処理を動かしている(アニメーションイベント)
                 NowShootTime = 0.0f; // 経過時間リセット
             }
             else
@@ -190,8 +190,17 @@ public class Gimmick_CannonParent : Gimmick_Main
     {
         if (CannonChild != null)
         {
-            VecQuaternion vecQuaternion = 
-                CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, -1.0f, 0), NowRotateZ, Vector3.forward);
+            VecQuaternion vecQuaternion;
+            if (WayRight)
+            {
+                vecQuaternion =
+                    CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, -1.0f, 0), NowRotateZ, Vector3.forward);
+            }
+            else
+            {
+                vecQuaternion =
+                    CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, 1.0f, 0), NowRotateZ, Vector3.forward);
+            }
 
             GameObject Child = 
                 Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾生成

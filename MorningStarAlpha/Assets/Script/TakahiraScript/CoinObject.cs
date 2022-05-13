@@ -21,8 +21,7 @@ public class CoinObject : MonoBehaviour
     private StageCoinInfo CoinInfo;
     
     [SerializeField, Label("透明コインオブジェクト")]
-    private AssetReferenceGameObject SkeletonCoin;
-    //public GameObject SkeletonCoin;     // 透明コイン
+    public GameObject SkeletonCoin;     // 透明コイン
 
     public void Start()
     {
@@ -33,8 +32,7 @@ public class CoinObject : MonoBehaviour
         {
             if (CoinInfo.GetCoinFlag)
             {
-                SkeletonCoin.InstantiateAsync(gameObject.transform.position, gameObject.transform.rotation);    // 透明コイン生成
-                //Instantiate(SkeletonCoin, gameObject.transform.position, gameObject.transform.rotation); // 透明コイン生成
+                Instantiate(SkeletonCoin, gameObject.transform.position, gameObject.transform.rotation); // 透明コイン生成
                 Death();
             }              
         }
