@@ -68,7 +68,8 @@ public enum EnumPlayerState
 /// <summary>
 ///アニメーションコントローラー用の文字列をindexにして格納
 /// </summary>
-public struct AnimHash{
+public struct AnimHash
+{
     public int onGround;
     public int isRunning;
     public int isShot;
@@ -175,8 +176,13 @@ public class PlayerMain : MonoBehaviour
     private void Start()
     {
         ////出現位置の設定
-        if(CheckPointManager.Instance.RespawnFlag) 
+        if (CheckPointManager.Instance.RespawnFlag)
+        {
             transform.position = CheckPointManager.Instance.GetCheckPointPos();
+        }
+
+        GameStateManager.Instance.PlayGameStageBGM();
+
 
         refState = EnumPlayerState.ON_GROUND;
         onGroundState = OnGroundState.NONE;

@@ -8,6 +8,7 @@ public class Raen_Path : MonoBehaviour
 {
     public GameObject[] positions; // ウェイポイント配列
     public GameObject[] player_postions;
+    [SerializeField, Tooltip("開始から終了にかかる時間")] private float Time = 4.0f;
 
     private Vector3[] path;
     private Vector3[] player_path;
@@ -36,7 +37,7 @@ public class Raen_Path : MonoBehaviour
             player_path = player_postions.Select(target => target.transform.position).ToArray();
 
             BulletMain.instance.transform
-            .DOPath(path, 4.0f, PathType.Linear)
+            .DOPath(path, Time, PathType.Linear)
             .OnUpdate(() =>
             {
 
@@ -50,7 +51,7 @@ public class Raen_Path : MonoBehaviour
              });
 
             PlayerMain.instance.transform
-            .DOPath(player_path, 4.0f);
+            .DOPath(player_path, Time);
 
             Rall_Now = true; // 一回のみ用フラグをオン
         }

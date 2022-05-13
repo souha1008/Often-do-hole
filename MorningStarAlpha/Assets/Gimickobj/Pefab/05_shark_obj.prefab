@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1794593007530208689
+--- !u!1 &6811802113272616131
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,36 +8,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5746088205159794831}
-  - component: {fileID: 6685980575236709902}
+  - component: {fileID: 7547969401890640626}
+  - component: {fileID: 3714713213169684260}
   m_Layer: 0
-  m_Name: polySurface74
+  m_Name: shark_obj_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5746088205159794831
+--- !u!4 &7547969401890640626
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1794593007530208689}
+  m_GameObject: {fileID: 6811802113272616131}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2398955243004883760}
+  m_Father: {fileID: 8129471017087706575}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &6685980575236709902
+--- !u!137 &3714713213169684260
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1794593007530208689}
+  m_GameObject: {fileID: 6811802113272616131}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -50,7 +50,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 5561349426305759274, guid: e78682abb54d46a4180079143d1debc0, type: 3}
+  - {fileID: 2100000, guid: 06ae9309d6372e9408f33254b35e220c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -75,15 +75,15 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: -8224402330841965657, guid: e78682abb54d46a4180079143d1debc0, type: 3}
+  m_Mesh: {fileID: 761789922370567643, guid: fd266f8896a8373438071a11551a2c5c, type: 3}
   m_Bones: []
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
-    m_Center: {x: -0.006202126, y: -0.0034063756, z: 0}
-    m_Extent: {x: 0.0629215, y: 0.03184551, z: 0.0270961}
+    m_Center: {x: 0.00044889003, y: 0.0014087576, z: 0}
+    m_Extent: {x: 0.069572516, y: 0.03666064, z: 0.0270961}
   m_DirtyAABB: 0
---- !u!1 &3026733108363635082
+--- !u!1 &8906570292238286709
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2398955243004883760}
+  - component: {fileID: 8129471017087706575}
   m_Layer: 0
   m_Name: 05_shark_obj
   m_TagString: Untagged
@@ -99,18 +99,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2398955243004883760
+--- !u!4 &8129471017087706575
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3026733108363635082}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.00000308454}
+  m_GameObject: {fileID: 8906570292238286709}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 44, y: 44, z: 44}
+  m_LocalScale: {x: 88, y: 88, z: 88}
   m_Children:
-  - {fileID: 5746088205159794831}
+  - {fileID: 7547969401890640626}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
