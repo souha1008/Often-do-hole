@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gimmick_SpringBoard : Gimmick_Main
@@ -35,6 +33,7 @@ public class Gimmick_SpringBoard : Gimmick_Main
             Vector3 VecPower = Vector3.zero;    // 加えるベクトル量
 
             PlayerMain playermain = collider.gameObject.GetComponent<PlayerMain>(); // プレイヤーメインスクリプト取得
+            PlayerMain.instance.BulletScript.rb.position =  PlayerMain.instance.rb.position;   //プレイヤーと弾のいちを等しくする
             Rad = this.transform.localEulerAngles.z;  // ジャンプ台の回転角(度)
             Rad = CalculationScript.AngleCalculation(Rad); // 角度ラジアン変換
             VecPower = CalculationScript.AngleVectorXY(Rad) * SpringPower;  // 飛ぶベクトル量
@@ -42,16 +41,20 @@ public class Gimmick_SpringBoard : Gimmick_Main
             if (VecPower.x < 1 && VecPower.x > -1) VecPower.x = 0;  // 小さい値は誤差として0にする
             if (VecPower.y < 1 && VecPower.y > -1) VecPower.y = 0;
 
+            PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.BOOST);
+            BulletMain.instance.ReturnBullet();
+            PlayerMain.instance.RecoverBullet();
 
-            PlayerMain.instance.ForciblyReturnBullet(false);
             PlayerMain.instance.vel = Vector3.zero;
+            PlayerMain.instance.BulletScript.rb.velocity = Vector3.zero;
             PlayerMain.instance.addVel = VecPower;
 
-            SoundManager.Instance.PlaySound("決定音");
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("決定音");
 
-            //Handheld.Vibrate
+            VibrationManager.Instance.StartVibration(1, 1, 0.2f);
 
-           Time = 0.0f;
+            Time = 0.0f;
         }
     }
 }

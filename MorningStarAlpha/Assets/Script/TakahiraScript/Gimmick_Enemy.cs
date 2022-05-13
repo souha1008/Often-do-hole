@@ -268,19 +268,19 @@ public class Gimmick_Enemy : Gimmick_Main
     // 何かと衝突処理(トリガー)
     public override void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.CompareTag("Bullet"))
+        if (collider.gameObject.CompareTag("Bullet") ||
+            (collider.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))
         {
             // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop();
+            GameSpeedManager.Instance.StartHitStop(0.1f);
             // ※当たったエフェクト
 
             Death(); // 死亡処理   
         }
-
-        if (collider.gameObject.CompareTag("Player"))
+        else if (collider.gameObject.CompareTag("Player"))
         {
             // プレイヤーノックバックステートに移行
-
+            PlayerMain.instance.mode = new PlayerState_Knockback(this.gameObject.transform.position);
         }
     }
 

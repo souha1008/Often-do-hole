@@ -239,9 +239,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public float SoundMaxDistance3D = 500.0f; // 3Dサウンドの聞こえる最大距離
 
-    public int NowPlaySoundBGM = 0;     // 現在再生中のBGM
-    public int NowPlaySoundSE = 0;      // 現在再生中のSE
-    public int NowPlaySoundOBJECT = 0;  // 現在再生中のOBJECT
+    public int NowPlaySoundBGM = 0;     // 現在再生中のBGM数
+    public int NowPlaySoundSE = 0;      // 現在再生中のSE数
+    public int NowPlaySoundOBJECT = 0;  // 現在再生中のOBJECT数
 
 
     // 内部データ用
@@ -329,6 +329,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         StartCoroutine(SetBGMData());
         StartCoroutine(SetOBJECTData());
 
+        // セーブデータから音量データ読み込み
+        if (SaveDataManager.Instance != null)
+        {
+            //Debug.LogWarning("音量読み込み");
+            SoundVolumeMaster = SaveDataManager.Instance.MainData.SoundVolumeMaster;
+            SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
+            SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
+            SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
+        }
+
         // 音量セット
         UpdateVolume();
     }
@@ -388,7 +398,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             for (int i = 0; i < AudioClipIlist.Count; i++)
             {
                 SoundList.Add(new SOUND_CLIP(AudioClipIlist[i].name, AudioClipIlist[i], SOUND_TYPE.BGM));
-                Debug.Log(AudioClipIlist[i].name);
+                //Debug.Log(AudioClipIlist[i].name);
             }
             AudioClipIlist.Clear();
 

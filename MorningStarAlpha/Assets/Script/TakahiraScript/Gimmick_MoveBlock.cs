@@ -211,10 +211,13 @@ public class Gimmick_MoveBlock : Gimmick_Main
             {
                 PlayerMain.instance.BulletScript.transform.position +=
                     new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+                PlayerMain.instance.floorVel =
+                    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
             }
             else
             {
                 BulletMoveFlag = false;
+                PlayerMain.instance.floorVel = Vector3.zero;
             }
         }
     }
