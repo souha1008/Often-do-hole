@@ -62,6 +62,9 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         NowShakeTime = 0.0f;
         ActiveFlag = true;
 
+        // トリガー
+        Cd.isTrigger = false;
+
         // リジッドボディ
         Rb.isKinematic = true;  // キネマティックオン
     }
