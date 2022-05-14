@@ -92,7 +92,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             // コイン
             CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
             CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
-            CoinManager.Instance.ResetCoin();               // コイン情報リセット
+            //CoinManager.Instance.ResetCoin();               // コイン情報リセット
 
             // チェックポイント
             CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
