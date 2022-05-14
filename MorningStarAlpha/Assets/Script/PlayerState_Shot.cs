@@ -191,7 +191,13 @@ public class PlayerStateShot : PlayerState
 
                 PlayerScript.vel = ReleaseForceCalicurate();
 
-                PlayerScript.vel.y += 30.0f;
+                if(PlayerScript.isOnGround == false)
+                {
+                    float addUp = 30.0f;
+                   
+                    PlayerScript.vel.y += addUp;
+                }
+
 
                 if (PlayerScript.forciblyFollowVelToward)
                 {
