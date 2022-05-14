@@ -81,8 +81,8 @@ public class Coin
 public class CoinManager : SingletonMonoBehaviour<CoinManager>
 {
     // 現在のコイン取得状況
-    public Coin coin = null;        // ゲーム内でのコイン取得用
-    public Coin SubCoin = null;     // ゲーム内でのコイン取得用(チェックポイント通過してないとき用)
+    [HideInInspector] public Coin coin = new Coin(3, 3, 3);        // ゲーム内でのコイン取得用
+    [HideInInspector] public Coin SubCoin = new Coin(3, 3, 3);     // ゲーム内でのコイン取得用(チェックポイント通過してないとき用)
 
     // コインオブジェクト
     public GameObject Coins1;
@@ -108,8 +108,10 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         {
             ResetCoin();
             CoinManagerInitFlag = true;
+
+            //Debug.LogWarning("コイン初期化");
         }
-            
+
     }
 
     public void SetCoins(Coins Coins)
@@ -123,25 +125,24 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         {
             ResetCoin();
             CoinManagerInitFlag = true;
+
+            //Debug.LogWarning("コイン初期化");
         }
 
 
         // ※セーブデータからコインの取得データ持ってくる、ない場合初期化
-        if (coin == null)
+        if (SaveDataManager.Instance.MainData != null && SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].Clear == true)
         {
-            if (SaveDataManager.Instance.MainData != null && SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].Clear == true)
-            {
-                coin = SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].coin;
-            }
-            else
-            {
-                // コイン初期化
-                coin = new Coin(
-                    Coins1.transform.childCount, 
-                    Coins2.transform.childCount, 
-                    Coins3.transform.childCount
-                    );
-            }
+            coin = SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].coin;
+        }
+        else
+        {
+            // コイン初期化
+            coin = new Coin(
+                Coins1.transform.childCount,
+                Coins2.transform.childCount,
+                Coins3.transform.childCount
+                );
         }
         SubCoin = new Coin(coin);
 
@@ -225,22 +226,26 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
                 SubCoin.AllGetCoin3 += 1;
             }
         }
+        SubCoin.AllGetCoins = SubCoin.AllGetCoin1 + SubCoin.AllGetCoin2 + SubCoin.AllGetCoin3;
     }
 
 
     // チェックポイント＆ゴール通った時のコインデータ更新用
     public void SetCheckPointCoinData()
     {
-        coin = new Coin(SubCoin);
-        //Debug.LogWarning("コイン更新");
+        if (SubCoin != null)
+        {
+            coin = new Coin(SubCoin);
+            //Debug.LogWarning("コイン更新");
+        }
     }
 
 
     // ステージから出た時のコインマネージャーリセット用
     public void ResetCoin()
     {
-        coin = null;
-        SubCoin = null;
+        coin = new Coin(3, 3, 3);
+        SubCoin = new Coin(3, 3, 3);
     }
 
 

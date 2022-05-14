@@ -22,11 +22,6 @@ public class PlayerState_Title : PlayerState
 
     public override void StateTransition()
     {
-        if (Title_p2.instance.changeScene == true)
-        {
-            PlayerScript.mode = new PlayerStateOnGround();
-            
-        }
     }
 
     

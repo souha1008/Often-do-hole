@@ -4,6 +4,14 @@ using System.IO;
 using System.Runtime.Serialization;
 using System;
 
+//ゲームランク
+[Serializable]
+public enum GAME_RANK
+{
+    S,
+    A,
+    B,
+}
 
 
 // データファイル
@@ -39,7 +47,7 @@ public class StageData
         coin = null;
         Clear = false;
     }
-    public int Rank = 0;            // ランク
+    public GAME_RANK Rank = 0;            // ランク
     public float Time = 0;          // 時間
     public Coin coin = null;        // コイン
     public bool Clear = false;      // ステージクリアフラグ
@@ -160,13 +168,13 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         Data.Stage[1].coin = new Coin(3, 3, 3);
         Data.Stage[2].coin = new Coin(3, 3, 3);
         Data.Stage[3].coin = new Coin(3, 3, 3);
-        Data.Stage[4].coin = new Coin(4, 4, 4);
-        Data.Stage[5].coin = new Coin(4, 4, 4);
-        Data.Stage[6].coin = new Coin(4, 4, 4);
-        Data.Stage[7].coin = new Coin(5, 5, 5);
-        Data.Stage[8].coin = new Coin(5, 5, 5);
-        Data.Stage[9].coin = new Coin(5, 5, 5);
-        Data.Stage[10].coin = new Coin(5, 5, 5);
+        Data.Stage[4].coin = new Coin(3, 3, 3);
+        Data.Stage[5].coin = new Coin(3, 3, 3);
+        Data.Stage[6].coin = new Coin(3, 3, 3);
+        Data.Stage[7].coin = new Coin(3, 3, 3);
+        Data.Stage[8].coin = new Coin(3, 3, 3);
+        Data.Stage[9].coin = new Coin(3, 3, 3);
+        Data.Stage[10].coin = new Coin(3, 3, 3);
 
 
         //Debug.LogWarning(Data.Stage[0]);
@@ -177,5 +185,11 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         //Data.Stage[1].coin.AllCoin1 = 3;
 
         return Data;
+    }
+
+
+    public StageData GetStageData(int StageNum)
+    {
+        return MainData.Stage[StageNum];
     }
 }

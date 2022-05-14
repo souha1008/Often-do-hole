@@ -62,8 +62,8 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         NowShakeTime = 0.0f;
         ActiveFlag = true;
 
-        // コリジョン
-        this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
+        // トリガー
+        Cd.isTrigger = false;
 
         // リジッドボディ
         Rb.isKinematic = true;  // キネマティックオン
@@ -165,7 +165,8 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             {
                 Active();
             }
-            NowTime++;
+            // 時間更新
+            NowTime += Time.fixedDeltaTime;
         }
     }
 
@@ -281,17 +282,29 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private void NoActive()
     {
         // 非アクティブ化
-        Cd.enabled = false;
+        Collider[] colliders = GetComponents<Collider>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = false;
+        }
         GetComponent<MeshRenderer>().enabled = false;
         ActiveFlag = false;
         NowTime = 0;
+
+        NowFall = false;
+        BulletMoveFlag = false;
+        PlayerMoveFlag = false;
         this.gameObject.transform.position = StartPos;
     }
 
     private void Active()
     {
         // アクティブ化
-        Cd.enabled = true;
+        Collider[] colliders = GetComponents<Collider>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = true;
+        }
         GetComponent<MeshRenderer>().enabled = true;
         ActiveFlag = true;
         NowTime = 0;
