@@ -180,8 +180,8 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     }
 
 
-    public void getCoinNum()
+    public StageData GetStageData(int StageNum)
     {
-
+        return MainData.Stage[StageNum];
     }
 }
