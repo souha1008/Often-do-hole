@@ -229,10 +229,6 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         // 自分自身を消す
         //Destroy(this.gameObject);
 
-        NowFall = false;
-        BulletMoveFlag = false;
-        PlayerMoveFlag = false;
-
         // 非アクティブ化
         NoActive();
     }
@@ -291,6 +287,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         GetComponent<MeshRenderer>().enabled = false;
         ActiveFlag = false;
         NowTime = 0;
+
+        NowFall = false;
+        BulletMoveFlag = false;
+        PlayerMoveFlag = false;
         this.gameObject.transform.position = StartPos;
     }
 
