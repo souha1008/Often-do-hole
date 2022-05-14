@@ -81,7 +81,7 @@ public class Gimmick_CannonChild : Gimmick_Main
             //GameSpeedManager.Instance.StartHitStop(0.1f);
 
             // プレイヤーを死亡状態に変更
-            PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
+            PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
 
             // 死亡
             Death();

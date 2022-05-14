@@ -11,12 +11,15 @@ public enum GAME_STATE {
     RESULT,//リザルト中
 }
 
-public enum GAME_RANK
-{
-    S,
-    A,
-    B,
+public class CLEAR_RANK_TIME {
+    public CLEAR_RANK_TIME(float s , float a , float b){ S = s; A = a; B = b;}
+
+    public float S;
+    public float A;
+    public float B;
+
 }
+
 
 
 /// <summary>
@@ -26,10 +29,22 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 16;
     private const float MAX_TIME = 999.0f;
-    private string[] StageNames = { "UetakeGattai" ,"Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
+    private string[] StageNames = { "coinTestScene" ,"Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
-
+    public CLEAR_RANK_TIME[] ClearRank = {
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300) ,
+        new CLEAR_RANK_TIME(900,750,300)
+    };
 
     private GAME_STATE GameState;
     private float GameTime;
@@ -51,7 +66,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Start()
     {
-        
+        Debug.Log(ClearRank[0].S);
+        Debug.Log(ClearRank[0].A);
+        Debug.Log(ClearRank[0].B);
     }
 
     private void Init()
@@ -69,7 +86,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             SoundManager.Instance.StopSound();
 
             //後にステージ連番によって分岐
-
             SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
             StageSoundFlag = false;
         }
@@ -93,9 +109,34 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         Instance.GameState = game_state;
 
+        // ゲームクリア時の処理
         if(Instance.GameState == GAME_STATE.RESULT)
         {
+            // コイン
+            CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
+            CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
+            //CoinManager.Instance.ResetCoin();               // コイン情報リセット
+
+            // チェックポイント
+            CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
+
+
+            // ランク
             Instance.CalicurateRank();
+
+
+            // ※　ランクをセーブデータにセーブする
+
+
+            // ※　時間をセーブデータにセーブする
+
+
+            // クリア情報
+            SaveDataManager.Instance.MainData.Stage[GetNowStage()].Clear = true;    // ステージクリア情報セーブ
+
+
+            // 入力したデータを完全にセーブする
+            SaveDataManager.Instance.SaveData();
         }
     }
 

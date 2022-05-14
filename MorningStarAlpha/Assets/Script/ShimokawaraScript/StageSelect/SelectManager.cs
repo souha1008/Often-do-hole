@@ -7,7 +7,7 @@ public class SelectManager : MonoBehaviour
     public static SelectManager instance;
 
     [SerializeField] public GameObject[] StageObj;
-    [SerializeField] private GameObject SelectObj;
+    //[SerializeField] private GameObject SelectObj;
     [SerializeField] private float PosDistance;
 
 #if false
@@ -104,7 +104,7 @@ public class SelectManager : MonoBehaviour
             Vector3 TempPos = StageObj[NowSelectStage].transform.position;
             TempPos.y += PosDistance;
 
-            SelectObj.transform.position = TempPos;
+            //SelectObj.transform.position = TempPos;
         }
     }
 
@@ -213,7 +213,7 @@ public class SelectManager : MonoBehaviour
     {
         if(DEBUG_ALL_STAGE_SELECT)
         {
-            CanStage = 15;
+            CanStage = 10;
         }
         else
         {

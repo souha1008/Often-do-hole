@@ -56,6 +56,9 @@ public class ResultManager : MonoBehaviour
     int Wanted_SkipAnime;
     int Stump_SkipAnime;
 
+    // 取得コイン
+    [SerializeField] Text coin_Text;
+
     // クリアランク用
     Sprite[] Stump_sprite;
 
@@ -65,6 +68,7 @@ public class ResultManager : MonoBehaviour
     [SerializeField][Range(0, 14)] int debug_stageNo;
     [SerializeField] bool debug_cicktime;
     [SerializeField] int debug_cickFlame;
+    [SerializeField] [Range(0, 9)] int debug_coins;
 
     enum ClearRank
     {
@@ -110,6 +114,9 @@ public class ResultManager : MonoBehaviour
 
         // ステージナンバーをUIセット
         StageNo_UISet();
+
+        // 取得コインをUIセット
+        Coin_UISet();
 
         // スカイボックスセット
         ChangeSkybox();
@@ -510,8 +517,17 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    void Skip_Animation()
+    void Coin_UISet()
     {
-
+        int result_coin;
+        if (debug_check)
+        {
+            result_coin = debug_coins;
+        }
+        else 
+        {
+           result_coin = SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).coin.AllGetCoins;
+        }
+        coin_Text.text = result_coin.ToString();
     }
 }
