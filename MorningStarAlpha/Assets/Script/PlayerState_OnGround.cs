@@ -14,7 +14,6 @@ public class PlayerStateOnGround : PlayerState
     private const float SLIDE_END_TIME = 0.5f;
     private float slideEndTimer;
     private float rareMotionTimer;
-    private bool RunMode;
     private PlayerMoveDir oldMoveDir;
 
     public PlayerStateOnGround()//コンストラクタ
@@ -25,7 +24,6 @@ public class PlayerStateOnGround : PlayerState
         PlayerScript.canShotState = true;
         slideEndTimer = 0.0f;
         rareMotionTimer = 0.0f;
-        RunMode = false;
         oldMoveDir = PlayerScript.dir;
         BulletScript.ReturnBullet();
 
@@ -82,7 +80,6 @@ public class PlayerStateOnGround : PlayerState
 
         if(oldMoveDir != PlayerScript.dir)
         {
-            RunMode = false;
             oldMoveDir = PlayerScript.dir;
         }
     }
@@ -154,19 +151,6 @@ public class PlayerStateOnGround : PlayerState
                     PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED  * (fixedAdjust);
                 }
 
-
-                if (PlayerScript.adjustLeftStick.x < 0.5f && RunMode == false)
-                {
-                    if(PlayerScript.vel.x > PlayerScript.MAX_RUN_SPEED / 2)
-                    {
-                        PlayerScript.vel.x -= PlayerScript.ADD_RUN_SPEED * 3 *(fixedAdjust);
-                    }
-                }
-                else
-                {
-                    RunMode = true;
-                }
-
                 //限度
                 PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
             }
@@ -183,18 +167,6 @@ public class PlayerStateOnGround : PlayerState
                     PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * (fixedAdjust);
                 }
 
-                if (PlayerScript.adjustLeftStick.x > -0.5f && RunMode == false)
-                {             
-                    if (PlayerScript.vel.x < (PlayerScript.MAX_RUN_SPEED / 2 ) * -1)
-                    {
-                        PlayerScript.vel.x -= PlayerScript.ADD_RUN_SPEED * -1 * 3 * (fixedAdjust);
-                    }
-                }
-                else
-                {
-                    RunMode = true;
-                }
-
                 //限度
                 PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
             }
@@ -205,7 +177,6 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.vel *= PlayerScript.RUN_FRICTION;
 
                 //ある程度下回ったら0にする処理
-                RunMode = false;
             }
         }
 

@@ -6,22 +6,24 @@ using DG.Tweening;
 
 public class Title_p2 : MonoBehaviour
 {
-    [Tooltip("Playerオブジェクト")] [SerializeField] GameObject Player;
-    [Tooltip("MainCamera")][SerializeField] GameObject mainCamera;
-    [Tooltip("CameraCenterX")][SerializeField] GameObject centerX;
-    [Tooltip("Canvas")][SerializeField] GameObject Canvas;
-    [Tooltip("足場")][SerializeField] GameObject Plane_Parent;
+    [Header("ヒエラルキーよりアタッチ")]
+    [SerializeField] Animator PressAny_animator;
+    [SerializeField] int SceneChange_Frame = 200;
 
     [System.NonSerialized] public static Title_p2 instance;
-
-    [Tooltip("カメラトランジション時間")][SerializeField] float cam_transition = 2.0f;
-    [Tooltip("プレイヤーローテーション時間")][SerializeField] float player_Rotation = 2.0f;
-
-    private Vector3 pos;
 
     private bool once_press;
 
     public bool changeScene;
+
+    // アニメーション関係
+    int PushButton;
+    int Anim_StateIdle2;
+    AnimatorStateInfo Anim_CurrentState_Info;
+
+    // フレームカウント
+    int frame_Count;
+
 
     void Awake()
     {
@@ -31,57 +33,49 @@ public class Title_p2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        pos = Player.transform.position;
         once_press = false;
-        Plane_Parent.SetActive(false);
         PlayerMain.instance.mode = new PlayerState_Title();
+
+        frame_Count = 0;
 
         // 変数初期化
         changeScene = false;
+
+        // アニメーションパラメータ取得
+        PushButton = Animator.StringToHash("PushButton");
+        Anim_StateIdle2 = Animator.StringToHash("PressAny_Idle2anim");
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Player.transform.position = pos;
+        Anim_CurrentState_Info = PressAny_animator.GetCurrentAnimatorStateInfo(0);
 
         // PressAnyButton
         if (Input.GetButton("Fire1") || Input.GetButton("Fire2")
             || Input.GetButton("Fire3") || Input.GetButton("Jump") && once_press == false)
         { 
-            Canvas.SetActive(false);
             once_press = true;
-            Plane_Parent.SetActive(true);
+            PressAny_animator.SetBool(PushButton, true);
         }
 
         if (once_press == true)
         {
-            Player.transform.DORotate(new Vector3(0, 90, 0), player_Rotation)
-                .SetRecyclable(false)
-                .SetLink(Player.gameObject)
-                .SetEase(Ease.OutCubic);
-
-            // メインカメラのポジション移動
-            Vector3 camPos = centerX.transform.position;
-            camPos.z = -50.0f;
-
-            mainCamera.transform.DORotate(new Vector3(0, 0, 0), 4.0f, RotateMode.Fast);
-            
-            mainCamera.transform.DOMove(camPos, cam_transition)
-                .SetLink(mainCamera.gameObject)
-                .SetRecyclable(false)
-                .SetEase(Ease.OutCubic)
-                .OnComplete(() =>
-                {
-                    changeScene = true;
-                });
-
-            // シーンチェンジ
-            if(changeScene == true)
+            if(CheckCurrent_PressAnyIdle() == true)
+            {
+                frame_Count++;
+            }
+            if (frame_Count >= SceneChange_Frame)
             {
                 SceneManager.LoadScene("Menu");
             }
         }
+    }
+
+    bool CheckCurrent_PressAnyIdle()
+    {
+        bool isState = Anim_CurrentState_Info.shortNameHash == Anim_StateIdle2;
+
+        return isState;
     }
 }
