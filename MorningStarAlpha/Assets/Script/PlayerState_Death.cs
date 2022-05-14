@@ -33,8 +33,8 @@ public class PlayerStateDeath_Thorn : PlayerState
         PlayerScript.ResetAnimation();
 
         //ÉAÉjÉÅóp
-        PlayerScript.animator.SetTrigger(PlayerScript.animHash.NockBack);
         PlayerScript.animator.SetFloat("NockbackSpeed", 8.0f);
+        PlayerScript.animator.Play("NockBack");
         PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
     }
 
