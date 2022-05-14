@@ -231,7 +231,8 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     // チェックポイント＆ゴール通った時のコインデータ更新用
     public void SetCheckPointCoinData()
     {
-        coin = new Coin(SubCoin);
+        if (SubCoin != null)
+            coin = new Coin(SubCoin);
         //Debug.LogWarning("コイン更新");
     }
 
