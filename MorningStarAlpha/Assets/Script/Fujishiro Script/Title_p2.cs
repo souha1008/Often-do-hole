@@ -44,6 +44,8 @@ public class Title_p2 : MonoBehaviour
         // アニメーションパラメータ取得
         PushButton = Animator.StringToHash("PushButton");
         Anim_StateIdle2 = Animator.StringToHash("PressAny_Idle2anim");
+
+        SoundManager.Instance.PlaySound("Title_BGM", 100, 1.8f);
     }
 
     // Update is called once per frame
