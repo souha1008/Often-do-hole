@@ -194,8 +194,10 @@ public class PlayerStateShot : PlayerState
                 if(PlayerScript.isOnGround == false)
                 {
                     float addUp = 30.0f;
-                   
                     PlayerScript.vel.y += addUp;
+
+                    GameObject eff = EffectManager.Instance.BoostEffect(PlayerScript.vel);
+                    eff.transform.parent = PlayerScript.transform;
                 }
 
 
@@ -233,6 +235,8 @@ public class PlayerStateShot : PlayerState
 
                     PlayerScript.vel = ReleaseForceCalicurate();
 
+                    GameObject eff = EffectManager.Instance.BoostEffect(PlayerScript.vel);
+                    
                     PlayerScript.useVelocity = true;
                     finishFlag = true;
                 }
