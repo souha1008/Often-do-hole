@@ -17,6 +17,9 @@ public class CheckPoint : MonoBehaviour
         {
             CheckPointManager.Instance.SetCheckPoint(this);
         }
+
+        // ステージにあるチェックポイントセット(アニメーション用)
+        CheckPointManager.Instance.SetStageCheckPoint(this);
     }
 
 
@@ -45,6 +48,15 @@ public class CheckPoint : MonoBehaviour
         {
             // チェックポイントのHitBoxに触れたらチェックポイント更新
             CheckPointManager.Instance.SetCheckPoint(this);
+
+            // アニメーション再生
+            SetAnimator();
         }
+    }
+
+    // アニメーションセット
+    public void SetAnimator()
+    {
+        MeshOnOffObject.gameObject.GetComponent<Animator>().enabled = true;
     }
 }

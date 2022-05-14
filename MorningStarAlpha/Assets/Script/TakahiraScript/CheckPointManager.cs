@@ -14,7 +14,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     private static Vector3 RespawnPos = Vector3.zero;   // リスポーン座標
     public bool RespawnFlag = false;   // チェックポイントセット確認フラグ
 
-    private List<Vector3> OldCheckPoint = new List<Vector3>();    // 通過済みチェックポイント
+    private List<Vector3> OldCheckPoint = new List<Vector3>();          // 通過済みチェックポイント
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     // チェックポイントのセット
     public void SetCheckPoint(CheckPoint checkpoint)
     {
-        // 同じチェックポイントだと更新不可のif文
+        // 同じチェックポイントだと更新不可の処理
         bool SetFlag = true;
 
         for (int i = 0; i < OldCheckPoint.Count; i++)
@@ -59,6 +59,18 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     {
         //Debug.LogWarning(RespawnPos);
         return RespawnPos;
+    }
+
+    // ステージにあるチェックポイントセット(アニメーション用)
+    public void SetStageCheckPoint(CheckPoint checkPoint)
+    {
+        for (int i = 0; i < OldCheckPoint.Count; i++)
+        {
+            if (OldCheckPoint[i] == checkPoint.RespawnPointObject.transform.position)
+            {
+                checkPoint.SetAnimator();
+            }
+        }
     }
 
     // チェックポイントリセット
