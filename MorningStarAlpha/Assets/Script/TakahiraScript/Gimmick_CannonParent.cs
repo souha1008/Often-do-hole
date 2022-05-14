@@ -217,4 +217,16 @@ public class Gimmick_CannonParent : Gimmick_Main
         // 自分自身を消す
         Destroy(this.gameObject);
     }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        // プレイヤーと接触時コイン取得
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            // ヒットストップ
+            GameSpeedManager.Instance.StartHitStop(0.1f);
+            // プレイヤーをノックバック
+            PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
+        }
+    }
 }
