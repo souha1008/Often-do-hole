@@ -246,8 +246,6 @@ public class PlayerMain : MonoBehaviour
     {
         landTimer = Mathf.Min(landTimer + Time.deltaTime, 10.0f);
         counterTimer = Mathf.Min(counterTimer + Time.deltaTime, 10.0f);
-
-        Debug.Log(landTimer);
     }
 
     private void Update()

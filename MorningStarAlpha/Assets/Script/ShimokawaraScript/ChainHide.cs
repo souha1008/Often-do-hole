@@ -18,7 +18,6 @@ public class ChainHide : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("‚ ‚½‚Á‚½");
         if (other.CompareTag("Player"))
         {
             this.GetComponent<MeshRenderer>().enabled = false;
@@ -27,7 +26,6 @@ public class ChainHide : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        Debug.Log("—£‚ê‚½‚½");
         if (other.CompareTag("Player"))
         {
             this.GetComponent<MeshRenderer>().enabled = true;
