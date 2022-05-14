@@ -81,8 +81,8 @@ public class Coin
 public class CoinManager : SingletonMonoBehaviour<CoinManager>
 {
     // 現在のコイン取得状況
-    public Coin coin = null;        // ゲーム内でのコイン取得用
-    public Coin SubCoin = null;     // ゲーム内でのコイン取得用(チェックポイント通過してないとき用)
+    [HideInInspector] public Coin coin = null;        // ゲーム内でのコイン取得用
+    [HideInInspector] public Coin SubCoin = null;     // ゲーム内でのコイン取得用(チェックポイント通過してないとき用)
 
     // コインオブジェクト
     public GameObject Coins1;
