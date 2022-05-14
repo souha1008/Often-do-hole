@@ -32,11 +32,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     // フェード秒数(シーン変更)
     [Label("フェード秒数(シーン変更)")]
-    [SerializeField] private float FadeTime_SceneChange = 1;
+    private float FadeTime_SceneChange = 1;
 
     // フェード秒数(ステージ変更)
     [Label("フェード秒数(ステージ変更)")]
-    [SerializeField] private float FadeTime_StageChange = 1;
+    private float FadeTime_StageChange = 1;
 
 
     private Texture2D FadeTexture;                    // フェードのテクスチャ
