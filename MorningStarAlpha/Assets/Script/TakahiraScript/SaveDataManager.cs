@@ -160,13 +160,13 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         Data.Stage[1].coin = new Coin(3, 3, 3);
         Data.Stage[2].coin = new Coin(3, 3, 3);
         Data.Stage[3].coin = new Coin(3, 3, 3);
-        Data.Stage[4].coin = new Coin(4, 4, 4);
-        Data.Stage[5].coin = new Coin(4, 4, 4);
-        Data.Stage[6].coin = new Coin(4, 4, 4);
-        Data.Stage[7].coin = new Coin(5, 5, 5);
-        Data.Stage[8].coin = new Coin(5, 5, 5);
-        Data.Stage[9].coin = new Coin(5, 5, 5);
-        Data.Stage[10].coin = new Coin(5, 5, 5);
+        Data.Stage[4].coin = new Coin(3, 3, 3);
+        Data.Stage[5].coin = new Coin(3, 3, 3);
+        Data.Stage[6].coin = new Coin(3, 3, 3);
+        Data.Stage[7].coin = new Coin(3, 3, 3);
+        Data.Stage[8].coin = new Coin(3, 3, 3);
+        Data.Stage[9].coin = new Coin(3, 3, 3);
+        Data.Stage[10].coin = new Coin(3, 3, 3);
 
 
         //Debug.LogWarning(Data.Stage[0]);
@@ -177,5 +177,11 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         //Data.Stage[1].coin.AllCoin1 = 3;
 
         return Data;
+    }
+
+
+    public void getCoinNum()
+    {
+
     }
 }
