@@ -25,7 +25,6 @@ public class CheckPoint : MonoBehaviour
     {
         // コライダー
         this.gameObject.GetComponent<Collider>().isTrigger = true;  // トリガーオン
-        RespawnPointObject.GetComponent<Collider>().isTrigger = true;     // トリガーオン
 
         // チェックポイントのメッシュオンオフ用スクリプトを参照して、見える or 見えなくする
         if (MeshOnOffObject.GetComponent<MeshOnOff>().MeshOn)
