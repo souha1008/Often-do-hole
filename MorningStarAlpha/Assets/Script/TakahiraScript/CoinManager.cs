@@ -108,8 +108,10 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         {
             ResetCoin();
             CoinManagerInitFlag = true;
+
+            //Debug.LogWarning("コイン初期化");
         }
-            
+
     }
 
     public void SetCoins(Coins Coins)
@@ -123,6 +125,8 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         {
             ResetCoin();
             CoinManagerInitFlag = true;
+
+            //Debug.LogWarning("コイン初期化");
         }
 
 
@@ -222,6 +226,7 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
                 SubCoin.AllGetCoin3 += 1;
             }
         }
+        SubCoin.AllGetCoins = SubCoin.AllGetCoin1 + SubCoin.AllGetCoin2 + SubCoin.AllGetCoin3;
     }
 
 
@@ -229,8 +234,10 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     public void SetCheckPointCoinData()
     {
         if (SubCoin != null)
+        {
             coin = new Coin(SubCoin);
-        //Debug.LogWarning("コイン更新");
+            //Debug.LogWarning("コイン更新");
+        }
     }
 
 
