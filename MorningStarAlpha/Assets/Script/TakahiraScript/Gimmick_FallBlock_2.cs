@@ -165,7 +165,8 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             {
                 Active();
             }
-            NowTime++;
+            // 時間更新
+            NowTime += Time.fixedDeltaTime;
         }
     }
 
@@ -230,6 +231,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
 
         // 自分自身を消す
         //Destroy(this.gameObject);
+
+        NowFall = false;
+        BulletMoveFlag = false;
+        PlayerMoveFlag = false;
 
         // 非アクティブ化
         NoActive();
