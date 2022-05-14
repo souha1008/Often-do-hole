@@ -85,8 +85,8 @@ public class CoinImage : MonoBehaviour
             NumImage[i + 2].sprite = NumberSprite[Num];
 
             // 10‚ÌˆÊ‚Ì0‚ğÁ‚·ˆ—
-            //if (i == 1 && Num == 0) NumImage[i + 2].enabled = false;
-            //else NumImage[i + 2].enabled = true;
+            if (i == 1 && Num == 0) NumImage[i + 2].enabled = false;
+            else NumImage[i + 2].enabled = true;
         }
     }
 
@@ -107,8 +107,8 @@ public class CoinImage : MonoBehaviour
             NumImage[i].sprite = NumberSprite[Num];
 
             // 10‚ÌˆÊ‚Ì0‚ğÁ‚·ˆ—
-            //if (i == 1 && Num == 0) NumImage[i].enabled = false;
-            //else NumImage[i].enabled = true;
+            if (i == 1 && Num == 0) NumImage[i].enabled = false;
+            else NumImage[i].enabled = true;
         }
     }
 }
