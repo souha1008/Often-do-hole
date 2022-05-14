@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 7416536dbe0334cfd888dd1beb75a9fb, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 79f459587c0220243845ace31b7d8697, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48011768, g: 0.5877557, b: 0.76804227, a: 1}
+  m_IndirectSpecularColor: {r: 0.6924116, g: 0.94415873, b: 1.1667516, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -922,6 +922,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6671305230561223984, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: Day_Skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: 79f459587c0220243845ace31b7d8697, type: 2}
+    - target: {fileID: 6671305230561223984, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: randomness
       value: 10
       objectReference: {fileID: 0}
@@ -938,6 +942,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6671305230561223984, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: Night_Skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: 78bef1a9e41461c46bea846f4a69a4dc, type: 2}
+    - target: {fileID: 6671305230561223984, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: Stump_Sprite
       value: 
       objectReference: {fileID: 2066504070}
@@ -949,6 +957,10 @@ PrefabInstance:
       propertyPath: debug_stageNo
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 6671305230561223984, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: Evening_Skybox
+      value: 
+      objectReference: {fileID: 2100000, guid: 6a44a10ed2a44ea46bc225b1bf799367, type: 2}
     - target: {fileID: 6671305230561223984, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: stump_animator
       value: 
