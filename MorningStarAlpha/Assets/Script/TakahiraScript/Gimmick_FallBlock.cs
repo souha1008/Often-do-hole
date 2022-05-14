@@ -8,7 +8,10 @@ public enum FALL_TYPE
     QUAD_IN,
     CUBIC_IN,
     QUART_IN,
-    QUINT_IN
+    QUINT_IN,
+    EXPO_IN,
+    BOUNCE_IN,
+    ELASTIC_IN
 }
 
 public class Gimmick_FallBlock : Gimmick_Main
@@ -105,6 +108,15 @@ public class Gimmick_FallBlock : Gimmick_Main
                     break;
                 case FALL_TYPE.QUINT_IN:
                     this.gameObject.transform.position = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.EXPO_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.ExpIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.BOUNCE_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.BounceIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                    break;
+                case FALL_TYPE.ELASTIC_IN:
+                    this.gameObject.transform.position = new Vector3(StartPos.x, Easing.ElasticIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                     break;
             }
 
