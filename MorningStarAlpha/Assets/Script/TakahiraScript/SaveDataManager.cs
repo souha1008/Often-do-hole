@@ -180,5 +180,8 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     }
 
 
-    public void getCoin()
+    public void getCoinNum()
+    {
+
+    }
 }
