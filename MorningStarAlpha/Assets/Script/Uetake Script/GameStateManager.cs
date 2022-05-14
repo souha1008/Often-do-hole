@@ -11,12 +11,6 @@ public enum GAME_STATE {
     RESULT,//リザルト中
 }
 
-public enum GAME_RANK
-{
-    S,
-    A,
-    B,
-}
 
 
 /// <summary>
@@ -99,7 +93,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
             CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
             CoinManager.Instance.ResetCoin();               // コイン情報リセット
-
 
             // チェックポイント
             CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット

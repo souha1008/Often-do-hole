@@ -4,6 +4,14 @@ using System.IO;
 using System.Runtime.Serialization;
 using System;
 
+//ゲームランク
+[Serializable]
+public enum GAME_RANK
+{
+    S,
+    A,
+    B,
+}
 
 
 // データファイル
@@ -39,7 +47,7 @@ public class StageData
         coin = null;
         Clear = false;
     }
-    public int Rank = 0;            // ランク
+    public GAME_RANK Rank = 0;            // ランク
     public float Time = 0;          // 時間
     public Coin coin = null;        // コイン
     public bool Clear = false;      // ステージクリアフラグ
