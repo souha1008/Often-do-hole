@@ -286,6 +286,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private void NoActive()
     {
         // 非アクティブ化
+        this.gameObject.SetActive(false);
         Cd.enabled = false;
         GetComponent<MeshRenderer>().enabled = false;
         ActiveFlag = false;
@@ -296,6 +297,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private void Active()
     {
         // アクティブ化
+        this.gameObject.SetActive(true);
         Cd.enabled = true;
         GetComponent<MeshRenderer>().enabled = true;
         ActiveFlag = true;
