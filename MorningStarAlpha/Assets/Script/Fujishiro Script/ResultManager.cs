@@ -510,8 +510,8 @@ public class ResultManager : MonoBehaviour
         }
     }
 
-    void Skip_Animation()
+    void Coin_UISet()
     {
-
+        
     }
 }
