@@ -92,9 +92,35 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         Instance.GameState = game_state;
 
+        // ゲームクリア時の処理
         if(Instance.GameState == GAME_STATE.RESULT)
         {
+            // コイン
+            CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
+            CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
+            CoinManager.Instance.ResetCoin();               // コイン情報リセット
+
+
+            // チェックポイント
+            CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
+
+
+            // ランク
             Instance.CalicurateRank();
+
+
+            // ※　ランクをセーブデータにセーブする
+
+
+            // ※　時間をセーブデータにセーブする
+
+
+            // クリア情報
+            SaveDataManager.Instance.MainData.Stage[GetNowStage()].Clear = true;    // ステージクリア情報セーブ
+
+
+            // 入力したデータを完全にセーブする
+            SaveDataManager.Instance.SaveData();
         }
     }
 
