@@ -17,7 +17,7 @@ public class GameTimeDisplay : MonoBehaviour
     void Update()
     {
         string displayTime;
-        displayTime = GameStateManager.GetGameTime().ToString();
+        displayTime = GameStateManager.GetGameTime().ToString("f0");
 
 
         text.text = displayTime;

@@ -55,6 +55,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Awake()
     {
+        Init();
+
         if (this != Instance)
         {
             Destroy(this);
@@ -122,7 +124,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
 
             // ランク
-            Instance.CalicurateRank();
+            Instance.CalicurateRank(GetNowStage());
 
             // ※　時間をセーブデータにセーブする
             SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time = GetGameTime();
@@ -188,21 +190,25 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         return Instance.GameTime;
     }
 
-    public void CalicurateRank()
+    private GAME_RANK CalicurateRank(int stage_num)
     {
-        //仮
-        if(GameTime > 990)
+        float time = GetGameTime();
+        GAME_RANK returnRank = GAME_RANK.S;
+
+        if(time >= ClearRank[stage_num].S)
         {
-            GameRank = GAME_RANK.S;
+            returnRank = GAME_RANK.S;
         }
-        else if(GameTime > 980)
+        else if(time >= ClearRank[stage_num].A)
         {
-            GameRank = GAME_RANK.A;
+            returnRank = GAME_RANK.A;
         }
-        if (GameTime > 970)
+        else
         {
-            GameRank = GAME_RANK.B;
+            returnRank = GAME_RANK.B;
         }
+
+        return returnRank;
     }
 
     private void CountDown()
