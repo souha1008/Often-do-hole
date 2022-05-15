@@ -712,12 +712,15 @@ public class PlayerMain : MonoBehaviour
     {
         if (landTimer > 0.2f)
         {
-            landTimer = 0.0f;
-            Vector3 startPos = rb.position;
-            startPos.y -= 3.3f;
-            EffectManager.Instance.landEffect(startPos);
+            if (refState == EnumPlayerState.MIDAIR)
+            {
+                landTimer = 0.0f;
+                Vector3 startPos = rb.position;
+                startPos.y -= 3.3f;
+                EffectManager.Instance.landEffect(startPos);
 
-            SoundManager.Instance.PlaySound("sound_16_Landing", 0.3f);
+                SoundManager.Instance.PlaySound("sound_16_Landing", 0.3f);
+            }
         }
     }
 
