@@ -1,118 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
+
 
 public class SpriteManager : SingletonMonoBehaviour<SpriteManager>
 {
-    public static List<Sprite> spritesList = new List<Sprite>();
-
-    static List<string> spriteName = new List<string>();
-
-    bool SpriteLoadFlag = true;
-
-    private IEnumerator SetSpriteData()
+    public async Task<Sprite> LoadTexture(string SpriteName)
     {
-        IList<Sprite> sprites;
-
+        Sprite sprite = null;
         // スプライトデータ読み込み
-        var handleSprite = Addressables.LoadAssetsAsync<Sprite>("Sprite", null);
+        var HandleSprites = await Addressables.LoadResourceLocationsAsync(SpriteName, typeof(Sprite)).Task;
 
-        yield return handleSprite;
-
-        if(handleSprite.Status == AsyncOperationStatus.Succeeded)
+        if (HandleSprites != default)
         {
-            sprites = handleSprite.Result;
+            sprite = await Addressables.LoadAssetAsync<Sprite>(HandleSprites).Task;
 
-            for(int i = 0; i < sprites.Count; i++)
-            {
-                spritesList[i] = sprites[i];
-            }
-            sprites.Clear();
-
-            if (spritesList != null)
-            {
-                Debug.Log("Sprite読み込み完了");
-            }
+            Debug.LogWarning("Sprite読み込み完了");
         }
         else
         {
-            Debug.Log("Sprite読み込み失敗");
+            Debug.LogWarning("Sprite読み込み失敗");
         }
-        SpriteLoadFlag = false;
+
+        Addressables.Release(HandleSprites);
+        return sprite;
     }
 
-    // コルーチンじゃないバージョン
-    void SetSpriteData_nomal()
+    public async Task<Sprite> LoadTexture(AssetReferenceSprite ARSprite)
     {
-        IList<Sprite> sprites;
+        Sprite sprite = null;
 
         // スプライトデータ読み込み
-        var handleSprite = Addressables.LoadAssetsAsync<Sprite>("Sprite", null);
+        var HandleSprites = await Addressables.LoadResourceLocationsAsync(ARSprite, typeof(Sprite)).Task;
 
-        do
+        if (HandleSprites != default)
         {
-            ;
-        } while (handleSprite.Status != AsyncOperationStatus.Succeeded && handleSprite.Status != AsyncOperationStatus.Failed);
+            sprite = await Addressables.LoadAssetAsync<Sprite>(HandleSprites).Task;
 
-        if (handleSprite.Result != null)
-        {
-            sprites = handleSprite.Result;
-
-            for (int i = 0; i < sprites.Count; i++)
-            {
-                spritesList.Add(sprites[i]);
-                spriteName.Add(sprites[i].name);
-            }
-            sprites.Clear();
-
-            Debug.Log("Sprite読み込み完了");
+            Debug.LogWarning("Sprite読み込み完了");
         }
         else
         {
-            Debug.Log("Sprite読み込み失敗");
-        }
-        SpriteLoadFlag = false;
-    }
-
-    public Sprite LoadTexture(string SpriteName)
-    {
-        Sprite sprite_ = spritesList[1];
-
-        for(int i = 0; i < spritesList.Count; i++)
-        {
-            if(spriteName[i] == SpriteName)
-            {
-                sprite_ = spritesList[i];
-            }
+            Debug.LogWarning("Sprite読み込み失敗");
         }
 
-        Debug.Log(sprite_.name);
-        return sprite_;
-    }
+        Addressables.Release(HandleSprites);
 
-    //private IEnumerator LoadTextureIE(string SpriteName, Sprite sprite)
-    //{
-
-
-    //}
-        
-    void Awake()
-    {
-        StartCoroutine(SetSpriteData());
-        //SetSpriteData_nomal();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return sprite;
     }
 }
