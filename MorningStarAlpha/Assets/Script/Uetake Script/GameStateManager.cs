@@ -122,12 +122,10 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             // ランク
             Instance.CalicurateRank();
 
-
-            // ※　ランクをセーブデータにセーブする
-
-
             // ※　時間をセーブデータにセーブする
-
+            SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time = GetGameTime();
+            // ※　ランクをセーブデータにセーブする
+            SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank = Instance.GameRank;
 
             // クリア情報
             SaveDataManager.Instance.MainData.Stage[GetNowStage()].Clear = true;    // ステージクリア情報セーブ
@@ -188,15 +186,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         return Instance.GameTime;
     }
 
-    public GAME_RANK GetGameRank()
-    {
-        return GameRank;
-    }
-
     public void CalicurateRank()
     {
         //仮
-
         if(GameTime > 990)
         {
             GameRank = GAME_RANK.S;
