@@ -11,12 +11,6 @@ public class ResultManager : MonoBehaviour
     // カメラ
     [Header("手配書揺れ関係")]
     [SerializeField] Image Wanted_Sprite;
-    [SerializeField][Range(0.0f, 1.0f)] float duration;
-    [SerializeField] float strength;
-    [SerializeField] int vibrato;
-    [SerializeField] float randomness;
-    [SerializeField] bool snapping;
-    [SerializeField] bool fadeOut;
 
     Tweener shaketeener; // DOTweenのやつ
     Vector3 initPos;    // 手配書の初期位置
@@ -28,12 +22,15 @@ public class ResultManager : MonoBehaviour
     // UI
     [Header("UI")]
     [SerializeField] GameObject UI_Canvas;
-    [SerializeField] GameObject Next_UI;
-    [SerializeField] GameObject Next_UI_Big;
-    [SerializeField] GameObject StageSelect_UI;
-    [SerializeField] GameObject StageSelect_UI_Big;
+    [SerializeField] Image Next_UI;
+    [SerializeField] Image StageSelect_UI;
     [SerializeField] Image Stump_UI;
     [SerializeField] Image Photo_UI;
+
+    Sprite White_Next_UI;
+    Sprite Glay_Next_UI;
+    Sprite White_StageSelect_UI;
+    Sprite Glay_StageSelect_UI;
 
     UI_COMMAND ui_command;
 
@@ -66,8 +63,6 @@ public class ResultManager : MonoBehaviour
     [Header("以下デバッグコンソール")]
     [SerializeField] bool debug_check;
     [SerializeField][Range(0, 14)] int debug_stageNo;
-    [SerializeField] bool debug_cicktime;
-    [SerializeField] int debug_cickFlame;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
     enum ClearRank
@@ -93,18 +88,8 @@ public class ResultManager : MonoBehaviour
     async void Start()
     {
 
-        anim_end = false;
-        UI_Canvas.SetActive(false);
-        ui_command = UI_COMMAND.NextStage;
-
-        // UIアクティブ初期化
-        Next_UI.SetActive(false);
-        Next_UI_Big.SetActive(true);
-        StageSelect_UI.SetActive(true);
-        StageSelect_UI_Big.SetActive(false);
-        Stump_UI.color = Color.clear;
-
-        initPos = Wanted_Sprite.transform.position;
+        // UIパス設定
+        ResourceSave();
 
         // アニメパラメータハッシュ
         AnimetorHash_Reset();
@@ -120,6 +105,14 @@ public class ResultManager : MonoBehaviour
 
         // スカイボックスセット
         ChangeSkybox();
+
+        anim_end = false;
+        UI_Canvas.SetActive(false);
+        ui_command = UI_COMMAND.NextStage;
+        Next_UI.sprite = White_Next_UI;
+        StageSelect_UI.sprite = Glay_StageSelect_UI;
+
+        initPos = Wanted_Sprite.transform.position;
 
     }
 
@@ -156,19 +149,15 @@ public class ResultManager : MonoBehaviour
             if (Input.GetAxis("Vertical") > 0.8f)
             {
                 ui_command = UI_COMMAND.NextStage;
-                Next_UI.SetActive(false);
-                Next_UI_Big.SetActive(true);
-                StageSelect_UI.SetActive(true);
-                StageSelect_UI_Big.SetActive(false);
+                Next_UI.sprite = White_Next_UI;
+                StageSelect_UI.sprite = Glay_StageSelect_UI;
             }
             // スティック下
             if (Input.GetAxis("Vertical") < -0.8)
             {
                 ui_command = UI_COMMAND.StageSelect;
-                Next_UI.SetActive(true);
-                Next_UI_Big.SetActive(false);
-                StageSelect_UI.SetActive(false);
-                StageSelect_UI_Big.SetActive(true);
+                Next_UI.sprite = Glay_Next_UI;
+                StageSelect_UI.sprite = White_StageSelect_UI;
             }
 
             switch (ui_command)
@@ -529,5 +518,13 @@ public class ResultManager : MonoBehaviour
            result_coin = SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).coin.AllGetCoins;
         }
         coin_Text.text = result_coin.ToString();
+    }
+
+    void ResourceSave()
+    {
+        White_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage_btn");
+        White_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/01_stageselect_btn");
+        Glay_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage2_btn");
+        Glay_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/01_stageselect2_btn");
     }
 }

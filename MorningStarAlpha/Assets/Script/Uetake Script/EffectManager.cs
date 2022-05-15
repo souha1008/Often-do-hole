@@ -9,12 +9,13 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     private GameObject BurstParticle;
     private GameObject LandParticle;
     private GameObject TreasureOpenParticle;
-
+    private GameObject BoostParticle;
 
     private void Awake()
     {
         ShotParticle = (GameObject)Resources.Load("Effect/05_stone_effect_01");
         BurstParticle = (GameObject)Resources.Load("Effect/Shot");
+        BoostParticle = (GameObject)Resources.Load("Effect/Boost");
         LandParticle = (GameObject)Resources.Load("Effect/Landing");
         TreasureOpenParticle = (GameObject)Resources.Load("Effect/05_Treasure_open");
     }
@@ -39,7 +40,6 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
 
         Quaternion rotateRot = Quaternion.LookRotation(PlayerMain.instance.adjustLeftStick);
 
-
         rot = rot * rotateRot;
 
         Vector3 vec = PlayerMain.instance.adjustLeftStick.normalized;
@@ -50,6 +50,28 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
 
         GameObject shot = Instantiate(BurstParticle, Point, rotateRot);
         shot.transform.localScale = Vector3.one * 3; //サイズ変更
+    }
+
+    public GameObject BoostEffect(Vector3 BoostVel)
+    {
+        Vector3 forwardVel = BoostVel.normalized;
+        const float adjustDistance =0.0f;
+        Quaternion rot = Quaternion.Euler(-90, 0, 0);
+
+        Quaternion rotateRot = Quaternion.LookRotation(forwardVel);
+
+
+        Vector3 vec = PlayerMain.instance.adjustLeftStick.normalized;
+        vec = forwardVel * adjustDistance;
+        Vector3 Point = PlayerMain.instance.rb.position + vec;
+
+
+        GameObject shotObject = Instantiate(BurstParticle, Point, rotateRot);
+        shotObject.transform.localScale = Vector3.one * 2; //サイズ変更
+        //shotObject.transform.SetParent(PlayerMain.instance.transform);
+
+
+        return shotObject;
     }
 
     public void landEffect(Vector3 pos)
