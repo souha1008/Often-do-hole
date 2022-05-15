@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1625778266423355417
+--- !u!114 &-8903209818594484401
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 05_line_01
-  m_Shader: {fileID: -6465566751694194690, guid: 71c6862bf135c5e40be2e60163ca6f85, type: 3}
+  m_Name: 05_fog_01
+  m_Shader: {fileID: -6465566751694194690, guid: 46cd1a0d6bcdb7a43b850cf15ee12b41, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -32,10 +32,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_e6b4d23041db470a8e337d57ea6932a4:
-        m_Texture: {fileID: -4654562289473540075, guid: 8d2c8b6e6b1fdd84098a28a62c939581, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -76,12 +72,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_456296fc5d984895a8d72b7aeca124c9_Texture_1:
-        m_Texture: {fileID: -4654562289473540075, guid: 8d2c8b6e6b1fdd84098a28a62c939581, type: 3}
+    - _SampleTexture2D_6c584565f79048e8940f6a31dbad23a7_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 27ee076c42a8deb4fbd797cb682ad0c9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_700e36aec65d4db28c53985ea86f6d38_Texture_1:
+        m_Texture: {fileID: 2039886987881811315, guid: 8d2c8b6e6b1fdd84098a28a62c939581, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - main_tex:
+        m_Texture: {fileID: 2800000, guid: 94ab7c9ac5350324887fe66c2d2b5014, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -97,6 +101,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_9d57786bd9ed435882b323e974e3533c: 0.1
+    - Vector1_a1702607823845a3bf50398c59bdcedc: 0.6
+    - Vector1_f14344ef996c48828965ffac8d9d7428: 1
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -123,9 +130,11 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - scale: 6
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - scroll_speed: {r: 0.6, g: 0.6, b: 0, a: 0}
   m_BuildTextureStacks: []
