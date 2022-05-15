@@ -66,9 +66,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Start()
     {
-        Debug.Log(ClearRank[0].S);
-        Debug.Log(ClearRank[0].A);
-        Debug.Log(ClearRank[0].B);
+       
     }
 
     private void Init()
