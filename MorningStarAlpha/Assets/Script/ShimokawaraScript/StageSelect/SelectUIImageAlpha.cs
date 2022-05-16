@@ -11,7 +11,7 @@ public class SelectUIImageAlpha : MonoBehaviour
     Color ClearColor;
 
     COLOR_STATE ColorState = COLOR_STATE.Original;
-    int ColorLerpCnt = 10;
+    int ColorLerpCnt = 0;
 
     int LERP_MIN = 0;
     int LERP_MAX = 5;
@@ -24,7 +24,7 @@ public class SelectUIImageAlpha : MonoBehaviour
         ClearColor = new Color(OriginnalColor.r, OriginnalColor.g, OriginnalColor.b, 0.0f);
 
         ColorState = COLOR_STATE.Original;
-        ColorLerpCnt = 10;
+        ColorLerpCnt = 0;
     }
 
     // Update is called once per frame

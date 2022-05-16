@@ -15,10 +15,10 @@ public class SelectUITextAlpha : MonoBehaviour
     Color ClearColor;
 
     COLOR_STATE ColorState = COLOR_STATE.Original;
-    int ColorLerpCnt = 10;
+    int ColorLerpCnt = 0;
 
     int LERP_MIN = 0;
-    int LERP_MAX = 10;
+    int LERP_MAX = 5;
 
 
     // Start is called before the first frame update
@@ -28,7 +28,7 @@ public class SelectUITextAlpha : MonoBehaviour
         ClearColor = new Color(OriginnalColor.r, OriginnalColor.g, OriginnalColor.b, 0.0f);
 
         ColorState = COLOR_STATE.Original;
-        ColorLerpCnt = 10;
+        ColorLerpCnt = 0;
     }
 
     // Update is called once per frame
