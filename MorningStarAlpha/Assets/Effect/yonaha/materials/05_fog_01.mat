@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-1718696501963624722
+--- !u!114 &-8903209818594484401
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: 05_tube_01
-  m_Shader: {fileID: -6465566751694194690, guid: db8b2d7fef6ce7d448e8beb346ea82bb, type: 3}
+  m_Name: 05_fog_01
+  m_Shader: {fileID: -6465566751694194690, guid: 46cd1a0d6bcdb7a43b850cf15ee12b41, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -32,10 +32,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - Texture2D_a646d0451294433d8cd1b9fa5b08fdb0:
-        m_Texture: {fileID: 5889685138616991007, guid: 8d2c8b6e6b1fdd84098a28a62c939581, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -76,12 +72,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_556daa0acf6d4173ba6b719f4316f81e_Texture_1:
-        m_Texture: {fileID: 0}
+    - _SampleTexture2D_6c584565f79048e8940f6a31dbad23a7_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 27ee076c42a8deb4fbd797cb682ad0c9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_700e36aec65d4db28c53985ea86f6d38_Texture_1:
+        m_Texture: {fileID: 2039886987881811315, guid: 8d2c8b6e6b1fdd84098a28a62c939581, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - main_tex:
+        m_Texture: {fileID: 2800000, guid: 94ab7c9ac5350324887fe66c2d2b5014, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -97,13 +101,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Boolean_2b470a3bf08e430bb6e1afd05cd9b4fb: 1
-    - Boolean_b88380ed94d945938a6eaef2d396b891: 1
-    - Vector1_0797c30c81ea4ff5bfed1988c8bd960d: 0.5
-    - Vector1_81103d4016d445519f31bc7937d0b379: 0.25
-    - Vector1_c6cea595c09548f5a251361078e95dbf: 2
-    - Vector1_cca7e63b523e489ca4d3025681944910: 1.09
-    - Vector1_ea2b5a3b4fd74950aa89bb40b84cde91: 1
+    - Vector1_9d57786bd9ed435882b323e974e3533c: 0.1
+    - Vector1_a1702607823845a3bf50398c59bdcedc: 0.6
+    - Vector1_f14344ef996c48828965ffac8d9d7428: 1
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -130,10 +130,11 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - scale: 6
     m_Colors:
-    - Vector2_72b167c139be414aa9546a9e8e1fae4b: {r: 3, g: 0.2, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - scroll_speed: {r: 0.6, g: 0.6, b: 0, a: 0}
   m_BuildTextureStacks: []
