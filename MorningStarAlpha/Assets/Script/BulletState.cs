@@ -89,7 +89,6 @@ public class BulletGo : BulletState
         radiusBigger = Mathf.Min(radiusBigger + 0.1f, 1.0f);
         BulletScript.co.radius = BulletScript.DefaultAnchorRadius * radiusBigger;
 
-        Debug.LogWarning(radiusBigger + "aaaa");
         // •d‚Ì“®‚«
         BulletScript.RotateBullet();
         ExitFlameCnt++;
