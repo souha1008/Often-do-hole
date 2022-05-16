@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 [System.Serializable]
 public class Coin
@@ -92,7 +94,6 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     // コインマネージャー初期化フラグ
     private bool CoinManagerInitFlag = false;
 
-
     private void Awake()
     {
         if (this != Instance)
@@ -111,7 +112,6 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
 
             //Debug.LogWarning("コイン初期化");
         }
-
     }
 
     public void SetCoins(Coins Coins)
