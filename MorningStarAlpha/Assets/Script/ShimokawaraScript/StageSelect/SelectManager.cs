@@ -31,7 +31,7 @@ public class SelectManager : MonoBehaviour
     public int LONG_PUSH_PITCH;
 
     int CanStage = 0;//えらべるステージ
-    bool CanStart = true;//移動中は開始できない
+    public bool CanStart = true;//移動中は開始できない
 
 
     public bool DEBUG_ALL_STAGE_SELECT;
