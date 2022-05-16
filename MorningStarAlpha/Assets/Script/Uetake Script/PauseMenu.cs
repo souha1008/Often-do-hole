@@ -152,15 +152,14 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void ClickRetry()
     {
-        //FadeManager.Instance.FadeGameOver();
         GameStateManager.LoadNowStage();
         EndPause();
     }
 
     public void ClickBackStageSelect()
     {
+        GameStateManager.LoadStageSelect();
         EndPause();
-        //SceneManager.LoadScene("StageSelectScene");
     }
 
     public void ClickSoundVolume()

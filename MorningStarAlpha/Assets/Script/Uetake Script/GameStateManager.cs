@@ -172,6 +172,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         LoadStage(Instance.NowStage);
     }
 
+    // ステージセレクトに移行
+    public static void LoadStageSelect()
+    {
+        FadeManager.Instance.FadeStageSelect();
+    }
+
     public static void GameOverReloadScene()
     {
         Instance.firstEnter = false;

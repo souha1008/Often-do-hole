@@ -80,7 +80,7 @@ public class MenuManager : MonoBehaviour
                 case NOWSELECT.StagesSelect:
                     if (Input.GetButtonDown("Jump") && OnceFlag)
                     {
-                        SceneManager.LoadScene("StageSelectScene");
+                        GameStateManager.LoadStageSelect();
                     }
                     break;
 
