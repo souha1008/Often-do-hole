@@ -10,6 +10,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     private GameObject LandParticle;
     private GameObject TreasureOpenParticle;
     private GameObject BoostParticle;
+    private GameObject CoinGetParticle;
 
     private void Awake()
     {
@@ -18,6 +19,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         BoostParticle = (GameObject)Resources.Load("Effect/Boost");
         LandParticle = (GameObject)Resources.Load("Effect/Landing");
         TreasureOpenParticle = (GameObject)Resources.Load("Effect/05_Treasure_open");
+        CoinGetParticle = (GameObject)Resources.Load("Effect/05_coin");
     }
 
     public void StartShotEffect(Vector3 Pos, Quaternion rot)
@@ -66,7 +68,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         Vector3 Point = PlayerMain.instance.rb.position + vec;
 
 
-        GameObject shotObject = Instantiate(BurstParticle, Point, rotateRot);
+        GameObject shotObject = Instantiate(BoostParticle, Point, rotateRot);
         shotObject.transform.localScale = Vector3.one * 2; //サイズ変更
         //shotObject.transform.SetParent(PlayerMain.instance.transform);
 
@@ -88,5 +90,12 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         pos.y += 1.2f;
         GameObject effect = Instantiate(TreasureOpenParticle, pos, Quaternion.identity);
         effect.transform.localScale = Vector3.one * size; //サイズ変更s
+    }
+
+    public void CoinGetEffect(Vector3 pos)
+    {
+        const float size = 12.0f;
+        GameObject effect = Instantiate(CoinGetParticle, pos, Quaternion.identity);
+        effect.transform.localScale = Vector3.one * size; //サイズ変更
     }
 }

@@ -62,6 +62,7 @@ public class CoinObject : MonoBehaviour
             GameSpeedManager.Instance.StartHitStop(0.1f);
             CoinInfo.GetCoinFlag = true;
             CoinManager.Instance.SetCoinInfo(CoinInfo);
+            EffectManager.Instance.CoinGetEffect(transform.position);
             Death();
         }
     }
