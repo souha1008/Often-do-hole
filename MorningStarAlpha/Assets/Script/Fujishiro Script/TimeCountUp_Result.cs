@@ -11,11 +11,20 @@ public class TimeCountUp_Result : MonoBehaviour
     [SerializeField] float Start_Time = 999;       // 一番最初の時間
 
     [Header("デバッグ用")]
-    [SerializeField] bool debug_Fixedtime;
+    [SerializeField] bool debug_check;
     [SerializeField] float debug_maxTime;
+
+    enum ClearRank
+    {
+        Rank_S = 0,
+        Rank_A,
+        Rank_B,
+    }
+    [SerializeField] ClearRank clearRank;
 
     int flame_time = 0;     // フレームカウント
     bool anim_start;
+
 
     void Awake()
     {
@@ -34,14 +43,7 @@ public class TimeCountUp_Result : MonoBehaviour
         if (Input.GetButton("Jump") || Input.GetButton("Fire1"))
         {
             StopAllCoroutines();
-            if (debug_Fixedtime)
-            {
-                timeText.text = debug_maxTime.ToString("f5");
-            }
-            else
-            {
-                timeText.text = GameStateManager.GetGameTime().ToString("f5");
-            }
+            DecimalPoint_Change();
             anim_start = true;
             ResultManager.instance.anim_end = true;
         }
@@ -55,7 +57,7 @@ public class TimeCountUp_Result : MonoBehaviour
                 //StartCoroutine(TimeAnimetion(1f, , 4f));
 
                 // デバッグ用
-                if (debug_Fixedtime)
+                if (debug_check)
                 {
                     StartCoroutine(TimeAnimetion(Start_Time, debug_maxTime, duration));
                 }
@@ -88,7 +90,82 @@ public class TimeCountUp_Result : MonoBehaviour
             yield return null;
         } while (Time.time < endtime);
 
-        timeText.text = endScoreTime.ToString("f5");
+        if (debug_check)
+        {
+            switch (clearRank)
+            {
+                case ClearRank.Rank_S:
+                    timeText.text = endScoreTime.ToString("f5");
+                    break;
+
+                case ClearRank.Rank_A:
+                    timeText.text = endScoreTime.ToString("f4");
+                    break;
+
+                case ClearRank.Rank_B:
+                    timeText.text = endScoreTime.ToString("f3");
+                    break;
+
+            }
+        }
+        else
+        {
+            switch (SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Rank)
+            {
+                case GAME_RANK.S:
+                    timeText.text = endScoreTime.ToString("f5");
+                    break;
+
+                case GAME_RANK.A:
+                    timeText.text = endScoreTime.ToString("f4");
+                    break;
+
+                case GAME_RANK.B:
+                    timeText.text = endScoreTime.ToString("f3");
+                    break;
+
+            }
+        }
         ResultManager.instance.anim_end = true;
+    }
+
+    void DecimalPoint_Change()
+    {
+        if (debug_check)
+        {
+            switch (clearRank)
+            {
+                case ClearRank.Rank_S:
+                    timeText.text = debug_maxTime.ToString("f5");
+                    break;
+
+                case ClearRank.Rank_A:
+                    timeText.text = debug_maxTime.ToString("f4");
+                    break;
+
+                case ClearRank.Rank_B:
+                    timeText.text = debug_maxTime.ToString("f3");
+                    break;
+
+            }
+        }
+        else
+        {
+            switch (SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Rank)
+            {
+                case GAME_RANK.S:
+                    timeText.text = GameStateManager.GetGameTime().ToString("f5");
+                    break;
+
+                case GAME_RANK.A:
+                    timeText.text = GameStateManager.GetGameTime().ToString("f4");
+                    break;
+
+                case GAME_RANK.B:
+                    timeText.text = GameStateManager.GetGameTime().ToString("f3");
+                    break;
+
+            }
+        }
     }
 }

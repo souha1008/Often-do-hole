@@ -285,20 +285,6 @@ public class ResultManager : MonoBehaviour
                     StageNo.text = "3-5";
                     break;
             }
-            switch (clearRank)
-            {
-                case ClearRank.Rank_S:
-                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");
-                    break;
-
-                case ClearRank.Rank_A:
-                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_A");
-                    break;
-
-                case ClearRank.Rank_B:
-                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_B");
-                    break;
-            }
 
         }
         else
@@ -526,5 +512,44 @@ public class ResultManager : MonoBehaviour
         White_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/01_stageselect_btn");
         Glay_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage2_btn");
         Glay_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/01_stageselect2_btn");
+    }
+
+    void RankStump_Set()
+    {
+        if (debug_check)
+        {
+            switch (clearRank)
+            {
+                case ClearRank.Rank_S:
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");
+                    break;
+
+                case ClearRank.Rank_A:
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_A");
+                    break;
+
+                case ClearRank.Rank_B:
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_B");
+                    break;
+            }
+        }
+        else
+        {
+            switch (SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Rank)
+            {
+                case GAME_RANK.S:
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");
+                    break;
+
+                case GAME_RANK.A:
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_A");
+                    break;
+
+                case GAME_RANK.B:
+                    Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_B");
+                    break;
+            }
+        }
+
     }
 }

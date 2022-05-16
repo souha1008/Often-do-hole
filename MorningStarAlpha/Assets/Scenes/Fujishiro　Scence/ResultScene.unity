@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.6924245, g: 0.94422853, b: 1.1668111, a: 1}
+  m_IndirectSpecularColor: {r: 0.6924116, g: 0.94415873, b: 1.1667516, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -433,6 +433,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 83772158}
     - target: {fileID: 1400751300354751949, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: clearRank
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1400751300354751949, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: debug_check
       value: 1
       objectReference: {fileID: 0}
@@ -492,6 +496,14 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 477991094}
+    - target: {fileID: 3040928297370378326, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: clearRank
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3040928297370378326, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: debug_check
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3133023124782753218, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: m_SizeDelta.x
       value: 751.507
@@ -544,5 +556,17 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: ea61ef598e16ff84f95a59b6daedc3fa, type: 3}
+    - target: {fileID: 6851428411140992135, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.594957
+      objectReference: {fileID: 0}
+    - target: {fileID: 6851428411140992135, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.594957
+      objectReference: {fileID: 0}
+    - target: {fileID: 6851428411140992135, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.594957
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
