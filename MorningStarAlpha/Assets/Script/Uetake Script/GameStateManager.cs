@@ -33,17 +33,17 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
     public CLEAR_RANK_TIME[] ClearRank = {
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300)
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900)
     };
 
     private GAME_STATE GameState;
