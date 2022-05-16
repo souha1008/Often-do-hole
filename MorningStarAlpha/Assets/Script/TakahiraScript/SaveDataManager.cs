@@ -31,10 +31,13 @@ public class DataFile
         SoundVolumeBGM = 100 * 0.7f;
         SoundVolumeSE = 100 * 0.7f;
         SoundVolumeOBJECT = 100 * 0.7f;
+
+        VibrationFlag = true;
     }
 
     public StageData[] Stage;   // ステージ分の配列
     public float SoundVolumeMaster, SoundVolumeBGM, SoundVolumeSE, SoundVolumeOBJECT;   // サウンドボリューム
+    public bool VibrationFlag;  // 振動
 }
 
 [Serializable]

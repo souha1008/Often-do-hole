@@ -10,6 +10,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] Image StageSelect_UI;
     [SerializeField] Image Option_UI;
     [SerializeField] Image Exit_UI;
+    [SerializeField] OptionManager optionManager;
 
     // UIÉäÉ\Å[ÉXï€ë∂
     Sprite White_StageSelect_UI;
@@ -18,6 +19,9 @@ public class MenuManager : MonoBehaviour
     Sprite Glay_StageSelect_UI;
     Sprite Glay_Option_UI;
     Sprite Glay_Exit_UI;
+
+    private bool MenuFlag = true;
+    private bool OnceFlag = false;
 
     enum NOWSELECT
     {
@@ -34,63 +38,68 @@ public class MenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        MenuFlag = true;
+        OnceFlag = false;
         nowSelect = NOWSELECT.StagesSelect;
         ResourceSave();
         SpriteChange();
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if(Input.GetAxis("Vertical") <= -0.8 && input_stick == false)
+        if (MenuFlag)
         {
-            nowSelect++;
-            SpriteChange();
-            if(nowSelect > (NOWSELECT)2)
+            if (Input.GetAxis("Vertical") <= -0.8 && input_stick == false)
             {
-                nowSelect = NOWSELECT.Exit;
+                nowSelect++;
+                SpriteChange();
+                if (nowSelect > (NOWSELECT)2)
+                {
+                    nowSelect = NOWSELECT.Exit;
+                }
+                input_stick = true;
             }
-            input_stick = true;
-        }
-        if(Input.GetAxis("Vertical") >= 0.8 && input_stick == false)
-        {
-            nowSelect--;
-            SpriteChange();
-            if (nowSelect < 0)
+            if (Input.GetAxis("Vertical") >= 0.8 && input_stick == false)
             {
-                nowSelect = NOWSELECT.StagesSelect;
+                nowSelect--;
+                SpriteChange();
+                if (nowSelect < 0)
+                {
+                    nowSelect = NOWSELECT.StagesSelect;
+                }
+                input_stick = true;
             }
-            input_stick = true;
+            if (Input.GetAxis("Vertical") < 0.1 && Input.GetAxis("Vertical") > -0.1)
+            {
+                input_stick = false;
+            }
+
+            switch (nowSelect)
+            {
+                case NOWSELECT.StagesSelect:
+                    if (Input.GetButtonDown("Jump") && OnceFlag)
+                    {
+                        SceneManager.LoadScene("StageSelectScene");
+                    }
+                    break;
+
+                case NOWSELECT.Option:
+                    if (Input.GetButtonDown("Jump") && OnceFlag)
+                    {
+                        optionManager.StartPause();
+                    }
+                    break;
+
+                case NOWSELECT.Exit:
+                    if (Input.GetButtonDown("Jump") && OnceFlag)
+                    {
+                        Application.Quit();
+                    }
+                    break;
+            }
+            OnceFlag = true;
         }
-        if(Input.GetAxis("Vertical") < 0.1 && Input.GetAxis("Vertical") > -0.1)
-        {
-            input_stick = false;
-        }
-
-        switch (nowSelect)
-        {
-            case NOWSELECT.StagesSelect:
-                if(Input.GetButton("Jump"))
-                {
-                    SceneManager.LoadScene("StageSelectScene");
-                }
-                break;
-
-            case NOWSELECT.Option:
-                if(Input.GetButton("Jump"))
-                {
-
-                }
-                break;
-
-            case NOWSELECT.Exit:
-                if(Input.GetButton("Jump"))
-                {
-                    Application.Quit();
-                }
-                break;
-        }
-
     }
 
     void SpriteChange()
@@ -126,5 +135,22 @@ public class MenuManager : MonoBehaviour
         Glay_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Menu/01_stageselect2_btn");
         Glay_Option_UI = Resources.Load<Sprite>("Sprite/UI/Menu/01_option2_btn");
         Glay_Exit_UI = Resources.Load<Sprite>("Sprite/UI/Menu/01_exit2_btn");
+    }
+
+    public void OnMenu()
+    {
+        MenuFlag = true;
+        StageSelect_UI.enabled = true;
+        Option_UI.enabled = true;
+        Exit_UI.enabled = true;
+        OnceFlag = false;
+    }
+
+    public void OffMenu()
+    {
+        MenuFlag = false;
+        StageSelect_UI.enabled = false;
+        Option_UI.enabled = false;
+        Exit_UI.enabled = false;
     }
 }

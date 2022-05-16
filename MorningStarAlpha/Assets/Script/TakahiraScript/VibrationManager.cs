@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
 {
-    public bool VibrationFlag = true;   // 振動フラグ
+    private bool VibrationFlag = true;   // 振動フラグ
     private Coroutine _Vibration;
 
     private void Awake()
@@ -16,6 +16,14 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         }
 
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
+    }
+
+    private void Start()
+    {
+        if (SaveDataManager.Instance.MainData != null)
+        {
+            VibrationFlag = SaveDataManager.Instance.MainData.VibrationFlag;
+        }
     }
 
     private void Update()
@@ -80,6 +88,22 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
             return;
         }
         gamepad.SetMotorSpeeds(0, 0);
+    }
+
+    public void SetVibrationFlag(bool vibrationFlag)
+    {
+        VibrationFlag = vibrationFlag;
+
+        // セーブ
+        if (SaveDataManager.Instance.MainData != null)
+        {
+            SaveDataManager.Instance.MainData.VibrationFlag = VibrationFlag;
+        }
+    }
+
+    public bool GetVibrationFlag()
+    {
+        return VibrationFlag;
     }
 
 

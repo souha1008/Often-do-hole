@@ -1,28 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
-/// <summary>
-/// ゲームシーン内のポーズメニュー管理のクラス
-/// 
-/// </summary>
-public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
+public class OptionManager : MonoBehaviour
 {
-    [SerializeField] private Canvas PauseCanvas;
     [SerializeField] private Canvas SoundVolumeCanvas;
     [SerializeField, Tooltip("最初に選択されるボタン")] private Selectable FirstSelect;
-    [SerializeField, Tooltip("サウンドに遷移するためのボタン")] private Selectable PushSound;
-    [SerializeField, Tooltip("サウンドで最初に選択されるボタン")] private Selectable FirstSelectSound;
     [SerializeField, Tooltip("振動変更オブジェクト")] private GameObject VibrationObject;
     [SerializeField, Tooltip("振動変更オブジェクト")] private Slider VibrationSlider;
     [SerializeField, Tooltip("振動変更オブジェクトのハンドル")] private GameObject VibrationObjectHandle;
     //[SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
     [SerializeField, Tooltip("BGMボリュームスライダー")] private Slider BGMVolumeSlider;
     [SerializeField, Tooltip("SEボリュームスライダー")] private Slider SEVolumeSlider;
+    [SerializeField, Tooltip("メニューマネージャー")] private MenuManager menuManager;
     private GameObject oldButton;
     private GameObject nowButton;
 
@@ -32,17 +22,17 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     private void Awake()
     {
-        PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(false);
         nowButton = EventSystem.current.gameObject;
         oldButton = null;
+        VibrationSlider = VibrationObject.GetComponent<Slider>();
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (PauseCanvas.gameObject.activeSelf)　//ポーズメニューがアクティブなら
+        if (SoundVolumeCanvas.gameObject.activeSelf)　//ポーズメニューがアクティブなら
         {
             nowButton = EventSystem.current.currentSelectedGameObject;
 
@@ -58,82 +48,42 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
                 oldButton = nowButton;
             }
 
+            // 振動ONOFFボタンクリック
+            if (Input.GetButtonDown("ButtonA") && VibrationObject == EventSystem.current.currentSelectedGameObject)
+            {
+                ClickVibrationONOFF();
+            }
+
             if (Input.GetButtonDown("Button_Select") || Input.GetButtonDown("ButtonB"))
             {
                 EndPause();
             }
         }
-        else //ポーズメニューが非アクティブなら
-        {
-            // サウンドボリューム設定がアクティブなら
-            if (SoundVolumeCanvas.gameObject.activeSelf)
-            {
-                nowButton = EventSystem.current.currentSelectedGameObject;
-
-                if (Object.ReferenceEquals(nowButton, oldButton) == false)
-                {
-                    // サイズ変更
-                    SetSizeUp(nowButton);
-
-                    if (oldButton != null)
-                    {
-                        SetSizeDown(oldButton);
-                    }
-                    oldButton = nowButton;
-                }
-
-                // 振動ONOFFボタンクリック
-                if (Input.GetButtonDown("ButtonA") && VibrationObject == EventSystem.current.currentSelectedGameObject)
-                {
-                    ClickVibrationONOFF();
-                }
-
-                // Bボタンクリック
-                if (Input.GetButtonDown("ButtonB") && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-                {
-                    ClickReturnSoundVolume();
-                }
-
-                if (Input.GetButtonDown("Button_Select") && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-                {
-                    EndPause();
-                }
-            }
-            else
-            {
-                if (Input.GetButtonDown("Button_Select") && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-                {
-                    StartPause();
-                }
-            }
-        }
     }
 
-
-    void EndPause()
+    // オプションの終了
+    public void EndPause()
     {
-        PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
-        if (FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
-        {
-            GameStateManager.SetGameState(GAME_STATE.PLAY);
-            Time.timeScale = 1.0f;            
-            SoundManager.Instance.UnPauseSound();
-        }
+        Time.timeScale = 1.0f;
+        SoundManager.Instance.UnPauseSound();
+        // データセーブ
+        SaveDataManager.Instance.SaveData();
+
         SetSizeDown(nowButton);
         nowButton = null;
         oldButton = null;
 
-        // データセーブ
-        SaveDataManager.Instance.SaveData();
+        menuManager.OnMenu();
     }
 
-    void StartPause()
+    // オプションのスタート
+    public void StartPause()
     {
-        GameStateManager.SetGameState(GAME_STATE.PAUSE);
-        PauseCanvas.gameObject.SetActive(true);
-        SoundVolumeCanvas.gameObject.SetActive(false);
+        menuManager.OffMenu();
+
+        SoundVolumeCanvas.gameObject.SetActive(true);
         EventSystem.current.SetSelectedGameObject(FirstSelect.gameObject);
         Time.timeScale = 0.0f;
 
@@ -143,42 +93,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SoundManager.Instance.PauseSound();
         VibrationManager.Instance.StopVibration();
         SoundVolumeInit();
-    }
-
-    public void ClickResume()
-    {
-        EndPause();
-    }
-
-    public void ClickRetry()
-    {
-        //FadeManager.Instance.FadeGameOver();
-        GameStateManager.LoadNowStage();
-        EndPause();
-    }
-
-    public void ClickBackStageSelect()
-    {
-        EndPause();
-        //SceneManager.LoadScene("StageSelectScene");
-    }
-
-    public void ClickSoundVolume()
-    {
-        PauseCanvas.gameObject.SetActive(false);
-        SoundVolumeCanvas.gameObject.SetActive(true);
-
-        EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
-        nowButton = EventSystem.current.currentSelectedGameObject;   
-    }
-
-    public void ClickReturnSoundVolume()
-    {
-        PauseCanvas.gameObject.SetActive(true);
-        SoundVolumeCanvas.gameObject.SetActive(false);
-
-        EventSystem.current.SetSelectedGameObject(PushSound.gameObject);
-        nowButton = EventSystem.current.currentSelectedGameObject;
     }
 
     public void ClickVibrationONOFF()
