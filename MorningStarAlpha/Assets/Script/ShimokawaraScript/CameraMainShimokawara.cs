@@ -9,7 +9,7 @@ public class CameraMainShimokawara: MonoBehaviour
 
     [SerializeField] private GameObject XObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] private GameObject YObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
-    [System.NonSerialized] public float CAMERA_DISTANCE = 55;      //カメラとプレイヤーの距離
+    [SerializeField] public float CAMERA_DISTANCE = 55;      //カメラとプレイヤーの距離
 
     public static CameraMainShimokawara instance; 
     
