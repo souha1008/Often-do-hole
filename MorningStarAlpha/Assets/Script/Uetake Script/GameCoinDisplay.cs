@@ -16,8 +16,11 @@ public class GameCoinDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        int coinNum = (int)CoinManager.Instance.SubCoin.AllGetCoin1 + (int)CoinManager.Instance.SubCoin.AllGetCoin2 + (int)CoinManager.Instance.SubCoin.AllGetCoin3;
         string displayTime;
-        displayTime = CoinManager.Instance.coin.AllGetCoins + " / 9";
+
+
+        displayTime = coinNum.ToString() + " / 9";
 
 
         text.text = displayTime;

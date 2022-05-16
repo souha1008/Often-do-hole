@@ -18,18 +18,18 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     [SerializeField, Tooltip("サウンドに遷移するためのボタン")] private Selectable PushSound;
     [SerializeField, Tooltip("サウンドで最初に選択されるボタン")] private Selectable FirstSelectSound;
     [SerializeField, Tooltip("振動変更オブジェクト")] private GameObject VibrationObject;
-    [SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
+    [SerializeField, Tooltip("振動変更オブジェクトのハンドル")] private GameObject VibrationObjectHandle;
+    //[SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
     [SerializeField, Tooltip("BGMボリュームスライダー")] private Slider BGMVolumeSlider;
     [SerializeField, Tooltip("SEボリュームスライダー")] private Slider SEVolumeSlider;
-    private Selectable OldSelectPause;
     private GameObject oldButton;
     private GameObject nowButton;
 
     private Slider VibrationSlider;
 
-    private RectTransform ButtonRect;
+    //private RectTransform ButtonRect;
 
-    private RectTransform ButtonChildRect;
+    //private RectTransform ButtonChildRect;
 
 
     private void Awake()
@@ -165,7 +165,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SoundVolumeCanvas.gameObject.SetActive(true);
 
         EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
-        nowButton = EventSystem.current.currentSelectedGameObject;       
+        nowButton = EventSystem.current.currentSelectedGameObject;   
     }
 
     public void ClickReturnSoundVolume()
@@ -189,6 +189,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         }
     }
 
+    // 振動のスライダーに変化があった時に呼ばれる処理
     public void VibrationSliderChange()
     {
         // 振動更新
@@ -196,18 +197,22 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         {
             VibrationManager.Instance.StartVibration(0.0f, 0.0f, 0.0f);
             VibrationManager.Instance.VibrationFlag = false;
+            // イメージ変更
+            SetSizeDown(VibrationObjectHandle);
         }
         else
         {
             VibrationManager.Instance.VibrationFlag = true;
             VibrationManager.Instance.StartVibration(0.5f, 0.5f, 0.4f);
+            // イメージ変更
+            SetSizeUp(VibrationObjectHandle);
         }
     }
 
-    public void MasterVolumeSliderChange()
-    {
-        SoundManager.Instance.SoundVolumeMaster = MasterVolumeSlider.value * 10.0f;
-    }
+    //public void MasterVolumeSliderChange()
+    //{
+    //    SoundManager.Instance.SoundVolumeMaster = MasterVolumeSlider.value * 10.0f;
+    //}
 
     public void BGMVolumeSliderChange()
     {
@@ -224,31 +229,52 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     private void SetSizeUp(GameObject gameObject)
     {
         // サイズ変更
-        if (gameObject.GetComponent<Button>() != null)
+        //if (gameObject.GetComponent<Button>() != null)
+        //{
+        //    ButtonRect = gameObject.GetComponent<RectTransform>();
+        //    ButtonRect.sizeDelta += new Vector2(70.0f, 8.0f);
+        //}
+        //ButtonChildRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
+        //ButtonChildRect.sizeDelta += new Vector2(70.0f, 8.0f);
+
+        // サイズ変更(イメージ変更)
+        if (gameObject.GetComponent<ButtonTexture>() != null)
         {
-            ButtonRect = gameObject.GetComponent<RectTransform>();
-            ButtonRect.sizeDelta += new Vector2(70.0f, 8.0f);
+            gameObject.GetComponent<ButtonTexture>().ChangeOnImage();
         }
-        ButtonChildRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
-        ButtonChildRect.sizeDelta += new Vector2(70.0f, 8.0f);
+        else
+        {
+            gameObject.transform.GetComponentInChildren<ButtonTexture>().ChangeOnImage();
+        }
     }
 
     private void SetSizeDown(GameObject gameObject)
     {
         // サイズ変更
-        if (gameObject.GetComponent<Button>() != null)
+        //if (gameObject.GetComponent<Button>() != null)
+        //{
+        //    ButtonRect = gameObject.GetComponent<RectTransform>();
+        //    ButtonRect.sizeDelta += new Vector2(-70.0f, -8.0f);
+        //}
+        //ButtonChildRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
+        //ButtonChildRect.sizeDelta += new Vector2(-70.0f, -8.0f);
+
+        // サイズ変更(イメージ変更)
+        if (gameObject.GetComponent<ButtonTexture>() != null)
         {
-            ButtonRect = gameObject.GetComponent<RectTransform>();
-            ButtonRect.sizeDelta += new Vector2(-70.0f, -8.0f);
+            gameObject.GetComponent<ButtonTexture>().ChangeOffImage();
         }
-        ButtonChildRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
-        ButtonChildRect.sizeDelta += new Vector2(-70.0f, -8.0f);
+        else
+        {
+            gameObject.transform.GetComponentInChildren<ButtonTexture>().ChangeOffImage();
+        }
     }
 
     private void SoundVolumeInit()
     {
         VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.VibrationFlag);
-        MasterVolumeSlider.value = SoundManager.Instance.SoundVolumeMaster * 0.1f;
+        VibrationSliderChange();
+        //MasterVolumeSlider.value = SoundManager.Instance.SoundVolumeMaster * 0.1f;
         BGMVolumeSlider.value = SoundManager.Instance.SoundVolumeBGM * 0.1f;
         SEVolumeSlider.value = SoundManager.Instance.SoundVolumeSE * 0.1f;
     }
