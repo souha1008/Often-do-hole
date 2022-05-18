@@ -28,22 +28,22 @@ public class CLEAR_RANK_TIME {
 public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 16;
-    private const float MAX_TIME = 999.0f;
-    private string[] StageNames = { "coinTestScene" ,"Stage1-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
+    private const float MAX_TIME = 999.9f;
+    private string[] StageNames = { "Stage1-1_Prod" ,"Stage2-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
     public CLEAR_RANK_TIME[] ClearRank = {
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300) ,
-        new CLEAR_RANK_TIME(900,750,300)
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900) ,
+        new CLEAR_RANK_TIME(300,750,900)
     };
 
     private GAME_STATE GameState;
@@ -52,6 +52,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private int NowStage = 0;
     private bool StageSoundFlag = false;
     private bool firstEnter = true; //stage入ったときtrue,いちど死ぬとfalse
+
+    [SerializeField] public bool ColliderVisible = true;
 
     private void Awake()
     {
@@ -73,7 +75,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Init()
     {
-        GameTime = MAX_TIME;
+        GameTime = 0.0f;
         GameRank = GAME_RANK.S;
         SetGameState(GAME_STATE.PLAY);
     }
@@ -172,6 +174,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         LoadStage(Instance.NowStage);
     }
 
+    // ステージセレクトに移行
+    public static void LoadStageSelect()
+    {
+        FadeManager.Instance.FadeStageSelect();
+    }
+
     public static void GameOverReloadScene()
     {
         Instance.firstEnter = false;
@@ -213,7 +221,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         if (GameState == GAME_STATE.PLAY)
         {
-            GameTime -= Time.deltaTime;
+            GameTime += Time.deltaTime;
             GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
         }
     }

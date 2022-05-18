@@ -12,7 +12,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     public Vector3 NowRespawnPos;       // 現在のリスポーン座標(見るだけ)
 
     private static Vector3 RespawnPos = Vector3.zero;   // リスポーン座標
-    public bool RespawnFlag = false;   // チェックポイントセット確認フラグ
+    [HideInInspector] public bool RespawnFlag = false;   // チェックポイントセット確認フラグ
 
     private List<Vector3> OldCheckPoint = new List<Vector3>();          // 通過済みチェックポイント
 
@@ -47,6 +47,8 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
             RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
             NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
 
+
+            // ※同じチェックポイントに触れてもコイン入手に変更するかも(その場合エフェクト出す)
             CoinManager.Instance.SetCheckPointCoinData(); // コインの情報を入力
 
             OldCheckPoint.Add(RespawnPos);

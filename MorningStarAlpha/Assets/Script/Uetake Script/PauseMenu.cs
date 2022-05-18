@@ -18,6 +18,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     [SerializeField, Tooltip("サウンドに遷移するためのボタン")] private Selectable PushSound;
     [SerializeField, Tooltip("サウンドで最初に選択されるボタン")] private Selectable FirstSelectSound;
     [SerializeField, Tooltip("振動変更オブジェクト")] private GameObject VibrationObject;
+    [SerializeField, Tooltip("振動変更オブジェクト")] private Slider VibrationSlider;
     [SerializeField, Tooltip("振動変更オブジェクトのハンドル")] private GameObject VibrationObjectHandle;
     //[SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
     [SerializeField, Tooltip("BGMボリュームスライダー")] private Slider BGMVolumeSlider;
@@ -25,10 +26,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     private GameObject oldButton;
     private GameObject nowButton;
 
-    private Slider VibrationSlider;
-
     //private RectTransform ButtonRect;
-
     //private RectTransform ButtonChildRect;
 
 
@@ -38,7 +36,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SoundVolumeCanvas.gameObject.SetActive(false);
         nowButton = EventSystem.current.gameObject;
         oldButton = null;
-        VibrationSlider = VibrationObject.GetComponent<Slider>();
     }
 
 
@@ -124,6 +121,10 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
             Time.timeScale = 1.0f;            
             SoundManager.Instance.UnPauseSound();
         }
+        SetSizeDown(nowButton);
+        nowButton = null;
+        oldButton = null;
+
         // データセーブ
         SaveDataManager.Instance.SaveData();
     }
@@ -135,7 +136,10 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SoundVolumeCanvas.gameObject.SetActive(false);
         EventSystem.current.SetSelectedGameObject(FirstSelect.gameObject);
         Time.timeScale = 0.0f;
-        nowButton = EventSystem.current.currentSelectedGameObject;
+
+        oldButton = nowButton = EventSystem.current.currentSelectedGameObject;
+        SetSizeUp(nowButton);
+
         SoundManager.Instance.PauseSound();
         VibrationManager.Instance.StopVibration();
         SoundVolumeInit();
@@ -148,15 +152,14 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void ClickRetry()
     {
-        //FadeManager.Instance.FadeGameOver();
         GameStateManager.LoadNowStage();
         EndPause();
     }
 
     public void ClickBackStageSelect()
     {
+        GameStateManager.LoadStageSelect();
         EndPause();
-        //SceneManager.LoadScene("StageSelectScene");
     }
 
     public void ClickSoundVolume()
@@ -196,13 +199,13 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         if (VibrationSlider.value <= 0.5f)
         {
             VibrationManager.Instance.StartVibration(0.0f, 0.0f, 0.0f);
-            VibrationManager.Instance.VibrationFlag = false;
+            VibrationManager.Instance.SetVibrationFlag(false);
             // イメージ変更
             SetSizeDown(VibrationObjectHandle);
         }
         else
         {
-            VibrationManager.Instance.VibrationFlag = true;
+            VibrationManager.Instance.SetVibrationFlag(true);
             VibrationManager.Instance.StartVibration(0.5f, 0.5f, 0.4f);
             // イメージ変更
             SetSizeUp(VibrationObjectHandle);
@@ -272,7 +275,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     private void SoundVolumeInit()
     {
-        VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.VibrationFlag);
+        VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.GetVibrationFlag());
         VibrationSliderChange();
         //MasterVolumeSlider.value = SoundManager.Instance.SoundVolumeMaster * 0.1f;
         BGMVolumeSlider.value = SoundManager.Instance.SoundVolumeBGM * 0.1f;

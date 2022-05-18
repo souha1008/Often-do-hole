@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameTimeDisplay : MonoBehaviour
 {
-    private Text text;
+    private TextMeshProUGUI text;
 
     // Start is called before the first frame update
     void Start()
     {
-        text = GetComponent<Text>();
+        text = GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -18,7 +19,7 @@ public class GameTimeDisplay : MonoBehaviour
     {
         string displayTime;
         displayTime = GameStateManager.GetGameTime().ToString("f0");
-
+        displayTime = displayTime.PadLeft(3, '0');
 
         text.text = displayTime;
     }

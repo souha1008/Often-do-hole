@@ -81,7 +81,7 @@ public class BulletGo : BulletState
 
         BulletScript.ShotBullet();   
         // 発射音再生
-        SoundManager.Instance.PlaySound("sound_12_チェーン伸びるSE", 1.0f, 0.03f);
+        SoundManager.Instance.PlaySound("sound_12_チェーン伸びるSE_02", 1.0f, 0.03f);
     }
 
     public override void Move()

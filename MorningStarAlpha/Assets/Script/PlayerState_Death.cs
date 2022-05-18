@@ -25,6 +25,8 @@ public class PlayerStateDeath_Thorn : PlayerState
         PlayerScript.canShotState = false;
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
+        PlayerScript.floorVel = Vector3.zero;
+        PlayerScript.addVel = Vector3.zero;
         PlayerScript.useVelocity = false;
         Timer = 0.0f;
 
@@ -72,17 +74,21 @@ public class PlayerStateDeath_Void : PlayerState
 
     public PlayerStateDeath_Void()
     {
-        CameraMainShimokawara.instance.StopCamera();
-        PlayerScript.refState = EnumPlayerState.DEATH;
-        PlayerScript.canShotState = false;
-        Timer = 0.0f;
+        if (PlayerScript.refState != EnumPlayerState.DEATH)
+        {
+            SoundManager.Instance.PlaySound("sound_20_Void", 0.3f);
+            CameraMainShimokawara.instance.StopCamera();
+            PlayerScript.refState = EnumPlayerState.DEATH;
+            PlayerScript.canShotState = false;
+            Timer = 0.0f;
 
-        BulletScript.ReturnBullet();
-        RotationStand();
+            BulletScript.ReturnBullet();
+            RotationStand();
 
-        //アニメ用
-        PlayerScript.ResetAnimation();
-        //なし
+            //アニメ用
+            PlayerScript.ResetAnimation();
+            //なし
+        }
     }
 
     public override void UpdateState()
