@@ -300,6 +300,8 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private void Active()
     {
         // アクティブ化
+        this.gameObject.transform.localScale *= 0.1f;
+
         Collider[] colliders = GetComponents<Collider>();
         for (int i = 0; i < colliders.Length; i++)
         {
