@@ -53,6 +53,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private bool StageSoundFlag = false;
     private bool firstEnter = true; //stage“ü‚Á‚½‚Æ‚«true,‚¢‚¿‚ÇŽ€‚Ê‚Æfalse
 
+    [SerializeField] public bool ColliderVisible = true;
+
     private void Awake()
     {
         Init();
