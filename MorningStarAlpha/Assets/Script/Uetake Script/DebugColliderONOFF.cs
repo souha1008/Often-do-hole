@@ -58,18 +58,6 @@ public class DebugColliderONOFF : MonoBehaviour
                 {
                     ren.enabled = false;
                 }
-
-                //foreach (Transform child in colOnOff.transform)
-                //{
-                //    try
-                //    {
-                //        child.gameObject.GetComponent<Renderer>().enabled = false;
-                //    }
-                //    catch
-                //    {
-
-                //    }
-                //}
             }
             GUILayout.EndHorizontal();
         }
