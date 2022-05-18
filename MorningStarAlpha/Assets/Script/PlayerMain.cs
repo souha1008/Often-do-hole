@@ -96,8 +96,8 @@ public class PlayerMain : MonoBehaviour
     public BulletMain BulletScript;
     public PlayerState mode;                         // ƒXƒe[ƒg
     private RaycastHit footHit;                      // ‰º‚É“–‚½‚Á‚Ä‚¢‚é‚à‚Ì‚Ìî•ñŠi”[
-    public float landTimer;                         //’…’nƒ`ƒƒƒ^ƒŠƒ“ƒO–hŽ~
-    public float counterTimer;                      //U‚èŽqƒ`ƒƒƒ^ƒŠƒ“ƒO–hŽ~
+    [System.NonSerialized] public float landTimer;                         //’…’nƒ`ƒƒƒ^ƒŠƒ“ƒO–hŽ~
+    [System.NonSerialized] public float counterTimer;                      //U‚èŽqƒ`ƒƒƒ^ƒŠƒ“ƒO–hŽ~
 
 
     [System.NonSerialized] public float colliderRadius = 1.42f;   //Ú’n”»’è—pray”¼Œa
@@ -296,7 +296,7 @@ public class PlayerMain : MonoBehaviour
             resetZo.z = 0.0f;
             rb.position = resetZo;
 
-            if (Mathf.Abs(addVel.magnitude) > 10.0f)
+            if (Mathf.Abs(addVel.magnitude) > 5.0f)
             {
                 addVel *= 0.98f;
             }
@@ -646,16 +646,16 @@ public class PlayerMain : MonoBehaviour
                         if (vel.y > 1.0f)
                         {
                             vel.y *= 0.0f;
+                            addVel.y *= 0.0f;
                         }
 
                         break;
 
                     case Aspect.DOWN:
                         vel.x *= 1.0f;
-                        vel.y *= 0.0f;
-
-                        
-                        break;
+                        vel.y *= 0.3f;
+                        addVel.y *= 0.0f;
+                    break;
                 }
         }
 

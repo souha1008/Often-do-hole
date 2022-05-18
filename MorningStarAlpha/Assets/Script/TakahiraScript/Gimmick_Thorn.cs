@@ -26,7 +26,10 @@ public class Gimmick_Thorn : Gimmick_Main
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
             // プレイヤーを死亡状態に変更
-            PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
+            if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
+            {
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
+            }
             // プレイヤーにダメージエフェクト
         }
     }
