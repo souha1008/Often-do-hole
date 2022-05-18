@@ -2021,7 +2021,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de9a20fffd7edd745afba329ec70af86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShotParticle: {fileID: 3165668657822650198, guid: 007f5728ff35db54683f1e8ab721cdde, type: 3}
 --- !u!1001 &168189719
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5133,6 +5132,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7839661137205424370, guid: 50fff490c58a5174f97a15fad0f7bbe2, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7839661137205424370, guid: 50fff490c58a5174f97a15fad0f7bbe2, type: 3}
+      propertyPath: m_BlendShapeWeights.Array.data[1]
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50fff490c58a5174f97a15fad0f7bbe2, type: 3}
 --- !u!1 &372377577
@@ -6286,6 +6293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RespawnObject: {fileID: 0}
   NowRespawnPos: {x: 0, y: 0, z: 0}
+  RespawnFlag: 0
 --- !u!1 &500459428
 GameObject:
   m_ObjectHideFlags: 0
@@ -15003,7 +15011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3903564996457256254, guid: 68954882d720bcb4a976a612fee44595, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3903564996457256254, guid: 68954882d720bcb4a976a612fee44595, type: 3}
       propertyPath: m_LocalScale.x
@@ -19958,6 +19966,7 @@ MonoBehaviour:
   onceFlag: 0
   StopVelChange: 0
   isInside: 0
+  DefaultAnchorRadius: 0
 --- !u!54 &1701169405
 Rigidbody:
   m_ObjectHideFlags: 0
