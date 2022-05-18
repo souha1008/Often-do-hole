@@ -24,11 +24,15 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private Vector3 StartPos;           // 初期座標
     private Vector3 FallPos;            // 落下座標
     private Vector3 OldPos;             // 前回の座標
+    private Vector3 StartScale;         // 初期スケール
 
     private bool PlayerMoveFlag = false;
     private bool BulletMoveFlag = false;
 
-    private bool PlayerMoveFlag2 = false;    // 前回の座標と比較して同じだったら動かさない
+    private bool PlayerMoveFlag2 = false;   // 前回の座標と比較して同じだったら動かさない
+
+    private static float SizeUpTime = 1.0f; // 何秒かけて大きくなるか
+    private float SizeUpNowTime;            // サイズアップ用時間
 
 
     // 揺れ情報
@@ -58,11 +62,13 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         NowFall = false;
         NowTime = 0.0f;
         StartPos = OldPos = FallPos = this.gameObject.transform.position;
+        StartScale = this.gameObject.transform.localScale;
         PlayerMoveFlag = false;
         BulletMoveFlag = false;
 
         ShakeFlag = false;
         NowShakeTime = 0.0f;
+        SizeUpNowTime = SizeUpTime;
         ActiveFlag = true;
 
         // トリガー
@@ -79,6 +85,17 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     {
         if (ActiveFlag)
         {
+            // 復活時サイズアップ
+            if (SizeUpNowTime < SizeUpTime)
+            {
+                this.gameObject.transform.localScale = StartScale * (SizeUpNowTime / SizeUpTime);
+                SizeUpNowTime += Time.fixedDeltaTime;
+            }
+            else
+            {
+                this.gameObject.transform.localScale = StartScale;
+            }
+
             // 揺れ開始
             if (NowFall && NowTime <= 0)
                 StartShake(FallTime * 0.2f, 20.0f, 0.2f);  // 揺れの情報セット
@@ -86,7 +103,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             // 床移動
             if (NowFall)
             {
-                if (OldPos == this.gameObject.transform.position) 
+                if (Mathf.Abs(OldPos.y) - Mathf.Abs(this.gameObject.transform.position.y) <= 0.01f) 
                     PlayerMoveFlag2 = false;
                 else 
                     PlayerMoveFlag2 = true;
@@ -159,9 +176,11 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                         //PlayerMain.instance.floorVel =
                         //    new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
 
-                        PlayerMain.instance.BulletScript.transform.position += Vel * Time.fixedDeltaTime;
-                        
-                        PlayerMain.instance.addVel = Vel;
+                        if (PlayerMoveFlag2)
+                        {
+                            PlayerMain.instance.BulletScript.transform.position += Vel * Time.fixedDeltaTime;
+                            PlayerMain.instance.addVel = Vel;
+                        }
                     }
                     else
                     {
@@ -324,13 +343,12 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         PlayerMoveFlag = false;
         PlayerMoveFlag2 = false;
         this.gameObject.transform.position = StartPos;
+        this.gameObject.transform.localScale = Vector3.zero;
     }
 
     private void Active()
     {
         // アクティブ化
-        //this.gameObject.transform.localScale *= 0.1f;
-
         Collider[] colliders = GetComponents<Collider>();
         for (int i = 0; i < colliders.Length; i++)
         {
@@ -338,6 +356,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         }
         GetComponent<MeshRenderer>().enabled = true;
         NowTime = 0;
+        SizeUpNowTime = 0;
         ActiveFlag = true;
     }
 }
