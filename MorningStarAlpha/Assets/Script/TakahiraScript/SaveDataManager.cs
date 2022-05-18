@@ -27,7 +27,7 @@ public class DataFile
             Stage[i] = new StageData();
         }
 
-        SoundVolumeMaster = 100 * 0.8f;
+        SoundVolumeMaster = 100 * 1.0f;
         SoundVolumeBGM = 100 * 0.7f;
         SoundVolumeSE = 100 * 0.7f;
         SoundVolumeOBJECT = 100 * 0.7f;
@@ -50,7 +50,7 @@ public class StageData
         coin = null;
         Clear = false;
     }
-    public GAME_RANK Rank = 0;            // ランク
+    public GAME_RANK Rank = 0;      // ランク
     public float Time = 0;          // 時間
     public Coin coin = null;        // コイン
     public bool Clear = false;      // ステージクリアフラグ
