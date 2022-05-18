@@ -37,47 +37,50 @@ public sealed class VibrationManager : SingletonMonoBehaviour<VibrationManager>
         // 以下振動テスト
 
 
-        // A ボタンが押されたら
-        if (gamepad.aButton.wasPressedThisFrame)
-        {
-            // 低周波（左）モーターの強さを 1、
-            // 高周波（右）モーターの強さを 0、
-            // 0.3f秒間かけて振動させる
-            StartVibration(1, 0, 0.3f);
-            Debug.LogWarning("Aボタン押した");
-            SoundManager.Instance.PlaySound("決定音");
-        }
-        // B ボタンが押されたら
-        else if (gamepad.bButton.wasPressedThisFrame)
-        {
-            // 低周波（左）モーターの強さを 0、
-            // 高周波（右）モーターの強さを 1、
-            // 0.3f秒間かけて振動させる
-            StartVibration(1, 0, 0.3f);
-            Debug.LogWarning("Bボタン押した");
-            SoundManager.Instance.PlaySound("決定音");
-        }
-
+        //// A ボタンが押されたら
+        //if (gamepad.aButton.wasPressedThisFrame)
+        //{
+        //    // 低周波（左）モーターの強さを 1、
+        //    // 高周波（右）モーターの強さを 0、
+        //    // 0.3f秒間かけて振動させる
+        //    StartVibration(1, 0, 0.3f);
+        //    Debug.LogWarning("Aボタン押した");
+        //    SoundManager.Instance.PlaySound("決定音");
+        //}
+        //// B ボタンが押されたら
+        //else if (gamepad.bButton.wasPressedThisFrame)
+        //{
+        //    // 低周波（左）モーターの強さを 0、
+        //    // 高周波（右）モーターの強さを 1、
+        //    // 0.3f秒間かけて振動させる
+        //    StartVibration(1, 0, 0.3f);
+        //    Debug.LogWarning("Bボタン押した");
+        //    SoundManager.Instance.PlaySound("決定音");
+        //}
+        
 
         // ここまで
     }
 
-    //===============================================
-    // 振動機能(開始)
-    //===============================================
-    // 引数：低周波（左）モーターの強さ（0.0 ～ 1.0）
-    // 　　　高周波（右）モーターの強さ（0.0 ～ 1.0）
-    // 　　　振動時間
-    // ==============================================
+    /// <summary>
+    /// 振動開始
+    /// 
+    /// 引数：低周波(左)0.0f ～ 1.0f, 
+    /// 　　　高周波(右)0.0f ～ 1.0f, 
+    /// 　　　振動時間
+    /// </summary>
+    /// <param name="lowFrequency">振動左 : 0.0f～1.0f</param>
+    /// <param name="highFrequency">振動右 : 0.0f～1.0f</param>
+    /// <param name="VibrationTime">振動時間</param>
     public void StartVibration(float lowFrequency, float highFrequency, float VibrationTime)
     {
         if (_Vibration != null) StopCoroutine(_Vibration);
         if (VibrationFlag) _Vibration = StartCoroutine(Vibration(lowFrequency, highFrequency, VibrationTime));
     }
 
-    //===============================================
-    // 振動機能(停止)
-    //===============================================
+    /// <summary>
+    /// 振動停止
+    /// </summary>
     public void StopVibration()
     {
         var gamepad = Gamepad.current;
