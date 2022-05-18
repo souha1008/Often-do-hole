@@ -7,15 +7,15 @@ public class Direction_UI : MonoBehaviour
 
     [SerializeField] private float Length = 6.0f;       // プレイヤーとの距離
 
-    private Image DirectionUI;
-    private RectTransform MyRectTf;
+    [SerializeField] private Image DirectionUI_ON;
+    [SerializeField] private Image DirectionUI_OFF;
+    [SerializeField] private RectTransform MyRectTf_ON;
+    [SerializeField] private RectTransform MyRectTf_OFF;
 
     void Start()
     {
-        MyRectTf = GetComponent<RectTransform>();
-        DirectionUI = GetComponent<Image>();
-
-        DirectionUI.enabled = false;
+        DirectionUI_ON.enabled = false;
+        DirectionUI_OFF.enabled = false;
     }
 
     public void LateUpdate()
@@ -28,30 +28,41 @@ public class Direction_UI : MonoBehaviour
             //クールタイム回復したら表示
             if (PlayerScript.canShotState)
             {
-                DirectionUI.enabled = true;
+                //if (DirectionUI_ON.isActiveAndEnabled == false)
+                //{
+                    DirectionUI_ON.enabled = true;
+                    DirectionUI_OFF.enabled = false;
+                //}
             }
             else
             {
-                DirectionUI.enabled = false;
+                //if (DirectionUI_ON.isActiveAndEnabled == true)
+                //{
+                    DirectionUI_ON.enabled = false;
+                    DirectionUI_OFF.enabled = true;
+                //}
             }
-
 
             if (PlayerScript.stickCanShotRange) // スティック入力一定以上あるか
             {
                 // 座標変換
-                MyRectTf.position = PlayerScript.transform.position + (vec * Length);
+                MyRectTf_ON.position = PlayerScript.transform.position + (vec * Length);
+                MyRectTf_OFF.position = PlayerScript.transform.position + (vec * Length);
 
                 // 回転
-                MyRectTf.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(Vector3.zero, vec) - 90);
+                MyRectTf_ON.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(Vector3.zero, vec) - 90);
+                MyRectTf_OFF.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(Vector3.zero, vec) - 90);
             }
             else
             {
-                DirectionUI.enabled = false;
+                DirectionUI_ON.enabled = false;
+                DirectionUI_OFF.enabled = false;
             }
         }
         else
         {
-            DirectionUI.enabled = false;
+            DirectionUI_ON.enabled = false;
+            DirectionUI_OFF.enabled = false;
         }
     }
 

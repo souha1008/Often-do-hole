@@ -189,7 +189,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private void FadeIn_GameOver()
     {
         // ゲームシーンのリセット
-        SceneManager.LoadSceneAsync(NextSceneName);
+        SceneManager.LoadScene(NextSceneName);
         GameStateManager.SetGameState(GAME_STATE.PLAY);
         Time.timeScale = 1.0f;
     }
@@ -197,6 +197,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     public void FadeIn_SceneChange()
     {
         SceneManager.LoadScene(NextSceneName);
+        SoundManager.Instance.StopSound();
     }
 
     // フェードインしたときの処理(ステージ変更)
@@ -239,6 +240,22 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             NextSceneName = SceneManager.GetActiveScene().name;
             NowFadeState = FADE_STATE.FADE_OUT;
             NowFadeKind = FADE_KIND.FADE_GAMOVER;
+
+            NowTime = 0.0f;
+
+            TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
+            TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
+            TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+        }
+    }
+
+    public void FadeStageSelect()
+    {
+        if (NowFadeState == FADE_STATE.FADE_NONE)
+        {
+            NextSceneName = "StageSelectScene";
+            NowFadeState = FADE_STATE.FADE_OUT;
+            NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
 
             NowTime = 0.0f;
 

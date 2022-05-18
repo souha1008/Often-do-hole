@@ -361,6 +361,8 @@ public class BulletMain : MonoBehaviour
                         CameraShake.instance.Shake(rb.velocity);
                         
                         EffectManager.Instance.StartShotEffect(colPoint, Quaternion.identity);
+
+                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
    
                         //面計算
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
@@ -393,7 +395,9 @@ public class BulletMain : MonoBehaviour
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
-                       SoundManager.Instance.PlaySound("sound_30_Iron",1.4f);
+                        SoundManager.Instance.PlaySound("sound_30_Iron",1.4f);
+
+                        VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.3f);
 
                         if (PlayerScript.isOnGround)
                         {
@@ -409,6 +413,7 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
+                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
 
 
                         //面計算
@@ -429,12 +434,34 @@ public class BulletMain : MonoBehaviour
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
+                        // コンベアに値渡す為の処理
+                        switch (colAspect)
+                        {
+                            case Aspect_8.UP:
+                            case Aspect_8.UP_LEFT:
+                            case Aspect_8.UP_RIGHT:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.UP);
+                                break;
+                            case Aspect_8.DOWN:
+                            case Aspect_8.DOWN_LEFT:
+                            case Aspect_8.DOWN_RIGHT:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.DOWN);
+                                break;
+                            case Aspect_8.RIGHT:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.RIGHT);
+                                break;
+                            case Aspect_8.LEFT:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.LEFT);
+                                break;
+                        }
+
                         break;
 
                     case "Conveyor_Tate":
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
+                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
 
 
                         //面計算
@@ -453,6 +480,28 @@ public class BulletMain : MonoBehaviour
                         {
                             PlayerScript.ForciblySwingMode(false);
                         }
+
+                        // コンベアに値渡す為の処理
+                        switch (colAspect)
+                        {
+                            case Aspect_8.UP:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.UP);
+                                break;
+                            case Aspect_8.DOWN:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.DOWN);
+                                break;
+                            case Aspect_8.RIGHT:
+                            case Aspect_8.UP_RIGHT:
+                            case Aspect_8.DOWN_RIGHT:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.RIGHT);
+                                break;
+                            case Aspect_8.LEFT:
+                            case Aspect_8.UP_LEFT:
+                            case Aspect_8.DOWN_LEFT:
+                                collision.gameObject.GetComponent<Gimmick_Conveyor>().ConveyorStart(TOUCH_SIDE.LEFT);
+                                break;
+                        }
+
                         break;
 
                     case "Player":

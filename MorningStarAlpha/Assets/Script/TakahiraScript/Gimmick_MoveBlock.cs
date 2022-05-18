@@ -141,7 +141,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
         this.gameObject.GetComponent<Collider>().isTrigger = false;  // トリガーオフ
 
         // リジッドボディ
-        Rb.isKinematic = true;
+        //Rb.isKinematic = true;
+
+        Rb.mass = 1000000000;   // 重さ変更
+        Rb.interpolation = RigidbodyInterpolation.Interpolate; // インターポール変更して動きを滑らかにする(処理が重くなる代わりに移動のがくがく修正)
     }
 
     public override void FixedMove()
@@ -151,8 +154,14 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             if (NowMove_X)
             {
-                this.gameObject.transform.position =
-                    new Vector3(Easing.QuadInOut(NowTime_X, MoveTime_X, StartPos_X, StartPos_X + MoveLength_X * Fugou_X), gameObject.transform.position.y, gameObject.transform.position.z);
+                //this.gameObject.transform.position =
+                //    new Vector3(Easing.QuadInOut(NowTime_X, MoveTime_X, StartPos_X, StartPos_X + MoveLength_X * Fugou_X), gameObject.transform.position.y, gameObject.transform.position.z);
+
+                Vel =
+                    new Vector3(
+                        (Easing.QuadInOut(NowTime_X, MoveTime_X, StartPos_X, StartPos_X + MoveLength_X * Fugou_X) - OldPos.x) * 1 / Time.fixedDeltaTime,
+                        Vel.y, 
+                        Vel.z);
                 NowTime_X += Time.fixedDeltaTime;
 
                 // 移動終了
@@ -174,8 +183,15 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             if (NowMove_Y)
             {
-                this.gameObject.transform.position =
-                    new Vector3(gameObject.transform.position.x, Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
+                //this.gameObject.transform.position =
+                //    new Vector3(gameObject.transform.position.x, Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y), gameObject.transform.position.z);
+
+                Vel =
+                   new Vector3(
+                       Vel.x, 
+                       (Easing.QuadInOut(NowTime_Y, MoveTime_Y, StartPos_Y, StartPos_Y + MoveLength_Y * Fugou_Y) - OldPos.y) * 1 / Time.fixedDeltaTime, 
+                       Vel.z);
+
                 NowTime_Y += Time.fixedDeltaTime;
 
                 // 移動終了
@@ -196,12 +212,12 @@ public class Gimmick_MoveBlock : Gimmick_Main
         // プレイヤーの移動
         if (PlayerMoveFlag)
         {
-            //Debug.Log("プレイヤーブロックの上移動中");
-            //Debug.Log(this.gameObject.transform.position.x - OldPos.x);
-            PlayerMain.instance.transform.position += 
-                new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
+            //Debug.LogWarning("プレイヤーブロックの上移動中");
+            //Debug.LogWarning(this.gameObject.transform.position.x - OldPos.x);
+            //PlayerMain.instance.transform.position += 
+            //    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
 
-            //PlayerMainScript.addVel = new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
+            PlayerMain.instance.addVel = Vel;
         }
 
         // 錨オブジェクトの移動
@@ -209,15 +225,15 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             if (PlayerMain.instance.BulletScript.isTouched)
             {
-                PlayerMain.instance.BulletScript.transform.position +=
-                    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0);
-                PlayerMain.instance.floorVel =
-                    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
+                PlayerMain.instance.BulletScript.transform.position += Vel * Time.fixedDeltaTime;
+                PlayerMain.instance.addVel = Vel;
+
+                //PlayerMain.instance.addVel =
+                //    new Vector3(this.gameObject.transform.position.x - OldPos.x, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
             }
             else
             {
                 BulletMoveFlag = false;
-                PlayerMain.instance.floorVel = Vector3.zero;
             }
         }
     }
