@@ -69,6 +69,9 @@ public abstract class Gimmick_Main : MonoBehaviour
     {
         FixedMove();                 // ギミックの動き処理
         //TotalMoveVel += Vel;    // 合計移動量変更
+
+        Vel -= new Vector3(0, 0, Vel.z);
+
         Rb.velocity = Vel;      // 移動量変更
 
 

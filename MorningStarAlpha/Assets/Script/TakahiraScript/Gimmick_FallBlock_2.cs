@@ -23,9 +23,12 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
     private Vector3 FallPos;            // 落下座標
+    private Vector3 OldPos;             // 前回の座標
 
     private bool PlayerMoveFlag = false;
     private bool BulletMoveFlag = false;
+
+    private bool PlayerMoveFlag2 = false;    // 前回の座標と比較して同じだったら動かさない
 
 
     // 揺れ情報
@@ -54,7 +57,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         // 初期化
         NowFall = false;
         NowTime = 0.0f;
-        StartPos = FallPos = this.gameObject.transform.position;
+        StartPos = OldPos = FallPos = this.gameObject.transform.position;
         PlayerMoveFlag = false;
         BulletMoveFlag = false;
 
@@ -66,7 +69,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         Cd.isTrigger = false;
 
         // リジッドボディ
-        Rb.isKinematic = true;  // キネマティックオン
+        //Rb.isKinematic = true;  // キネマティックオン
+
+        Rb.mass = 1000000000;   // 重さ変更
+        Rb.interpolation = RigidbodyInterpolation.Interpolate; // インターポール変更して動きを滑らかにする(処理が重くなる代わりに移動のがくがく修正)
     }
 
     public override void FixedMove()
@@ -80,7 +86,12 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             // 床移動
             if (NowFall)
             {
-                Vector3 OldPos = this.gameObject.transform.position;
+                if (OldPos == this.gameObject.transform.position) 
+                    PlayerMoveFlag2 = false;
+                else 
+                    PlayerMoveFlag2 = true;
+
+                OldPos = this.gameObject.transform.position;
                 switch (FallType)
                 {
                     case FALL_TYPE.SINE_IN:
@@ -101,14 +112,14 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 }
 
 
-                // 揺れによる移動
+                // 揺れによる落下移動
                 if (ShakeFlag)
                 {
-                    // 揺れ位置情報更新
-                    this.gameObject.transform.position = GetUpdateShakePosition(
+                    // 揺れ落下移動更新
+                    Vel = (GetUpdateShakePosition(
                         Shake,
                         NowShakeTime,
-                        FallPos);
+                        FallPos) - OldPos) * 1 / Time.fixedDeltaTime;
 
                     // ShakeTime分の時間が経過したら揺らすのを止める
                     NowShakeTime += Time.fixedDeltaTime;
@@ -116,13 +127,13 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                     {
                         ShakeFlag = false;
                         NowShakeTime = 0.0f;
-                        // 初期位置に戻す
-                        this.gameObject.transform.position = FallPos;
+                        // 普通の落下移動に戻す
+                        Vel = (FallPos - OldPos) * 1 / Time.fixedDeltaTime;
                     }
                 }
-                else
+                else // 普通の落下移動
                 {
-                    this.gameObject.transform.position = FallPos;
+                    Vel = (FallPos - OldPos) * 1 / Time.fixedDeltaTime;
                 }
 
                 // 時間更新
@@ -132,9 +143,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 // プレイヤー移動
                 if (PlayerMoveFlag)
                 {
-                    PlayerMain.instance.transform.position +=
-                                new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
-                    //PlayerMainScript.addVel = new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) / Time.fixedDeltaTime;
+                    //PlayerMain.instance.transform.position +=
+                    //            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                    if (PlayerMoveFlag2)
+                        PlayerMain.instance.addVel = Vel;
                 }
 
                 // 錨移動
@@ -142,14 +154,18 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 {
                     if (PlayerMain.instance.BulletScript.isTouched)
                     {
-                        PlayerMain.instance.BulletScript.transform.position +=
-                            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
-                        PlayerMain.instance.floorVel =
-                            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
+                        //PlayerMain.instance.BulletScript.transform.position +=
+                        //    new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
+                        //PlayerMain.instance.floorVel =
+                        //    new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
+
+                        PlayerMain.instance.BulletScript.transform.position += Vel * Time.fixedDeltaTime;
+                        
+                        PlayerMain.instance.addVel = Vel;
                     }
                     else
                     {
-                        PlayerMain.instance.floorVel = Vector3.zero;
+                        PlayerMain.instance.addVel = Vector3.zero;
                         BulletMoveFlag = false;
                     }
                 }
@@ -220,6 +236,11 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
 
     public override void Death()
     {
+        if (PlayerMoveFlag)
+        {
+            PlayerMain.instance.addVel = Vector3.zero;
+        }
+
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
         {
@@ -275,12 +296,19 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (PlayerMoveFlag)
+            {
+                PlayerMain.instance.addVel = Vector3.zero;
+            }
             PlayerMoveFlag = false;
+            PlayerMoveFlag2 = false;
         }
     }
 
     private void NoActive()
     {
+        Vel = Vector3.zero;
+
         // 非アクティブ化
         Collider[] colliders = GetComponents<Collider>();
         for (int i = 0; i < colliders.Length; i++)
@@ -288,19 +316,20 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             colliders[i].enabled = false;
         }
         GetComponent<MeshRenderer>().enabled = false;
-        ActiveFlag = false;
         NowTime = 0;
+        ActiveFlag = false;
 
         NowFall = false;
         BulletMoveFlag = false;
         PlayerMoveFlag = false;
+        PlayerMoveFlag2 = false;
         this.gameObject.transform.position = StartPos;
     }
 
     private void Active()
     {
         // アクティブ化
-        this.gameObject.transform.localScale *= 0.1f;
+        //this.gameObject.transform.localScale *= 0.1f;
 
         Collider[] colliders = GetComponents<Collider>();
         for (int i = 0; i < colliders.Length; i++)
@@ -308,7 +337,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             colliders[i].enabled = true;
         }
         GetComponent<MeshRenderer>().enabled = true;
-        ActiveFlag = true;
         NowTime = 0;
+        ActiveFlag = true;
     }
 }
