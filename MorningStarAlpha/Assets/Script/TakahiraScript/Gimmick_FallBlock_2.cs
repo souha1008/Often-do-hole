@@ -23,13 +23,11 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
     private float NowTime;              // 経過時間
     private Vector3 StartPos;           // 初期座標
     private Vector3 FallPos;            // 落下座標
-    private Vector3 OldPos;             // 前回の座標
     private Vector3 StartScale;         // 初期スケール
 
     private bool PlayerMoveFlag = false;
     private bool BulletMoveFlag = false;
-
-    private bool PlayerMoveFlag2 = false;   // 前回の座標と比較して同じだったら動かさない
+    private bool FallBlockHitFlag = false;
 
     private static float SizeUpTime = 1.0f; // 何秒かけて大きくなるか
     private float SizeUpNowTime;            // サイズアップ用時間
@@ -61,10 +59,11 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         // 初期化
         NowFall = false;
         NowTime = 0.0f;
-        StartPos = OldPos = FallPos = this.gameObject.transform.position;
+        StartPos = FallPos = this.gameObject.transform.position;
         StartScale = this.gameObject.transform.localScale;
         PlayerMoveFlag = false;
         BulletMoveFlag = false;
+        FallBlockHitFlag = false;
 
         ShakeFlag = false;
         NowShakeTime = 0.0f;
@@ -103,12 +102,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
             // 床移動
             if (NowFall)
             {
-                if (Mathf.Abs(OldPos.y) - Mathf.Abs(this.gameObject.transform.position.y) <= 0.01f) 
-                    PlayerMoveFlag2 = false;
-                else 
-                    PlayerMoveFlag2 = true;
-
-                OldPos = this.gameObject.transform.position;
+                Vector3 OldPos = this.gameObject.transform.position;
                 switch (FallType)
                 {
                     case FALL_TYPE.SINE_IN:
@@ -125,6 +119,15 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                         break;
                     case FALL_TYPE.QUINT_IN:
                         FallPos = new Vector3(StartPos.x, Easing.QuintIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.EXPO_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.ExpIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.BOUNCE_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.BounceIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
+                        break;
+                    case FALL_TYPE.ELASTIC_IN:
+                        FallPos = new Vector3(StartPos.x, Easing.ElasticIn(NowTime, FallTime, StartPos.y, StartPos.y - FallLength), StartPos.z);
                         break;
                 }
 
@@ -162,12 +165,14 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 {
                     //PlayerMain.instance.transform.position +=
                     //            new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0);
-                    if (PlayerMoveFlag2)
+                    if (!FallBlockHitFlag)
                         PlayerMain.instance.addVel = Vel;
+                    else
+                        PlayerMain.instance.addVel = Vector3.zero;
                 }
 
                 // 錨移動
-                if (BulletMoveFlag)
+                if (BulletMoveFlag && !FallBlockHitFlag)
                 {
                     if (PlayerMain.instance.BulletScript.isTouched)
                     {
@@ -176,10 +181,14 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                         //PlayerMain.instance.floorVel =
                         //    new Vector3(0, this.gameObject.transform.position.y - OldPos.y, 0) * 1 / Time.deltaTime;
 
-                        if (PlayerMoveFlag2)
+                        if (!FallBlockHitFlag)
                         {
                             PlayerMain.instance.BulletScript.transform.position += Vel * Time.fixedDeltaTime;
                             PlayerMain.instance.addVel = Vel;
+                        }
+                        else
+                        {
+                            PlayerMain.instance.addVel = Vector3.zero;
                         }
                     }
                     else
@@ -196,12 +205,13 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         }
         else
         {
+            // 時間更新
+            NowTime += Time.fixedDeltaTime;
+
             if (NowTime > RespawnTime)
             {
                 Active();
             }
-            // 時間更新
-            NowTime += Time.fixedDeltaTime;
         }
     }
 
@@ -296,6 +306,12 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
+        if (collision.gameObject.CompareTag("Platform") ||
+            collision.gameObject.CompareTag("Iron") ||
+            collision.gameObject.CompareTag("Untagged"))
+        {
+            FallBlockHitFlag = true;
+        }
     }
 
     public void OnCollisionStay(Collision collision)
@@ -309,18 +325,24 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
+        if (collision.gameObject.CompareTag("Platform") ||
+            collision.gameObject.CompareTag("Iron") ||
+            collision.gameObject.CompareTag("Untagged"))
+        {
+            FallBlockHitFlag = true;
+        }
     }
 
     public void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (PlayerMoveFlag)
-            {
-                PlayerMain.instance.addVel = Vector3.zero;
-            }
             PlayerMoveFlag = false;
-            PlayerMoveFlag2 = false;
+        }
+        if (collision.gameObject.CompareTag("Platform") ||
+            collision.gameObject.CompareTag("Iron"))
+        {
+            FallBlockHitFlag = false;
         }
     }
 
@@ -341,7 +363,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         NowFall = false;
         BulletMoveFlag = false;
         PlayerMoveFlag = false;
-        PlayerMoveFlag2 = false;
+        FallBlockHitFlag = false;
         this.gameObject.transform.position = StartPos;
         this.gameObject.transform.localScale = Vector3.zero;
     }
