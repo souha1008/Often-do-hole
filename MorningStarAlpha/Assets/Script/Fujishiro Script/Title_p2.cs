@@ -7,8 +7,12 @@ using DG.Tweening;
 public class Title_p2 : MonoBehaviour
 {
     [Header("ヒエラルキーよりアタッチ")]
-    [SerializeField] Animator PressAny_animator;
-    [SerializeField] int SceneChange_Frame = 200;
+    [Tooltip("PressAnyアニメーターを入れる")][SerializeField] Animator PressAny_animator;
+    [Tooltip("PressAnyアニメーション終了後のデュレーション")][SerializeField] int SceneChange_Frame = 200;
+    [Tooltip("メニューマネージャーを入れる")][SerializeField] GameObject MenuManager;
+    [Tooltip("PressAnyUIを入れる")][SerializeField] GameObject PressAny_GO;
+    [Tooltip("SelectUIを入れる")][SerializeField] GameObject Select_GO;
+
 
     [System.NonSerialized] public static Title_p2 instance;
 
@@ -45,6 +49,11 @@ public class Title_p2 : MonoBehaviour
         PushButton = Animator.StringToHash("PushButton");
         Anim_StateIdle2 = Animator.StringToHash("PressAny_Idle2anim");
 
+        // Menu関係非アクティブ
+        MenuManager.SetActive(false);
+        Select_GO.SetActive(false);
+
+        // サウンド再生
         SoundManager.Instance.PlaySound("Title_BGM", 100, 1.8f);
     }
 
@@ -69,7 +78,11 @@ public class Title_p2 : MonoBehaviour
             }
             if (frame_Count >= SceneChange_Frame)
             {
-                SceneManager.LoadScene("Menu");
+                //SceneManager.LoadScene("Menu");
+                PressAny_GO.SetActive(false);
+                MenuManager.SetActive(true);
+                Select_GO.SetActive(true);
+                this.gameObject.SetActive(false);
             }
         }
     }

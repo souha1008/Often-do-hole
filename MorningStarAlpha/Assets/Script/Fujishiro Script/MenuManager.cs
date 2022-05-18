@@ -73,6 +73,7 @@ public class MenuManager : MonoBehaviour
                 if(Input.GetButton("Jump"))
                 {
                     SceneManager.LoadScene("StageSelectScene");
+                    SoundManager.Instance.StopSound();
                 }
                 break;
 
