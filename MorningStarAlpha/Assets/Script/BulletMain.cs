@@ -363,7 +363,9 @@ public class BulletMain : MonoBehaviour
                         EffectManager.Instance.StartShotEffect(colPoint, Quaternion.identity);
 
                         VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
-   
+
+                        SoundManager.Instance.PlaySound("sound_13_wall", 1.4f);
+
                         //面計算
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
    
@@ -386,7 +388,7 @@ public class BulletMain : MonoBehaviour
                         {
                             //SWING状態に移行
                             PlayerScript.ForciblySwingMode(false);
-                            SoundManager.Instance.PlaySound("sound_13_wood", 1.4f);                    
+                                              
                         }
 
 
@@ -466,19 +468,22 @@ public class BulletMain : MonoBehaviour
 
                         //面計算
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
-                        if (colAspect == Aspect_8.UP)
+
+                        switch (colAspect)
                         {
-                            //FOLLOW状態に移行
-                            PlayerScript.ForciblyReleaseMode(true);
-                        }
-                        //SWING状態に移行
-                        else if (colAspect == Aspect_8.DOWN)
-                        {
-                            PlayerScript.ForciblyReleaseMode(true);
-                        }
-                        else
-                        {
-                            PlayerScript.ForciblySwingMode(false);
+                            case Aspect_8.UP:
+                            case Aspect_8.DOWN:
+                            case Aspect_8.UP_RIGHT:
+                            case Aspect_8.DOWN_RIGHT:
+                            case Aspect_8.UP_LEFT:
+                            case Aspect_8.DOWN_LEFT:
+                                PlayerScript.ForciblyReleaseMode(true);
+                                break;
+
+                            case Aspect_8.RIGHT:
+                            case Aspect_8.LEFT:
+                                PlayerScript.ForciblySwingMode(false);
+                                break;
                         }
 
                         // コンベアに値渡す為の処理
