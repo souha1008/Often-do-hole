@@ -26,6 +26,7 @@ public class PlayerStateDeath_Thorn : PlayerState
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
         PlayerScript.floorVel = Vector3.zero;
+        PlayerScript.addVel = Vector3.zero;
         PlayerScript.useVelocity = false;
         Timer = 0.0f;
 
