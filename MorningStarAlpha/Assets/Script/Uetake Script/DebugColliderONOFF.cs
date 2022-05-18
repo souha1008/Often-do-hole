@@ -1,27 +1,79 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 /// <summary>
 /// 全ての子オブジェクトのコライダーを表示
 /// </summary>
 public class DebugColliderONOFF : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    //// Start is called before the first frame update
+    //void Start()
+    //{
+    //    if (GameStateManager.Instance.ColliderVisible == false)
+    //    {
+    //        foreach (Transform child in gameObject.transform)
+    //        {
+    //            child.gameObject.GetComponent<Renderer>().enabled = false;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        foreach (Transform child in gameObject.transform)
+    //        {
+    //            child.gameObject.GetComponent<Renderer>().enabled = true;
+    //        }
+    //    }
+    //}
+
+#if UNITY_EDITOR
+    [CustomEditor(typeof(DebugColliderONOFF))]
+    public class ColliderOnOffEditor : Editor
     {
-        if (GameStateManager.Instance.ColliderVisible == false)
+        public override void OnInspectorGUI()
         {
-            foreach (GameObject child in gameObject.transform)
+            base.OnInspectorGUI();
+
+            DebugColliderONOFF colOnOff = target as DebugColliderONOFF;
+
+            GUILayout.Space(20);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("オブジェクトのレンダラーオン", GUILayout.Height(120)))
             {
-                child.GetComponent<Renderer>().enabled = false;
+                Renderer[] rens = colOnOff.GetComponentsInChildren<Renderer>();
+
+                foreach (var ren in rens)
+                {
+                    ren.enabled = true;
+                }
             }
+
+            if (GUILayout.Button("オブジェクトのレンダラーオフ", GUILayout.Height(120)))
+            {
+                Renderer[] rens = colOnOff.GetComponentsInChildren<Renderer>();
+
+                foreach (var ren in rens)
+                {
+                    ren.enabled = false;
+                }
+
+                //foreach (Transform child in colOnOff.transform)
+                //{
+                //    try
+                //    {
+                //        child.gameObject.GetComponent<Renderer>().enabled = false;
+                //    }
+                //    catch
+                //    {
+
+                //    }
+                //}
+            }
+            GUILayout.EndHorizontal();
         }
     }
+#endif
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
