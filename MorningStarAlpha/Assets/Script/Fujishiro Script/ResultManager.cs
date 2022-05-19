@@ -103,6 +103,9 @@ public class ResultManager : MonoBehaviour
         // 取得コインをUIセット
         Coin_UISet();
 
+        // スタンプセット
+        RankStump_Set();
+
         // スカイボックスセット
         ChangeSkybox();
 
