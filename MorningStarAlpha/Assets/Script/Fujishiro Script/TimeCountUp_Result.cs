@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -126,6 +128,10 @@ public class TimeCountUp_Result : MonoBehaviour
 
             }
         }
+        //StringBuilder stringBuilder = new StringBuilder();
+        //stringBuilder.Append("sec");
+        //timeText.text += stringBuilder.ToString();
+        timeText.text += "<size=60>sec</size>";
         ResultManager.instance.anim_end = true;
     }
 
@@ -167,5 +173,6 @@ public class TimeCountUp_Result : MonoBehaviour
 
             }
         }
+        //timeText.text += "sec";
     }
 }
