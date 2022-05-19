@@ -12,7 +12,7 @@ public class GeneratePlatform : MonoBehaviour
     [Tooltip("複製したいオブジェクト")] public GameObject platform;
     [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeX = 0.0f;
     [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeY = 0.0f;
-    [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeZ = 0.0f;
+    [Range(-0.1f, 1.0f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeZ = 0.0f;
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(GeneratePlatform))]
