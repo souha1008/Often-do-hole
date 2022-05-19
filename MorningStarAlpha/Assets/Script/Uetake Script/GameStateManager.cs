@@ -156,6 +156,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     //ステージセレクトから入るときのみ
     public static void LoadStage(int num)
     {
+        Debug.Log("ロードステージ");
         Instance.NowStage = num;
         Instance.InitializeStage();
         FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);

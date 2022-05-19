@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 
 public class KujiraLoupeScript : MonoBehaviour
 {
+    public static KujiraLoupeScript instans;
+
     float SPRIT_SIRCL = 0.72015466f;//吹き出しの画像内の円の割合高さ
 
     public RectTransform CanvasObj;
@@ -33,9 +35,29 @@ public class KujiraLoupeScript : MonoBehaviour
         currentCamera = camera;
     }
 
+    void Start()
+    {
+        instans = this;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        //フラグ変更
+        float depth1 = CameraMainShimokawara.instance.CAMERA_DISTANCE;
+        //2点がワールド座標
+        Vector3 leftBottom1 = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, depth1));
+
+        float KujiraRight = transform.position.x + transform.lossyScale.x / 2 * 2;
+
+        if(KujiraRight > leftBottom1.x)
+        {
+            Flag = true;
+        }
+        else
+        {
+            Flag = false;
+        }
 
         //　ターゲットポイントがひとつでもカメラに写っていたらUI非表示
         if (Flag)
@@ -122,12 +144,17 @@ public class KujiraLoupeScript : MonoBehaviour
         }
     }
 
-    void OnWillRenderObject()
-    {
-        Flag = false;
+    //void OnWillRenderObject()
+    //{
+    //    Flag = false;
 
-        if (currentCamera.name == "Main Camera")
-            Flag = true;
+    //    if (currentCamera.name == "Main Camera")
+    //        Flag = true;
+    //}
+
+    public void FlagChange(bool flag)
+    {
+        Flag = flag;
     }
 
     //// Start is called before the first frame update
