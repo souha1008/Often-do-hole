@@ -306,9 +306,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
-        if (collision.gameObject.CompareTag("Platform") ||
-            collision.gameObject.CompareTag("Iron") ||
-            collision.gameObject.CompareTag("Untagged"))
+        if (!(collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet")))
         {
             FallBlockHitFlag = true;
         }
@@ -325,9 +323,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
-        if (collision.gameObject.CompareTag("Platform") ||
-            collision.gameObject.CompareTag("Iron") ||
-            collision.gameObject.CompareTag("Untagged"))
+        if (!(collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet")))
         {
             FallBlockHitFlag = true;
         }
@@ -339,8 +335,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         {
             PlayerMoveFlag = false;
         }
-        if (collision.gameObject.CompareTag("Platform") ||
-            collision.gameObject.CompareTag("Iron"))
+        if (!(collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet")))
         {
             FallBlockHitFlag = false;
         }

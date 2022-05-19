@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AddressableAssets;
 
 // コインオブジェクト情報
@@ -21,7 +22,12 @@ public class CoinObject : MonoBehaviour
     private StageCoinInfo CoinInfo;
     
     [SerializeField, Label("透明コインオブジェクト")]
-    public GameObject SkeletonCoin;     // 透明コイン
+    public GameObject SkeletonCoin;   // 透明コイン
+
+    [Label("自身のアニメーター")]
+    public Animator CoinAnimator;     // コインアニメーター
+
+    private bool OnceFlag = false;
 
     public void Start()
     {
@@ -47,6 +53,8 @@ public class CoinObject : MonoBehaviour
 
     public void Death()
     {
+        // コイン取得エフェクト
+        EffectManager.Instance.CoinGetEffect(transform.position);
         Destroy(this.gameObject);
     }
 
@@ -55,15 +63,17 @@ public class CoinObject : MonoBehaviour
     public void OnTriggerEnter(Collider collider)
     {
         // プレイヤーと接触時コイン取得
-        if (collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Bullet"))
+        if (!OnceFlag && (collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Bullet")))
         {
+            OnceFlag = true;
             SoundManager.Instance.PlaySound("決定音");
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
             CoinInfo.GetCoinFlag = true;
             CoinManager.Instance.SetCoinInfo(CoinInfo);
-            EffectManager.Instance.CoinGetEffect(transform.position);
-            Death();
+            
+            //Death();
+            CoinAnimator.SetBool("GetCoin", true);
         }
     }
 }
