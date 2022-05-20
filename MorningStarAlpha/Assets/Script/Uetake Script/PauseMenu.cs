@@ -249,6 +249,13 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         {
             gameObject.transform.GetComponentInChildren<ButtonTexture>().ChangeOnImage();
         }
+
+        //var Images = gameObject.transform.GetComponentsInChildren<Image>();
+
+        //foreach(Image Image in Images)
+        //{
+        //    Image.color = new Color(Image.color.r, Image.color.g, Image.color.b, 1.0f);
+        //}
     }
 
     private void SetSizeDown(GameObject gameObject)
