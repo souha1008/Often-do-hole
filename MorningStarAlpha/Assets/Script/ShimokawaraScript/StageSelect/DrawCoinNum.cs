@@ -14,7 +14,7 @@ public class DrawCoinNum : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<UnityEngine.UI.Text>().text = "x " + SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).coin.AllGetCoins + " / 9";
+            gameObject.GetComponent<UnityEngine.UI.Text>().text = "x " + SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).coin.AllGetCoins + " / 9";
 
         //Debug.Log(SelectManager.instance.CanStart);
         //Debug.Log(SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).coin.AllGetCoins);

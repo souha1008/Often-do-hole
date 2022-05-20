@@ -29,7 +29,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 16;
     private const float MAX_TIME = 999.9f;
-    private string[] StageNames = { "Stage1-1_Prod" ,"Stage2-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
+    private string[] StageNames = { "coinTestScene" ,"Stage2-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
     public CLEAR_RANK_TIME[] ClearRank = {

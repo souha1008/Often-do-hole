@@ -115,7 +115,7 @@ public class KujiraPos : MonoBehaviour
         }
         else
         {
-            ImageUI.gameObject.SetActive(false);
+            ImageUI.gameObject.SetActive(true);
 
             KujiraCenterPos.instance.MyKujiraSpeed = KujiraSpeed.High;
             //Debug.Log("•\Ž¦");
