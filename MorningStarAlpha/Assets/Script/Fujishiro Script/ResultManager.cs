@@ -123,7 +123,7 @@ public class ResultManager : MonoBehaviour
     void Update()
     {
         // ボタンを押したらスキップ
-        if(Input.GetButton("Fire1") || Input.GetButton("Jump"))
+        if(Input.GetButton("ButtonA"))
         {
             Wanted_animator.SetBool(Wanted_SkipAnime, true);
             stump_animator.SetBool(Stump_SkipAnime, true);
@@ -166,14 +166,14 @@ public class ResultManager : MonoBehaviour
             switch (ui_command)
             {
                 case UI_COMMAND.NextStage:
-                    if (Input.GetButton("Jump"))
+                    if (Input.GetButton("ButtonA"))
                     {
                         GameStateManager.LoadNextStage();
                     }
                     break;
 
                 case UI_COMMAND.StageSelect:
-                    if (Input.GetButton("Jump"))
+                    if (Input.GetButton("ButtonA"))
                     {
                         SceneManager.LoadScene("StageSelectScene");
                     }

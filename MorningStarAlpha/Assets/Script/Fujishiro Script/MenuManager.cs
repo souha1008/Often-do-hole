@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
+
     // UI
     [SerializeField] Image StageSelect_UI;
     [SerializeField] Image Option_UI;
@@ -30,7 +31,22 @@ public class MenuManager : MonoBehaviour
         Exit,
     }
 
+    public enum SOUND_OK_TEST
+    {
+        sound_03_01_03,
+        sound_03_01_04,
+        sound_03_01_06,
+        sound_03_01_07,
+        sound_03_01_08,
+        sound_03_01_09,
+        sound_03_01_10,
+        sound_03_01_11,
+    }
+
     NOWSELECT nowSelect;
+
+    [Header("サウンドデバッグ用")]
+    public SOUND_OK_TEST sound_ok_test;
 
     bool input_stick;
 
@@ -78,22 +94,25 @@ public class MenuManager : MonoBehaviour
             switch (nowSelect)
             {
                 case NOWSELECT.StagesSelect:
-                    if (Input.GetButtonDown("Jump") && OnceFlag)
+                    if (Input.GetButton("ButtonA") && OnceFlag)
                     {
+                        SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         GameStateManager.LoadStageSelect();
                     }
                     break;
 
                 case NOWSELECT.Option:
-                    if (Input.GetButtonDown("Jump") && OnceFlag)
+                    if (Input.GetButtonDown("ButtonA") && OnceFlag)
                     {
+                        SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         optionManager.StartPause();
                     }
                     break;
 
                 case NOWSELECT.Exit:
-                    if (Input.GetButtonDown("Jump") && OnceFlag)
+                    if (Input.GetButtonDown("ButtonA") && OnceFlag)
                     {
+                        SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         Application.Quit();
                     }
                     break;
