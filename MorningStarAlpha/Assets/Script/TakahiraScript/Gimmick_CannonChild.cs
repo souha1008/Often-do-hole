@@ -11,12 +11,16 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     private float NowLifeTime;  // 現在の生存時間
 
+
     // 弾情報セット
-    public void SetCannonChild(float speed, float lifetime, bool chaseflag)
+    public void SetCannonChild(float speed, float lifetime, bool chaseflag, Vector3 pos, Quaternion quaternion)
     {
+        // 値セット
+        NowLifeTime = 0.0f;
         Speed = speed;
         LifeTime = lifetime;
         ChaseFlag = chaseflag;
+        transform.SetPositionAndRotation(pos, quaternion);
     }
 
     public override void Init()
@@ -24,17 +28,14 @@ public class Gimmick_CannonChild : Gimmick_Main
         // 初期化
 
         //ChasePower = 0.1f;
-        NowLifeTime = 0.0f;
+        //NowLifeTime = 0.0f;
 
         // コライダー
         //this.GetComponent<Collider>().isTrigger = false; // トリガーオフ
 
         // 弾に速度を与える
-        Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(transform.rotation.eulerAngles.z)) * Speed;
+        //Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(transform.rotation.eulerAngles.z)) * Speed;
         //Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(Rad.z)).normalized * Speed; // (ノーマライズ)
-
-        // プレイヤーオブジェクト取得
-        //PlayerObject = GameObject.Find("Player");
     }
 
     public override void UpdateMove()
@@ -46,10 +47,11 @@ public class Gimmick_CannonChild : Gimmick_Main
             Vector3 ThisPos = this.gameObject.transform.position;   // 自身の座標
 
             transform.rotation = Quaternion.Euler(0, 0, CalculationScript.UnityTwoPointAngle360(ThisPos, PlayerPos));    // 回転角
-
-            Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(transform.rotation.eulerAngles.z)) * Speed; // 追尾
-            //Vel = (PlayerPos - ThisPos).normalized * Speed; // 追尾(ノーマライズ)
         }
+
+        // 弾に速度を与える
+        Vel = CalculationScript.AngleVectorXY(CalculationScript.AngleCalculation(transform.rotation.eulerAngles.z)) * Speed;
+        //Vel = (PlayerPos - ThisPos).normalized * Speed; // 追尾(ノーマライズ)
 
         if (NowLifeTime >= LifeTime) // 生存時間で死亡
         {
@@ -60,8 +62,10 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     public override void Death()
     {
+        Debug.LogWarning("死亡");
         // 自分自身を消す
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 
     public override void OnTriggerEnter(Collider collider)

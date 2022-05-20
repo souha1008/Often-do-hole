@@ -55,7 +55,7 @@ public class CoinObject : MonoBehaviour
     {
         // コイン取得エフェクト
         EffectManager.Instance.CoinGetEffect(transform.position);
-        Destroy(this.gameObject);
+        this.gameObject.SetActive(false);
     }
 
 

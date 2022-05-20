@@ -103,6 +103,10 @@ public class Gimmick_CannonParent : Gimmick_Main
     private bool StartFlag;     // 起動フラグ
     private float NowShootTime; // 経過時間
 
+    // 弾のプール
+    private static int BulletNum = 6;   // サメの弾最大量
+    private Gimmick_CannonChild[] Bullet = new Gimmick_CannonChild[BulletNum];
+
     public override void Init()
     {
         // 初期化
@@ -202,13 +206,36 @@ public class Gimmick_CannonParent : Gimmick_Main
                     CalculationScript.PointRotate(gameObject.transform.position, gameObject.transform.position + new Vector3(Length, 1.0f, 0), NowRotateZ, Vector3.forward);
             }
 
-            GameObject Child = 
-                Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾生成
+            Gimmick_CannonChild Child = null;
+
+            for (int i = 0; i < BulletNum; i++)
+            {
+                if (Bullet[i] == null)
+                {
+                    Bullet[i] = Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)).GetComponent<Gimmick_CannonChild>(); // 弾生成
+                    Child = Bullet[i];
+                    Debug.LogWarning("生成");
+                    break;
+                }
+                else if (!Bullet[i].gameObject.activeSelf)
+                {
+                    Child = Bullet[i];
+                    Debug.LogWarning("再利用");
+                    break;
+                }
+            }
 
 
-
-
-            Child.GetComponent<Gimmick_CannonChild>().SetCannonChild(Speed, LifeTime, ChaseFlag); // 弾の値セット
+            // 弾の最大量チェック
+            if (Child == null)
+            {
+                Debug.LogWarning("サメの弾の最大量を超えました。最大量をより多く設定して下さい。");
+            }
+            else
+            {
+                Child.SetCannonChild(Speed, LifeTime, ChaseFlag, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾の値セット
+                Child.gameObject.SetActive(true);
+            }          
         }
     }
 

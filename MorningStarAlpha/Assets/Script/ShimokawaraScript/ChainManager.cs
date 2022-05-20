@@ -107,9 +107,13 @@ public class ChainManager : MonoBehaviour
             {
                 if (i < ChainNum)
                 {
-                    if (!Chain[i])
+                    if (Chain[i] == null)
                     {
                         Chain[i] = Instantiate(Obj);
+                    }
+                    else if (!Chain[i].activeSelf)
+                    {
+                        Chain[i].SetActive(true);
                     }
 
                     //‘å‚«‚³
@@ -204,7 +208,8 @@ public class ChainManager : MonoBehaviour
                 {
                     if (Chain[i])
                     {
-                        Destroy(Chain[i]);
+                        Chain[i].SetActive(false);
+                        //Destroy(Chain[i]);
                     }
                 }
             }
@@ -217,7 +222,8 @@ public class ChainManager : MonoBehaviour
             {
                 if (Chain[i])
                 {
-                    Destroy(Chain[i]);
+                    Chain[i].SetActive(false);
+                    //Destroy(Chain[i]);
                 }
             }
         }
