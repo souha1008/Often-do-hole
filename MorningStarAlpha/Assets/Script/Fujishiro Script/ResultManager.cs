@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -59,6 +60,11 @@ public class ResultManager : MonoBehaviour
     // クリアランク用
     Sprite[] Stump_sprite;
 
+    // BGMディレイ用
+    bool BGM_Dlay;
+    int flame_count01;
+    [SerializeField] int wait_flame = 100;
+
     // デバッグ用
     [Header("以下デバッグコンソール")]
     [SerializeField] bool debug_check;
@@ -109,6 +115,9 @@ public class ResultManager : MonoBehaviour
         // スカイボックスセット
         ChangeSkybox();
 
+
+        
+
         anim_end = false;
         UI_Canvas.SetActive(false);
         ui_command = UI_COMMAND.NextStage;
@@ -120,10 +129,12 @@ public class ResultManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        SoundDlay();
+
         // ボタンを押したらスキップ
-        if(Input.GetButton("ButtonA"))
+        if (Input.GetButton("ButtonA"))
         {
             Wanted_animator.SetBool(Wanted_SkipAnime, true);
             stump_animator.SetBool(Stump_SkipAnime, true);
@@ -192,6 +203,20 @@ public class ResultManager : MonoBehaviour
         Wanted_SkipAnime = Animator.StringToHash("Wanted_Skip_Anime");
         Stump_SkipAnime = Animator.StringToHash("Stump_Skip_Anime");
 
+    }
+
+    void SoundDlay()
+    {
+        if (flame_count01 < wait_flame)
+        {
+            flame_count01++;
+        }
+
+        if (flame_count01 >= wait_flame && BGM_Dlay == false)
+        {
+            BGM_Dlay = true;
+            SoundManager.Instance.PlaySound("sound_42_03");
+        }
     }
 
     void Photo_Random()
