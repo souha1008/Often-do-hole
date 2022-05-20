@@ -36,7 +36,7 @@ public abstract class Gimmick_Main : MonoBehaviour
 
 
     // 継承先で自動で動く処理(プロテクト)
-    protected void Start() 
+    protected void Awake() 
     {
         // 初期化
         Vel = Vector3.zero;

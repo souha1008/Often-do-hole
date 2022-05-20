@@ -556,6 +556,23 @@ public class BulletMain : MonoBehaviour
                                 onceFlag = true;
                                 PlayerScript.ForciblyFollowMode(false);
                                 break;
+
+                            case "Iron":
+                                onceFlag = true;
+                                isTouched = true;
+                                SoundManager.Instance.PlaySound("sound_30_Iron", 1.4f);
+
+                                VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.3f);
+
+                                if (PlayerScript.isOnGround)
+                                {
+                                    PlayerScript.ForciblyReleaseMode(false);
+                                }
+                                else
+                                {
+                                    PlayerScript.ForciblyReleaseMode(true);
+                                }
+                                break;
                         }
                     }
                 }

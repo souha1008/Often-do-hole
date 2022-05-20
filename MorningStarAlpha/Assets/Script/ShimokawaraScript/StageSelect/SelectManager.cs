@@ -33,7 +33,6 @@ public class SelectManager : MonoBehaviour
     int CanStage = 0;//えらべるステージ
     public bool CanStart = true;//移動中は開始できない
 
-
     public bool DEBUG_ALL_STAGE_SELECT;
 
     // Start is called before the first frame update
@@ -86,7 +85,7 @@ public class SelectManager : MonoBehaviour
         ChangeStageCheck();
 
         //ステージ侵入
-        if(CanStart && Input.GetKey(KeyCode.Return))
+        if(CanStart && Input.GetButton("ButtonA"))
         {
             GameStateManager.LoadStage(NowSelectStage);
             
