@@ -14,11 +14,11 @@ public class CameraManeger : MonoBehaviour
     void LateUpdate()
     {
         //ÉJÉÅÉâñﬂÇµ
-        VirtualCamera.instance.CameraReturn();
+        //VirtualCamera.instance.CameraReturn();
 
         CameraCenterY.instance.ManualUpdate();
-        VirtualCamera.instance.ManualUpdate();
-        TempCamera.instance.ManualUpdate();
+        //VirtualCamera.instance.ManualUpdate();
+        //TempCamera.instance.ManualUpdate();
         CameraCenterX.instance.ManualUpdate();
         CameraMainShimokawara.instance.ManualUpdate();
 

@@ -63,8 +63,7 @@ public class Title_p2 : MonoBehaviour
         Anim_CurrentState_Info = PressAny_animator.GetCurrentAnimatorStateInfo(0);
 
         // PressAnyButton
-        if (Input.GetButton("Fire1") || Input.GetButton("Fire2")
-            || Input.GetButton("Fire3") || Input.GetButton("Jump") && once_press == false)
+        if (Input.GetButton("ButtonA") || Input.GetButton("ButtonB") || Input.GetButton("Button_Select") && once_press == false)
         { 
             once_press = true;
             PressAny_animator.SetBool(PushButton, true);
