@@ -51,18 +51,6 @@ public class PlayerState
         PlayerScript.floorVel = Vector3.zero;
 
     }
-
-    protected void WeakenFlourVel()
-    {
-        if (Mathf.Abs(PlayerScript.floorVel.x) > 5.0f)
-        {
-            PlayerScript.floorVel *= 0.9f;
-        }
-        else
-        {
-            PlayerScript.floorVel = Vector3.zero;
-        }
-    }
 }
 
 
