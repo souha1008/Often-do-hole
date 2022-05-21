@@ -87,11 +87,6 @@ public class PlayerStateOnGround : PlayerState
     public override void Move()
     {
 
-        //if (PlayerScript.getFootHit().collider.CompareTag("Conveyor_Yoko"))
-        //{
-            WeakenFlourVel();
-        //}
-
         if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
             float slide_Weaken = 0.5f;

@@ -305,10 +305,42 @@ public class PlayerMain : MonoBehaviour
                 addVel = Vector3.zero;
             }
 
-#if UNITY_EDITOR //unityエディター上ではデバッグを行う（ビルド時には無視される）
-                //mode.DebugMessage();
-#endif
-            
+
+  
+        }
+    }
+
+
+    private void FloorVelDown()
+    {
+        switch (refState)
+        {
+            case EnumPlayerState.ON_GROUND:
+            case EnumPlayerState.MIDAIR:
+                WeakenFlourVel();
+        　　break;
+
+            case EnumPlayerState.SHOT:
+                NoFloorVel();
+                break;
+        }
+    }
+
+    private void NoFloorVel()
+    {
+        floorVel = Vector3.zero;
+
+    }
+
+    private void WeakenFlourVel()
+    {
+        if (Mathf.Abs(floorVel.x) > 5.0f)
+        {
+            floorVel *= 0.9f;
+        }
+        else
+        {
+            floorVel = Vector3.zero;
         }
     }
 

@@ -11,6 +11,7 @@ public enum GAME_RANK
     S,
     A,
     B,
+    NONE,
 }
 
 
@@ -45,15 +46,15 @@ public class StageData
 {
     public StageData()
     {
-        Rank = 0;
-        Time = 0;
+        Rank = GAME_RANK.NONE;
+        Time = 1000.0f;
         coin = null;
         Clear = false;
     }
-    public GAME_RANK Rank = 0;      // ランク
-    public float Time = 0;          // 時間
-    public Coin coin = null;        // コイン
-    public bool Clear = false;      // ステージクリアフラグ
+    public GAME_RANK Rank;      // ランク
+    public float Time;          // 時間
+    public Coin coin;           // コイン
+    public bool Clear;          // ステージクリアフラグ
 }
 
 
@@ -63,7 +64,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     public DataFile MainData = null;
 
     // パス
-    static private string Path = "Assets/SaveData/Data";
+    static private string Path;
 
 
     private void Awake()
@@ -75,7 +76,14 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         }
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
 
+#if UNITY_EDITOR
+        Path = "Assets/SaveData/Data";
+#else
+        Path = Application.persistentDataPath;
+        Path = Path + "/Data";
+#endif
         MainData = null;
+
         LoadData();
         //Debug.LogWarning("セーブデータ読み込み官僚");
         //Debug.LogWarning(MainData.Stage[0].Rank);

@@ -14,6 +14,6 @@ public class DrawSTime : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<UnityEngine.UI.Text>().text = "SÅc" + (int)(GameStateManager.Instance.ClearRank[SelectManager.instance.NowSelectStage].S) + "ïbà»ì‡";
+            gameObject.GetComponent<UnityEngine.UI.Text>().text = "SÅc" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].S) + "ïbà»ì‡";
     }
 }

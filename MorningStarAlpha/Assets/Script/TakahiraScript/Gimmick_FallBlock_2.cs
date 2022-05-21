@@ -732,6 +732,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         if (collision.gameObject.CompareTag("Player"))
         {
             PlayerMoveFlag = false;
+            PlayerMain.instance.addVel = Vector3.zero;
         }
         if (!(collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet")))
         {

@@ -81,7 +81,6 @@ public class PlayerStateMidair : PlayerState
 
     public override void Move()
     {
-        WeakenFlourVel();
         //Œ¸ŠS
         PlayerScript.vel.x *= PlayerScript.MIDAIR_FRICTION;
         if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD)

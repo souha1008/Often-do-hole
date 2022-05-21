@@ -125,6 +125,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         nowButton = null;
         oldButton = null;
 
+        SoundManager.Instance.PlaySound("決定音");
+
         // データセーブ
         SaveDataManager.Instance.SaveData();
     }
@@ -256,6 +258,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         //{
         //    Image.color = new Color(Image.color.r, Image.color.g, Image.color.b, 1.0f);
         //}
+        SoundManager.Instance.PlaySound("決定音");
     }
 
     private void SetSizeDown(GameObject gameObject)

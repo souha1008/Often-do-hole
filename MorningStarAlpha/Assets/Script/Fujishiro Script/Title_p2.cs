@@ -32,6 +32,13 @@ public class Title_p2 : MonoBehaviour
     void Awake()
     {
         instance = this;
+
+        StartCoroutine("WaitAwake");
+    }
+
+    IEnumerator WaitAwake()
+    {
+        yield return new WaitForEndOfFrame();
     }
 
     // Start is called before the first frame update

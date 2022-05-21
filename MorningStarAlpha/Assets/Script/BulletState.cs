@@ -28,7 +28,7 @@ public abstract class BulletState
     protected void AdjustBulletPos()
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        vec = vec * 1.0f;
+        vec = vec * 3.0f;
         vec.y += 3.0f;
         Vector3 adjustPos = PlayerScript.rb.position + vec;
 
