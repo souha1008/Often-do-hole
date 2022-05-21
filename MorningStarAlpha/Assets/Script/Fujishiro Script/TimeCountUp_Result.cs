@@ -42,7 +42,7 @@ public class TimeCountUp_Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Jump") || Input.GetButton("Fire1"))
+        if (Input.GetButton("ButtonA"))
         {
             StopAllCoroutines();
             DecimalPoint_Change();
@@ -65,7 +65,7 @@ public class TimeCountUp_Result : MonoBehaviour
                 }
                 else
                 {
-                    StartCoroutine(TimeAnimetion(Start_Time, GameStateManager.GetGameTime(), duration));
+                    StartCoroutine(TimeAnimetion(Start_Time, SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Time, duration));
                 }
 
 
