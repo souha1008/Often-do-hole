@@ -14,6 +14,6 @@ public class DrawBTime : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<UnityEngine.UI.Text>().text = "BÅc" + (int)(GameStateManager.Instance.ClearRank[SelectManager.instance.NowSelectStage].B) + "ïbà»ì‡";
+            gameObject.GetComponent<UnityEngine.UI.Text>().text = "BÅc" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].B) + "ïbà»ì‡";
     }
 }

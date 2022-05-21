@@ -119,7 +119,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             // コイン
             CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
             CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
-                                                            //CoinManager.Instance.ResetCoin();               // コイン情報リセッ
+
                                                             // ランク
 
             Instance.GameRank = Instance.CalicurateRank(GetNowStage());
