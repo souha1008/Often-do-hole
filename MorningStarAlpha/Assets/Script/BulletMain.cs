@@ -362,7 +362,7 @@ public class BulletMain : MonoBehaviour
                         
                         EffectManager.Instance.StartShotEffect(colPoint, Quaternion.identity);
 
-                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
+                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
 
                         SoundManager.Instance.PlaySound("sound_13_wall", 1.4f);
 
@@ -399,7 +399,7 @@ public class BulletMain : MonoBehaviour
                         isTouched = true;
                         SoundManager.Instance.PlaySound("sound_30_Iron",1.4f);
 
-                        VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.3f);
+                        VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 
                         if (PlayerScript.isOnGround)
                         {
@@ -415,7 +415,7 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
-                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
+                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
 
 
                         //–ÊŒvŽZ
@@ -463,7 +463,7 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
-                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.3f);
+                        VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
 
 
                         //–ÊŒvŽZ
@@ -562,7 +562,7 @@ public class BulletMain : MonoBehaviour
                                 isTouched = true;
                                 SoundManager.Instance.PlaySound("sound_30_Iron", 1.4f);
 
-                                VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.3f);
+                                VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 
                                 if (PlayerScript.isOnGround)
                                 {

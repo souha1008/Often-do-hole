@@ -252,6 +252,10 @@ public class Gimmick_CannonParent : Gimmick_Main
         {
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
+
+            // 振動
+            VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.2f);
+
             // プレイヤーをノックバック
             PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
         }
