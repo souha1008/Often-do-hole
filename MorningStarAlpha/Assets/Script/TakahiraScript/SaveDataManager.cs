@@ -76,8 +76,12 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         }
         DontDestroyOnLoad(this.gameObject); // ƒV[ƒ“‚ª•Ï‚í‚Á‚Ä‚à€‚È‚È‚¢
 
+#if UNITY_EDITOR
+        Path = "Assets/SaveData/Data";
+#else
         Path = Application.persistentDataPath;
         Path = Path + "/Data";
+#endif
         MainData = null;
 
         LoadData();
