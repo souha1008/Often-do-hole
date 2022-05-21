@@ -28,12 +28,12 @@ public class CLEAR_RANK_TIME {
 public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 16;
-    private const float MAX_TIME = 999.9f;
+    private const float MAX_TIME = 999.999999f;
     private string[] StageNames = { "coinTestScene" ,"Stage2-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
     "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
     "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
-    public CLEAR_RANK_TIME[] ClearRank = {
-        new CLEAR_RANK_TIME(300,750,900) ,
+    public CLEAR_RANK_TIME[] ClearRankTime = {
+        new CLEAR_RANK_TIME(10,20,900) ,
         new CLEAR_RANK_TIME(300,750,900) ,
         new CLEAR_RANK_TIME(300,750,900) ,
         new CLEAR_RANK_TIME(300,750,900) ,
@@ -48,7 +48,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private GAME_STATE GameState;
     private float GameTime;
+    private float ClearTime;
     private GAME_RANK GameRank;
+    private GAME_RANK ClearRank;
     private int NowStage = 0;
     private bool StageSoundFlag = false;
     private bool firstEnter = true; //stage入ったときtrue,いちど死ぬとfalse
@@ -57,8 +59,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Awake()
     {
-        Init();
-
         if (this != Instance)
         {
             Destroy(this);
@@ -66,6 +66,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             return;
         }
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
+
+        Init();
     }
 
     private void Start()
@@ -117,19 +119,25 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             // コイン
             CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
             CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
-            //CoinManager.Instance.ResetCoin();               // コイン情報リセット
+                                                            //CoinManager.Instance.ResetCoin();               // コイン情報リセッ
+                                                            // ランク
 
+            Instance.GameRank = Instance.CalicurateRank(GetNowStage());
             // チェックポイント
             CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
 
 
-            // ランク
-            Instance.CalicurateRank(GetNowStage());
 
             // ※　時間をセーブデータにセーブする
-            SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time = GetGameTime();
+            if (GetGameTime() < SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time)
+            {
+                SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time = GetGameTime();
+            }
             // ※　ランクをセーブデータにセーブする
-            SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank = Instance.GameRank;
+            if (((int)GetGamRank()) < ((int)SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank))
+            {
+                SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank = Instance.GameRank;
+            }
 
             // クリア情報
             SaveDataManager.Instance.MainData.Stage[GetNowStage()].Clear = true;    // ステージクリア情報セーブ
@@ -197,16 +205,22 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         return Instance.GameTime;
     }
 
+
+    public static GAME_RANK GetGamRank()
+    {
+        return Instance.GameRank;
+    }
+
     private GAME_RANK CalicurateRank(int stage_num)
     {
         float time = GetGameTime();
         GAME_RANK returnRank = GAME_RANK.S;
 
-        if(time >= ClearRank[stage_num].S)
+        if(time >= ClearRankTime[stage_num].S)
         {
             returnRank = GAME_RANK.S;
         }
-        else if(time >= ClearRank[stage_num].A)
+        else if(time >= ClearRankTime[stage_num].A)
         {
             returnRank = GAME_RANK.A;
         }
@@ -220,10 +234,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void CountDown()
     {
-        if (GameState == GAME_STATE.PLAY)
-        {
-            GameTime += Time.deltaTime;
-            GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
+        if(FadeManager.GetNowState() == FADE_STATE.FADE_NONE) {
+            if (GameState == GAME_STATE.PLAY)
+            {
+                GameTime += Time.deltaTime;
+                GameTime = Mathf.Clamp(GameTime, 0, MAX_TIME);
+            }
         }
     }
 }

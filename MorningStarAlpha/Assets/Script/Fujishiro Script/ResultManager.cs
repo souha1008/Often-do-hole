@@ -186,7 +186,7 @@ public class ResultManager : MonoBehaviour
                 case UI_COMMAND.StageSelect:
                     if (Input.GetButton("ButtonA"))
                     {
-                        SceneManager.LoadScene("StageSelectScene");
+                        FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
                     }
                     break;
             }

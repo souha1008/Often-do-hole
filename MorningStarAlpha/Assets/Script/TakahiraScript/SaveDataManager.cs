@@ -11,6 +11,7 @@ public enum GAME_RANK
     S,
     A,
     B,
+    NONE,
 }
 
 
@@ -50,8 +51,8 @@ public class StageData
         coin = null;
         Clear = false;
     }
-    public GAME_RANK Rank = 0;      // ランク
-    public float Time = 0;          // 時間
+    public GAME_RANK Rank = GAME_RANK.NONE;      // ランク
+    public float Time = 1000.0f;          // 時間
     public Coin coin = null;        // コイン
     public bool Clear = false;      // ステージクリアフラグ
 }
