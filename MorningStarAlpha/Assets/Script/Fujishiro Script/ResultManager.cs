@@ -563,7 +563,7 @@ public class ResultManager : MonoBehaviour
         }
         else
         {
-            switch (SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Rank)
+            switch (GameStateManager.GetGameRank())
             {
                 case GAME_RANK.S:
                     Stump_UI.sprite = Resources.Load<Sprite>("Sprite/ClearRankStump/Stump_S");

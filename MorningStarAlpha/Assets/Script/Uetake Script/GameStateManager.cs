@@ -48,12 +48,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private GAME_STATE GameState;
     private float GameTime;
-    private float ClearTime;
     private GAME_RANK GameRank;
-    private GAME_RANK ClearRank;
     private int NowStage = 0;
     private bool StageSoundFlag = false;
-    private bool firstEnter = true; //stage入ったときtrue,いちど死ぬとfalse
 
     [SerializeField] public bool ColliderVisible = true;
 
@@ -120,23 +117,23 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             CoinManager.Instance.SetCheckPointCoinData();   // コインデータ更新
             CoinManager.Instance.SetCoinSaveData();         // コインデータセーブ
 
-                                                            // ランク
-
+            // ランク
             Instance.GameRank = Instance.CalicurateRank(GetNowStage());
+
             // チェックポイント
             CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
 
 
 
-            // ※　時間をセーブデータにセーブする
+            // 時間をセーブデータにセーブする
             if (GetGameTime() < SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time)
             {
                 SaveDataManager.Instance.MainData.Stage[GetNowStage()].Time = GetGameTime();
             }
-            // ※　ランクをセーブデータにセーブする
-            if (((int)GetGamRank()) < ((int)SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank))
+            // ランクをセーブデータにセーブする
+            if (((int)GetGameRank()) < ((int)SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank))
             {
-                SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank = Instance.GameRank;
+                SaveDataManager.Instance.MainData.Stage[GetNowStage()].Rank = GetGameRank();
             }
 
             // クリア情報
@@ -145,6 +142,10 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
             // 入力したデータを完全にセーブする
             SaveDataManager.Instance.SaveData();
+
+            Debug.LogWarning("セーブデータにセーブ：" + SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Time);
+            Debug.LogWarning("ランク：" + GetGameRank());
+            Debug.LogWarning("タイム：" + GetGameTime());
         }
     }
 
@@ -156,7 +157,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     {
         Init();
         StageSoundFlag = true;
-        firstEnter = true;
         CoinManager.Instance.ResetCoin();               // コインのリセット
         CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
     }
@@ -191,7 +191,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     public static void GameOverReloadScene()
     {
-        Instance.firstEnter = false;
         FadeManager.Instance.FadeGameOver();
     }
 
@@ -206,21 +205,21 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     }
 
 
-    public static GAME_RANK GetGamRank()
+    public static GAME_RANK GetGameRank()
     {
         return Instance.GameRank;
     }
 
     private GAME_RANK CalicurateRank(int stage_num)
     {
-        float time = GetGameTime();
+        int time = (int)GetGameTime();
         GAME_RANK returnRank = GAME_RANK.S;
 
-        if(time >= ClearRankTime[stage_num].S)
+        if(time <= (int)ClearRankTime[stage_num].S)
         {
             returnRank = GAME_RANK.S;
         }
-        else if(time >= ClearRankTime[stage_num].A)
+        else if(time <= (int)ClearRankTime[stage_num].A)
         {
             returnRank = GAME_RANK.A;
         }
