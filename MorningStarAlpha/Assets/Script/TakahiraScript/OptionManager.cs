@@ -75,7 +75,7 @@ public class OptionManager : MonoBehaviour
         nowButton = null;
         oldButton = null;
 
-        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        SoundManager.Instance.PlaySound("Œˆ’è‰¹");
 
         menuManager.OnMenu();
     }
@@ -166,6 +166,8 @@ public class OptionManager : MonoBehaviour
         {
             gameObject.transform.GetComponentInChildren<ButtonTexture>().ChangeOnImage();
         }
+
+        SoundManager.Instance.PlaySound("Œˆ’è‰¹");
     }
 
     private void SetSizeDown(GameObject gameObject)
