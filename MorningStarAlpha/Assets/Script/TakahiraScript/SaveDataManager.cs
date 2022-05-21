@@ -46,15 +46,15 @@ public class StageData
 {
     public StageData()
     {
-        Rank = 0;
-        Time = 0;
+        Rank = GAME_RANK.NONE;
+        Time = 1000.0f;
         coin = null;
         Clear = false;
     }
-    public GAME_RANK Rank = GAME_RANK.NONE;      // ランク
-    public float Time = 1000.0f;          // 時間
-    public Coin coin = null;        // コイン
-    public bool Clear = false;      // ステージクリアフラグ
+    public GAME_RANK Rank;      // ランク
+    public float Time;          // 時間
+    public Coin coin;           // コイン
+    public bool Clear;          // ステージクリアフラグ
 }
 
 
