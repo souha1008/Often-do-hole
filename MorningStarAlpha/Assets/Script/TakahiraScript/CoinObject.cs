@@ -39,7 +39,8 @@ public class CoinObject : MonoBehaviour
             if (CoinInfo.GetCoinFlag)
             {
                 Instantiate(SkeletonCoin, gameObject.transform.position, gameObject.transform.rotation); // 透明コイン生成
-                Death();
+                //Death();
+                this.gameObject.SetActive(false);
             }              
         }
     }
@@ -69,6 +70,10 @@ public class CoinObject : MonoBehaviour
             SoundManager.Instance.PlaySound("決定音");
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
+
+            // 振動
+            VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.12f);
+
             CoinInfo.GetCoinFlag = true;
             CoinManager.Instance.SetCoinInfo(CoinInfo);
             

@@ -22,6 +22,10 @@ public class SkeletonCoin : MonoBehaviour
             SoundManager.Instance.PlaySound("決定音");
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
+
+            // 振動
+            VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.12f);
+
             CoinAnimator.SetBool("GetCoin", true);
         }
     }
