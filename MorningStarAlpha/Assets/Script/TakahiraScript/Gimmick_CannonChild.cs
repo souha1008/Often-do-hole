@@ -62,7 +62,7 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     public override void Death()
     {
-        Debug.LogWarning("死亡");
+        //Debug.LogWarning("死亡");
         // 自分自身を消す
         //Destroy(this.gameObject);
         this.gameObject.SetActive(false);
@@ -76,6 +76,9 @@ public class Gimmick_CannonChild : Gimmick_Main
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
 
+            // 振動
+            VibrationManager.Instance.StartVibration(0.4f, 0.4f, 0.2f);
+
             // 死亡
             Death();
         }
@@ -83,6 +86,9 @@ public class Gimmick_CannonChild : Gimmick_Main
         {
             // ヒットストップ
             //GameSpeedManager.Instance.StartHitStop(0.1f);
+
+            // 振動
+            VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.2f);
 
             // プレイヤーを死亡状態に変更
             PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);

@@ -2,18 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FALL_TYPE
-{
-    SINE_IN = 0,
-    QUAD_IN,
-    CUBIC_IN,
-    QUART_IN,
-    QUINT_IN,
-    EXPO_IN,
-    BOUNCE_IN,
-    ELASTIC_IN
-}
-
 public class Gimmick_FallBlock : Gimmick_Main
 {
     [Label("動き方")]

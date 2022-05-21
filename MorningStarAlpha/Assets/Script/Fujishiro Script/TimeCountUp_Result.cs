@@ -42,7 +42,7 @@ public class TimeCountUp_Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Jump") || Input.GetButton("Fire1"))
+        if (Input.GetButton("ButtonA"))
         {
             StopAllCoroutines();
             DecimalPoint_Change();
@@ -112,7 +112,7 @@ public class TimeCountUp_Result : MonoBehaviour
         }
         else
         {
-            switch (SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Rank)
+            switch (GameStateManager.GetGameRank())
             {
                 case GAME_RANK.S:
                     timeText.text = endScoreTime.ToString("f5");
@@ -125,7 +125,6 @@ public class TimeCountUp_Result : MonoBehaviour
                 case GAME_RANK.B:
                     timeText.text = endScoreTime.ToString("f3");
                     break;
-
             }
         }
         //StringBuilder stringBuilder = new StringBuilder();
@@ -157,7 +156,7 @@ public class TimeCountUp_Result : MonoBehaviour
         }
         else
         {
-            switch (SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Rank)
+            switch (GameStateManager.GetGameRank())
             {
                 case GAME_RANK.S:
                     timeText.text = GameStateManager.GetGameTime().ToString("f5");

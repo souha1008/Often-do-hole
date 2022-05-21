@@ -22,15 +22,18 @@ public class Gimmick_Thorn : Gimmick_Main
     public override void OnTriggerEnter(Collider collider)
     {
         if (collider.gameObject.CompareTag("Player"))
-        {
-            // ヒットストップ
-            GameSpeedManager.Instance.StartHitStop(0.1f);
-            // プレイヤーを死亡状態に変更
+        {   
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
+                // ヒットストップ
+                GameSpeedManager.Instance.StartHitStop(0.1f);
+
+                // 振動
+                VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
+
+                // プレイヤーステートを死亡に変更
                 PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
             }
-            // プレイヤーにダメージエフェクト
         }
     }
 }

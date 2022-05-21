@@ -50,6 +50,7 @@ public class PlayerStateShot : PlayerState
     public PlayerStateShot(bool isFollow)//コンストラクタ
     {
         Init();
+
         //弾の発射
         BulletScript.GetComponent<Collider>().isTrigger = false;
         BulletScript.VisibleBullet();

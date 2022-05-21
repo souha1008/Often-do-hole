@@ -214,13 +214,13 @@ public class Gimmick_CannonParent : Gimmick_Main
                 {
                     Bullet[i] = Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)).GetComponent<Gimmick_CannonChild>(); // 弾生成
                     Child = Bullet[i];
-                    Debug.LogWarning("生成");
+                    ///Debug.LogWarning("生成");
                     break;
                 }
                 else if (!Bullet[i].gameObject.activeSelf)
                 {
                     Child = Bullet[i];
-                    Debug.LogWarning("再利用");
+                    //Debug.LogWarning("再利用");
                     break;
                 }
             }
@@ -252,6 +252,10 @@ public class Gimmick_CannonParent : Gimmick_Main
         {
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
+
+            // 振動
+            VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.2f);
+
             // プレイヤーをノックバック
             PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
         }
