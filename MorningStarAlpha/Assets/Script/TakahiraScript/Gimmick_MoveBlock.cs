@@ -234,6 +234,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
             else
             {
                 BulletMoveFlag = false;
+                PlayerMain.instance.addVel = Vector3.zero;
             }
         }
     }
@@ -277,6 +278,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
         if (collision.gameObject.CompareTag("Player"))
         {
             PlayerMoveFlag = false;
+            PlayerMain.instance.addVel = Vector3.zero;
         }
         //if (collision.gameObject.CompareTag("Bullet"))
         //{
