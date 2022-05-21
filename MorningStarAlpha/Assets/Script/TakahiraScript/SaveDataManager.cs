@@ -77,7 +77,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         DontDestroyOnLoad(this.gameObject); // ƒV[ƒ“‚ª•Ï‚í‚Á‚Ä‚à€‚È‚È‚¢
 
         Path = Application.persistentDataPath;
-
+        Path = Path + "/Data";
         MainData = null;
 
         LoadData();
