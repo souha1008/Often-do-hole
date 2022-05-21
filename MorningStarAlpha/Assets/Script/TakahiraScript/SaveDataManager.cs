@@ -64,7 +64,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     public DataFile MainData = null;
 
     // パス
-    static private string Path = "Assets/SaveData/Data";
+    static private string Path;
 
 
     private void Awake()
@@ -76,7 +76,10 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         }
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
 
+        Path = Application.persistentDataPath;
+
         MainData = null;
+
         LoadData();
         //Debug.LogWarning("セーブデータ読み込み官僚");
         //Debug.LogWarning(MainData.Stage[0].Rank);

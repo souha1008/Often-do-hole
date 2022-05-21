@@ -20,7 +20,6 @@ public class GameTimeDisplay : MonoBehaviour
         string displayTime;
         displayTime = ((int)GameStateManager.GetGameTime()).ToString("f0");
         displayTime = displayTime.PadLeft(3, '0');
-        Debug.LogWarning(displayTime);
 
         text.text = displayTime;
     }
