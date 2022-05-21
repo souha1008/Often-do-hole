@@ -214,13 +214,13 @@ public class Gimmick_CannonParent : Gimmick_Main
                 {
                     Bullet[i] = Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)).GetComponent<Gimmick_CannonChild>(); // íeê∂ê¨
                     Child = Bullet[i];
-                    Debug.LogWarning("ê∂ê¨");
+                    ///Debug.LogWarning("ê∂ê¨");
                     break;
                 }
                 else if (!Bullet[i].gameObject.activeSelf)
                 {
                     Child = Bullet[i];
-                    Debug.LogWarning("çƒóòóp");
+                    //Debug.LogWarning("çƒóòóp");
                     break;
                 }
             }
