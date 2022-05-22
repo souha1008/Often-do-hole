@@ -20,11 +20,15 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     [SerializeField, Tooltip("振動変更オブジェクト")] private GameObject VibrationObject;
     [SerializeField, Tooltip("振動変更オブジェクト")] private Slider VibrationSlider;
     [SerializeField, Tooltip("振動変更オブジェクトのハンドル")] private GameObject VibrationObjectHandle;
+    [SerializeField, Tooltip("BGMオブジェクトのハンドル")] private GameObject BGMObjectHandle;
+    [SerializeField, Tooltip("SEオブジェクトのハンドル")] private GameObject SEObjectHandle;
     //[SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
     [SerializeField, Tooltip("BGMボリュームスライダー")] private Slider BGMVolumeSlider;
     [SerializeField, Tooltip("SEボリュームスライダー")] private Slider SEVolumeSlider;
     private GameObject oldButton;
     private GameObject nowButton;
+
+    private bool StartOnceFlag = false;
 
     //private RectTransform ButtonRect;
     //private RectTransform ButtonChildRect;
@@ -48,6 +52,9 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
             if (Object.ReferenceEquals(nowButton, oldButton) == false)
             {
+                // 選択音
+                SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+
                 // サイズ変更
                 SetSizeUp(nowButton);
 
@@ -72,6 +79,9 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
                 if (Object.ReferenceEquals(nowButton, oldButton) == false)
                 {
+                    // 選択音
+                    SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+
                     // サイズ変更
                     SetSizeUp(nowButton);
 
@@ -125,10 +135,12 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         nowButton = null;
         oldButton = null;
 
-        SoundManager.Instance.PlaySound("決定音");
+        SoundManager.Instance.PlaySound("sound_03_01");
 
         // データセーブ
         SaveDataManager.Instance.SaveData();
+
+        StartOnceFlag = false;
     }
 
     void StartPause()
@@ -145,21 +157,27 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SoundManager.Instance.PauseSound();
         VibrationManager.Instance.StopVibration();
         SoundVolumeInit();
+
+        SoundManager.Instance.PlaySound("sound_03_01");
+        StartOnceFlag = true;
     }
 
     public void ClickResume()
     {
+        SoundManager.Instance.PlaySound("sound_03_01");
         EndPause();
     }
 
     public void ClickRetry()
     {
+        SoundManager.Instance.PlaySound("sound_03_01");
         GameStateManager.LoadNowStage();
         EndPause();
     }
 
     public void ClickBackStageSelect()
     {
+        SoundManager.Instance.PlaySound("sound_03_01");
         GameStateManager.LoadStageSelect();
         EndPause();
     }
@@ -169,8 +187,12 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(true);
 
+        SetSizeDown(nowButton);
         EventSystem.current.SetSelectedGameObject(FirstSelectSound.gameObject);
-        nowButton = EventSystem.current.currentSelectedGameObject;   
+        nowButton = oldButton = EventSystem.current.currentSelectedGameObject;
+        SetSizeUp(nowButton);
+        
+        SoundManager.Instance.PlaySound("sound_03_01");
     }
 
     public void ClickReturnSoundVolume()
@@ -178,8 +200,12 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         PauseCanvas.gameObject.SetActive(true);
         SoundVolumeCanvas.gameObject.SetActive(false);
 
+        SetSizeDown(nowButton);
         EventSystem.current.SetSelectedGameObject(PushSound.gameObject);
-        nowButton = EventSystem.current.currentSelectedGameObject;
+        nowButton = oldButton = EventSystem.current.currentSelectedGameObject;
+        SetSizeUp(nowButton);
+
+        SoundManager.Instance.PlaySound("sound_03_01");
     }
 
     public void ClickVibrationONOFF()
@@ -212,6 +238,8 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
             // イメージ変更
             SetSizeUp(VibrationObjectHandle);
         }
+        if (StartOnceFlag)
+            SoundManager.Instance.PlaySound("sound_05_オプション調節SE");
     }
 
     //public void MasterVolumeSliderChange()
@@ -221,13 +249,27 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     public void BGMVolumeSliderChange()
     {
+        if (BGMVolumeSlider.value < 0.5f)
+            SetSizeDown(BGMObjectHandle);
+        else
+            SetSizeUp(BGMObjectHandle);
         SoundManager.Instance.SoundVolumeBGM = BGMVolumeSlider.value * 10.0f;
+        SoundManager.Instance.UpdateVolume();
+        if (StartOnceFlag)
+            SoundManager.Instance.PlaySound("sound_05_オプション調節BGM");
     }
 
     public void SEVolumeSliderChange()
     {
+        if (SEVolumeSlider.value < 0.5f)
+            SetSizeDown(SEObjectHandle);
+        else
+            SetSizeUp(SEObjectHandle);
         SoundManager.Instance.SoundVolumeSE = SEVolumeSlider.value * 10.0f;
         SoundManager.Instance.SoundVolumeOBJECT = SEVolumeSlider.value * 10.0f;
+        SoundManager.Instance.UpdateVolume();
+        if (StartOnceFlag)
+            SoundManager.Instance.PlaySound("sound_05_オプション調節SE");
     }
 
 
@@ -258,7 +300,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         //{
         //    Image.color = new Color(Image.color.r, Image.color.g, Image.color.b, 1.0f);
         //}
-        SoundManager.Instance.PlaySound("決定音");
     }
 
     private void SetSizeDown(GameObject gameObject)
@@ -286,10 +327,12 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     private void SoundVolumeInit()
     {
         VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.GetVibrationFlag());
-        VibrationSliderChange();
-        VibrationManager.Instance.StartVibration(0.0f, 0.0f, 0.0f);
         //MasterVolumeSlider.value = SoundManager.Instance.SoundVolumeMaster * 0.1f;
         BGMVolumeSlider.value = SoundManager.Instance.SoundVolumeBGM * 0.1f;
         SEVolumeSlider.value = SoundManager.Instance.SoundVolumeSE * 0.1f;
+
+        VibrationSliderChange();
+        BGMVolumeSliderChange();
+        SEVolumeSliderChange();
     }
 }

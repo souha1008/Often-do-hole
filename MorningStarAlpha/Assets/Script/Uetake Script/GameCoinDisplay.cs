@@ -7,11 +7,21 @@ using TMPro;
 public class GameCoinDisplay : MonoBehaviour
 {
     private TextMeshProUGUI text;
-
+    private string coinMax = "9";
     // Start is called before the first frame update
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
+
+        if(GameStateManager.GetNowStage() == 0)
+        {
+            coinMax = "3";
+        }
+        else
+        {
+            coinMax = "9";
+        }
+        
         TextUpdate();
     }
 
@@ -30,7 +40,7 @@ public class GameCoinDisplay : MonoBehaviour
         string displayTime;
 
 
-        displayTime = coinNum.ToString() + " / 9";
+        displayTime = coinNum.ToString() + " / " + coinMax;
 
 
         text.text = displayTime;
