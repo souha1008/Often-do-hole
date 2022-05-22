@@ -287,6 +287,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     {
         VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.GetVibrationFlag());
         VibrationSliderChange();
+        VibrationManager.Instance.StartVibration(0.0f, 0.0f, 0.0f);
         //MasterVolumeSlider.value = SoundManager.Instance.SoundVolumeMaster * 0.1f;
         BGMVolumeSlider.value = SoundManager.Instance.SoundVolumeBGM * 0.1f;
         SEVolumeSlider.value = SoundManager.Instance.SoundVolumeSE * 0.1f;
