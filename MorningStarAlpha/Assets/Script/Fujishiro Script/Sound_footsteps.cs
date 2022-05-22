@@ -49,38 +49,41 @@ public class Sound_footsteps : MonoBehaviour
         flame_count++;
         if (flame_count >= play_flame)
         {
-            if (PlayerMain.instance.animator.GetBool("isRunning"))
+            if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND)
             {
-                int random = Random.Range(0, 3 + 1);
-                //Debug.Log("Number:" + random);
-                if (random != (int)old_soundNo)
+                if (PlayerMain.instance.animator.GetBool("isRunning"))
                 {
-                    soundNo = (SOUND_NO)random;
-                    switch (soundNo)
+                    int random = Random.Range(0, 3 + 1);
+                    //Debug.Log("Number:" + random);
+                    if (random != (int)old_soundNo)
                     {
-                        case SOUND_NO.SOUND_1:
-                            // à»â∫ínñ Ç…ÇÊÇ¡Çƒï™äÚ
-                            SoundManager.Instance.PlaySound("sound_10_2_1", volume, 0.0f); // êŒè∞
-                            //Debug.Log("ñ¬Ç¡ÇΩ");
-                            break;
+                        soundNo = (SOUND_NO)random;
+                        switch (soundNo)
+                        {
+                            case SOUND_NO.SOUND_1:
+                                // à»â∫ínñ Ç…ÇÊÇ¡Çƒï™äÚ
+                                SoundManager.Instance.PlaySound("sound_10_2_1", volume, 0.0f); // êŒè∞
+                                                                                               //Debug.Log("ñ¬Ç¡ÇΩ");
+                                break;
 
-                        case SOUND_NO.SOUND_2:
-                            SoundManager.Instance.PlaySound("sound_10_2_2", volume, 0.0f);
-                            //Debug.Log("ñ¬Ç¡ÇΩ");
-                            break;
+                            case SOUND_NO.SOUND_2:
+                                SoundManager.Instance.PlaySound("sound_10_2_2", volume, 0.0f);
+                                //Debug.Log("ñ¬Ç¡ÇΩ");
+                                break;
 
-                        case SOUND_NO.SOUND_3:
-                            SoundManager.Instance.PlaySound("sound_10_2_3", volume, 0.0f);
-                            //Debug.Log("ñ¬Ç¡ÇΩ");
-                            break;
+                            case SOUND_NO.SOUND_3:
+                                SoundManager.Instance.PlaySound("sound_10_2_3", volume, 0.0f);
+                                //Debug.Log("ñ¬Ç¡ÇΩ");
+                                break;
 
-                        case SOUND_NO.SOUND_4:
-                            SoundManager.Instance.PlaySound("sound_10_2_4", volume, 0.0f);
-                            //Debug.Log("ñ¬Ç¡ÇΩ");
-                            break;
+                            case SOUND_NO.SOUND_4:
+                                SoundManager.Instance.PlaySound("sound_10_2_4", volume, 0.0f);
+                                //Debug.Log("ñ¬Ç¡ÇΩ");
+                                break;
+                        }
+                        old_soundNo = (SOUND_NO)random;
+                        flame_count = 0;
                     }
-                    old_soundNo = (SOUND_NO)random;
-                    flame_count = 0;
                 }
             }
         }

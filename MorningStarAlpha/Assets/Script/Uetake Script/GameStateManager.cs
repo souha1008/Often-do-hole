@@ -28,7 +28,7 @@ public class CLEAR_RANK_TIME {
 public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
     private const int STAGE_MAX_NUM = 8;
-    private const float MAX_TIME = 999.999999f;
+    private const float MAX_TIME = 999.9999f;
     private string[] StageNames = { "coinTestScene" ,"coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene",
     "coinTestScene", "coinTestScene"};
     public CLEAR_RANK_TIME[] ClearRankTime = {
