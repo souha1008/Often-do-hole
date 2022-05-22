@@ -18,7 +18,10 @@ public class GameCoinDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        TextUpdate();
+        if (FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
+        {
+            TextUpdate();
+        }
     }
 
     private void TextUpdate()
