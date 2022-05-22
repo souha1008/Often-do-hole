@@ -305,8 +305,7 @@ public class PlayerMain : MonoBehaviour
                 addVel = Vector3.zero;
             }
 
-
-  
+            FloorVelDown();
         }
     }
 
