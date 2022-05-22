@@ -27,11 +27,10 @@ public class CLEAR_RANK_TIME {
 /// </summary>
 public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 {
-    private const int STAGE_MAX_NUM = 16;
-    private const float MAX_TIME = 999.999999f;
-    private string[] StageNames = { "coinTestScene" ,"Stage2-2" , "Stage1-3" , "Stage1-4" , "Stage1-5" , "Stage1-6",
-    "Stage2-1","Stage2-2","Stage2-3","Stage2-4","Stage2-5",
-    "Stage3-1","Stage3-2","Stage3-3","Stage3-4","Stage3-5"};
+    private const int STAGE_MAX_NUM = 8;
+    private const float MAX_TIME = 999.9999f;
+    private string[] StageNames = { "coinTestScene" ,"coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene",
+    "coinTestScene", "coinTestScene"};
     public CLEAR_RANK_TIME[] ClearRankTime = {
         new CLEAR_RANK_TIME(10,20,900) ,
         new CLEAR_RANK_TIME(300,750,900) ,
@@ -40,10 +39,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         new CLEAR_RANK_TIME(300,750,900) ,
         new CLEAR_RANK_TIME(300,750,900) ,
         new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900)
+        new CLEAR_RANK_TIME(300,750,900) 
     };
 
     private GAME_STATE GameState;
@@ -86,8 +82,33 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         {
             SoundManager.Instance.StopSound();
 
-            //後にステージ連番によって分岐
-            SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+            switch (NowStage) {
+                case 0:
+                case 1:
+                case 2:
+                    SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+                    break;
+
+                case 3:
+                case 4:
+                    SoundManager.Instance.PlaySound("EveningBGM", 0.6f, AudioReverbPreset.City);
+                    break;
+
+                case 5:
+                case 6:               
+                    SoundManager.Instance.PlaySound("night_theme_0516", 0.6f, AudioReverbPreset.City);
+                    break;
+
+                case 7:
+                    SoundManager.Instance.PlaySound("lastbattle_0516", 0.6f, AudioReverbPreset.City);
+                    break;
+
+                default:
+                    break;
+            }
+
+
+         
             StageSoundFlag = false;
         }
     }
