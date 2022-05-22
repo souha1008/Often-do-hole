@@ -9,6 +9,8 @@ public class OptionManager : MonoBehaviour
     [SerializeField, Tooltip("振動変更オブジェクト")] private GameObject VibrationObject;
     [SerializeField, Tooltip("振動変更オブジェクト")] private Slider VibrationSlider;
     [SerializeField, Tooltip("振動変更オブジェクトのハンドル")] private GameObject VibrationObjectHandle;
+    [SerializeField, Tooltip("BGMオブジェクトのハンドル")] private GameObject BGMObjectHandle;
+    [SerializeField, Tooltip("SEオブジェクトのハンドル")] private GameObject SEObjectHandle;
     //[SerializeField, Tooltip("マスターボリュームスライダー")] private Slider MasterVolumeSlider;
     [SerializeField, Tooltip("BGMボリュームスライダー")] private Slider BGMVolumeSlider;
     [SerializeField, Tooltip("SEボリュームスライダー")] private Slider SEVolumeSlider;
@@ -16,8 +18,7 @@ public class OptionManager : MonoBehaviour
     private GameObject oldButton;
     private GameObject nowButton;
 
-    //private RectTransform ButtonRect;
-    //private RectTransform ButtonChildRect;
+    private bool StartOnceFlag = false;
 
 
     private void Awake()
@@ -26,6 +27,11 @@ public class OptionManager : MonoBehaviour
         nowButton = EventSystem.current.gameObject;
         oldButton = null;
         VibrationSlider = VibrationObject.GetComponent<Slider>();
+#if !UNITY_EDITOR
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = false;
+#endif
+
     }
 
 
@@ -38,6 +44,9 @@ public class OptionManager : MonoBehaviour
 
             if (Object.ReferenceEquals(nowButton, oldButton) == false)
             {
+                // 選択音
+                SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+
                 // サイズ変更
                 SetSizeUp(nowButton);
 
@@ -75,8 +84,9 @@ public class OptionManager : MonoBehaviour
         nowButton = null;
         oldButton = null;
 
-        SoundManager.Instance.PlaySound("決定音");
-
+        //　決定音
+        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        StartOnceFlag = false;
         menuManager.OnMenu();
     }
 
@@ -95,6 +105,10 @@ public class OptionManager : MonoBehaviour
         SoundManager.Instance.PauseSound();
         VibrationManager.Instance.StopVibration();
         SoundVolumeInit();
+
+        // 決定音
+        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        StartOnceFlag = true;
     }
 
     public void ClickVibrationONOFF()
@@ -127,6 +141,8 @@ public class OptionManager : MonoBehaviour
             // イメージ変更
             SetSizeUp(VibrationObjectHandle);
         }
+        if (StartOnceFlag)
+            SoundManager.Instance.PlaySound("sound_05_オプション調節SE");
     }
 
     //public void MasterVolumeSliderChange()
@@ -136,27 +152,32 @@ public class OptionManager : MonoBehaviour
 
     public void BGMVolumeSliderChange()
     {
+        if (BGMVolumeSlider.value < 0.5f)
+            SetSizeDown(BGMObjectHandle);
+        else
+            SetSizeUp(BGMObjectHandle);
         SoundManager.Instance.SoundVolumeBGM = BGMVolumeSlider.value * 10.0f;
+        SoundManager.Instance.UpdateVolume();
+        if (StartOnceFlag)
+            SoundManager.Instance.PlaySound("sound_05_オプション調節BGM");
     }
 
     public void SEVolumeSliderChange()
     {
+        if (SEVolumeSlider.value < 0.5f)
+            SetSizeDown(SEObjectHandle);
+        else
+            SetSizeUp(SEObjectHandle);
         SoundManager.Instance.SoundVolumeSE = SEVolumeSlider.value * 10.0f;
         SoundManager.Instance.SoundVolumeOBJECT = SEVolumeSlider.value * 10.0f;
+        SoundManager.Instance.UpdateVolume();
+        if (StartOnceFlag)
+            SoundManager.Instance.PlaySound("sound_05_オプション調節SE");
     }
 
 
     private void SetSizeUp(GameObject gameObject)
     {
-        // サイズ変更
-        //if (gameObject.GetComponent<Button>() != null)
-        //{
-        //    ButtonRect = gameObject.GetComponent<RectTransform>();
-        //    ButtonRect.sizeDelta += new Vector2(70.0f, 8.0f);
-        //}
-        //ButtonChildRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
-        //ButtonChildRect.sizeDelta += new Vector2(70.0f, 8.0f);
-
         // サイズ変更(イメージ変更)
         if (gameObject.GetComponent<ButtonTexture>() != null)
         {
@@ -166,21 +187,10 @@ public class OptionManager : MonoBehaviour
         {
             gameObject.transform.GetComponentInChildren<ButtonTexture>().ChangeOnImage();
         }
-
-        SoundManager.Instance.PlaySound("決定音");
     }
 
     private void SetSizeDown(GameObject gameObject)
     {
-        // サイズ変更
-        //if (gameObject.GetComponent<Button>() != null)
-        //{
-        //    ButtonRect = gameObject.GetComponent<RectTransform>();
-        //    ButtonRect.sizeDelta += new Vector2(-70.0f, -8.0f);
-        //}
-        //ButtonChildRect = gameObject.transform.GetChild(0).GetComponent<RectTransform>();
-        //ButtonChildRect.sizeDelta += new Vector2(-70.0f, -8.0f);
-
         // サイズ変更(イメージ変更)
         if (gameObject.GetComponent<ButtonTexture>() != null)
         {
@@ -195,9 +205,12 @@ public class OptionManager : MonoBehaviour
     private void SoundVolumeInit()
     {
         VibrationSlider.value = CalculationScript.OneZeroChange(VibrationManager.Instance.GetVibrationFlag());
-        VibrationSliderChange();
         //MasterVolumeSlider.value = SoundManager.Instance.SoundVolumeMaster * 0.1f;
         BGMVolumeSlider.value = SoundManager.Instance.SoundVolumeBGM * 0.1f;
         SEVolumeSlider.value = SoundManager.Instance.SoundVolumeSE * 0.1f;
+
+        VibrationSliderChange();
+        BGMVolumeSliderChange();
+        SEVolumeSliderChange();
     }
 }

@@ -256,7 +256,9 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     private List<NOW_PLAY_SOUND> NowPlaySoundList = new List<NOW_PLAY_SOUND>(); // 再生中のサウンド管理用リスト
 
-    private bool SoundLoadFlag = true;
+    private bool SoundLoadBGMFlag = false;
+    private bool SoundLoadSEFlag = false;
+    private bool SoundLoadOBJECTFlag = false;
 
     
     private void Awake()
@@ -374,6 +376,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             Debug.Log("SEデータの読み込み失敗");
         }
+        SoundLoadSEFlag = true;
     }
 
     private IEnumerator SetBGMData()
@@ -408,7 +411,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             Debug.Log("BGMデータの読み込み失敗");
         }
-        SoundLoadFlag = false;
+        SoundLoadBGMFlag = true;
     }
 
     private IEnumerator SetOBJECTData()
@@ -441,6 +444,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             Debug.Log("OBJECTデータの読み込み失敗");
         }
+        SoundLoadOBJECTFlag = true;
     }
     /// <summary>
     ///<para>=====================================================================  </para>
@@ -571,7 +575,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             //Debug.Log("読み込み中");
             yield return null;
         }
-        while (SoundLoadFlag);
+        while (!(SoundLoadBGMFlag && SoundLoadSEFlag && SoundLoadOBJECTFlag));
 
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
@@ -614,7 +618,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                     {
                         NowPlaySoundList.Add(new NOW_PLAY_SOUND(Sound_Clip, AudioSource_BGM[i]));
 
-                        StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
+                        if (SoundName == "sound_05_オプション調節BGM")
+                            StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, false, FadeType);
+                        else
+                            StartSoundSource(NowPlaySoundList[NowPlaySoundList.Count - 1], Volume, PlayTime, SoundObject, ReverbPreset, true, FadeType);
                         FadeSound(Sound_Clip.SoundName, FadeType, FadeTime, FadeEndVolume, SoundStop);
 
                         yield break;
@@ -854,6 +861,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                             i -= 1;
                         break;
                 }
+                UpdateVolume(); // 音量更新
             }
         }
     }
@@ -1146,8 +1154,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
     public void Update()
     {
-        // 音量セット　※　最終的に音量オプションで変更させる予定
-        UpdateVolume();
+        // 音量セット
+        //UpdateVolume();
 
         // 現在使用中か判定処理
         UpdateNowUse();
@@ -1166,51 +1174,51 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         // テスト用入力キー
 
-        if (Input.GetKeyDown(KeyCode.A)) // 一時停止
-        {
-            PauseSound();
-        }
+        //if (Input.GetKeyDown(KeyCode.A)) // 一時停止
+        //{
+        //    PauseSound();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.S)) // 一時停止解除
-        {
-            UnPauseSound();
-        }
+        //if (Input.GetKeyDown(KeyCode.S)) // 一時停止解除
+        //{
+        //    UnPauseSound();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.D)) // 停止
-        {
-            StopSound();
-        }
+        //if (Input.GetKeyDown(KeyCode.D)) // 停止
+        //{
+        //    StopSound();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.F)) // 効果音再生
-        {
-            SoundManager.Instance.PlaySound("決定音");
-        }
+        //if (Input.GetKeyDown(KeyCode.F)) // 効果音再生
+        //{
+        //    SoundManager.Instance.PlaySound("決定音");
+        //}
 
-        if (Input.GetKeyDown(KeyCode.G)) // BGM再生
-        {
-            SoundManager.Instance.PlaySound("Test2コピー", 0.2f, 2.0f);
-        }
+        //if (Input.GetKeyDown(KeyCode.G)) // BGM再生
+        //{
+        //    SoundManager.Instance.PlaySound("Test2コピー", 0.2f, 2.0f);
+        //}
 
-        if (Input.GetKeyDown(KeyCode.H)) // BGM再生(3D)
-        {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, this.gameObject);
-        }
+        //if (Input.GetKeyDown(KeyCode.H)) // BGM再生(3D)
+        //{
+        //    SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, this.gameObject);
+        //}
 
-        if (Input.GetKeyDown(KeyCode.J)) // BGM再生(フィルターあり, お風呂場みたいなの)
-        {
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, AudioReverbPreset.Bathroom);
-        }
+        //if (Input.GetKeyDown(KeyCode.J)) // BGM再生(フィルターあり, お風呂場みたいなの)
+        //{
+        //    SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 2.0f, AudioReverbPreset.Bathroom);
+        //}
 
-        if (Input.GetKeyDown(KeyCode.K)) // BGMのフェードイン再生
-        {
-            //SoundManager.Instance.SoundFade("TestBGM2", SOUND_FADE_TYPE.OUT_IN, 3.0f, false);
-            SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 6.0f, AudioReverbPreset.Bathroom, SOUND_FADE_TYPE.IN, 5.0f, 1.0f, false);
-        }
+        //if (Input.GetKeyDown(KeyCode.K)) // BGMのフェードイン再生
+        //{
+        //    //SoundManager.Instance.SoundFade("TestBGM2", SOUND_FADE_TYPE.OUT_IN, 3.0f, false);
+        //    SoundManager.Instance.PlaySound("TestBGM2", 0.2f, 6.0f, AudioReverbPreset.Bathroom, SOUND_FADE_TYPE.IN, 5.0f, 1.0f, false);
+        //}
 
-        if (Input.GetKeyDown(KeyCode.L)) // BGMのフェードアウト停止
-        {
-            SoundManager.Instance.FadeSound("TestBGM2", SOUND_FADE_TYPE.OUT, 5.0f, 0.0f, true);
-        }
+        //if (Input.GetKeyDown(KeyCode.L)) // BGMのフェードアウト停止
+        //{
+        //    SoundManager.Instance.FadeSound("TestBGM2", SOUND_FADE_TYPE.OUT, 5.0f, 0.0f, true);
+        //}
     }
 
     public void FixedUpdate()

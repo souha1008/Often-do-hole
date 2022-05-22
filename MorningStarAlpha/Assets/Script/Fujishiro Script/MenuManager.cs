@@ -73,6 +73,7 @@ public class MenuManager : MonoBehaviour
                     nowSelect = NOWSELECT.Exit;
                 }
                 input_stick = true;
+                SoundManager.Instance.PlaySound("sound_04_‘I‘ð‰¹", 1.0f, 0.1f);
             }
             if (Input.GetAxis("Vertical") >= 0.8 && input_stick == false)
             {
@@ -83,6 +84,7 @@ public class MenuManager : MonoBehaviour
                     nowSelect = NOWSELECT.StagesSelect;
                 }
                 input_stick = true;
+                SoundManager.Instance.PlaySound("sound_04_‘I‘ð‰¹", 1.0f, 0.1f);
             }
             if (Input.GetAxis("Vertical") < 0.1 && Input.GetAxis("Vertical") > -0.1)
             {
@@ -92,7 +94,7 @@ public class MenuManager : MonoBehaviour
             switch (nowSelect)
             {
                 case NOWSELECT.StagesSelect:
-                    if (Input.GetButton("ButtonA"))
+                    if (Input.GetButtonDown("ButtonA"))
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         GameStateManager.LoadStageSelect();
@@ -103,7 +105,7 @@ public class MenuManager : MonoBehaviour
                 case NOWSELECT.Option:
                     if (Input.GetButtonDown("ButtonA") && OnceFlag)
                     {
-                        SoundManager.Instance.PlaySound(sound_ok_test.ToString());
+                        //SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         optionManager.StartPause();
                     }
                     break;

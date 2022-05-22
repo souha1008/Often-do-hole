@@ -6,11 +6,15 @@ public class CameraMainShimokawara: MonoBehaviour
 {
     [Header("チェックが入っていたらレール追従")]
     [SerializeField, Tooltip("チェックが入っていたらレール追従")] public bool isRail;        //これにチェックが入っていたら分割
-    [SerializeField, Tooltip("チェックが入っていたら宝箱にカメラ")] public bool isGoal = false;      //これにチェックが入っていたらゴールの寄る演出
+    [SerializeField, Tooltip("チェックが入っていたら宝箱にカメラ寄る")] public bool isGoal = false;      //これにチェックが入っていたらゴールの寄る演出
 
     [SerializeField] private GameObject XObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] private GameObject YObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] public float CAMERA_DISTANCE = 55;      //カメラとプレイヤーの距離
+    [SerializeField] public float GOAL_CAMERA_DISTANCE = 55;      //　ゴール時のカメラとプレイヤーの距離
+
+    private float NowGoalTime = 0;
+    private static float GoalTime = 2.0f;
 
     public static CameraMainShimokawara instance; 
     
@@ -135,7 +139,17 @@ public class CameraMainShimokawara: MonoBehaviour
         }
         else if (isGoal)
         {
+            if (NowGoalTime < GoalTime)
+            {
+                TruePos.z = Easing.CubicOut(NowGoalTime, GoalTime, CAMERA_DISTANCE, GOAL_CAMERA_DISTANCE);
 
+                NowGoalTime += Time.deltaTime;
+            }
+            else
+            {
+                TruePos.z = -GOAL_CAMERA_DISTANCE;                
+            }
+            this.transform.position = TruePos;
         }
         else
         {
