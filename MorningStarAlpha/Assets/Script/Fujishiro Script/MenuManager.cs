@@ -33,14 +33,12 @@ public class MenuManager : MonoBehaviour
 
     public enum SOUND_OK_TEST
     {
-        sound_03_01_03,
-        sound_03_01_04,
-        sound_03_01_06,
-        sound_03_01_07,
-        sound_03_01_08,
-        sound_03_01_09,
-        sound_03_01_10,
-        sound_03_01_11,
+        sound_03_01,
+        sound_03_02,
+        sound_03_03,
+        sound_03_04,
+        sound_03_05,
+        sound_03_06,
     }
 
     NOWSELECT nowSelect;
@@ -94,10 +92,11 @@ public class MenuManager : MonoBehaviour
             switch (nowSelect)
             {
                 case NOWSELECT.StagesSelect:
-                    if (Input.GetButton("ButtonA") && OnceFlag)
+                    if (Input.GetButton("ButtonA"))
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         GameStateManager.LoadStageSelect();
+                        this.gameObject.SetActive(false);
                     }
                     break;
 
@@ -110,7 +109,7 @@ public class MenuManager : MonoBehaviour
                     break;
 
                 case NOWSELECT.Exit:
-                    if (Input.GetButtonDown("ButtonA") && OnceFlag)
+                    if (Input.GetButtonDown("ButtonA"))
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         Application.Quit();
