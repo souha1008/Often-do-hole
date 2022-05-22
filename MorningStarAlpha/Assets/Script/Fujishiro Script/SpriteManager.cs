@@ -38,6 +38,7 @@ public class SpriteManager : SingletonMonoBehaviour<SpriteManager>
             sprite = await Addressables.LoadAssetAsync<Sprite>(HandleSprites).Task;
 
             Debug.LogWarning("Sprite“Ç‚İ‚İŠ®—¹");
+            Debug.LogWarning(sprite);
         }
         else
         {

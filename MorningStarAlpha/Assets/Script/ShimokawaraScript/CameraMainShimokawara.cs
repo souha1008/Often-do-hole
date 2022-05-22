@@ -6,6 +6,7 @@ public class CameraMainShimokawara: MonoBehaviour
 {
     [Header("チェックが入っていたらレール追従")]
     [SerializeField, Tooltip("チェックが入っていたらレール追従")] public bool isRail;        //これにチェックが入っていたら分割
+    [SerializeField, Tooltip("チェックが入っていたら宝箱にカメラ")] public bool isGoal = false;      //これにチェックが入っていたらゴールの寄る演出
 
     [SerializeField] private GameObject XObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] private GameObject YObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
@@ -131,6 +132,10 @@ public class CameraMainShimokawara: MonoBehaviour
                 
             }
             
+        }
+        else if (isGoal)
+        {
+
         }
         else
         {

@@ -252,7 +252,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             PlayerMoveFlag = true;
         }
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.CompareTag("Bullet") && gameObject.CompareTag("Platform"))
         {
             BulletMoveFlag = true;
         }
@@ -267,7 +267,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.CompareTag("Bullet") && gameObject.CompareTag("Platform"))
         {
             BulletMoveFlag = true;
         }
