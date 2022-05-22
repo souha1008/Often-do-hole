@@ -36,4 +36,22 @@ public class Gimmick_Thorn : Gimmick_Main
             }
         }
     }
+
+    public void OnTriggerStay(Collider collider)
+    {
+        if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
+        {
+            if (collider.gameObject.CompareTag("Player"))
+            {
+                // ヒットストップ
+                GameSpeedManager.Instance.StartHitStop(0.1f);
+
+                // 振動
+                VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
+
+                // プレイヤーステートを死亡に変更
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
+            }
+        }
+    }
 }

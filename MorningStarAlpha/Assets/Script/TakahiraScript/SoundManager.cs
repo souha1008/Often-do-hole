@@ -1002,8 +1002,10 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // サウンドソース一時停止処理
     private void PauseSoundSource(SOUND_SOURCE Sound_Source)
     {
-        Sound_Source.PauseTime = Sound_Source.AudioSource.time; // ポーズ中の時間ゲット
-        Sound_Source.AudioSource.Stop();// 再生一時停止
+        //Sound_Source.PauseTime = Sound_Source.AudioSource.time; // ポーズ中の時間ゲット
+        //Debug.LogWarning(Sound_Source.PauseTime);
+        //Sound_Source.AudioSource.Stop();// 再生一時停止
+        Sound_Source.AudioSource.Pause();
         Sound_Source.isPause = true;    // ポーズ中フラグオン
     }
 
@@ -1011,8 +1013,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     // サウンドソース一時停止解除処理
     private void UnPauseSoundSource(SOUND_SOURCE Sound_Source)
     {
-        Sound_Source.AudioSource.time = Sound_Source.PauseTime; // ポーズの時間セット
-        Sound_Source.AudioSource.Play();// 再生一時停止解除
+        //if (Sound_Source.PauseTime < Sound_Source.AudioSource.clip.length)
+        //{
+        //    Sound_Source.AudioSource.time = Sound_Source.PauseTime;         // ポーズの時間セット
+        //}
+        //else
+        //{
+        //    Sound_Source.AudioSource.time = Sound_Source.AudioSource.clip.length - 0.01f; // ポーズの時間セット
+        //}
+        //Sound_Source.AudioSource.Play();// 再生一時停止解除
+        Sound_Source.AudioSource.UnPause();
         Sound_Source.isPause = false;   // ポーズ中フラグオフ
     }
 
