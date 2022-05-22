@@ -12,10 +12,16 @@ public class GameCoinDisplay : MonoBehaviour
     void Start()
     {
         text = GetComponent<TextMeshProUGUI>();
+        TextUpdate();
     }
 
     // Update is called once per frame
     void Update()
+    {
+        TextUpdate();
+    }
+
+    private void TextUpdate()
     {
         int coinNum = (int)CoinManager.Instance.SubCoin.AllGetCoin1 + (int)CoinManager.Instance.SubCoin.AllGetCoin2 + (int)CoinManager.Instance.SubCoin.AllGetCoin3;
         string displayTime;
