@@ -45,7 +45,7 @@ public class TimeCountUp_Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("ButtonA") && ResultManager.instance.anim_end == false)
+        if (Input.GetButtonDown("ButtonA") && ResultManager.instance.anim_end == false)
         {
             StopAllCoroutines();
             DecimalPoint_Change();
@@ -175,6 +175,6 @@ public class TimeCountUp_Result : MonoBehaviour
 
             }
         }
-        //timeText.text += "sec";
+        timeText.text += "<size=60>sec</size>";
     }
 }

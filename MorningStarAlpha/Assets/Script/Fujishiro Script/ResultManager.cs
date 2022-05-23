@@ -65,6 +65,9 @@ public class ResultManager : MonoBehaviour
     int flame_count01;
     [SerializeField] int wait_flame = 100;
 
+    // コントローラー
+    bool OncePush = false;
+
     // デバッグ用
     [Header("以下デバッグコンソール")]
     [SerializeField] bool debug_check;
@@ -132,19 +135,29 @@ public class ResultManager : MonoBehaviour
     void FixedUpdate()
     {
         SoundDlay();
-
-        // ボタンを押したらスキップ
-        if (Input.GetButton("ButtonA") && stump_animator.GetBool(Stump_end) == false)
+        if(!Input.GetButton("ButtonA"))
         {
-            Wanted_animator.SetBool(Wanted_SkipAnime, true);
-            stump_animator.SetBool(Stump_SkipAnime, true);
-            stump_animator.SetBool(Stump_end, true);
-            UI_Canvas.SetActive(true);
-            Stump_UI.color = new Color(1, 1, 1, 1);
+            OncePush = false;
         }
 
-        if (anim_end == true)
+        // ボタンを押したらスキップ
+        if (UI_Canvas.activeSelf == false)
         {
+            if (Input.GetButton("ButtonA") && OncePush == false)
+            {
+                OncePush = true;    // ボタンを押している
+
+                // アニメーター設定
+                Wanted_animator.SetBool(Wanted_SkipAnime, true);
+                stump_animator.SetBool(Stump_SkipAnime, true);
+                stump_animator.SetBool(Stump_end, true);
+                
+                // UIをアクティブ
+                UI_Canvas.SetActive(true);
+            }
+        }
+
+        if (anim_end == true)        {
             stump_animator.SetBool(Stump_Start, true);
             Stump_UI.color = new Color(1, 1, 1, 1);
         }
@@ -177,14 +190,14 @@ public class ResultManager : MonoBehaviour
             switch (ui_command)
             {
                 case UI_COMMAND.NextStage:
-                    if (Input.GetButton("ButtonA"))
+                    if (Input.GetButton("ButtonA") && OncePush == false)
                     {
                         GameStateManager.LoadNextStage();
                     }
                     break;
 
                 case UI_COMMAND.StageSelect:
-                    if (Input.GetButton("ButtonA"))
+                    if (Input.GetButton("ButtonA") && OncePush == false)
                     {
                         FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
                     }
