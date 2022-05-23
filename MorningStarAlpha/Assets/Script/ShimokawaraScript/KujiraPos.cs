@@ -19,7 +19,7 @@ public class KujiraPos : MonoBehaviour
     bool TempSwitch = false;
 
     public GameObject[] CheckpointArray;
-    public int[] CheckPointPathAtai;
+    public float[] CheckPointPathAtai;
 
     CinemachineDollyCart myDolly;
 
