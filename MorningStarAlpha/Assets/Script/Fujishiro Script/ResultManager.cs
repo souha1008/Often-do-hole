@@ -57,6 +57,7 @@ public class ResultManager : MonoBehaviour
 
     // 取得コイン
     [SerializeField] Text coin_Text;
+    [SerializeField] Text Coin_AllNum;
 
     // クリアランク用
     Sprite[] Stump_sprite;
@@ -557,6 +558,10 @@ public class ResultManager : MonoBehaviour
 
     void Coin_UISet()
     {
+        if (GameStateManager.GetNowStage() == 0)
+        {
+            Coin_AllNum.text = "/3";
+        }
         int result_coin;
         if (debug_check)
         {
