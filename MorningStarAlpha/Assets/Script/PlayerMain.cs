@@ -180,6 +180,11 @@ public class PlayerMain : MonoBehaviour
         {
             transform.position = CheckPointManager.Instance.GetCheckPointPos();
         }
+        if(KujiraPos.instance)
+        {
+            KujiraPos.instance.RespornKujira();
+        }
+
 
         GameStateManager.Instance.PlayGameStageBGM();
 

@@ -92,7 +92,7 @@ public class SelectManager : MonoBehaviour
         }
         else if(CanStart && Input.GetButton("ButtonA"))
         {
-
+            FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
         }
         //Debug.Log(CanStart);
     }
