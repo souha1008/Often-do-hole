@@ -23,6 +23,7 @@ public class ResultManager : MonoBehaviour
     // UI
     [Header("UI")]
     [SerializeField] GameObject UI_Canvas;
+    [SerializeField] GameObject LastStage_UICanvas;
     [SerializeField] Image Next_UI;
     [SerializeField] Image StageSelect_UI;
     [SerializeField] Image Stump_UI;
@@ -123,6 +124,7 @@ public class ResultManager : MonoBehaviour
 
         anim_end = false;
         UI_Canvas.SetActive(false);
+        LastStage_UICanvas.SetActive(false);
         ui_command = UI_COMMAND.NextStage;
         Next_UI.sprite = White_Next_UI;
         StageSelect_UI.sprite = Glay_StageSelect_UI;
@@ -165,43 +167,63 @@ public class ResultManager : MonoBehaviour
         // UI操作
         if (stump_animator.GetBool(Stump_end) == true && UI_Canvas.activeSelf == false)
         {
-            UI_Canvas.SetActive(true);
+            if (GameStateManager.GetNowStage() != 7)
+            {
+                UI_Canvas.SetActive(true);
+            }
+            else
+            {
+                LastStage_UICanvas.SetActive(true);
+            }
             Wanted_animator.SetBool(Shake_Start, true);
         }
 
         // アニメーションが終わっていたらUI操作可能
         if (stump_animator.GetBool(Stump_end) == true)
         {
-            // スティック上
-            if (Input.GetAxis("Vertical") > 0.8f)
+            // ラストステージ以外
+            if (UI_Canvas.activeSelf == true)
             {
-                ui_command = UI_COMMAND.NextStage;
-                Next_UI.sprite = White_Next_UI;
-                StageSelect_UI.sprite = Glay_StageSelect_UI;
-            }
-            // スティック下
-            if (Input.GetAxis("Vertical") < -0.8)
-            {
-                ui_command = UI_COMMAND.StageSelect;
-                Next_UI.sprite = Glay_Next_UI;
-                StageSelect_UI.sprite = White_StageSelect_UI;
+                // スティック上
+                if (Input.GetAxis("Vertical") > 0.8f)
+                {
+                    ui_command = UI_COMMAND.NextStage;
+                    Next_UI.sprite = White_Next_UI;
+                    StageSelect_UI.sprite = Glay_StageSelect_UI;
+                }
+                // スティック下
+                if (Input.GetAxis("Vertical") < -0.8)
+                {
+                    ui_command = UI_COMMAND.StageSelect;
+                    Next_UI.sprite = Glay_Next_UI;
+                    StageSelect_UI.sprite = White_StageSelect_UI;
+                }
+
+                switch (ui_command)
+                {
+                    case UI_COMMAND.NextStage:
+                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        {
+                            GameStateManager.LoadNextStage();
+                        }
+                        break;
+
+                    case UI_COMMAND.StageSelect:
+                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        {
+                            FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                        }
+                        break;
+                }
             }
 
-            switch (ui_command)
+            // ラストステージ
+            if(LastStage_UICanvas.activeSelf == true)
             {
-                case UI_COMMAND.NextStage:
-                    if (Input.GetButton("ButtonA") && OncePush == false)
-                    {
-                        GameStateManager.LoadNextStage();
-                    }
-                    break;
-
-                case UI_COMMAND.StageSelect:
-                    if (Input.GetButton("ButtonA") && OncePush == false)
-                    {
-                        FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
-                    }
-                    break;
+                if (Input.GetButton("ButtonA") && OncePush == false)
+                {
+                    FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                }
             }
         }
         
