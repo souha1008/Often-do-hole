@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Gimmick_Conveyor : Gimmick_Main
 {
-    [EnumPName("回転方向", typeof(MOVE_DIRECTION_X))]
-    public MOVE_DIRECTION_X MoveDirection_X;   // 回転方向
+    [Label("回転方向, 右ならチェック")]
+    public bool MOVE_DIRECTION_R_X;   // 回転方向
     [Label("移動量")]
     public float MovePower = 30;                // 移動量
     [Label("縦ならチェック")]
@@ -20,7 +20,7 @@ public class Gimmick_Conveyor : Gimmick_Main
         conveyorStateMain = new ConveyorStateMain(this);
 
         // 回転方向更新
-        MoveRight = MoveDirectionBoolChangeX(MoveDirection_X);
+        MoveRight = MOVE_DIRECTION_R_X;
 
         // リジッドボディ
         Rb.isKinematic = true;
@@ -45,7 +45,7 @@ public class Gimmick_Conveyor : Gimmick_Main
 
     public override void FixedMove()
     {
-        MoveRight = MoveDirectionBoolChangeX(MoveDirection_X); // 回転方向更新
+        MoveRight = MOVE_DIRECTION_R_X; // 回転方向更新
 
         //接地判定
         conveyorStateMain.PlayerMoveFlag = IsPlayerOnFloor();
@@ -156,21 +156,21 @@ public class Gimmick_Conveyor : Gimmick_Main
     //    //}
     //}
 
-    public bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
-    {
-        if (MoveDirection_X == MOVE_DIRECTION_X.MoveRight)
-            return true;
-        else
-            return false;
-    }
+    //public bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
+    //{
+    //    if (MoveDirection_X == MOVE_DIRECTION_X.MoveRight)
+    //        return true;
+    //    else
+    //        return false;
+    //}
 
-    public MOVE_DIRECTION_X BoolMoveDirectionChangeX(bool MoveRight)
-    {
-        if (MoveRight)
-            return MOVE_DIRECTION_X.MoveRight;
-        else
-            return MOVE_DIRECTION_X.MoveLeft;
-    }
+    //public MOVE_DIRECTION_X BoolMoveDirectionChangeX(bool MoveRight)
+    //{
+    //    if (MoveRight)
+    //        return MOVE_DIRECTION_X.MoveRight;
+    //    else
+    //        return MOVE_DIRECTION_X.MoveLeft;
+    //}
 }
 
 public enum TOUCH_SIDE
