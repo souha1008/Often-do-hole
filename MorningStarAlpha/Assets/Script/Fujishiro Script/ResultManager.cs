@@ -134,7 +134,7 @@ public class ResultManager : MonoBehaviour
         SoundDlay();
 
         // ボタンを押したらスキップ
-        if (Input.GetButton("ButtonA"))
+        if (Input.GetButton("ButtonA") && stump_animator.GetBool(Stump_end) == false)
         {
             Wanted_animator.SetBool(Wanted_SkipAnime, true);
             stump_animator.SetBool(Stump_SkipAnime, true);
