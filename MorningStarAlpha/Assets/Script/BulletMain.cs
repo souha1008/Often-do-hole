@@ -391,6 +391,12 @@ public class BulletMain : MonoBehaviour
                                               
                         }
 
+                        Gimmick_Main Gmain = null;
+
+                        if ((Gmain = collision.gameObject.GetComponent<Gimmick_Main>()) != null)
+                        {
+                            Gmain.GimmickBulletStart(collision); // ギミックの錨移動開始処理
+                        }
 
                         break;
 

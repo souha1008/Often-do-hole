@@ -90,6 +90,10 @@ public class SelectManager : MonoBehaviour
             GameStateManager.LoadStage(NowSelectStage);
             
         }
+        else if(CanStart && Input.GetButton("ButtonA"))
+        {
+
+        }
         //Debug.Log(CanStart);
     }
 

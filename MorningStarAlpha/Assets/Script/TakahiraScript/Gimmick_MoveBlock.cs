@@ -244,6 +244,12 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     }
 
+    public override void GimmickBulletStart(Collision collision)
+    {
+        if (collision.gameObject == this.gameObject)
+            BulletMoveFlag = true;
+    }
+
     public override void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player") &&
@@ -252,10 +258,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
         {
             PlayerMoveFlag = true;
         }
-        if (collision.gameObject.CompareTag("Bullet") && gameObject.CompareTag("Platform"))
-        {
-            BulletMoveFlag = true;
-        }
+        //if (collision.gameObject.CompareTag("Bullet") && gameObject.CompareTag("Platform"))
+        //{
+        //    BulletMoveFlag = true;
+        //}
     }
     public void OnCollisionStay(Collision collision)
     {
@@ -267,10 +273,10 @@ public class Gimmick_MoveBlock : Gimmick_Main
                 PlayerMoveFlag = true;
             }
         }
-        if (collision.gameObject.CompareTag("Bullet") && gameObject.CompareTag("Platform"))
-        {
-            BulletMoveFlag = true;
-        }
+        //if (collision.gameObject.CompareTag("Bullet") && gameObject.CompareTag("Platform"))
+        //{
+        //    BulletMoveFlag = true;
+        //}
     }
 
     public void OnCollisionExit(Collision collision)

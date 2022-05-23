@@ -14,7 +14,7 @@ public class KujiraCenterPos : MonoBehaviour
     public static KujiraCenterPos instance;
 
     CinemachineDollyCart myDolly;
-    float dollySpeed = 0;
+    public float dollySpeed = 0;
 
     public KujiraSpeed MyKujiraSpeed = KujiraSpeed.Low;
 
@@ -34,11 +34,11 @@ public class KujiraCenterPos : MonoBehaviour
         switch (MyKujiraSpeed)
         {
             case KujiraSpeed.Low:
-                myDolly.m_Speed = 20;
+                myDolly.m_Speed = dollySpeed;
                 break;
 
             case KujiraSpeed.High:
-                myDolly.m_Speed = 25;
+                myDolly.m_Speed = dollySpeed * 1.5f;
                 break;
 
         }
