@@ -684,14 +684,23 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         NoActive();
     }
 
-    public override void OnCollisionEnter(Collision collision)
+    public override void GimmickBulletStart(Collision collision)
     {
-        // プレイヤーか錨と接触
-        if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject == this.gameObject)
         {
             NowFall = true; // 落下中
             BulletMoveFlag = true;
         }
+    }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        // プレイヤーか錨と接触
+        //if (collision.gameObject.CompareTag("Bullet"))
+        //{
+        //    NowFall = true; // 落下中
+        //    BulletMoveFlag = true;
+        //}
 
         if (collision.gameObject.CompareTag("Player"))
         {

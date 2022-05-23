@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Cinemachine; // <- Cinemachine ÇÅ@Using
 
 public class KujiraPos : MonoBehaviour
 {
+    static public KujiraPos instance;
+
     public GameObject CenterPos;
 
     public RectTransform CanvasObj;
@@ -14,13 +17,19 @@ public class KujiraPos : MonoBehaviour
     int FlagCnt = 0;
     bool Flag = false;
     bool TempSwitch = false;
-    
+
+    public GameObject[] CheckpointArray;
+    public float[] CheckPointPathAtai;
+
+    CinemachineDollyCart myDolly;
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         FlagCnt = 0;
         TraceObj();
+        //myDolly = KujiraCenterPos.instance.GetComponent<CinemachineDollyCart>();
     }
 
     void TraceObj()
@@ -48,7 +57,7 @@ public class KujiraPos : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        myDolly = KujiraCenterPos.instance.GetComponent<CinemachineDollyCart>();
         TraceObj();
 
         // Ç±Ç±Ç©ÇÁç¿ïWíTçı
@@ -157,7 +166,28 @@ public class KujiraPos : MonoBehaviour
                 TempObjPosY, ImageUI.transform.localPosition.z);
         }
 
-       // Flag = false;
+        // Flag = false;
+    }
+
+    public void RespornKujira()
+    {
+        if(CheckPointManager.Instance.RespawnFlag == false)
+        {
+            //pasuÇO
+            myDolly.m_Position = 0;
+        }
+        else
+        {
+            for (int i = 0; i < CheckpointArray.Length; i++)
+            {
+                //âΩî‘ÇﬂÅH
+                if (CheckPointManager.Instance.GetCheckPointPos() == CheckpointArray[i].transform.position)
+                {
+                    //  CheckPointPathNumber[i]Ç™ÇœÇ∑
+                    myDolly.m_Position = CheckPointPathAtai[i];
+                }
+            }
+        }
     }
 
     //void OnWillRenderObject()

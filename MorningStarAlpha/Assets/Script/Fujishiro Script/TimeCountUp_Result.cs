@@ -27,6 +27,9 @@ public class TimeCountUp_Result : MonoBehaviour
     int flame_time = 0;     // フレームカウント
     bool anim_start;
 
+    // タイム保存
+    float scoreTime;
+
 
     void Awake()
     {
@@ -36,13 +39,13 @@ public class TimeCountUp_Result : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        scoreTime = GameStateManager.GetGameTime();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("ButtonA"))
+        if (Input.GetButtonDown("ButtonA") && ResultManager.instance.anim_end == false)
         {
             StopAllCoroutines();
             DecimalPoint_Change();
@@ -65,7 +68,7 @@ public class TimeCountUp_Result : MonoBehaviour
                 }
                 else
                 {
-                    StartCoroutine(TimeAnimetion(Start_Time, GameStateManager.GetGameTime(), duration));
+                    StartCoroutine(TimeAnimetion(Start_Time, scoreTime, duration));
                 }
 
 
@@ -172,6 +175,6 @@ public class TimeCountUp_Result : MonoBehaviour
 
             }
         }
-        //timeText.text += "sec";
+        timeText.text += "<size=60>sec</size>";
     }
 }
