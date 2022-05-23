@@ -23,6 +23,7 @@ public class ResultManager : MonoBehaviour
     // UI
     [Header("UI")]
     [SerializeField] GameObject UI_Canvas;
+    [SerializeField] GameObject LastStage_UICanvas;
     [SerializeField] Image Next_UI;
     [SerializeField] Image StageSelect_UI;
     [SerializeField] Image Stump_UI;
@@ -56,6 +57,7 @@ public class ResultManager : MonoBehaviour
 
     // 取得コイン
     [SerializeField] Text coin_Text;
+    [SerializeField] Text Coin_AllNum;
 
     // クリアランク用
     Sprite[] Stump_sprite;
@@ -64,6 +66,9 @@ public class ResultManager : MonoBehaviour
     bool BGM_Dlay;
     int flame_count01;
     [SerializeField] int wait_flame = 100;
+
+    // コントローラー
+    bool OncePush = false;
 
     // デバッグ用
     [Header("以下デバッグコンソール")]
@@ -120,6 +125,7 @@ public class ResultManager : MonoBehaviour
 
         anim_end = false;
         UI_Canvas.SetActive(false);
+        LastStage_UICanvas.SetActive(false);
         ui_command = UI_COMMAND.NextStage;
         Next_UI.sprite = White_Next_UI;
         StageSelect_UI.sprite = Glay_StageSelect_UI;
@@ -132,19 +138,29 @@ public class ResultManager : MonoBehaviour
     void FixedUpdate()
     {
         SoundDlay();
-
-        // ボタンを押したらスキップ
-        if (Input.GetButton("ButtonA"))
+        if(!Input.GetButton("ButtonA"))
         {
-            Wanted_animator.SetBool(Wanted_SkipAnime, true);
-            stump_animator.SetBool(Stump_SkipAnime, true);
-            stump_animator.SetBool(Stump_end, true);
-            UI_Canvas.SetActive(true);
-            Stump_UI.color = new Color(1, 1, 1, 1);
+            OncePush = false;
         }
 
-        if (anim_end == true)
+        // ボタンを押したらスキップ
+        if (UI_Canvas.activeSelf == false)
         {
+            if (Input.GetButton("ButtonA") && OncePush == false)
+            {
+                OncePush = true;    // ボタンを押している
+
+                // アニメーター設定
+                Wanted_animator.SetBool(Wanted_SkipAnime, true);
+                stump_animator.SetBool(Stump_SkipAnime, true);
+                stump_animator.SetBool(Stump_end, true);
+                
+                // UIをアクティブ
+                UI_Canvas.SetActive(true);
+            }
+        }
+
+        if (anim_end == true)        {
             stump_animator.SetBool(Stump_Start, true);
             Stump_UI.color = new Color(1, 1, 1, 1);
         }
@@ -152,43 +168,63 @@ public class ResultManager : MonoBehaviour
         // UI操作
         if (stump_animator.GetBool(Stump_end) == true && UI_Canvas.activeSelf == false)
         {
-            UI_Canvas.SetActive(true);
+            if (GameStateManager.GetNowStage() != 7)
+            {
+                UI_Canvas.SetActive(true);
+            }
+            else
+            {
+                LastStage_UICanvas.SetActive(true);
+            }
             Wanted_animator.SetBool(Shake_Start, true);
         }
 
         // アニメーションが終わっていたらUI操作可能
         if (stump_animator.GetBool(Stump_end) == true)
         {
-            // スティック上
-            if (Input.GetAxis("Vertical") > 0.8f)
+            // ラストステージ以外
+            if (UI_Canvas.activeSelf == true)
             {
-                ui_command = UI_COMMAND.NextStage;
-                Next_UI.sprite = White_Next_UI;
-                StageSelect_UI.sprite = Glay_StageSelect_UI;
-            }
-            // スティック下
-            if (Input.GetAxis("Vertical") < -0.8)
-            {
-                ui_command = UI_COMMAND.StageSelect;
-                Next_UI.sprite = Glay_Next_UI;
-                StageSelect_UI.sprite = White_StageSelect_UI;
+                // スティック上
+                if (Input.GetAxis("Vertical") > 0.8f)
+                {
+                    ui_command = UI_COMMAND.NextStage;
+                    Next_UI.sprite = White_Next_UI;
+                    StageSelect_UI.sprite = Glay_StageSelect_UI;
+                }
+                // スティック下
+                if (Input.GetAxis("Vertical") < -0.8)
+                {
+                    ui_command = UI_COMMAND.StageSelect;
+                    Next_UI.sprite = Glay_Next_UI;
+                    StageSelect_UI.sprite = White_StageSelect_UI;
+                }
+
+                switch (ui_command)
+                {
+                    case UI_COMMAND.NextStage:
+                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        {
+                            GameStateManager.LoadNextStage();
+                        }
+                        break;
+
+                    case UI_COMMAND.StageSelect:
+                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        {
+                            FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                        }
+                        break;
+                }
             }
 
-            switch (ui_command)
+            // ラストステージ
+            if(LastStage_UICanvas.activeSelf == true)
             {
-                case UI_COMMAND.NextStage:
-                    if (Input.GetButton("ButtonA"))
-                    {
-                        GameStateManager.LoadNextStage();
-                    }
-                    break;
-
-                case UI_COMMAND.StageSelect:
-                    if (Input.GetButton("ButtonA"))
-                    {
-                        FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
-                    }
-                    break;
+                if (Input.GetButton("ButtonA") && OncePush == false)
+                {
+                    FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                }
             }
         }
         
@@ -522,6 +558,10 @@ public class ResultManager : MonoBehaviour
 
     void Coin_UISet()
     {
+        if (GameStateManager.GetNowStage() == 0)
+        {
+            Coin_AllNum.text = "/3";
+        }
         int result_coin;
         if (debug_check)
         {
