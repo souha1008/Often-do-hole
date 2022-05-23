@@ -86,7 +86,7 @@ public class PlayerStateOnGround : PlayerState
 
     public override void Move()
     {
-
+#if false
         if (PlayerScript.onGroundState == OnGroundState.SLIDE)
         {
             float slide_Weaken = 0.5f;
@@ -174,8 +174,85 @@ public class PlayerStateOnGround : PlayerState
                 //ある程度下回ったら0にする処理
             }
         }
+#else
+        if(PlayerScript.onGroundState == OnGroundState.SLIDE)
+        {
+
+            //スライド終了処理（時間によるもの
+            slideEndTimer += Time.fixedDeltaTime;
+            if (slideEndTimer > SLIDE_END_TIME)
+            {
+                PlayerScript.onGroundState = OnGroundState.NORMAL;
+                PlayerScript.canShotState = true;
+            }
+        }
 
 
+
+        if (PlayerScript.adjustLeftStick.x > PlayerScript.LATERAL_MOVE_THRESHORD) //右移動
+        {
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
+
+            if (PlayerScript.vel.x < 5.0f)
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * 2 * (fixedAdjust);
+            }
+            else
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * (fixedAdjust);
+            }
+
+            //限度
+            if (PlayerScript.onGroundState == OnGroundState.SLIDE)
+            {
+                if (PlayerScript.vel.x > PlayerScript.MAX_RUN_SPEED)
+                {
+                    PlayerScript.vel.x *= 0.94f;
+                }
+            }
+            else 
+            {
+                PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED);
+            }
+        }
+        else if (PlayerScript.adjustLeftStick.x < PlayerScript.LATERAL_MOVE_THRESHORD * -1) //左移動
+        {
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, true);
+
+            if (PlayerScript.vel.x > -5.0f)
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * 2 * (fixedAdjust);
+            }
+            else
+            {
+                PlayerScript.vel.x += PlayerScript.ADD_RUN_SPEED * -1 * (fixedAdjust);
+            }
+
+            //限度
+            if (PlayerScript.onGroundState == OnGroundState.SLIDE)
+            {
+               if(PlayerScript.vel.x < PlayerScript.MAX_RUN_SPEED * -1)
+                {
+                    PlayerScript.vel.x *= 0.94f;
+                }
+            }
+            else
+            {
+                PlayerScript.vel.x = Mathf.Max(PlayerScript.vel.x, PlayerScript.MAX_RUN_SPEED * -1);
+            }
+        }
+        else //減衰
+        {
+            PlayerScript.animator.SetBool(PlayerScript.animHash.isRunning, false);
+
+            PlayerScript.vel *= PlayerScript.RUN_FRICTION;
+
+            //ある程度下回ったら0にする処理
+        }
+
+
+
+#endif
         //バグ防止用にほんの少しだけ弱い重力を与える
         PlayerScript.vel.y = AddDownForce;
     }
