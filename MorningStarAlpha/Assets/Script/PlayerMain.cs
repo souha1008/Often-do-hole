@@ -155,8 +155,8 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
     [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
-    public float GameSpeed = 1.0f;
-
+    //public float GameSpeed = 1.0f;
+    public bool VoiceON = true;
 
     void Awake()
     {
@@ -235,7 +235,7 @@ public class PlayerMain : MonoBehaviour
             mode.Move();
         }
 
-        Time.timeScale = GameSpeed;
+        //Time.timeScale = GameSpeed;
     }
 
     public void VisibleAnimBullet(bool on_off)
