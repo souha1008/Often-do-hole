@@ -69,7 +69,7 @@ public class PlayerState_Clear : PlayerState
         else if(state == ClearState.WALK)
         {
             //‰E‚É•à‚­
-            PlayerScript.vel.x += 30.0f;
+            PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x += 5.0f, 30.0f);
 
             PlayerScript.animator.SetBool("isRunning", true);
             Debug.Log(Vector3.Distance(PlayerScript.rb.position, goal.transform.position));
