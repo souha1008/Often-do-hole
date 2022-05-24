@@ -23,6 +23,7 @@ public class PlayerState_Clear : PlayerState
     {
         GameStateManager.SetGameState(GAME_STATE.RESULT);
 
+        CameraMainShimokawara.instance.isGoal = true;
 
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
