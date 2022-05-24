@@ -1,17 +1,18 @@
 using UnityEngine;
 
+[System.Serializable]
 public class Gimmick_Conveyor : Gimmick_Main
 {
-    [Label("回転方向, 右ならチェック")]
+    [SerializeField, Label("回転方向, 右ならチェック")]
     public bool MOVE_DIRECTION_R_X;   // 回転方向
-    [Label("移動量")]
+    [SerializeField, Label("移動量")]
     public float MovePower = 30;                // 移動量
-    [Label("縦ならチェック")]
+    [SerializeField, Label("縦ならチェック")]
     public bool MoveTateFlag = false;                // コンベア縦移動フラグ
 
 
-    [HideInInspector] public ConveyorStateMain conveyorStateMain;
-    [HideInInspector] public bool MoveRight;    // 回転方向
+    [System.NonSerialized] public ConveyorStateMain conveyorStateMain;
+    [System.NonSerialized] public bool MoveRight;    // 回転方向
 
 
     public override void Init()

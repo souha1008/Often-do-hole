@@ -93,6 +93,7 @@ public class Gimmick_MoveBlockEditor : Editor
 //    MoveDown
 //}
 
+[System.Serializable]
 public class Gimmick_MoveBlock : Gimmick_Main
 {
     // •Ï”
