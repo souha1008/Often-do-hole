@@ -40,6 +40,8 @@ public class PlayerState_Clear : PlayerState
         if (PlayerScript.isOnGround)
         {
             state = ClearState.WALK;
+            //SEVoice
+            SoundManager.Instance.PlaySound("goal");
         }
         else
         {
@@ -63,8 +65,10 @@ public class PlayerState_Clear : PlayerState
             if (PlayerScript.isOnGround)
             {
                 state = ClearState.WALK;
-
                 PlayerScript.vel.y = 0.0f;
+
+                //SEVoice
+                SoundManager.Instance.PlaySound("goal");
             }
         }
         else if(state == ClearState.WALK)

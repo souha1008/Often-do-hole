@@ -43,6 +43,9 @@ public class PlayerStateDeath_Thorn : PlayerState
         PlayerScript.animator.Play("NockBack");
         PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
 
+        //SE
+        SoundManager.Instance.PlaySound("death", 0.3f);
+
         Knockback();
     }
 
@@ -130,6 +133,8 @@ public class PlayerStateDeath_Kujira : PlayerState
         PlayerScript.animator.SetFloat("NockbackSpeed", 8.0f);
         PlayerScript.animator.Play("NockBack");
         PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
+
+      
     }
 
     public override void UpdateState()
@@ -168,7 +173,7 @@ public class PlayerStateDeath_Void : PlayerState
     {
         if (PlayerScript.refState != EnumPlayerState.DEATH)
         {
-            SoundManager.Instance.PlaySound("sound_20_Void", 0.3f);
+            SoundManager.Instance.PlaySound("fallVoice", 0.3f);
             CameraMainShimokawara.instance.StopCamera();
             PlayerScript.refState = EnumPlayerState.DEATH;
             PlayerScript.canShotState = false;

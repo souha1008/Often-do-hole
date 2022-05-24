@@ -114,6 +114,9 @@ public class GoalManager : MonoBehaviour
 
         StartPos.y += 1.0f;
         EffectManager.Instance.BoxOpen(StartPos);
+
+        //SEVoice
+        SoundManager.Instance.PlaySound("sound_34_boxOpen", 0.5f);
     }
 }
 
