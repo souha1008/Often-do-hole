@@ -196,9 +196,6 @@ public class PlayerStateShot : PlayerState
                 {
                     float addUp = 30.0f;
                     PlayerScript.vel.y += addUp;
-
-                    GameObject eff = EffectManager.Instance.BoostEffect(PlayerScript.vel);
-                    eff.transform.parent = PlayerScript.transform;
                 }
 
 

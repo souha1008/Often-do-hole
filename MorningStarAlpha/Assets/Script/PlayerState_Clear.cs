@@ -23,6 +23,7 @@ public class PlayerState_Clear : PlayerState
     {
         GameStateManager.SetGameState(GAME_STATE.RESULT);
 
+        CameraMainShimokawara.instance.isGoal = true;
 
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
@@ -69,7 +70,8 @@ public class PlayerState_Clear : PlayerState
         else if(state == ClearState.WALK)
         {
             //‰E‚É•à‚­
-            PlayerScript.vel.x = 10.0f;
+            PlayerScript.vel.x = Mathf.Min(PlayerScript.vel.x += 5.0f, 30.0f);
+
             PlayerScript.animator.SetBool("isRunning", true);
             Debug.Log(Vector3.Distance(PlayerScript.rb.position, goal.transform.position));
 
@@ -94,7 +96,7 @@ public class PlayerState_Clear : PlayerState
         {
             motionTimer += Time.fixedDeltaTime;
 
-            if(motionTimer > 10.0f)
+            if(motionTimer > 5.0f)
             {
                 GoalManager.Instance.StartMotionBlur();
             }
