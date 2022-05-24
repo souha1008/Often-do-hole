@@ -6,7 +6,9 @@ public class Gimmick_Thorn : Gimmick_Main
 {
     public override void Init()
     {
-        
+        Rb.isKinematic = true;
+        Cd.isTrigger = false;
+        this.gameObject.tag = "Iron";
     }
 
     public override void FixedMove()
@@ -19,9 +21,9 @@ public class Gimmick_Thorn : Gimmick_Main
         
     }
 
-    public override void OnTriggerEnter(Collider collider)
+    public override void OnCollisionEnter(Collision collision)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {   
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
@@ -37,11 +39,11 @@ public class Gimmick_Thorn : Gimmick_Main
         }
     }
 
-    public void OnTriggerStay(Collider collider)
+    public void OnCollisionStay(Collision collision)
     {
         if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
         {
-            if (collider.gameObject.CompareTag("Player"))
+            if (collision.gameObject.CompareTag("Player"))
             {
                 // ヒットストップ
                 GameSpeedManager.Instance.StartHitStop(0.1f);

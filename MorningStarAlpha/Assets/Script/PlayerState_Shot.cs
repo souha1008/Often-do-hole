@@ -45,6 +45,9 @@ public class PlayerStateShot : PlayerState
         //アニメーション用
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
+
+        SoundManager.Instance.PlaySound("shot");
+        SoundManager.Instance.PlaySound("sound_70_shot", 0.3f, 0.1f);
     }
 
     public PlayerStateShot(bool isFollow)//コンストラクタ
