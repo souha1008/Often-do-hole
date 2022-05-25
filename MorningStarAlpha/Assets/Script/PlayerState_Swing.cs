@@ -20,8 +20,8 @@ public class PlayerStateSwing_Vel : PlayerState
     private bool startVelDownFlag; //velocityを減速させるフラグ（真下に到達したら
     private bool LongestLope;    //ロープが最大長になっているかどうか
     private bool onceSwingSound;
-    private bool cunterAnimFlag;
-    private float cunterAnimRatio;
+    private bool counterAnimFlag;
+    private float counterAnimRatio;
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
 
@@ -42,8 +42,8 @@ public class PlayerStateSwing_Vel : PlayerState
         releaseButton = false;
         countreButton = false;
         onceSwingSound = false;
-        cunterAnimFlag = false;
-        cunterAnimRatio = 0.0f;
+        counterAnimFlag = false;
+        counterAnimRatio = 0.0f;
         BulletScript.SetBulletState(EnumBulletState.STOP);
 
         PlayerScript.useVelocity = true;
@@ -263,6 +263,9 @@ public class PlayerStateSwing_Vel : PlayerState
 
     public void AnimFrameSetting()
     {
+        const float RayLength = 10.0f;
+
+
         float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
         float animFrame = 0.0f;
 
@@ -270,58 +273,118 @@ public class PlayerStateSwing_Vel : PlayerState
 
         if (firstDir == PlayerMoveDir.RIGHT)
         {
-            degree -= 95;
-            animFrame = degree / 170;
+            animFrame = (degree  - 95) / 170;
             animFrame = Mathf.Clamp01(animFrame);
             animFrame = 1 - animFrame;
-
-            if (PlayerScript.dir == PlayerMoveDir.LEFT)
+   
+            Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
+            Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
+            if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
             {
-
-                Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
-                Debug.DrawRay(ray.origin, ray.direction * 4.0f, Color.green, 0, true);
-                if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, 5.0f, LayerMask.GetMask("Platform")))
+                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    cunterAnimFlag = true;
-                    cunterAnimRatio = Mathf.Min(cunterAnimRatio + 0.3f, 1.0f);
-                    PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, cunterAnimRatio);
+                    if (degree < 240)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
                 }
                 else
                 {
-                    cunterAnimFlag = false;
+                    if (degree < 120)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
                 }
-
-
-            }
+            }        
         }
         else if(firstDir == PlayerMoveDir.LEFT)
         {
-            degree -= 95;
-            animFrame = degree / 170;
+            animFrame = (degree - 95) / 170;
             animFrame = Mathf.Clamp01(animFrame);
+
+            Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
+            Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
+            if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
+            {
+                //壁ジャンプ用
+                if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                {
+                    if (degree > 120)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
+                }
+                else
+                {
+                    if (degree > 160)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+                }
+            }
         }
 
 
-        if (cunterAnimFlag)
+        if (counterAnimFlag)
         {
-            //cunterAnimRatio = Mathf.Min(cunterAnimRatio + 0.3f, 1.0f);
-            //PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, cunterAnimRatio);
+            if (firstDir == PlayerScript.dir)
+            {
+                counterAnimRatio = Mathf.Min(counterAnimRatio + 0.05f, 1.0f);      
+                PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
+            }
         }
         else
         {
-            cunterAnimRatio = Mathf.Max(cunterAnimRatio - 0.05f, 0.0f);
-            PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, cunterAnimRatio);
+            counterAnimRatio = Mathf.Max(counterAnimRatio - 0.05f, 0.0f);
+            PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
         }
+
+        ////壁ジャンプ用
+        //if (counterAnimFlag)
+        //{
+        //    if (firstDir == PlayerScript.dir)
+        //    {
+        //        counterAnimRatio = Mathf.Min(counterAnimRatio + 0.05f, 1.0f);
+        //        PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
+        //    }
+        //}
+        //else
+        //{
+        //    counterAnimRatio = Mathf.Max(counterAnimRatio - 0.05f, 0.0f);
+        //    PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
+        //}
+
+        Debug.Log("KickRatio" + counterAnimRatio);
 
         if (firstDir == PlayerScript.dir)
         {
-            PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
+            PlayerScript.animator.Play("Swing.swingGo_Kick", -1, animFrame);
         }
         else
         {
             animFrame = 1 - animFrame;
-            PlayerScript.animator.Play("Swing.swingBack", -1, animFrame);
+            PlayerScript.animator.Play("Swing.swingBack_Kick", -1, animFrame);
         }
+
+       
     }
 
     public Vector3 ReleaseForceCalicurale()
@@ -498,8 +561,8 @@ public class PlayerStateSwing_Vel : PlayerState
                     {
                         CalculateCounterVariable();
                         onceSwingSound = false;
-                        cunterAnimFlag = false;
-                        cunterAnimRatio = 0.0f;
+                        counterAnimFlag = false;
+                       
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -508,8 +571,7 @@ public class PlayerStateSwing_Vel : PlayerState
                     {
                         CalculateCounterVariable();
                         onceSwingSound = false;
-                        cunterAnimFlag = false;
-                        cunterAnimRatio = 0.0f;
+                        counterAnimFlag = false;
                     }
                 }
 
@@ -520,7 +582,6 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.animator.SetTrigger(PlayerScript.animHash.wallKick);
                     CalculateCounterVariable();
                     PlayerScript.conuterSwing = false;
-                    cunterAnimFlag = true;
                 }
 
                 //速度計算
