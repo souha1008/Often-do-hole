@@ -903,6 +903,11 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+    private void StartClearCamera()
+    {
+        GoalManager.Instance.StartMotionBlur();
+    }
+
     //private void OnDrawGizmos()
     //{
     //    //ê⁄ínray
