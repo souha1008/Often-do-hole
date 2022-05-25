@@ -125,6 +125,7 @@ public class Gimmick_EnemyEditor : Editor
 }
 #endif
 
+[System.Serializable]
 public class Gimmick_Enemy : Gimmick_Main
 {
     // 変数
@@ -150,7 +151,13 @@ public class Gimmick_Enemy : Gimmick_Main
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
 
-    private Vector3 OldPos;                     // ひとつ前の座標確認用
+    //private Vector3 OldPos;                     // ひとつ前の座標確認用
+
+    private float YureMove;                         // ふわふわ揺れる用
+    private float StartYure;                        // 開始ふわふわ揺れる用
+    private float YureMax = 45.0f;           // 揺れ最大座標
+    private float YureTime = 1.3f;           // 揺れ時間
+    private float YureNowTime = 0.0f;               // 揺れ現在時間
 
     // スタート処理
     public override void Init()
@@ -168,7 +175,8 @@ public class Gimmick_Enemy : Gimmick_Main
         Fugou_Y = CalculationScript.FugouChange(MoveUp);
         StartMoveRight = MoveRight;
         StartMoveUp = MoveUp;
-        OldPos = this.gameObject.transform.position;
+        //OldPos = this.gameObject.transform.position;
+        StartYure = YureMove = YureMax;
 
         if (MoveTime_X1 <= 0) MoveTime_X1 = 0.1f;
         if (MoveTime_X2 <= 0) MoveTime_X2 = 0.1f;
@@ -179,7 +187,7 @@ public class Gimmick_Enemy : Gimmick_Main
     // 敵の動き処理
     public override void FixedMove()
     {
-        OldPos = this.gameObject.transform.position;
+        //OldPos = this.gameObject.transform.position;
         if (Move_X) // X方向移動が使用されていたら
         {
             if (NowMove_X)
@@ -258,15 +266,38 @@ public class Gimmick_Enemy : Gimmick_Main
             }
         }
 
-        //transform.rotation *= Quaternion.Euler(0, 0, 10);  // 回転
+        // 揺れる処理
+        YureMove = Easing.EasingTypeFloat(EASING_TYPE.SINE_INOUT, YureNowTime, YureTime, StartYure, -YureMax);
+
+        transform.rotation = Quaternion.Euler(0, 0, YureMove);  // 回転
+
+        //Debug.LogWarning(YureMove);
+        //Debug.LogWarning("時間"+YureNowTime);
+
+        YureNowTime += Time.fixedDeltaTime;
+        if (YureNowTime > YureTime)
+        {
+            YureNowTime = 0.0f;
+            YureMove = StartYure = YureMax = -YureMax;
+        }
     }
 
     // 敵死亡処理
     public override void Death()
     {
         // ※死亡エフェクト(自身のタグで判定)
+        EffectManager.Instance.BoxBreakEffect(this.transform.position);
 
-        // 自身を消す
+        // ヒットストップ
+        GameSpeedManager.Instance.StartHitStop(0.1f);
+
+        // 効果音
+        SoundManager.Instance.PlaySound("sound_24_破壊SE_2", 0.8f);
+
+        // 振動
+        VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.25f);
+
+        // 死亡
         Destroy(this.gameObject);
     }
 
