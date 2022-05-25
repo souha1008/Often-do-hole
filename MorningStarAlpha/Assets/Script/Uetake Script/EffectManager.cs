@@ -11,6 +11,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     private GameObject TreasureOpenParticle;
     private GameObject BoostParticle;
     private GameObject CoinGetParticle;
+    private GameObject BoxParticle;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         LandParticle = (GameObject)Resources.Load("Effect/Landing");
         TreasureOpenParticle = (GameObject)Resources.Load("Effect/05_Treasure_open");
         CoinGetParticle = (GameObject)Resources.Load("Effect/05_coin");
+        BoxParticle = (GameObject)Resources.Load("Effect/05_uiterudebris_effect");
     }
 
     public void StartShotEffect(Vector3 Pos, Quaternion rot)
@@ -96,6 +98,13 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     {
         const float size = 12.0f;
         GameObject effect = Instantiate(CoinGetParticle, pos, Quaternion.identity);
+        effect.transform.localScale = Vector3.one * size; //サイズ変更
+    }
+
+    public void BoxBreakEffect(Vector3 pos) // 箱破壊エフェクト
+    {
+        const float size = 4.0f;
+        GameObject effect = Instantiate(BoxParticle, pos, Quaternion.identity);
         effect.transform.localScale = Vector3.one * size; //サイズ変更
     }
 }
