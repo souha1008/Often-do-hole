@@ -33,6 +33,9 @@ public class Gimmick_Thorn : Gimmick_Main
                 // 振動
                 VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
 
+                // 音
+                SoundManager.Instance.PlaySound("sound_21");
+
                 // プレイヤーステートを死亡に変更
                 PlayerMain.instance.mode = new PlayerStateDeath_Thorn(gameObject.transform.position);
             }
@@ -50,6 +53,9 @@ public class Gimmick_Thorn : Gimmick_Main
 
                 // 振動
                 VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
+
+                // 音
+                SoundManager.Instance.PlaySound("sound_21");
 
                 // プレイヤーステートを死亡に変更
                 PlayerMain.instance.mode = new PlayerStateDeath_Thorn(gameObject.transform.position);
