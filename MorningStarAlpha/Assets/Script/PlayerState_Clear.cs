@@ -96,18 +96,32 @@ public class PlayerState_Clear : PlayerState
 
                 PlayerScript.animator.SetBool("isRunning", false);
                 PlayerScript.animator.SetTrigger("ClearTrigger");
+                switch (GameStateManager.GetGameRank()) {
+                    case GAME_RANK.S:
+                        PlayerScript.animator.SetInteger("ClearType", 0);
+                        break;
+
+                    case GAME_RANK.A:
+                        PlayerScript.animator.SetInteger("ClearType", 1);
+                        break;
+
+                    case GAME_RANK.B:
+                        PlayerScript.animator.SetInteger("ClearType", 2);
+                        break;
+                }
+
 
                 goal.GetComponent<Animator>().SetTrigger("OpenTrigger");
             }
         }
         else if (state == ClearState.ANIMMOTION)
         {
-            motionTimer += Time.fixedDeltaTime;
+            //motionTimer += Time.fixedDeltaTime;
 
-            if(motionTimer > 5.9f)
-            {
-                GoalManager.Instance.StartMotionBlur();
-            }
+            //if(motionTimer > 5.9f)
+            //{
+            //    GoalManager.Instance.StartMotionBlur();
+            //}
         }
 
     }

@@ -376,12 +376,12 @@ public class PlayerStateSwing_Vel : PlayerState
 
         if (firstDir == PlayerScript.dir)
         {
-            PlayerScript.animator.Play("Swing.swingGo_Kick", -1, animFrame);
+            PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
         }
         else
         {
             animFrame = 1 - animFrame;
-            PlayerScript.animator.Play("Swing.swingBack_Kick", -1, animFrame);
+            PlayerScript.animator.Play("Swing.swingBack", -1, animFrame);
         }
 
        

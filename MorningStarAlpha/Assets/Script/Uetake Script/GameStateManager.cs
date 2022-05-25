@@ -33,12 +33,8 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 #if true
     private string[] StageNames = { "Stage1-1_fix" ,"Stage1-2_fix" , "Stage2-1_fix" , "Stage2-2_fix" , "Stage2-3_fix" , "Stage3-1_fix",
     "Stage3-3_fix", "coinTestScene"};
-#else
-     private string[] StageNames = { "coinTestScene" ,"coinTestScene , "coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene",
-    "coinTestScene", "coinTestScene"};
-#endif
 
-    public CLEAR_RANK_TIME[] ClearRankTime = {
+      public CLEAR_RANK_TIME[] ClearRankTime = {
         new CLEAR_RANK_TIME(50,150,900) ,
         new CLEAR_RANK_TIME(150,240,900) ,
         new CLEAR_RANK_TIME(120,250,900) ,
@@ -48,6 +44,32 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         new CLEAR_RANK_TIME(200,450,900) ,
         new CLEAR_RANK_TIME(250,450,900) 
     };
+#else
+    private string[] StageNames = { "coinTestScene" ,"coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene",
+    "coinTestScene", "coinTestScene"};
+
+    public CLEAR_RANK_TIME[] ClearRankTime = {
+        new CLEAR_RANK_TIME(10,15,900) ,
+        new CLEAR_RANK_TIME(150,240,900) ,
+        new CLEAR_RANK_TIME(120,250,900) ,
+        new CLEAR_RANK_TIME(130,300,900) ,
+        new CLEAR_RANK_TIME(150,400,900) ,
+        new CLEAR_RANK_TIME(150,400,900) ,
+        new CLEAR_RANK_TIME(200,450,900) ,
+        new CLEAR_RANK_TIME(250,450,900)
+    };
+#endif
+
+    //public CLEAR_RANK_TIME[] ClearRankTime = {
+    //    new CLEAR_RANK_TIME(50,150,900) ,
+    //    new CLEAR_RANK_TIME(150,240,900) ,
+    //    new CLEAR_RANK_TIME(120,250,900) ,
+    //    new CLEAR_RANK_TIME(130,300,900) ,
+    //    new CLEAR_RANK_TIME(150,400,900) ,
+    //    new CLEAR_RANK_TIME(150,400,900) ,
+    //    new CLEAR_RANK_TIME(200,450,900) ,
+    //    new CLEAR_RANK_TIME(250,450,900) 
+    //};
 
     private GAME_STATE GameState;
     private float GameTime;
