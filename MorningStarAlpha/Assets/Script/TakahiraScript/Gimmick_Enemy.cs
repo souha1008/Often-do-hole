@@ -300,7 +300,7 @@ public class Gimmick_Enemy : Gimmick_Main
         GameSpeedManager.Instance.StartHitStop(0.1f);
 
         // Œø‰Ê‰¹
-        SoundManager.Instance.PlaySound("sound_24_”j‰óSE_2", 0.8f);
+        SoundManager.Instance.PlaySound("sound_24", 0.8f);
 
         // U“®
         VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.25f);
