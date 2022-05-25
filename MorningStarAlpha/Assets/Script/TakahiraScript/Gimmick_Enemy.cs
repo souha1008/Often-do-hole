@@ -176,7 +176,15 @@ public class Gimmick_Enemy : Gimmick_Main
         StartMoveRight = MoveRight;
         StartMoveUp = MoveUp;
         //OldPos = this.gameObject.transform.position;
-        StartYure = YureMove = YureMax;
+        YureNowTime = Random.Range(0.0f, YureTime);
+        if (Random.value < 0.5f)
+        {
+            StartYure = YureMove = YureMax;
+        }
+        else
+        {
+            StartYure = YureMove = YureMax = -YureMax;
+        }
 
         if (MoveTime_X1 <= 0) MoveTime_X1 = 0.1f;
         if (MoveTime_X2 <= 0) MoveTime_X2 = 0.1f;
