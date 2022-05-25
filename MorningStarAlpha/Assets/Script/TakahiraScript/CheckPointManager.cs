@@ -52,6 +52,10 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
             CoinManager.Instance.SetCheckPointCoinData(); // ƒRƒCƒ“‚Ìî•ñ‚ğ“ü—Í
 
             OldCheckPoint.Add(RespawnPos);
+
+            // ‰¹Ä¶
+            if (RespawnFlag)
+                SoundManager.Instance.PlaySound("sound_72");
         }
         RespawnFlag = true;
     }

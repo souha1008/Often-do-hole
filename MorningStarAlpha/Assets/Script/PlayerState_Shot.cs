@@ -47,7 +47,7 @@ public class PlayerStateShot : PlayerState
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
 
         SoundManager.Instance.PlaySound("shot");
-        SoundManager.Instance.PlaySound("sound_70_shot", 0.3f, 0.1f);
+        SoundManager.Instance.PlaySound("sound_70_shot", 0.5f, 0.1f);
     }
 
     public PlayerStateShot(bool isFollow)//コンストラクタ

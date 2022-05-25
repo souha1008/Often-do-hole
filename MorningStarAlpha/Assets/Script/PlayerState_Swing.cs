@@ -504,7 +504,6 @@ public class PlayerStateSwing_Vel : PlayerState
                     if (LongestLope == false)
                     {
                         tempVec = Quaternion.Euler(0, 0, -30) * tempVec;
-
                     }
 
                     if (startVelDownFlag)
@@ -513,7 +512,11 @@ public class PlayerStateSwing_Vel : PlayerState
                     }
                     else
                     {
-                        PlayerScript.vel = tempVec * 40.0f;
+# if true
+                        PlayerScript.vel = tempVec * easeRatio * 15.0f + (tempVec * 40.0f);
+#else
+
+#endif
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
