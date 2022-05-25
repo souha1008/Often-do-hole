@@ -61,7 +61,7 @@ public class Title_p2 : MonoBehaviour
         Select_GO.SetActive(false);
 
         // ƒTƒEƒ“ƒhÄ¶
-        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 1.8f);
+        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.5f);
     }
 
     // Update is called once per frame
