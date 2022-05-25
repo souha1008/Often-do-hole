@@ -82,6 +82,7 @@ public struct AnimHash
     public int rareWaitTrigger;
     public int rareWaitType;
     public int IsDead;
+    public int KickFloat;
 }
 
 
@@ -365,6 +366,7 @@ public class PlayerMain : MonoBehaviour
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
         animHash.rareWaitType = Animator.StringToHash("rareWaitType");
         animHash.IsDead = Animator.StringToHash("IsDead");
+        animHash.KickFloat = Animator.StringToHash("KickFloat");
     }   
 
     public void AnimVariableReset()
