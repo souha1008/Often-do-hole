@@ -225,8 +225,9 @@ MonoBehaviour:
   anim_exitFlame: 180
   duration: 3
   Start_Time: 999
-  debug_Fixedtime: 1
+  debug_check: 0
   debug_maxTime: 674
+  clearRank: 0
 --- !u!114 &1400751300354751949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,18 +241,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Wanted_Sprite: {fileID: 6851428411140992133}
-  duration: 0.672
-  strength: 10
-  vibrato: 10
-  randomness: 10
-  snapping: 0
-  fadeOut: 1
   StageNo: {fileID: 627577041896149797}
   UI_Canvas: {fileID: 7686264145022252759}
-  Next_UI: {fileID: 450456310515111831}
-  Next_UI_Big: {fileID: 0}
-  StageSelect_UI: {fileID: 5001767095115857375}
-  StageSelect_UI_Big: {fileID: 0}
+  LastStage_UICanvas: {fileID: 0}
+  Next_UI: {fileID: 6438823541673111923}
+  StageSelect_UI: {fileID: 1447457325338475825}
   Stump_UI: {fileID: 6851428411233931620}
   Photo_UI: {fileID: 6851428409481595532}
   stump_animator: {fileID: 6851428411233931617}
@@ -260,10 +254,10 @@ MonoBehaviour:
   Evening_Skybox: {fileID: 2100000, guid: 6a44a10ed2a44ea46bc225b1bf799367, type: 2}
   Night_Skybox: {fileID: 2100000, guid: 78bef1a9e41461c46bea846f4a69a4dc, type: 2}
   coin_Text: {fileID: 6851428411392486083}
+  Coin_AllNum: {fileID: 6851428409707659218}
+  wait_flame: 100
   debug_check: 0
   debug_stageNo: 3
-  debug_cicktime: 0
-  debug_cickFlame: 0
   debug_coins: 5
   clearRank: 0
 --- !u!1 &4622354955245819825
