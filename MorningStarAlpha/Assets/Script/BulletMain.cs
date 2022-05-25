@@ -364,7 +364,7 @@ public class BulletMain : MonoBehaviour
 
                         VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
 
-                        SoundManager.Instance.PlaySound("sound_13_wall", 1.4f);
+                        SoundManager.Instance.PlaySound("sound_13_wall", 1.0f);
 
                         //–ÊŒvŽZ
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
@@ -403,7 +403,7 @@ public class BulletMain : MonoBehaviour
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
-                        SoundManager.Instance.PlaySound("sound_69_Sasaranai", 1.4f);
+                        SoundManager.Instance.PlaySound("sound_69_Sasaranai", 1.0f, 0.05f);
 
                         VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 
@@ -438,7 +438,7 @@ public class BulletMain : MonoBehaviour
                         }
                         else
                         {
-                            SoundManager.Instance.PlaySound("sound_30_Iron");
+                            SoundManager.Instance.PlaySound("sound_69_Sasaranai", 1.0f, 0.05f);
                             PlayerScript.ForciblyReleaseMode(true);
                         }
 
@@ -515,6 +515,23 @@ public class BulletMain : MonoBehaviour
 
                         break;
 
+                    case "Thorn":
+                        onceFlag = true;
+                        isTouched = true;
+                        SoundManager.Instance.PlaySound("sound_30", 1.0f);
+
+                        VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
+
+                        if (PlayerScript.isOnGround)
+                        {
+                            PlayerScript.ForciblyReleaseMode(false);
+                        }
+                        else
+                        {
+                            PlayerScript.ForciblyReleaseMode(true);
+                        }
+                        break;
+
                     case "Player":
                         onceFlag = false;
                         Debug.LogWarning("colPlayerBullet");
@@ -555,6 +572,7 @@ public class BulletMain : MonoBehaviour
                                 onceFlag = true;
                                 PlayerScript.ForciblySwingMode(false);
                                 PlayerMain.instance.RecoverBullet();
+                                SoundManager.Instance.PlaySound("sound_30");
                                 break;
 
                             case "SpringBoard":
@@ -566,7 +584,7 @@ public class BulletMain : MonoBehaviour
                             case "Iron":
                                 onceFlag = true;
                                 isTouched = true;
-                                SoundManager.Instance.PlaySound("sound_30_Iron", 1.4f);
+                                SoundManager.Instance.PlaySound("sound_30");
 
                                 VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 

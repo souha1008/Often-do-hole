@@ -251,7 +251,7 @@ public class ResultManager : MonoBehaviour
         if (flame_count01 >= wait_flame && BGM_Dlay == false)
         {
             BGM_Dlay = true;
-            SoundManager.Instance.PlaySound("sound_42_03");
+            SoundManager.Instance.PlaySound("Result_BGM");
         }
     }
 

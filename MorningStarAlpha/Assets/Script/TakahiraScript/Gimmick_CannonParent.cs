@@ -233,8 +233,10 @@ public class Gimmick_CannonParent : Gimmick_Main
             }
             else
             {
+                // 完全に発射する
                 Child.SetCannonChild(Speed, LifeTime, ChaseFlag, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾の値セット
                 Child.gameObject.SetActive(true);
+                SoundManager.Instance.PlaySound("sound_31", 1.0f, 0.06f);
             }          
         }
     }

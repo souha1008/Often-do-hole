@@ -68,6 +68,7 @@ public class GoalManager : MonoBehaviour
         if (alpha > alpha_Flag)
         {
             SceneManager.LoadScene("ResultScene");
+            SoundManager.Instance.StopSound(); // âπí‚é~
         }
     }
 

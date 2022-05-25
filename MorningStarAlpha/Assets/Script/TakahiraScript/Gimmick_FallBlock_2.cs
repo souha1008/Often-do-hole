@@ -570,7 +570,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
                 }
 
                 // 錨移動
-                if (BulletMoveFlag && !FallBlockHitFlag)
+                if (BulletMoveFlag)
                 {
                     if (PlayerMain.instance.BulletScript.isTouched)
                     {

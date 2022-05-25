@@ -1169,7 +1169,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 #if UNITY_EDITOR
         // サウンドのインスペクター用詳細情報更新
         UpdateSoundInspector();
-#endif
 
 
         // テスト用入力キー
@@ -1219,6 +1218,8 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         //{
         //    SoundManager.Instance.FadeSound("TestBGM2", SOUND_FADE_TYPE.OUT, 5.0f, 0.0f, true);
         //}
+#endif
+
     }
 
     public void FixedUpdate()

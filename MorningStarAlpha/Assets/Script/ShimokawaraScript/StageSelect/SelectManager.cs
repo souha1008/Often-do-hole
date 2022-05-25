@@ -216,7 +216,7 @@ public class SelectManager : MonoBehaviour
     {
         if(DEBUG_ALL_STAGE_SELECT)
         {
-            CanStage = 10;
+            CanStage = StageObj.Length - 1;
         }
         else
         {

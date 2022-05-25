@@ -176,6 +176,11 @@ public class Gimmick_Enemy : Gimmick_Main
         StartMoveRight = MoveRight;
         StartMoveUp = MoveUp;
         //OldPos = this.gameObject.transform.position;
+        if (MoveTime_X1 <= 0) MoveTime_X1 = 0.1f;
+        if (MoveTime_X2 <= 0) MoveTime_X2 = 0.1f;
+        if (MoveTime_Y1 <= 0) MoveTime_Y1 = 0.1f;
+        if (MoveTime_Y2 <= 0) MoveTime_Y2 = 0.1f;
+        // ƒ‰ƒ“ƒ_ƒ€‚Å—h‚ç‚·
         YureNowTime = Random.Range(0.0f, YureTime);
         if (Random.value < 0.5f)
         {
@@ -185,11 +190,6 @@ public class Gimmick_Enemy : Gimmick_Main
         {
             StartYure = YureMove = YureMax = -YureMax;
         }
-
-        if (MoveTime_X1 <= 0) MoveTime_X1 = 0.1f;
-        if (MoveTime_X2 <= 0) MoveTime_X2 = 0.1f;
-        if (MoveTime_Y1 <= 0) MoveTime_Y1 = 0.1f;
-        if (MoveTime_Y2 <= 0) MoveTime_Y2 = 0.1f;
     }
 
     // “G‚Ì“®‚«ˆ—
@@ -300,7 +300,7 @@ public class Gimmick_Enemy : Gimmick_Main
         GameSpeedManager.Instance.StartHitStop(0.1f);
 
         // Œø‰Ê‰¹
-        SoundManager.Instance.PlaySound("sound_24_”j‰óSE_2", 0.8f);
+        SoundManager.Instance.PlaySound("sound_24", 0.8f);
 
         // U“®
         VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.25f);

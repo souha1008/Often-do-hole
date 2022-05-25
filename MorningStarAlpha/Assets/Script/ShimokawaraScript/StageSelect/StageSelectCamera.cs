@@ -7,9 +7,7 @@ public class StageSelectCamera : MonoBehaviour
     public static StageSelectCamera instance;
 
     //[SerializeField] private GameObject CenterObj;
-    public float MASU_DISTANCE_Z;
-    public float MASU_DISTANCE_Y;
-    public float MASU_DISTANCE_X;
+    Vector3 CameraToPoint;
     
     // Start is called before the first frame update
     void Start()
@@ -36,15 +34,9 @@ public class StageSelectCamera : MonoBehaviour
 
     public void ManualStart()
     {
-        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position;
-        GoPos.z -= MASU_DISTANCE_Z;
-        GoPos.y += MASU_DISTANCE_Y;
+        CameraToPoint = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position -  transform.position;
 
-        transform.position = GoPos;
-        transform.LookAt(SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position);
-
-        GoPos.x += MASU_DISTANCE_X;
-        transform.position = GoPos;
+        Vector3 GoPos = transform.position;
 
 #if false
         Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CenterObj.transform.position).normalized;
@@ -67,11 +59,8 @@ public class StageSelectCamera : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position;
-        GoPos.z -= MASU_DISTANCE_Z;
-        GoPos.y += MASU_DISTANCE_Y;
-        GoPos.x += MASU_DISTANCE_X;
-
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CameraToPoint;
+       
         //transform.position = GoPos;
         //transform.rotation = Quaternion.FromToRotation(GoPos, SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position);
 

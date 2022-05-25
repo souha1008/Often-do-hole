@@ -27,6 +27,9 @@ public class OptionManager : MonoBehaviour
         nowButton = EventSystem.current.gameObject;
         oldButton = null;
         VibrationSlider = VibrationObject.GetComponent<Slider>();
+
+        Random.InitState(System.DateTime.Now.Millisecond); // 乱数初期化
+        // マウスロック
 #if !UNITY_EDITOR
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = false;
@@ -85,7 +88,7 @@ public class OptionManager : MonoBehaviour
         oldButton = null;
 
         //　決定音
-        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        SoundManager.Instance.PlaySound("sound_41");
         StartOnceFlag = false;
         menuManager.OnMenu();
     }
@@ -107,7 +110,7 @@ public class OptionManager : MonoBehaviour
         SoundVolumeInit();
 
         // 決定音
-        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        SoundManager.Instance.PlaySound("sound_40");
         StartOnceFlag = true;
     }
 

@@ -16,12 +16,21 @@ public class CameraManeger : MonoBehaviour
         //ÉJÉÅÉâñﬂÇµ
         //VirtualCamera.instance.CameraReturn();
 
-        CameraCenterY.instance.ManualUpdate();
-        //VirtualCamera.instance.ManualUpdate();
-        //TempCamera.instance.ManualUpdate();
-        CameraCenterX.instance.ManualUpdate();
-        CameraMainShimokawara.instance.ManualUpdate();
+        if (CameraCenterY.instance != null)
+        {
+            if (CameraCenterX.instance != null)
+            {
+                if (CameraMainShimokawara.instance != null)
+                {
+                    CameraCenterY.instance.ManualUpdate();
+                    //VirtualCamera.instance.ManualUpdate();
+                    //TempCamera.instance.ManualUpdate();
+                    CameraCenterX.instance.ManualUpdate();
+                    CameraMainShimokawara.instance.ManualUpdate();
 
-        CameraMainShimokawara.instance.CameraReturn();
+                    CameraMainShimokawara.instance.CameraReturn();
+                }
+            }
+        }
     }
 }
