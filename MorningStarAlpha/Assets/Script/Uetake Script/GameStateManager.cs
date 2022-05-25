@@ -39,14 +39,14 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 #endif
 
     public CLEAR_RANK_TIME[] ClearRankTime = {
-        new CLEAR_RANK_TIME(10,20,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) ,
-        new CLEAR_RANK_TIME(300,750,900) 
+        new CLEAR_RANK_TIME(50,150,900) ,
+        new CLEAR_RANK_TIME(150,240,900) ,
+        new CLEAR_RANK_TIME(120,250,900) ,
+        new CLEAR_RANK_TIME(130,300,900) ,
+        new CLEAR_RANK_TIME(150,400,900) ,
+        new CLEAR_RANK_TIME(150,400,900) ,
+        new CLEAR_RANK_TIME(200,450,900) ,
+        new CLEAR_RANK_TIME(250,450,900) 
     };
 
     private GAME_STATE GameState;
@@ -171,9 +171,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
             // 入力したデータを完全にセーブする
             SaveDataManager.Instance.SaveData();
 
-            Debug.LogWarning("セーブデータにセーブ：" + SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Time);
-            Debug.LogWarning("ランク：" + GetGameRank());
-            Debug.LogWarning("タイム：" + GetGameTime());
+            //Debug.LogWarning("セーブデータにセーブ：" + SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).Time);
+            //Debug.LogWarning("ランク：" + GetGameRank());
+            //Debug.LogWarning("タイム：" + GetGameTime());
         }
     }
 
