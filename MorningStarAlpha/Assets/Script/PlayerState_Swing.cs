@@ -20,7 +20,8 @@ public class PlayerStateSwing_Vel : PlayerState
     private bool startVelDownFlag; //velocityを減速させるフラグ（真下に到達したら
     private bool LongestLope;    //ロープが最大長になっているかどうか
     private bool onceSwingSound;
-
+    private bool cunterAnimFlag;
+    private float cunterAnimRatio;
     Vector3 LastBtoP_Angle;  //最後に計測したバレット→プレイヤーの正規化Vector
     Vector3 AfterBtoP_Angle; //角速度計算後のバレット→プレイヤーの正規化Vector
 
@@ -40,6 +41,9 @@ public class PlayerStateSwing_Vel : PlayerState
         finishFlag = false;
         releaseButton = false;
         countreButton = false;
+        onceSwingSound = false;
+        cunterAnimFlag = false;
+        cunterAnimRatio = 0.0f;
         BulletScript.SetBulletState(EnumBulletState.STOP);
 
         PlayerScript.useVelocity = true;
@@ -47,11 +51,11 @@ public class PlayerStateSwing_Vel : PlayerState
 
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, true);
-
+        PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, 0.0f);
         CalculateStartVariable();
 
         PlayerScript.counterTimer = 1.0f;
-        onceSwingSound = false;
+
     }
 
 
@@ -261,12 +265,34 @@ public class PlayerStateSwing_Vel : PlayerState
     {
         float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
         float animFrame = 0.0f;
+
+       
+
         if (firstDir == PlayerMoveDir.RIGHT)
         {
             degree -= 95;
             animFrame = degree / 170;
             animFrame = Mathf.Clamp01(animFrame);
             animFrame = 1 - animFrame;
+
+            if (PlayerScript.dir == PlayerMoveDir.LEFT)
+            {
+
+                Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
+                Debug.DrawRay(ray.origin, ray.direction * 4.0f, Color.green, 0, true);
+                if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, 5.0f, LayerMask.GetMask("Platform")))
+                {
+                    cunterAnimFlag = true;
+                    cunterAnimRatio = Mathf.Min(cunterAnimRatio + 0.3f, 1.0f);
+                    PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, cunterAnimRatio);
+                }
+                else
+                {
+                    cunterAnimFlag = false;
+                }
+
+
+            }
         }
         else if(firstDir == PlayerMoveDir.LEFT)
         {
@@ -275,7 +301,19 @@ public class PlayerStateSwing_Vel : PlayerState
             animFrame = Mathf.Clamp01(animFrame);
         }
 
-        if(firstDir == PlayerScript.dir)
+
+        if (cunterAnimFlag)
+        {
+            //cunterAnimRatio = Mathf.Min(cunterAnimRatio + 0.3f, 1.0f);
+            //PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, cunterAnimRatio);
+        }
+        else
+        {
+            cunterAnimRatio = Mathf.Max(cunterAnimRatio - 0.05f, 0.0f);
+            PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, cunterAnimRatio);
+        }
+
+        if (firstDir == PlayerScript.dir)
         {
             PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
         }
@@ -460,6 +498,8 @@ public class PlayerStateSwing_Vel : PlayerState
                     {
                         CalculateCounterVariable();
                         onceSwingSound = false;
+                        cunterAnimFlag = false;
+                        cunterAnimRatio = 0.0f;
                     }
                 }
                 else if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -468,6 +508,8 @@ public class PlayerStateSwing_Vel : PlayerState
                     {
                         CalculateCounterVariable();
                         onceSwingSound = false;
+                        cunterAnimFlag = false;
+                        cunterAnimRatio = 0.0f;
                     }
                 }
 
@@ -478,6 +520,7 @@ public class PlayerStateSwing_Vel : PlayerState
                     PlayerScript.animator.SetTrigger(PlayerScript.animHash.wallKick);
                     CalculateCounterVariable();
                     PlayerScript.conuterSwing = false;
+                    cunterAnimFlag = true;
                 }
 
                 //速度計算

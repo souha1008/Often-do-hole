@@ -82,6 +82,7 @@ public struct AnimHash
     public int rareWaitTrigger;
     public int rareWaitType;
     public int IsDead;
+    public int KickFloat;
 }
 
 
@@ -365,6 +366,7 @@ public class PlayerMain : MonoBehaviour
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
         animHash.rareWaitType = Animator.StringToHash("rareWaitType");
         animHash.IsDead = Animator.StringToHash("IsDead");
+        animHash.KickFloat = Animator.StringToHash("KickFloat");
     }   
 
     public void AnimVariableReset()
@@ -896,50 +898,50 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        //接地ray
-        Ray footRay = new Ray(rb.position, Vector3.down);
+    //private void OnDrawGizmos()
+    //{
+    //    //接地ray
+    //    Ray footRay = new Ray(rb.position, Vector3.down);
 
-        if (isOnGround)
-        {
-            Gizmos.color = Color.magenta;
-        }
-        else
-        {
-            Gizmos.color = Color.cyan;
-        }
-        Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
+    //    if (isOnGround)
+    //    {
+    //        Gizmos.color = Color.magenta;
+    //    }
+    //    else
+    //    {
+    //        Gizmos.color = Color.cyan;
+    //    }
+    //    Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
 
 
-        //頭
-        //if (refState == EnumPlayerState.SHOT)
-        //{
-        //    if (shotState == ShotState.STRAINED)
-        //    {
-        Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
-        vecToPlayer = vecToPlayer.normalized;
+    //    //頭
+    //    //if (refState == EnumPlayerState.SHOT)
+    //    //{
+    //    //    if (shotState == ShotState.STRAINED)
+    //    //    {
+    //    Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
+    //    vecToPlayer = vecToPlayer.normalized;
 
-        Ray headRay = new Ray(rb.position, vecToPlayer);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
-        //    }
-        //}
+    //    Ray headRay = new Ray(rb.position, vecToPlayer);
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
+    //    //    }
+    //    //}
 
-        //スイングスライド足元
-        //if(refState == EnumPlayerState.SWING)
-        //{
-        //    if(swingState == SwingState.TOUCHED) 
-        //    {
-        Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
-        vecToPlayerR = vecToPlayerR.normalized;
+    //    //スイングスライド足元
+    //    //if(refState == EnumPlayerState.SWING)
+    //    //{
+    //    //    if(swingState == SwingState.TOUCHED) 
+    //    //    {
+    //    Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
+    //    vecToPlayerR = vecToPlayerR.normalized;
 
-        Ray Ray = new Ray(rb.position, vecToPlayerR);
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
-        //    }
-        //}   
+    //    Ray Ray = new Ray(rb.position, vecToPlayerR);
+    //    Gizmos.color = Color.black;
+    //    Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
+    //    //    }
+    //    //}   
 
-    }
+    //}
 
 }
