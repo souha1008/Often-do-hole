@@ -11,7 +11,7 @@ public class CameraMainShimokawara: MonoBehaviour
     [SerializeField] private GameObject XObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] private GameObject YObj /*= GameObject.Find("CameraCenterPos")*/;         // [SerializeField] private属性だけどinspector上で設定できるようにする
     [SerializeField] public float CAMERA_DISTANCE = 55;      //カメラとプレイヤーの距離
-    private float GOAL_CAMERA_DISTANCE = 20;      //　ゴール時のカメラとプレイヤーの距離
+    private float GOAL_CAMERA_DISTANCE = 21;      //　ゴール時のカメラとプレイヤーの距離
 
     private float NowGoalTime = 0;
     [SerializeField, Label("ゴール時にカメラが寄る時間")] private float GoalTime = 2.0f;
@@ -146,7 +146,7 @@ public class CameraMainShimokawara: MonoBehaviour
                 Vector3 GoalPos = GoalManager.Instance.transform.position;
 
                 TruePos.x = Easing.CubicOut(NowGoalTime, GoalTime, GoalStartCameraPos.x, GoalPos.x - 2.0f);
-                TruePos.y = Easing.CubicOut(NowGoalTime, GoalTime, GoalStartCameraPos.y, GoalPos.y + 5.0f);
+                TruePos.y = Easing.CubicOut(NowGoalTime, GoalTime, GoalStartCameraPos.y, GoalPos.y + 3.0f);
                 TruePos.z = -Easing.CubicOut(NowGoalTime, GoalTime, CAMERA_DISTANCE, GOAL_CAMERA_DISTANCE);
 
                 NowGoalTime += Time.deltaTime;
@@ -155,7 +155,7 @@ public class CameraMainShimokawara: MonoBehaviour
             {
                 Vector3 GoalPos = GoalManager.Instance.transform.position;
                 TruePos.x = GoalPos.x - 2.0f;
-                TruePos.y = GoalPos.y + 5.0f;
+                TruePos.y = GoalPos.y + 3.0f;
                 TruePos.z = -GOAL_CAMERA_DISTANCE;                
             }
             this.transform.position = TruePos;
