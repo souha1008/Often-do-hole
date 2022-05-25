@@ -67,7 +67,7 @@ public class CoinObject : MonoBehaviour
         if (!OnceFlag && (collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Bullet")))
         {
             OnceFlag = true;
-            SoundManager.Instance.PlaySound("決定音");
+            SoundManager.Instance.PlaySound("sound_71");
             // ヒットストップ
             GameSpeedManager.Instance.StartHitStop(0.1f);
 
