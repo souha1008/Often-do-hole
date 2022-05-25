@@ -32,6 +32,9 @@ public class CameraCenterY : MonoBehaviour
         float x = PlayerObj.transform.position.x;
         float y = CameraObj.transform.position.y;
 
-        this.transform.position = new Vector3(x, y, 0);
+        if(this != null)
+        {
+            this.transform.position = new Vector3(x, y, 0);
+        }
     }
 }
