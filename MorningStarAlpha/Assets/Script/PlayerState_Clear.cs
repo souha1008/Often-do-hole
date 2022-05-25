@@ -100,7 +100,7 @@ public class PlayerState_Clear : PlayerState
         {
             motionTimer += Time.fixedDeltaTime;
 
-            if(motionTimer > 5.0f)
+            if(motionTimer > 5.9f)
             {
                 GoalManager.Instance.StartMotionBlur();
             }

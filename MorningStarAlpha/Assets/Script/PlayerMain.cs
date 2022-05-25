@@ -651,6 +651,7 @@ public class PlayerMain : MonoBehaviour
         ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
+            RecoverBullet();
             forciblyFollowFlag = true;
             forciblyFollowVelToward = velTowardBullet;
         }
@@ -669,6 +670,10 @@ public class PlayerMain : MonoBehaviour
     public void RecoverBullet()
     {
         recoverBullet = true;
+    }
+    public void ResetBulletRecover()
+    {
+        recoverBullet = false;
     }
 
     private void OnCollisionEnter(Collision collision)
