@@ -10,7 +10,7 @@ using UnityEditor;
 [CustomEditor(typeof(Gimmick_Enemy))]
 
 // 複数選択有効
-[CanEditMultipleObjects]
+//[CanEditMultipleObjects]
 
 public class Gimmick_EnemyEditor : Editor
 {
@@ -59,7 +59,7 @@ public class Gimmick_EnemyEditor : Editor
         if (Enemy.Move_X)
         {
             Enemy.MoveDirection_X=
-                (MOVE_DIRECTION_X)EditorGUILayout.Popup("移動方向", (int)Enemy.MoveDirection_X, new string[] { "右移動", "左移動" });
+                EditorGUILayout.Toggle("右移動ならチェック", Enemy.MoveDirection_X);
             Enemy.MoveLength_X = EditorGUILayout.FloatField("移動距離", Enemy.MoveLength_X);
             Enemy.MoveTime_X1 = EditorGUILayout.FloatField("何秒かけて移動するか[行き]", Enemy.MoveTime_X1);
             Enemy.MoveTime_X2 = EditorGUILayout.FloatField("何秒かけて移動するか[帰り]", Enemy.MoveTime_X2);
@@ -76,7 +76,7 @@ public class Gimmick_EnemyEditor : Editor
         if (Enemy.Move_Y)
         {
             Enemy.MoveDirection_Y =
-                (MOVE_DIRECTION_Y)EditorGUILayout.Popup("移動方向", (int)Enemy.MoveDirection_Y, new string[] { "上移動", "下移動" });
+                EditorGUILayout.Toggle("上移動ならチェック", Enemy.MoveDirection_Y);
             Enemy.MoveLength_Y = EditorGUILayout.FloatField("移動距離", Enemy.MoveLength_Y);
             Enemy.MoveTime_Y1 = EditorGUILayout.FloatField("何秒かけて移動するか[行き]", Enemy.MoveTime_Y1);
             Enemy.MoveTime_Y2 = EditorGUILayout.FloatField("何秒かけて移動するか[帰り]", Enemy.MoveTime_Y2);
@@ -125,6 +125,7 @@ public class Gimmick_EnemyEditor : Editor
 }
 #endif
 
+[System.Serializable]
 public class Gimmick_Enemy : Gimmick_Main
 {
     // 変数
@@ -137,8 +138,8 @@ public class Gimmick_Enemy : Gimmick_Main
     public float MoveTime_Y1, MoveTime_Y2 = 2.0f; // 何秒かけて移動するか
     public float StartTime_X;                   // 初期経過時間
     public float StartTime_Y;                   // 初期経過時間
-    public MOVE_DIRECTION_X MoveDirection_X;    // 移動方向X
-    public MOVE_DIRECTION_Y MoveDirection_Y;    // 移動方向Y
+    public bool MoveDirection_X;                // 移動方向X
+    public bool MoveDirection_Y;                // 移動方向Y
 
     public bool Move_X;                         // X方向移動が使われているか
     public bool Move_Y;                         // Y方向移動が使われているか
@@ -150,7 +151,13 @@ public class Gimmick_Enemy : Gimmick_Main
     private float StartPos_X, StartPos_Y;       // 初期座標
     private float Fugou_X, Fugou_Y;             // 符号
 
-    private Vector3 OldPos;                     // ひとつ前の座標確認用
+    //private Vector3 OldPos;                     // ひとつ前の座標確認用
+
+    private float YureMove;                         // ふわふわ揺れる用
+    private float StartYure;                        // 開始ふわふわ揺れる用
+    private float YureMax = 45.0f;           // 揺れ最大座標
+    private float YureTime = 1.3f;           // 揺れ時間
+    private float YureNowTime = 0.0f;               // 揺れ現在時間
 
     // スタート処理
     public override void Init()
@@ -162,19 +169,33 @@ public class Gimmick_Enemy : Gimmick_Main
         NowTime_Y = StartTime_Y;
         StartPos_X = this.gameObject.transform.position.x;
         StartPos_Y = this.gameObject.transform.position.y;
-        MoveRight = MoveDirectionBoolChangeX(MoveDirection_X);
-        MoveUp = MoveDirectionBoolChangeY(MoveDirection_Y);
+        MoveRight = MoveDirection_X;
+        MoveUp = MoveDirection_Y;
         Fugou_X = CalculationScript.FugouChange(MoveRight);
         Fugou_Y = CalculationScript.FugouChange(MoveUp);
         StartMoveRight = MoveRight;
         StartMoveUp = MoveUp;
-        OldPos = this.gameObject.transform.position;
+        //OldPos = this.gameObject.transform.position;
+        if (MoveTime_X1 <= 0) MoveTime_X1 = 0.1f;
+        if (MoveTime_X2 <= 0) MoveTime_X2 = 0.1f;
+        if (MoveTime_Y1 <= 0) MoveTime_Y1 = 0.1f;
+        if (MoveTime_Y2 <= 0) MoveTime_Y2 = 0.1f;
+        // ランダムで揺らす
+        YureNowTime = Random.Range(0.0f, YureTime);
+        if (Random.value < 0.5f)
+        {
+            StartYure = YureMove = YureMax;
+        }
+        else
+        {
+            StartYure = YureMove = YureMax = -YureMax;
+        }
     }
 
     // 敵の動き処理
     public override void FixedMove()
     {
-        OldPos = this.gameObject.transform.position;
+        //OldPos = this.gameObject.transform.position;
         if (Move_X) // X方向移動が使用されていたら
         {
             if (NowMove_X)
@@ -209,7 +230,7 @@ public class Gimmick_Enemy : Gimmick_Main
                 NowTime_X = 0.0f; // 時間リセット
                 MoveRight = !MoveRight; // 向き反転
                 Fugou_X = CalculationScript.FugouChange(MoveRight);   // 符号反転
-                MoveDirection_X = BoolMoveDirectionChangeX(MoveRight); // 向き表示変化
+                MoveDirection_X = MoveRight; // 向き表示変化
                 NowMove_X = true; // 動く
             }
         }
@@ -248,20 +269,43 @@ public class Gimmick_Enemy : Gimmick_Main
                 NowTime_Y = 0.0f; // 時間リセット
                 MoveUp = !MoveUp; // 向き反転
                 Fugou_Y = CalculationScript.FugouChange(MoveUp);   // 符号反転
-                MoveDirection_Y = BoolMoveDirectionChangeY(MoveUp); // 向き表示変化
+                MoveDirection_Y = MoveUp; // 向き表示変化
                 NowMove_Y = true; // 動く
             }
         }
 
-        //transform.rotation *= Quaternion.Euler(0, 0, 10);  // 回転
+        // 揺れる処理
+        YureMove = Easing.EasingTypeFloat(EASING_TYPE.SINE_INOUT, YureNowTime, YureTime, StartYure, -YureMax);
+
+        transform.rotation = Quaternion.Euler(0, 0, YureMove);  // 回転
+
+        //Debug.LogWarning(YureMove);
+        //Debug.LogWarning("時間"+YureNowTime);
+
+        YureNowTime += Time.fixedDeltaTime;
+        if (YureNowTime > YureTime)
+        {
+            YureNowTime = 0.0f;
+            YureMove = StartYure = YureMax = -YureMax;
+        }
     }
 
     // 敵死亡処理
     public override void Death()
     {
         // ※死亡エフェクト(自身のタグで判定)
+        EffectManager.Instance.BoxBreakEffect(this.transform.position);
 
-        // 自身を消す
+        // ヒットストップ
+        GameSpeedManager.Instance.StartHitStop(0.1f);
+
+        // 効果音
+        SoundManager.Instance.PlaySound("sound_24_破壊SE_2", 0.8f);
+
+        // 振動
+        VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.25f);
+
+        // 死亡
         Destroy(this.gameObject);
     }
 
@@ -284,35 +328,35 @@ public class Gimmick_Enemy : Gimmick_Main
         }
     }
 
-    private bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
-    {
-        if (MoveDirection_X == MOVE_DIRECTION_X.MoveRight)
-            return true;
-        else
-            return false;
-    }
+    //private bool MoveDirectionBoolChangeX(MOVE_DIRECTION_X MoveDirection_X)
+    //{
+    //    if (MoveDirection_X == MOVE_DIRECTION_X.MoveRight)
+    //        return true;
+    //    else
+    //        return false;
+    //}
 
-    private MOVE_DIRECTION_X BoolMoveDirectionChangeX(bool MoveRight)
-    {
-        if (MoveRight)
-            return MOVE_DIRECTION_X.MoveRight;
-        else
-            return MOVE_DIRECTION_X.MoveLeft;
-    }
+    //private MOVE_DIRECTION_X BoolMoveDirectionChangeX(bool MoveRight)
+    //{
+    //    if (MoveRight)
+    //        return MOVE_DIRECTION_X.MoveRight;
+    //    else
+    //        return MOVE_DIRECTION_X.MoveLeft;
+    //}
 
-    private bool MoveDirectionBoolChangeY(MOVE_DIRECTION_Y MoveDirection_Y)
-    {
-        if (MoveDirection_Y == MOVE_DIRECTION_Y.MoveUp)
-            return true;
-        else
-            return false;
-    }
+    //private bool MoveDirectionBoolChangeY(MOVE_DIRECTION_Y MoveDirection_Y)
+    //{
+    //    if (MoveDirection_Y == MOVE_DIRECTION_Y.MoveUp)
+    //        return true;
+    //    else
+    //        return false;
+    //}
 
-    private MOVE_DIRECTION_Y BoolMoveDirectionChangeY(bool MoveUp)
-    {
-        if (MoveUp)
-            return MOVE_DIRECTION_Y.MoveUp;
-        else
-            return MOVE_DIRECTION_Y.MoveDown;
-    }
+    //private MOVE_DIRECTION_Y BoolMoveDirectionChangeY(bool MoveUp)
+    //{
+    //    if (MoveUp)
+    //        return MOVE_DIRECTION_Y.MoveUp;
+    //    else
+    //        return MOVE_DIRECTION_Y.MoveDown;
+    //}
 }

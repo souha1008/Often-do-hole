@@ -82,6 +82,7 @@ public struct AnimHash
     public int rareWaitTrigger;
     public int rareWaitType;
     public int IsDead;
+    public int KickFloat;
 }
 
 
@@ -93,16 +94,20 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public AnimHash animHash;
     [System.NonSerialized] public GameObject[] animBullet = new GameObject[3];
 
+
+    public bool VoiceON = true;
     public BulletMain BulletScript;
     public PlayerState mode;                         // ステート
     private RaycastHit footHit;                      // 下に当たっているものの情報格納
     [System.NonSerialized] public float landTimer;                         //着地チャタリング防止
     [System.NonSerialized] public float counterTimer;                      //振り子チャタリング防止
 
+    [System.NonSerialized] public float colliderRadius = 1.7f;   //接地判定用ray半径
+    [System.NonSerialized] public float coliderDistance = 1.5f; //
 
-    [System.NonSerialized] public float colliderRadius = 1.42f;   //接地判定用ray半径
-    [System.NonSerialized] public float coliderDistance = 1.8f; //
-                                                                 //
+    //public float colliderRadius = 1.42f;   //接地判定用ray半径
+    //public float coliderDistance = 1.8f; //
+    //
     [System.NonSerialized] public float HcolliderRadius = 2.0f;   //頭判定用ray半径
     [System.NonSerialized] public float HcoliderDistance = 0.6f; //頭判定用ray中心点から頭までのオフセット
 
@@ -155,8 +160,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイング短くする用")] public bool SlideSwing;
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
     [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
-    public float GameSpeed = 1.0f;
-
+    //public float GameSpeed = 1.0f;
 
     void Awake()
     {
@@ -235,7 +239,7 @@ public class PlayerMain : MonoBehaviour
             mode.Move();
         }
 
-        Time.timeScale = GameSpeed;
+        //Time.timeScale = GameSpeed;
     }
 
     public void VisibleAnimBullet(bool on_off)
@@ -362,6 +366,7 @@ public class PlayerMain : MonoBehaviour
         animHash.rareWaitTrigger = Animator.StringToHash("rareWaitTrigger");
         animHash.rareWaitType = Animator.StringToHash("rareWaitType");
         animHash.IsDead = Animator.StringToHash("IsDead");
+        animHash.KickFloat = Animator.StringToHash("KickFloat");
     }   
 
     public void AnimVariableReset()
@@ -898,45 +903,45 @@ public class PlayerMain : MonoBehaviour
     //    //接地ray
     //    Ray footRay = new Ray(rb.position, Vector3.down);
 
-    //        if (isOnGround)
-    //        {
-    //            Gizmos.color = Color.magenta;
-    //        }
-    //        else
-    //        {
-    //            Gizmos.color = Color.cyan;
-    //        }
-    //        Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
+    //    if (isOnGround)
+    //    {
+    //        Gizmos.color = Color.magenta;
+    //    }
+    //    else
+    //    {
+    //        Gizmos.color = Color.cyan;
+    //    }
+    //    Gizmos.DrawWireSphere(footRay.origin + (Vector3.down * (coliderDistance)), colliderRadius);
 
 
-    //        //頭
-    //        //if (refState == EnumPlayerState.SHOT)
-    //        //{
-    //        //    if (shotState == ShotState.STRAINED)
-    //        //    {
-    //        Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
-    //        vecToPlayer = vecToPlayer.normalized;
+    //    //頭
+    //    //if (refState == EnumPlayerState.SHOT)
+    //    //{
+    //    //    if (shotState == ShotState.STRAINED)
+    //    //    {
+    //    Vector3 vecToPlayer = BulletScript.rb.position - rb.position;
+    //    vecToPlayer = vecToPlayer.normalized;
 
-    //        Ray headRay = new Ray(rb.position, vecToPlayer);
-    //        Gizmos.color = Color.yellow;
-    //        Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
-    //        //    }
-    //        //}
+    //    Ray headRay = new Ray(rb.position, vecToPlayer);
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(headRay.origin + (vecToPlayer * (HcoliderDistance)), HcolliderRadius);
+    //    //    }
+    //    //}
 
-    //        //スイングスライド足元
-    //        //if(refState == EnumPlayerState.SWING)
-    //        //{
-    //        //    if(swingState == SwingState.TOUCHED) 
-    //        //    {
-    //        Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
-    //        vecToPlayerR = vecToPlayerR.normalized;
+    //    //スイングスライド足元
+    //    //if(refState == EnumPlayerState.SWING)
+    //    //{
+    //    //    if(swingState == SwingState.TOUCHED) 
+    //    //    {
+    //    Vector3 vecToPlayerR = rb.position - BulletScript.rb.position;
+    //    vecToPlayerR = vecToPlayerR.normalized;
 
-    //        Ray Ray = new Ray(rb.position, vecToPlayerR);
-    //        Gizmos.color = Color.black;
-    //        Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
-    //        //    }
-    //        //}   
-    //    
+    //    Ray Ray = new Ray(rb.position, vecToPlayerR);
+    //    Gizmos.color = Color.black;
+    //    Gizmos.DrawWireSphere(Ray.origin + (vecToPlayerR * SwingcoliderDistance), SwingcolliderRadius);
+    //    //    }
+    //    //}   
+
     //}
 
 }

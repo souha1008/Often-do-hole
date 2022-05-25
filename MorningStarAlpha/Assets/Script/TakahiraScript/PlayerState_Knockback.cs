@@ -9,7 +9,6 @@ public class PlayerState_Knockback : PlayerState
     private static float KnockbackPowerX = 60.0f;    // ノックバック力 X
     private static float KnockbackPowerY = 50.0f;    // ノックバック力 Y
 
-
     private float NowTime = 0.0f;               // 経過時間
     private Vector3 HitPos;                     // ヒットしたオブジェクトの座標
     private bool BulletReturnFlag;              // 錨引き戻しフラグ
@@ -88,7 +87,7 @@ public class PlayerState_Knockback : PlayerState
         { // 時間経過でステート変更
             if (NowTime > 0.3f)
             {
-                PlayerScript.mode = new PlayerStateDeath_Thorn();
+                //PlayerScript.mode = new PlayerStateDeath_Thorn();
             }
         }
         else

@@ -27,6 +27,9 @@ public class OptionManager : MonoBehaviour
         nowButton = EventSystem.current.gameObject;
         oldButton = null;
         VibrationSlider = VibrationObject.GetComponent<Slider>();
+
+        Random.InitState(System.DateTime.Now.Millisecond); // 乱数初期化
+        // マウスロック
 #if !UNITY_EDITOR
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = false;

@@ -403,7 +403,7 @@ public class BulletMain : MonoBehaviour
                     case "Iron":
                         onceFlag = true;
                         isTouched = true;
-                        SoundManager.Instance.PlaySound("sound_30_Iron",1.4f);
+                        SoundManager.Instance.PlaySound("sound_69_Sasaranai", 1.4f);
 
                         VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 

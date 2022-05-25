@@ -37,7 +37,8 @@ public class Raen_Path : MonoBehaviour
             player_path = player_postions.Select(target => target.transform.position).ToArray();
 
             BulletMain.instance.transform
-            .DOPath(path, Time, PathType.Linear)
+            .DOPath(path, Time, PathType.Linear, PathMode.Sidescroller2D)
+            .SetEase(Ease.InSine)
             .OnUpdate(() =>
             {
 
@@ -51,7 +52,8 @@ public class Raen_Path : MonoBehaviour
              });
 
             PlayerMain.instance.transform
-            .DOPath(player_path, Time);
+            .DOPath(player_path, Time, PathType.Linear, PathMode.Sidescroller2D)
+            .SetEase(Ease.InSine);
 
             Rall_Now = true; // 一回のみ用フラグをオン
         }

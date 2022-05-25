@@ -45,6 +45,9 @@ public class PlayerStateShot : PlayerState
         //アニメーション用
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
+
+        SoundManager.Instance.PlaySound("shot");
+        SoundManager.Instance.PlaySound("sound_70_shot", 0.5f, 0.1f);
     }
 
     public PlayerStateShot(bool isFollow)//コンストラクタ
@@ -196,9 +199,6 @@ public class PlayerStateShot : PlayerState
                 {
                     float addUp = 30.0f;
                     PlayerScript.vel.y += addUp;
-
-                    GameObject eff = EffectManager.Instance.BoostEffect(PlayerScript.vel);
-                    eff.transform.parent = PlayerScript.transform;
                 }
 
 

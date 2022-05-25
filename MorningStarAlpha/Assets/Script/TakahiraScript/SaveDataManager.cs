@@ -28,7 +28,7 @@ public class DataFile
             Stage[i] = new StageData();
         }
 
-        SoundVolumeMaster = 100 * 0.7f;
+        SoundVolumeMaster = 100 * 0.8f;
         SoundVolumeBGM = 100 * 0.7f;
         SoundVolumeSE = 100 * 0.7f;
         SoundVolumeOBJECT = 100 * 0.7f;
@@ -175,7 +175,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         DataFile Data = new DataFile();
 
         // ステージコインデータ生成
-        Data.Stage[0].coin = new Coin(3, 3, 3);
+        Data.Stage[0].coin = new Coin(1, 1, 1);
         Data.Stage[1].coin = new Coin(3, 3, 3);
         Data.Stage[2].coin = new Coin(3, 3, 3);
         Data.Stage[3].coin = new Coin(3, 3, 3);

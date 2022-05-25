@@ -6,7 +6,9 @@ public class Gimmick_Thorn : Gimmick_Main
 {
     public override void Init()
     {
-        
+        Rb.isKinematic = true;
+        Cd.isTrigger = false;
+        this.gameObject.tag = "Iron";
     }
 
     public override void FixedMove()
@@ -19,9 +21,9 @@ public class Gimmick_Thorn : Gimmick_Main
         
     }
 
-    public override void OnTriggerEnter(Collider collider)
+    public override void OnCollisionEnter(Collision collision)
     {
-        if (collider.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {   
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
@@ -32,16 +34,16 @@ public class Gimmick_Thorn : Gimmick_Main
                 VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
 
                 // プレイヤーステートを死亡に変更
-                PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn(gameObject.transform.position);
             }
         }
     }
 
-    public void OnTriggerStay(Collider collider)
+    public void OnCollisionStay(Collision collision)
     {
         if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
         {
-            if (collider.gameObject.CompareTag("Player"))
+            if (collision.gameObject.CompareTag("Player"))
             {
                 // ヒットストップ
                 GameSpeedManager.Instance.StartHitStop(0.1f);
@@ -50,7 +52,7 @@ public class Gimmick_Thorn : Gimmick_Main
                 VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
 
                 // プレイヤーステートを死亡に変更
-                PlayerMain.instance.mode = new PlayerStateDeath_Thorn();
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn(gameObject.transform.position);
             }
         }
     }
