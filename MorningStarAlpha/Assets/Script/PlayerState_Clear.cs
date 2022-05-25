@@ -36,10 +36,14 @@ public class PlayerState_Clear : PlayerState
         PlayerScript.dir = PlayerMoveDir.RIGHT; //ã≠êßâEå¸Ç´
         RotationStand();
 
+        // âπí‚é~
+        SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+
         PlayerScript.ResetAnimation();
         if (PlayerScript.isOnGround)
         {
             state = ClearState.WALK;
+
             //SEVoice
             SoundManager.Instance.PlaySound("goal");
         }

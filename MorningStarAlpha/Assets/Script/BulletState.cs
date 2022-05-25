@@ -78,6 +78,7 @@ public class BulletGo : BulletState
         BulletScript.CanShotFlag = false;
 
         AdjustBulletPos();
+        PlayerScript.ResetBulletRecover();
 
         BulletScript.ShotBullet();   
         // î≠éÀâπçƒê∂

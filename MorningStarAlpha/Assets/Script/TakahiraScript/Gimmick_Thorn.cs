@@ -8,7 +8,7 @@ public class Gimmick_Thorn : Gimmick_Main
     {
         Rb.isKinematic = true;
         Cd.isTrigger = false;
-        this.gameObject.tag = "Iron";
+        this.gameObject.tag = "Thorn";
     }
 
     public override void FixedMove()
