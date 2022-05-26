@@ -76,6 +76,9 @@ public class ResultManager : MonoBehaviour
     [SerializeField][Range(0, 14)] int debug_stageNo;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
+    // 一回のみ反応用
+    bool OnceFlag = false;
+
     enum ClearRank
     {
         Rank_S = 0,
@@ -136,10 +139,7 @@ public class ResultManager : MonoBehaviour
     private void Update()
     {
         SoundDlay();
-        if (!Input.GetButtonDown("ButtonA"))
-        {
-            OncePush = false;
-        }
+        OncePush = false;
 
         // ボタンを押したらスキップ
         if (UI_Canvas.activeSelf == false)
@@ -202,16 +202,18 @@ public class ResultManager : MonoBehaviour
                 switch (ui_command)
                 {
                     case UI_COMMAND.NextStage:
-                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
                         {
+                            OnceFlag = true;
                             GameStateManager.LoadNextStage();
                         }
                         break;
 
                     case UI_COMMAND.StageSelect:
-                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
                         {
-                            FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                            OnceFlag = true;
+                            GameStateManager.LoadStageSelect(true);
                         }
                         break;
                 }
@@ -220,9 +222,10 @@ public class ResultManager : MonoBehaviour
             // ラストステージ
             if (LastStage_UICanvas.activeSelf == true)
             {
-                if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
                 {
-                    FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                    OnceFlag = true;
+                    GameStateManager.LoadStageSelect(true);
                 }
             }
         }

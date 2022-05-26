@@ -230,9 +230,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     }
 
     // ステージセレクトに移行
-    public static void LoadStageSelect()
+    public static void LoadStageSelect(bool SoundStop)
     {
-        FadeManager.Instance.FadeStageSelect();
+        FadeManager.Instance.FadeStageSelect(SoundStop);
     }
 
     public static void GameOverReloadScene()
