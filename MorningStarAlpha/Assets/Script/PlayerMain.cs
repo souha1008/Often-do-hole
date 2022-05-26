@@ -197,12 +197,10 @@ public class PlayerMain : MonoBehaviour
                 transform.position = RespornPos;
 
                 Debug.Log("Respon Point Adjustment");
-
             }
             else
             {
                 transform.position = CheckPointManager.Instance.GetCheckPointPos();
-
             }
         }
         if(KujiraPos.instance)
