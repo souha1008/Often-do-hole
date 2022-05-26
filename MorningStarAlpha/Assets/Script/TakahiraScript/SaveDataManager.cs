@@ -101,6 +101,14 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         //Debug.Log(MainData.Stage[2].Time);
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
 
     public void SaveData()
     {
