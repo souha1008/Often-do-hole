@@ -97,7 +97,7 @@ public class MenuManager : MonoBehaviour
                     if (Input.GetButtonDown("ButtonA"))
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
-                        GameStateManager.LoadStageSelect();
+                        GameStateManager.LoadStageSelect(false);
                         this.gameObject.SetActive(false);
                     }
                     break;

@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DrawStageName : MonoBehaviour
 {
     private string[] StageNames = {
+#if false
         "Stage1",
         "Stage2",
         "Stage3",
@@ -17,6 +19,15 @@ public class DrawStageName : MonoBehaviour
         "Stage9",
         "Stage10",
         "Stage11"
+#endif
+        "Tutorial",
+        "Stage1",
+        "Stage2",
+        "Stage3",
+        "Stage4",
+        "Stage5",
+        "Stage6",
+        "BOSS"
     };
 
     // Start is called before the first frame update
@@ -29,6 +40,6 @@ public class DrawStageName : MonoBehaviour
     void Update()
     {
         if(SelectManager.instance.CanStart)
-        gameObject.GetComponent<UnityEngine.UI.Text>().text = StageNames[SelectManager.instance.NowSelectStage];
+        gameObject.GetComponent<TextMeshProUGUI>().text = StageNames[SelectManager.instance.NowSelectStage];
     }
 }

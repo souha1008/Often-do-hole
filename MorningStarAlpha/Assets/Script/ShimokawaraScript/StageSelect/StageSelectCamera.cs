@@ -34,9 +34,9 @@ public class StageSelectCamera : MonoBehaviour
 
     public void ManualStart()
     {
-        CameraToPoint = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position -  transform.position;
+        CameraToPoint = SelectManager.instance.StageObj[0].transform.position -  transform.position;
 
-        Vector3 GoPos = transform.position;
+        Vector3 GoPos = SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CameraToPoint;
 
 #if false
         Vector3 CenterToVector = (SelectManager.instance.StageObj[SelectManager.instance.NowSelectStage].transform.position - CenterObj.transform.position).normalized;

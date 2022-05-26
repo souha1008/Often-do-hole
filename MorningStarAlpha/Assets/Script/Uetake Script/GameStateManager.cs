@@ -30,7 +30,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private const int STAGE_MAX_NUM = 8;
     private const float MAX_TIME = 999.9999f;
 
-#if true
+#if false
     private string[] StageNames = { "Stage1-1_fix" ,"Stage1-2_fix" , "Stage2-1_fix" , "Stage2-2_fix" , "Stage2-3_fix" , "Stage3-1_fix",
     "Stage3-3_fix", "coinTestScene"};
 
@@ -94,7 +94,12 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
     private void Start()
     {
-       
+
+    }
+
+    private void Update()
+    {
+        CountDown();
     }
 
     private void Init()
@@ -139,15 +144,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
          
             StageSoundFlag = false;
-        }
-    }
-
-
-    private void Update()
-    {
-        if (GetGameState() == GAME_STATE.PLAY)
-        {
-            CountDown();
         }
     }
 
@@ -234,9 +230,9 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     }
 
     // ステージセレクトに移行
-    public static void LoadStageSelect()
+    public static void LoadStageSelect(bool SoundStop)
     {
-        FadeManager.Instance.FadeStageSelect();
+        FadeManager.Instance.FadeStageSelect(SoundStop);
     }
 
     public static void GameOverReloadScene()

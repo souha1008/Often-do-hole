@@ -250,13 +250,16 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         }
     }
 
-    public void FadeStageSelect()
+    public void FadeStageSelect(bool SoundStop)
     {
         if (NowFadeState == FADE_STATE.FADE_NONE)
         {
             NextSceneName = "StageSelectScene";
             NowFadeState = FADE_STATE.FADE_OUT;
-            NowFadeKind = FADE_KIND.FADE_STAGECHANGE;
+            if (SoundStop)
+                NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
+            else
+                NowFadeKind = FADE_KIND.FADE_STAGECHANGE;
 
             NowTime = 0.0f;
 

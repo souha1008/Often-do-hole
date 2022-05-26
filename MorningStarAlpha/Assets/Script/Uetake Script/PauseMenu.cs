@@ -178,7 +178,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     public void ClickBackStageSelect()
     {
         SoundManager.Instance.PlaySound("sound_03_01");
-        GameStateManager.LoadStageSelect();
+        GameStateManager.LoadStageSelect(true);
         EndPause();
     }
 
