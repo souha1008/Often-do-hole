@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class DrawATime : MonoBehaviour
 {
@@ -14,6 +16,6 @@ public class DrawATime : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<UnityEngine.UI.Text>().text = "AÅc" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].A) + "ïbà»ì‡";
+            gameObject.GetComponent<TextMeshProUGUI>().text = "-" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].A) + "sec";
     }
 }

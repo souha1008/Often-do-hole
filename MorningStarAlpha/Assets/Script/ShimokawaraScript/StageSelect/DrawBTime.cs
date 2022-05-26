@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DrawBTime : MonoBehaviour
 {
@@ -14,6 +15,6 @@ public class DrawBTime : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<UnityEngine.UI.Text>().text = "BÅc" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].B) + "ïbà»ì‡";
+            gameObject.GetComponent<TextMeshProUGUI>().text = "-" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].B) + "sec";
     }
 }
