@@ -24,14 +24,17 @@ public class JewelFall : MonoBehaviour
 
     List<JEWEL_LIST> JewelList = new List<JEWEL_LIST>();
 
-    private static float FallLength_X = 80.0f;  // XÀ•W‚Ì~‚ç‚¹‚é•
-    private static float FallLength_Z = 100.0f;  // ZÀ•W‚Ì~‚ç‚¹‚é•
+    private static float StartPos_Y = 90.0f;        // ‰ŠúYÀ•W
+    private static float EndPos_Y = -120.0f;        // ÁŽ¸YÀ•W
+    private static float FallLength_X = 80.0f;      // XÀ•W‚Ì~‚ç‚¹‚é•
+    private static float FallLength_Z = 100.0f;     // ZÀ•W‚Ì~‚ç‚¹‚é•
     private static float StartVel_Y = -100.0f;      // Å‰‚É‰Á‚¦‚éY•ûŒüˆÚ“®—Ê
-    private static float StartPos_Y = 90.0f;    // ‰ŠúYÀ•W
-    private static float EndPos_Y = -120.0f;    // ÁŽ¸YÀ•W
-    private float JewelFallTime = 0.01f; // ƒWƒ…ƒGƒ‹‚ª~‚éŽžŠÔ(•b)
-    private int JewelFallNum = 2;       // ƒWƒ…ƒGƒ‹‚ªˆê“x‚É~‚é—Ê
-    private float NowTime = 0.0f;       // Œ»ÝŽžŠÔ
+    private static float StartDelayTime = 1.5f;     // Å‰‚É’x‚ç‚¹‚éŽžŠÔ(•b)
+    private float JewelFallTime = 0.015f;           // ƒWƒ…ƒGƒ‹‚ª~‚éŽžŠÔ(•b)
+    private int JewelFallNum = 4;                   // ƒWƒ…ƒGƒ‹‚ªˆê“x‚É~‚é—Ê
+
+    private bool StartDelayFlag = false;            // Å‰‚É’x‚ç‚¹‚é—pƒtƒ‰ƒO
+    private float NowTime = 0.0f;                   // Œ»ÝŽžŠÔ
     //private float FallSpeed;
 
     // Start is called before the first frame update
@@ -43,6 +46,21 @@ public class JewelFall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // ŠJŽn’x‰„ˆ—
+        if (!StartDelayFlag)
+        {
+            if (NowTime >= StartDelayTime)
+            {
+                StartDelayFlag = true;
+                NowTime = 0.0f;
+            }
+            else
+            {
+                NowTime += Time.deltaTime;
+                return;
+            }
+        }
+
         // ŽžŠÔ‚É’B‚µ‚Ä‚¢‚½‚ç~‚ç‚¹‚é
         if (NowTime >= JewelFallTime)
         {

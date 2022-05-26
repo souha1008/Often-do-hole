@@ -96,9 +96,8 @@ public class ResultManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    async void Start()
+    void Start()
     {
-
         // UIパス設定
         ResourceSave();
 
@@ -134,11 +133,10 @@ public class ResultManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
         SoundDlay();
-        if(!Input.GetButton("ButtonA"))
+        if (!Input.GetButtonDown("ButtonA"))
         {
             OncePush = false;
         }
@@ -146,7 +144,7 @@ public class ResultManager : MonoBehaviour
         // ボタンを押したらスキップ
         if (UI_Canvas.activeSelf == false)
         {
-            if (Input.GetButton("ButtonA") && OncePush == false)
+            if (Input.GetButtonDown("ButtonA") && OncePush == false)
             {
                 OncePush = true;    // ボタンを押している
 
@@ -154,13 +152,14 @@ public class ResultManager : MonoBehaviour
                 Wanted_animator.SetBool(Wanted_SkipAnime, true);
                 stump_animator.SetBool(Stump_SkipAnime, true);
                 stump_animator.SetBool(Stump_end, true);
-                
+
                 // UIをアクティブ
                 UI_Canvas.SetActive(true);
             }
         }
 
-        if (anim_end == true)        {
+        if (anim_end == true)
+        {
             stump_animator.SetBool(Stump_Start, true);
             Stump_UI.color = new Color(1, 1, 1, 1);
         }
@@ -203,14 +202,14 @@ public class ResultManager : MonoBehaviour
                 switch (ui_command)
                 {
                     case UI_COMMAND.NextStage:
-                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
                         {
                             GameStateManager.LoadNextStage();
                         }
                         break;
 
                     case UI_COMMAND.StageSelect:
-                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
                         {
                             FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
                         }
@@ -219,16 +218,21 @@ public class ResultManager : MonoBehaviour
             }
 
             // ラストステージ
-            if(LastStage_UICanvas.activeSelf == true)
+            if (LastStage_UICanvas.activeSelf == true)
             {
-                if (Input.GetButton("ButtonA") && OncePush == false)
+                if (Input.GetButtonDown("ButtonA") && OncePush == false)
                 {
                     FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
                 }
             }
         }
-        
     }
+
+    // Update is called once per frame
+    //void FixedUpdate()
+    //{
+        
+    //}
 
     void AnimetorHash_Reset()
     {
