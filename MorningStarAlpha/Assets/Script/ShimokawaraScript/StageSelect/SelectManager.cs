@@ -62,39 +62,43 @@ public class SelectManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        StickX = Input.GetAxis("Horizontal");
-        OldSelectStage = NowSelectStage;
-
-        //ここに更新処理
-        if(PushRightMomentOrLongPush())//今押した or 長押しいい感じ
+        //フェードしてない時だけ動ける
+        if(FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
-            //関数空呼び
-            PushLeftMomentOrLongPush();
+            StickX = Input.GetAxis("Horizontal");
+            OldSelectStage = NowSelectStage;
 
-            NowSelectStage++;
+            //ここに更新処理
+            if (PushRightMomentOrLongPush())//今押した or 長押しいい感じ
+            {
+                //関数空呼び
+                PushLeftMomentOrLongPush();
+
+                NowSelectStage++;
+            }
+            else if (PushLeftMomentOrLongPush())//今押した or 長押しいい感じ
+            {
+                NowSelectStage--;
+            }
+
+
+            NowSelectStage = Mathf.Clamp(NowSelectStage, 0, CanStage);
+
+            //最後にチェック
+            ChangeStageCheck();
+
+            //ステージ侵入
+            if (CanStart && Input.GetButton("ButtonA"))
+            {
+                GameStateManager.LoadStage(NowSelectStage);
+
+            }
+            else if (CanStart && Input.GetButton("ButtonB"))
+            {
+                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
+            }
+            //Debug.Log(CanStart);
         }
-        else if(PushLeftMomentOrLongPush())//今押した or 長押しいい感じ
-        {
-            NowSelectStage--;
-        }
-
-
-        NowSelectStage = Mathf.Clamp(NowSelectStage, 0, CanStage);
-
-        //最後にチェック
-        ChangeStageCheck();
-
-        //ステージ侵入
-        if(CanStart && Input.GetButton("ButtonA"))
-        {
-            GameStateManager.LoadStage(NowSelectStage);
-            
-        }
-        else if(CanStart && Input.GetButton("ButtonB"))
-        {
-            FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
-        }
-        //Debug.Log(CanStart);
     }
 
     void ChangeStageCheck()
