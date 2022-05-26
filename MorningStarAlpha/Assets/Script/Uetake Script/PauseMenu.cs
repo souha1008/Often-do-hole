@@ -135,7 +135,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         nowButton = null;
         oldButton = null;
 
-        SoundManager.Instance.PlaySound("sound_03_01");
+        SoundManager.Instance.PlaySound("sound_41");
 
         // データセーブ
         SaveDataManager.Instance.SaveData();
@@ -158,7 +158,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         VibrationManager.Instance.StopVibration();
         SoundVolumeInit();
 
-        SoundManager.Instance.PlaySound("sound_03_01");
+        SoundManager.Instance.PlaySound("sound_40");
         StartOnceFlag = true;
     }
 
@@ -178,7 +178,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     public void ClickBackStageSelect()
     {
         SoundManager.Instance.PlaySound("sound_03_01");
-        GameStateManager.LoadStageSelect();
+        GameStateManager.LoadStageSelect(true);
         EndPause();
     }
 

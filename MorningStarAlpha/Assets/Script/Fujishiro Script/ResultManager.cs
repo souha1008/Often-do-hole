@@ -76,6 +76,9 @@ public class ResultManager : MonoBehaviour
     [SerializeField][Range(0, 14)] int debug_stageNo;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
+    // 一回のみ反応用
+    bool OnceFlag = false;
+
     enum ClearRank
     {
         Rank_S = 0,
@@ -96,9 +99,8 @@ public class ResultManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    async void Start()
+    void Start()
     {
-
         // UIパス設定
         ResourceSave();
 
@@ -134,19 +136,15 @@ public class ResultManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void Update()
     {
         SoundDlay();
-        if(!Input.GetButton("ButtonA"))
-        {
-            OncePush = false;
-        }
+        OncePush = false;
 
         // ボタンを押したらスキップ
         if (UI_Canvas.activeSelf == false)
         {
-            if (Input.GetButton("ButtonA") && OncePush == false)
+            if (Input.GetButtonDown("ButtonA") && OncePush == false)
             {
                 OncePush = true;    // ボタンを押している
 
@@ -154,13 +152,14 @@ public class ResultManager : MonoBehaviour
                 Wanted_animator.SetBool(Wanted_SkipAnime, true);
                 stump_animator.SetBool(Stump_SkipAnime, true);
                 stump_animator.SetBool(Stump_end, true);
-                
+
                 // UIをアクティブ
                 UI_Canvas.SetActive(true);
             }
         }
 
-        if (anim_end == true)        {
+        if (anim_end == true)
+        {
             stump_animator.SetBool(Stump_Start, true);
             Stump_UI.color = new Color(1, 1, 1, 1);
         }
@@ -203,32 +202,40 @@ public class ResultManager : MonoBehaviour
                 switch (ui_command)
                 {
                     case UI_COMMAND.NextStage:
-                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
                         {
+                            OnceFlag = true;
                             GameStateManager.LoadNextStage();
                         }
                         break;
 
                     case UI_COMMAND.StageSelect:
-                        if (Input.GetButton("ButtonA") && OncePush == false)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
                         {
-                            FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                            OnceFlag = true;
+                            GameStateManager.LoadStageSelect(true);
                         }
                         break;
                 }
             }
 
             // ラストステージ
-            if(LastStage_UICanvas.activeSelf == true)
+            if (LastStage_UICanvas.activeSelf == true)
             {
-                if (Input.GetButton("ButtonA") && OncePush == false)
+                if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
                 {
-                    FadeManager.Instance.FadeStart("StageSelectScene", FADE_KIND.FADE_SCENECHANGE);
+                    OnceFlag = true;
+                    GameStateManager.LoadStageSelect(true);
                 }
             }
         }
-        
     }
+
+    // Update is called once per frame
+    //void FixedUpdate()
+    //{
+        
+    //}
 
     void AnimetorHash_Reset()
     {
@@ -251,7 +258,7 @@ public class ResultManager : MonoBehaviour
         if (flame_count01 >= wait_flame && BGM_Dlay == false)
         {
             BGM_Dlay = true;
-            SoundManager.Instance.PlaySound("sound_42_03");
+            SoundManager.Instance.PlaySound("Result_BGM");
         }
     }
 
@@ -290,63 +297,63 @@ public class ResultManager : MonoBehaviour
             switch (debug_stageNo)
             {
                 case 0:
-                    StageNo.text = "1-1";
+                    StageNo.text = "Tutorial";
                     break;
 
                 case 1:
-                    StageNo.text = "1-2";
+                    StageNo.text = "1";
                     break;
 
                 case 2:
-                    StageNo.text = "1-3";
+                    StageNo.text = "2";
                     break;
 
                 case 3:
-                    StageNo.text = "1-4";
+                    StageNo.text = "3";
                     break;
 
                 case 4:
-                    StageNo.text = "1-5";
+                    StageNo.text = "4";
                     break;
 
                 case 5:
-                    StageNo.text = "2-1";
+                    StageNo.text = "5";
                     break;
 
                 case 6:
-                    StageNo.text = "2-2";
+                    StageNo.text = "6";
                     break;
 
                 case 7:
-                    StageNo.text = "2-3";
+                    StageNo.text = "7";
                     break;
 
                 case 8:
-                    StageNo.text = "2-4";
+                    StageNo.text = "8";
                     break;
 
                 case 9:
-                    StageNo.text = "2-5";
+                    StageNo.text = "9";
                     break;
 
                 case 10:
-                    StageNo.text = "3-1";
+                    StageNo.text = "10";
                     break;
 
                 case 11:
-                    StageNo.text = "3-2";
+                    StageNo.text = "11";
                     break;
 
                 case 12:
-                    StageNo.text = "3-3";
+                    StageNo.text = "12";
                     break;
 
                 case 13:
-                    StageNo.text = "3-4";
+                    StageNo.text = "13";
                     break;
 
                 case 14:
-                    StageNo.text = "3-5";
+                    StageNo.text = "14";
                     break;
             }
 
@@ -357,63 +364,63 @@ public class ResultManager : MonoBehaviour
             switch (GameStateManager.GetNowStage())
             {
                 case 0:
-                    StageNo.text = "1-1";
+                    StageNo.text = "1";
                     break;
 
                 case 1:
-                    StageNo.text = "1-2";
+                    StageNo.text = "2";
                     break;
 
                 case 2:
-                    StageNo.text = "1-3";
+                    StageNo.text = "3";
                     break;
 
                 case 3:
-                    StageNo.text = "1-4";
+                    StageNo.text = "4";
                     break;
 
                 case 4:
-                    StageNo.text = "1-5";
+                    StageNo.text = "5";
                     break;
 
                 case 5:
-                    StageNo.text = "2-1";
+                    StageNo.text = "6";
                     break;
 
                 case 6:
-                    StageNo.text = "2-2";
+                    StageNo.text = "7";
                     break;
 
                 case 7:
-                    StageNo.text = "2-3";
+                    StageNo.text = "8";
                     break;
 
                 case 8:
-                    StageNo.text = "2-4";
+                    StageNo.text = "9";
                     break;
 
                 case 9:
-                    StageNo.text = "2-5";
+                    StageNo.text = "10";
                     break;
 
                 case 10:
-                    StageNo.text = "3-1";
+                    StageNo.text = "11";
                     break;
 
                 case 11:
-                    StageNo.text = "3-2";
+                    StageNo.text = "12";
                     break;
 
                 case 12:
-                    StageNo.text = "3-3";
+                    StageNo.text = "13";
                     break;
 
                 case 13:
-                    StageNo.text = "3-4";
+                    StageNo.text = "14";
                     break;
 
                 case 14:
-                    StageNo.text = "3-5";
+                    StageNo.text = "15";
                     break;
             }
         }
@@ -439,31 +446,31 @@ public class ResultManager : MonoBehaviour
                     break;
 
                 case 3:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 4:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 5:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 6:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 7:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 8:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 9:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 10:
@@ -506,31 +513,31 @@ public class ResultManager : MonoBehaviour
                     break;
 
                 case 3:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 4:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 5:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 6:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 7:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 8:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 9:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 10:

@@ -197,13 +197,14 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     public void FadeIn_SceneChange()
     {
         SceneManager.LoadScene(NextSceneName);
-        SoundManager.Instance.StopSound();
+        SoundManager.Instance.StopSound(); // BGM等音消す
     }
 
     // フェードインしたときの処理(ステージ変更)
     public void FadeIn_StageChange()
     {
-        // ※後で別の処理に任せる予定
+        SceneManager.LoadScene(NextSceneName);
+        // BGM等消さない
     }
 
     // フェード変更
@@ -249,13 +250,16 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         }
     }
 
-    public void FadeStageSelect()
+    public void FadeStageSelect(bool SoundStop)
     {
         if (NowFadeState == FADE_STATE.FADE_NONE)
         {
             NextSceneName = "StageSelectScene";
             NowFadeState = FADE_STATE.FADE_OUT;
-            NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
+            if (SoundStop)
+                NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
+            else
+                NowFadeKind = FADE_KIND.FADE_STAGECHANGE;
 
             NowTime = 0.0f;
 

@@ -182,7 +182,26 @@ public class PlayerMain : MonoBehaviour
         ////出現位置の設定
         if (CheckPointManager.Instance.RespawnFlag)
         {
-            transform.position = CheckPointManager.Instance.GetCheckPointPos();
+
+            Vector3 CheckPointPos = CheckPointManager.Instance.GetCheckPointPos();
+          
+            //地面に置く調整
+
+            Ray ray = new Ray(CheckPointPos, Vector3.down);
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray.origin, ray.direction * 100.0f, out hit, LayerMask.GetMask("Platform")))
+            {
+                Vector3 RespornPos = hit.point;
+                RespornPos.y += 3.0f;
+                transform.position = RespornPos;
+
+                Debug.Log("Respon Point Adjustment");
+            }
+            else
+            {
+                transform.position = CheckPointManager.Instance.GetCheckPointPos();
+            }
         }
         if(KujiraPos.instance)
         {
@@ -651,6 +670,7 @@ public class PlayerMain : MonoBehaviour
         ClearModeTransitionFlag();
         if (refState == EnumPlayerState.SHOT)
         {
+            RecoverBullet();
             forciblyFollowFlag = true;
             forciblyFollowVelToward = velTowardBullet;
         }
@@ -669,6 +689,10 @@ public class PlayerMain : MonoBehaviour
     public void RecoverBullet()
     {
         recoverBullet = true;
+    }
+    public void ResetBulletRecover()
+    {
+        recoverBullet = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -896,6 +920,11 @@ public class PlayerMain : MonoBehaviour
                 animator.SetBool(animHash.onGround, false);
             }
         }
+    }
+
+    private void StartClearCamera()
+    {
+        GoalManager.Instance.StartMotionBlur();
     }
 
     //private void OnDrawGizmos()

@@ -61,20 +61,24 @@ public class Title_p2 : MonoBehaviour
         Select_GO.SetActive(false);
 
         // ÉTÉEÉìÉhçƒê∂
-        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 1.8f);
+        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.5f);
+    }
+
+    private void Update()
+    {
+        // PressAnyButton
+        if (Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select") && once_press == false)
+        {
+            once_press = true;
+            PressAny_animator.SetBool(PushButton, true);
+            SoundManager.Instance.PlaySound("sound_03_Title", 0.7f);
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         Anim_CurrentState_Info = PressAny_animator.GetCurrentAnimatorStateInfo(0);
-
-        // PressAnyButton
-        if (Input.GetButton("ButtonA") || Input.GetButton("ButtonB") || Input.GetButton("Button_Select") && once_press == false)
-        { 
-            once_press = true;
-            PressAny_animator.SetBool(PushButton, true);
-        }
 
         if (once_press == true)
         {

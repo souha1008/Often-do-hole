@@ -88,7 +88,7 @@ public class OptionManager : MonoBehaviour
         oldButton = null;
 
         //@Œˆ’è‰¹
-        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        SoundManager.Instance.PlaySound("sound_41");
         StartOnceFlag = false;
         menuManager.OnMenu();
     }
@@ -110,7 +110,7 @@ public class OptionManager : MonoBehaviour
         SoundVolumeInit();
 
         // Œˆ’è‰¹
-        SoundManager.Instance.PlaySound(menuManager.sound_ok_test.ToString());
+        SoundManager.Instance.PlaySound("sound_40");
         StartOnceFlag = true;
     }
 

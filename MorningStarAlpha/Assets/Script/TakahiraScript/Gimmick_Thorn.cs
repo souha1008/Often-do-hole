@@ -8,7 +8,7 @@ public class Gimmick_Thorn : Gimmick_Main
     {
         Rb.isKinematic = true;
         Cd.isTrigger = false;
-        this.gameObject.tag = "Iron";
+        this.gameObject.tag = "Thorn";
     }
 
     public override void FixedMove()
@@ -33,6 +33,9 @@ public class Gimmick_Thorn : Gimmick_Main
                 // 振動
                 VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
 
+                // 音
+                SoundManager.Instance.PlaySound("sound_21", 0.2f, 0.1f);
+
                 // プレイヤーステートを死亡に変更
                 PlayerMain.instance.mode = new PlayerStateDeath_Thorn(gameObject.transform.position);
             }
@@ -50,6 +53,9 @@ public class Gimmick_Thorn : Gimmick_Main
 
                 // 振動
                 VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.22f);
+
+                // 音
+                SoundManager.Instance.PlaySound("sound_21", 1.0f, 0.2f);
 
                 // プレイヤーステートを死亡に変更
                 PlayerMain.instance.mode = new PlayerStateDeath_Thorn(gameObject.transform.position);
