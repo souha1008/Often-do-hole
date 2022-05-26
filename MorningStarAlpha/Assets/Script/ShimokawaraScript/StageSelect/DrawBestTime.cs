@@ -23,7 +23,7 @@ public class DrawBestTime : MonoBehaviour
             }
             else
             {
-                Debug.Log(SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).Time);
+                //Debug.Log(SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).Time);
                 float num = SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).Time;
                
                 int tempNum = (int)(num * 100.0f);//for‚Ì’†‚Å•Ï“®‚·‚é‚æ
