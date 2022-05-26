@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public enum COLOR_STATE{ 
     Original,
@@ -24,7 +25,7 @@ public class SelectUITextAlpha : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OriginnalColor = GetComponent<Text>().color;
+        OriginnalColor = GetComponent<TextMeshProUGUI>().color;
         ClearColor = new Color(OriginnalColor.r, OriginnalColor.g, OriginnalColor.b, 0.0f);
 
         ColorState = COLOR_STATE.Original;
@@ -48,7 +49,7 @@ public class SelectUITextAlpha : MonoBehaviour
             ColorLerpCnt = Mathf.Clamp(ColorLerpCnt - 1, LERP_MIN, LERP_MAX);
         }
 
-        GetComponent<Text>().color = new Color(OriginnalColor.r , OriginnalColor.g , OriginnalColor.b , (float)ColorLerpCnt / LERP_MAX) ;
+        GetComponent<TextMeshProUGUI>().color = new Color(OriginnalColor.r , OriginnalColor.g , OriginnalColor.b , (float)ColorLerpCnt / LERP_MAX) ;
     }
 
     public void SetOriginnal()

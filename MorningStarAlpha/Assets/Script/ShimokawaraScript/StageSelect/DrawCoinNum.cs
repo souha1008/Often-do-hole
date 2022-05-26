@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class DrawCoinNum : MonoBehaviour
 {
@@ -14,7 +15,16 @@ public class DrawCoinNum : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<UnityEngine.UI.Text>().text = "x " + SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).coin.AllGetCoins + " / 9";
+        {
+            if(SelectManager.instance.NowSelectStage == 0)
+            {
+                gameObject.GetComponent<TextMeshProUGUI>().text = SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).coin.AllGetCoins + " / 3";
+            }
+            else
+            {
+                gameObject.GetComponent<TextMeshProUGUI>().text = SaveDataManager.Instance.GetStageData(SelectManager.instance.NowSelectStage).coin.AllGetCoins + " / 9";
+            }
+        }
 
         //Debug.Log(SelectManager.instance.CanStart);
         //Debug.Log(SaveDataManager.Instance.GetStageData(GameStateManager.GetNowStage()).coin.AllGetCoins);
