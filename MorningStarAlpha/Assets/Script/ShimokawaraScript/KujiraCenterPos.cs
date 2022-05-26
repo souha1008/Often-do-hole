@@ -6,7 +6,8 @@ using Cinemachine; // <- Cinemachine ‚ð@Using
 public enum KujiraSpeed
 {
     High,
-    Low
+    Low,
+    MechaHayai
 }
 
 public class KujiraCenterPos : MonoBehaviour
@@ -39,6 +40,10 @@ public class KujiraCenterPos : MonoBehaviour
 
             case KujiraSpeed.High:
                 myDolly.m_Speed = dollySpeed * 1.5f;
+                break;
+
+            case KujiraSpeed.MechaHayai:
+                myDolly.m_Speed = dollySpeed * 15;
                 break;
 
         }
