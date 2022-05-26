@@ -297,63 +297,63 @@ public class ResultManager : MonoBehaviour
             switch (debug_stageNo)
             {
                 case 0:
-                    StageNo.text = "1-1";
+                    StageNo.text = "Tutorial";
                     break;
 
                 case 1:
-                    StageNo.text = "1-2";
+                    StageNo.text = "1";
                     break;
 
                 case 2:
-                    StageNo.text = "1-3";
+                    StageNo.text = "2";
                     break;
 
                 case 3:
-                    StageNo.text = "1-4";
+                    StageNo.text = "3";
                     break;
 
                 case 4:
-                    StageNo.text = "1-5";
+                    StageNo.text = "4";
                     break;
 
                 case 5:
-                    StageNo.text = "2-1";
+                    StageNo.text = "5";
                     break;
 
                 case 6:
-                    StageNo.text = "2-2";
+                    StageNo.text = "6";
                     break;
 
                 case 7:
-                    StageNo.text = "2-3";
+                    StageNo.text = "7";
                     break;
 
                 case 8:
-                    StageNo.text = "2-4";
+                    StageNo.text = "8";
                     break;
 
                 case 9:
-                    StageNo.text = "2-5";
+                    StageNo.text = "9";
                     break;
 
                 case 10:
-                    StageNo.text = "3-1";
+                    StageNo.text = "10";
                     break;
 
                 case 11:
-                    StageNo.text = "3-2";
+                    StageNo.text = "11";
                     break;
 
                 case 12:
-                    StageNo.text = "3-3";
+                    StageNo.text = "12";
                     break;
 
                 case 13:
-                    StageNo.text = "3-4";
+                    StageNo.text = "13";
                     break;
 
                 case 14:
-                    StageNo.text = "3-5";
+                    StageNo.text = "14";
                     break;
             }
 
@@ -364,63 +364,63 @@ public class ResultManager : MonoBehaviour
             switch (GameStateManager.GetNowStage())
             {
                 case 0:
-                    StageNo.text = "1-1";
+                    StageNo.text = "1";
                     break;
 
                 case 1:
-                    StageNo.text = "1-2";
+                    StageNo.text = "2";
                     break;
 
                 case 2:
-                    StageNo.text = "1-3";
+                    StageNo.text = "3";
                     break;
 
                 case 3:
-                    StageNo.text = "1-4";
+                    StageNo.text = "4";
                     break;
 
                 case 4:
-                    StageNo.text = "1-5";
+                    StageNo.text = "5";
                     break;
 
                 case 5:
-                    StageNo.text = "2-1";
+                    StageNo.text = "6";
                     break;
 
                 case 6:
-                    StageNo.text = "2-2";
+                    StageNo.text = "7";
                     break;
 
                 case 7:
-                    StageNo.text = "2-3";
+                    StageNo.text = "8";
                     break;
 
                 case 8:
-                    StageNo.text = "2-4";
+                    StageNo.text = "9";
                     break;
 
                 case 9:
-                    StageNo.text = "2-5";
+                    StageNo.text = "10";
                     break;
 
                 case 10:
-                    StageNo.text = "3-1";
+                    StageNo.text = "11";
                     break;
 
                 case 11:
-                    StageNo.text = "3-2";
+                    StageNo.text = "12";
                     break;
 
                 case 12:
-                    StageNo.text = "3-3";
+                    StageNo.text = "13";
                     break;
 
                 case 13:
-                    StageNo.text = "3-4";
+                    StageNo.text = "14";
                     break;
 
                 case 14:
-                    StageNo.text = "3-5";
+                    StageNo.text = "15";
                     break;
             }
         }
@@ -446,31 +446,31 @@ public class ResultManager : MonoBehaviour
                     break;
 
                 case 3:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 4:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 5:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 6:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 7:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 8:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 9:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 10:
@@ -513,31 +513,31 @@ public class ResultManager : MonoBehaviour
                     break;
 
                 case 3:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 4:
-                    RenderSettings.skybox = Day_Skybox;
+                    RenderSettings.skybox = Evening_Skybox;
                     break;
 
                 case 5:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 6:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 7:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 8:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 9:
-                    RenderSettings.skybox = Evening_Skybox;
+                    RenderSettings.skybox = Night_Skybox;
                     break;
 
                 case 10:
