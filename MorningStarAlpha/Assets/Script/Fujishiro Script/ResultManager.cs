@@ -73,14 +73,11 @@ public class ResultManager : MonoBehaviour
     // デバッグ用
     [Header("以下デバッグコンソール")]
     [SerializeField] bool debug_check;
-    [SerializeField][Range(0, 14)] int debug_stageNo;
+    [SerializeField][Range(0, 14)] public int debug_stageNo;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
     // 一回のみ反応用
     bool OnceFlag = false;
-
-    // クリアステージがチュートリアルorボスの時のみ立つフラグ(文字の位置変更用)
-    bool WantedFlag = false;
 
     enum ClearRank
     {
@@ -125,12 +122,11 @@ public class ResultManager : MonoBehaviour
         // スカイボックスセット
         ChangeSkybox();
 
-
+        // ステージ文字の座標＆サイズ調整処理
+        TextChange();
         
-        //if (WantedFlag)
-        //{
-        //    StageNo.gameObject.transform.position
-        //}
+
+
         anim_end = false;
         UI_Canvas.SetActive(false);
         LastStage_UICanvas.SetActive(false);
@@ -303,7 +299,6 @@ public class ResultManager : MonoBehaviour
             {
                 case 0:
                     StageNo.text = "TUTORIAL";
-                    WantedFlag = true;
                     break;
 
                 case 1:
@@ -332,7 +327,6 @@ public class ResultManager : MonoBehaviour
 
                 case 7:
                     StageNo.text = "BOSS";
-                    WantedFlag = true;
                     break;
 
                 case 8:
@@ -372,7 +366,6 @@ public class ResultManager : MonoBehaviour
             {
                 case 0:
                     StageNo.text = "TUTORIAL";
-                    WantedFlag = true;
                     break;
 
                 case 1:
@@ -401,7 +394,6 @@ public class ResultManager : MonoBehaviour
 
                 case 7:
                     StageNo.text = "BOSS";
-                    WantedFlag = true;
                     break;
 
                 case 8:
@@ -635,5 +627,35 @@ public class ResultManager : MonoBehaviour
             }
         }
 
+    }
+
+    private void TextChange()
+    {
+        if (debug_check)
+        {
+            if (debug_stageNo == 0)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 80; // 文字サイズ調整
+            }
+            else if (debug_stageNo == 7)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 92; // 文字サイズ調整
+            }
+        }
+        else
+        {
+            if (GameStateManager.GetNowStage() == 0)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 80; // 文字サイズ調整
+            }
+            else if (GameStateManager.GetNowStage() == 7)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 92; // 文字サイズ調整
+            }
+        }
     }
 }
