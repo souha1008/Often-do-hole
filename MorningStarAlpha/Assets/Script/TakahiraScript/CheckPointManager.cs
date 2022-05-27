@@ -41,7 +41,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
                 SetFlag = false;
             }
         }
-        if (SetFlag && PlayerMain.instance.refState != EnumPlayerState.DEATH)
+        if (!RespawnFlag || SetFlag && PlayerMain.instance != null && PlayerMain.instance.refState != EnumPlayerState.DEATH)
         {
             RespawnPos = checkpoint.RespawnPointObject.transform.position;
             RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
