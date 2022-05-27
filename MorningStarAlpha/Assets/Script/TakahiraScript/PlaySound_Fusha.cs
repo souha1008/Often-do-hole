@@ -6,6 +6,6 @@ public class PlaySound_Fusha : MonoBehaviour
 {
     void Start()
     {
-        SoundManager.Instance.PlaySound("sound_52");
+        SoundManager.Instance.PlaySound("sound_52", this.gameObject);
     }
 }
