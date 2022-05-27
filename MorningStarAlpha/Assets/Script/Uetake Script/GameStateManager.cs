@@ -30,19 +30,19 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private const int STAGE_MAX_NUM = 8;
     private const float MAX_TIME = 999.9999f;
 
-#if false
+#if true
     private string[] StageNames = { "Stage1-1_fix" ,"Stage1-2_fix" , "Stage2-1_fix" , "Stage2-2_fix" , "Stage2-3_fix" , "Stage3-1_fix",
     "Stage3-3_fix", "coinTestScene"};
 
       public CLEAR_RANK_TIME[] ClearRankTime = {
-        new CLEAR_RANK_TIME(50,150,900) ,
-        new CLEAR_RANK_TIME(150,240,900) ,
-        new CLEAR_RANK_TIME(120,250,900) ,
-        new CLEAR_RANK_TIME(130,300,900) ,
-        new CLEAR_RANK_TIME(150,400,900) ,
-        new CLEAR_RANK_TIME(150,400,900) ,
-        new CLEAR_RANK_TIME(200,450,900) ,
-        new CLEAR_RANK_TIME(250,450,900) 
+        new CLEAR_RANK_TIME(50,150,999) ,
+        new CLEAR_RANK_TIME(150,240,999) ,
+        new CLEAR_RANK_TIME(120,250,999) ,
+        new CLEAR_RANK_TIME(130,300,999) ,
+        new CLEAR_RANK_TIME(150,400,999) ,
+        new CLEAR_RANK_TIME(150,400,999) ,
+        new CLEAR_RANK_TIME(200,450,999) ,
+        new CLEAR_RANK_TIME(250,450,999) 
     };
 #else
     private string[] StageNames = { "coinTestScene" ,"coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene",
