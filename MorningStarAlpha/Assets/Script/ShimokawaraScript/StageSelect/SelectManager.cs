@@ -101,11 +101,13 @@ public class SelectManager : MonoBehaviour
             //ステージ侵入
             if (CanStart && Input.GetButton("ButtonA"))
             {
+                SoundManager.Instance.PlaySound("sound_03_03");
                 GameStateManager.LoadStage(NowSelectStage);
 
             }
             else if (CanStart && Input.GetButton("ButtonB"))
             {
+                SoundManager.Instance.PlaySound("sound_03_06");
                 FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
             }
             //Debug.Log(CanStart);
@@ -116,6 +118,8 @@ public class SelectManager : MonoBehaviour
     {
         if(NowSelectStage != OldSelectStage)
         {
+
+
             //変わったタイミングはスタート受け付けない
             CanStart = false;
 
