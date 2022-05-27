@@ -338,7 +338,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
             SoundVolumeBGM = SaveDataManager.Instance.MainData.SoundVolumeBGM;
             SoundVolumeSE = SaveDataManager.Instance.MainData.SoundVolumeSE;
             SoundVolumeOBJECT = SaveDataManager.Instance.MainData.SoundVolumeOBJECT;
-            Debug.LogWarning("âπó ì«Ç›çûÇ›");
+            //Debug.LogWarning("âπó ì«Ç›çûÇ›");
         }        
 
         // âπó ÉZÉbÉg
