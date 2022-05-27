@@ -127,7 +127,7 @@ public class KujiraPos : MonoBehaviour
             ImageUI.gameObject.SetActive(true);
 
             //Œ‹\‰“‚¯‚ê‚Î”š‘¬‚É‚È‚é
-            if((transform.position - PlayerMain.instance.transform.position).magnitude > 40)
+            if((transform.position - PlayerMain.instance.transform.position).magnitude > 100)
             {
                 KujiraCenterPos.instance.MyKujiraSpeed = KujiraSpeed.MechaHayai;
 
