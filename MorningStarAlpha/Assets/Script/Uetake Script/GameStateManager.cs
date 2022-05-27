@@ -30,7 +30,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     private const int STAGE_MAX_NUM = 8;
     private const float MAX_TIME = 999.9999f;
 
-#if false
+#if true
     private string[] StageNames = { "Stage1-1_fix" ,"Stage1-2_fix" , "Stage2-1_fix" , "Stage2-2_fix" , "Stage2-3_fix" , "Stage3-1_fix",
     "Stage3-3_fix", "coinTestScene"};
 
