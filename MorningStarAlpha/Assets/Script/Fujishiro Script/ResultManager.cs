@@ -79,6 +79,9 @@ public class ResultManager : MonoBehaviour
     // 一回のみ反応用
     bool OnceFlag = false;
 
+    // クリアステージがチュートリアルorボスの時のみ立つフラグ(文字の位置変更用)
+    bool WantedFlag = false;
+
     enum ClearRank
     {
         Rank_S = 0,
@@ -124,7 +127,10 @@ public class ResultManager : MonoBehaviour
 
 
         
-
+        //if (WantedFlag)
+        //{
+        //    StageNo.gameObject.transform.position
+        //}
         anim_end = false;
         UI_Canvas.SetActive(false);
         LastStage_UICanvas.SetActive(false);
@@ -285,7 +291,6 @@ public class ResultManager : MonoBehaviour
             case 3:
                 Photo_UI.sprite = Resources.Load<Sprite>("Sprite/WantedPoster_Photo/WantedPoster_Photo04_sepia");
                 break;
-
         }
     }
 
@@ -297,7 +302,8 @@ public class ResultManager : MonoBehaviour
             switch (debug_stageNo)
             {
                 case 0:
-                    StageNo.text = "Tutorial";
+                    StageNo.text = "TUTORIAL";
+                    WantedFlag = true;
                     break;
 
                 case 1:
@@ -325,7 +331,8 @@ public class ResultManager : MonoBehaviour
                     break;
 
                 case 7:
-                    StageNo.text = "7";
+                    StageNo.text = "BOSS";
+                    WantedFlag = true;
                     break;
 
                 case 8:
@@ -364,35 +371,37 @@ public class ResultManager : MonoBehaviour
             switch (GameStateManager.GetNowStage())
             {
                 case 0:
-                    StageNo.text = "1";
+                    StageNo.text = "TUTORIAL";
+                    WantedFlag = true;
                     break;
 
                 case 1:
-                    StageNo.text = "2";
+                    StageNo.text = "1";
                     break;
 
                 case 2:
-                    StageNo.text = "3";
+                    StageNo.text = "2";
                     break;
 
                 case 3:
-                    StageNo.text = "4";
+                    StageNo.text = "3";
                     break;
 
                 case 4:
-                    StageNo.text = "5";
+                    StageNo.text = "4";
                     break;
 
                 case 5:
-                    StageNo.text = "6";
+                    StageNo.text = "5";
                     break;
 
                 case 6:
-                    StageNo.text = "7";
+                    StageNo.text = "6";
                     break;
 
                 case 7:
-                    StageNo.text = "8";
+                    StageNo.text = "BOSS";
+                    WantedFlag = true;
                     break;
 
                 case 8:

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.68327487, g: 0.98188704, b: 1.2341045, a: 1}
+  m_IndirectSpecularColor: {r: 0.6834597, g: 0.9820785, b: 1.2343833, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1271,6 +1271,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 627577041896149797, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: m_Text
+      value: '1
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 627577041896149797, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: m_FontData.m_Alignment
       value: 3
       objectReference: {fileID: 0}
@@ -1472,6 +1478,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: /9
       objectReference: {fileID: 0}
+    - target: {fileID: 6851428411140992133, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 75eef6a86c864344282475e627691925, type: 3}
     - target: {fileID: 6851428411140992135, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5627044
@@ -1507,3 +1517,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2795301805008574374, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
   m_PrefabInstance: {fileID: 6851428409708529890}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6851428409708529892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6851428410713418852, guid: 584762174e4392a43b1868bb93a4785b, type: 3}
+  m_PrefabInstance: {fileID: 6851428409708529890}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6851428409708529893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851428409708529892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6cfb905e55936a41abe6885301e3bce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StageWantedSprite: {fileID: 21300000, guid: 75eef6a86c864344282475e627691925, type: 3}
+  NoStageWantedSprite: {fileID: 21300000, guid: 85d099e2785dbb1449ad8da0aaba2b3c, type: 3}
