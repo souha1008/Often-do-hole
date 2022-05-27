@@ -518,6 +518,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 else
                 {
                     PlayerScript.vel = ReleaseForceCalicurale();
+                    EffectManager.Instance.BoostEffect(PlayerScript.vel);
                 }
 
                 PlayerScript.useVelocity = true;
