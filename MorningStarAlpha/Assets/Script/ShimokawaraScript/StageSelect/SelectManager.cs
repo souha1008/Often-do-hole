@@ -6,7 +6,7 @@ public class SelectManager : MonoBehaviour
 {
     public static SelectManager instance;
 
-    [SerializeField] public GameObject[] StageObj;
+    [SerializeField] public StageSelectBox[] StageObj;
     //[SerializeField] private GameObject SelectObj;
     [SerializeField] private float PosDistance;
 
@@ -57,6 +57,17 @@ public class SelectManager : MonoBehaviour
 
         //無理矢理スタートを呼びます
         StageSelectCamera.instance.ManualStart();
+
+        
+    }
+
+    void Awake()
+    {
+        //宝箱更新
+        for (int i = 0; i < StageObj.Length; i++)
+        {
+            StageObj[i].isNumber = i;
+        }
     }
 
     // Update is called once per frame
