@@ -35,14 +35,14 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     "Stage3-3_fix", "coinTestScene"};
 
       public CLEAR_RANK_TIME[] ClearRankTime = {
-        new CLEAR_RANK_TIME(50,150,900) ,
-        new CLEAR_RANK_TIME(150,240,900) ,
-        new CLEAR_RANK_TIME(120,250,900) ,
-        new CLEAR_RANK_TIME(130,300,900) ,
-        new CLEAR_RANK_TIME(150,400,900) ,
-        new CLEAR_RANK_TIME(150,400,900) ,
-        new CLEAR_RANK_TIME(200,450,900) ,
-        new CLEAR_RANK_TIME(250,450,900) 
+        new CLEAR_RANK_TIME(50,150,999) ,
+        new CLEAR_RANK_TIME(150,240,999) ,
+        new CLEAR_RANK_TIME(120,250,999) ,
+        new CLEAR_RANK_TIME(130,300,999) ,
+        new CLEAR_RANK_TIME(150,400,999) ,
+        new CLEAR_RANK_TIME(150,400,999) ,
+        new CLEAR_RANK_TIME(200,450,999) ,
+        new CLEAR_RANK_TIME(250,450,999) 
     };
 #else
     private string[] StageNames = { "coinTestScene" ,"coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene" , "coinTestScene",
