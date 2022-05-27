@@ -91,8 +91,7 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     public GameObject Coins2;
     public GameObject Coins3;
 
-    // コインマネージャー初期化フラグ
-    private bool CoinManagerInitFlag = false;
+    private bool CoinManagerStageFlag = false;  // ステージに入った時に一回のみ初期化するようフラグ
 
     private void Awake()
     {
@@ -103,15 +102,6 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         }
 
         DontDestroyOnLoad(this.gameObject); // シーンが変わっても死なない
-
-        // コイン初期化
-        if (!CoinManagerInitFlag)
-        {
-            ResetCoin();
-            CoinManagerInitFlag = true;
-
-            //Debug.LogWarning("コイン初期化");
-        }
     }
 
     public void SetCoins(Coins Coins)
@@ -120,22 +110,13 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         Coins2 = Coins.transform.GetChild(1).gameObject;
         Coins3 = Coins.transform.GetChild(2).gameObject;
 
-        // コイン初期化
-        if (!CoinManagerInitFlag)
-        {
-            ResetCoin();
-            CoinManagerInitFlag = true;
-
-            //Debug.LogWarning("コイン初期化");
-        }
-
 
         // ※セーブデータからコインの取得データ持ってくる、ない場合初期化
         if (SaveDataManager.Instance.MainData != null && SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].Clear == true)
         {
             coin = SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].coin;
         }
-        else
+        else if (!CoinManagerStageFlag)
         {
             // コイン初期化
             coin = new Coin(
@@ -148,6 +129,8 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
 
         // コインオブジェクトに情報セット
         SetCoinObjectInfo();
+
+        CoinManagerStageFlag = true;
     }
 
 
@@ -237,6 +220,7 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         {
             coin = new Coin(SubCoin);
             //Debug.LogWarning("コイン更新");
+            //Debug.LogWarning(coin.AllGetCoins);
         }
     }
 
@@ -246,6 +230,8 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
     {
         coin = new Coin(3, 3, 3);
         SubCoin = new Coin(3, 3, 3);
+        CoinManagerStageFlag = false;
+        //Debug.LogWarning("コインリセット");
     }
 
 
@@ -255,4 +241,10 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].coin = new Coin(coin);
         //Debug.LogWarning("セーブデータにセーブ");
     }
+
+    //private void Update()
+    //{
+    //    Debug.LogWarning("メインコイン合計：" + coin.AllGetCoins);
+    //    Debug.LogWarning("サブコイン合計：" + SubCoin.AllGetCoins);
+    //}
 }

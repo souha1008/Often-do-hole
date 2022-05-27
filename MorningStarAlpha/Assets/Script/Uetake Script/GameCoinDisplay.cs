@@ -36,7 +36,7 @@ public class GameCoinDisplay : MonoBehaviour
 
     private void TextUpdate()
     {
-        int coinNum = (int)CoinManager.Instance.SubCoin.AllGetCoin1 + (int)CoinManager.Instance.SubCoin.AllGetCoin2 + (int)CoinManager.Instance.SubCoin.AllGetCoin3;
+        int coinNum = (int)CoinManager.Instance.SubCoin.AllGetCoins;
         string displayTime;
 
 

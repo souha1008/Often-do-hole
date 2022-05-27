@@ -34,7 +34,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
     //private RectTransform ButtonChildRect;
 
 
-    private void Awake()
+    private void Start()
     {
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(false);
@@ -122,8 +122,6 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
     void EndPause()
     {
-        PauseCanvas.gameObject.SetActive(false);
-        SoundVolumeCanvas.gameObject.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
         if (FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
         {
@@ -141,13 +139,17 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         SaveDataManager.Instance.SaveData();
 
         StartOnceFlag = false;
+
+        PauseCanvas.gameObject.SetActive(false);
+        SoundVolumeCanvas.gameObject.SetActive(false);
     }
 
     void StartPause()
     {
-        GameStateManager.SetGameState(GAME_STATE.PAUSE);
         PauseCanvas.gameObject.SetActive(true);
         SoundVolumeCanvas.gameObject.SetActive(false);
+
+        GameStateManager.SetGameState(GAME_STATE.PAUSE);
         EventSystem.current.SetSelectedGameObject(FirstSelect.gameObject);
         Time.timeScale = 0.0f;
 

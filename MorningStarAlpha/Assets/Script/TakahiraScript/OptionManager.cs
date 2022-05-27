@@ -21,7 +21,7 @@ public class OptionManager : MonoBehaviour
     private bool StartOnceFlag = false;
 
 
-    private void Awake()
+    private void Start()
     {
         SoundVolumeCanvas.gameObject.SetActive(false);
         nowButton = EventSystem.current.gameObject;
@@ -29,12 +29,11 @@ public class OptionManager : MonoBehaviour
         VibrationSlider = VibrationObject.GetComponent<Slider>();
 
         Random.InitState(System.DateTime.Now.Millisecond); // 乱数初期化
-        // マウスロック
-#if !UNITY_EDITOR
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = false;
-#endif
-
+                                                           //マウスロック
+//#if !UNITY_EDITOR
+//        Cursor.lockState = CursorLockMode.None;
+//        Cursor.visible = false;
+//#endif
     }
 
 
@@ -76,7 +75,6 @@ public class OptionManager : MonoBehaviour
     // オプションの終了
     public void EndPause()
     {
-        SoundVolumeCanvas.gameObject.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
         Time.timeScale = 1.0f;
         SoundManager.Instance.UnPauseSound();
@@ -90,6 +88,8 @@ public class OptionManager : MonoBehaviour
         //　決定音
         SoundManager.Instance.PlaySound("sound_41");
         StartOnceFlag = false;
+
+        SoundVolumeCanvas.gameObject.SetActive(false);
         menuManager.OnMenu();
     }
 

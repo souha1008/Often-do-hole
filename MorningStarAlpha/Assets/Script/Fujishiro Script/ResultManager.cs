@@ -73,7 +73,7 @@ public class ResultManager : MonoBehaviour
     // デバッグ用
     [Header("以下デバッグコンソール")]
     [SerializeField] bool debug_check;
-    [SerializeField][Range(0, 14)] int debug_stageNo;
+    [SerializeField][Range(0, 14)] public int debug_stageNo;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
     // 一回のみ反応用
@@ -122,8 +122,10 @@ public class ResultManager : MonoBehaviour
         // スカイボックスセット
         ChangeSkybox();
 
-
+        // ステージ文字の座標＆サイズ調整処理
+        TextChange();
         
+
 
         anim_end = false;
         UI_Canvas.SetActive(false);
@@ -285,7 +287,6 @@ public class ResultManager : MonoBehaviour
             case 3:
                 Photo_UI.sprite = Resources.Load<Sprite>("Sprite/WantedPoster_Photo/WantedPoster_Photo04_sepia");
                 break;
-
         }
     }
 
@@ -297,7 +298,7 @@ public class ResultManager : MonoBehaviour
             switch (debug_stageNo)
             {
                 case 0:
-                    StageNo.text = "Tutorial";
+                    StageNo.text = "TUTORIAL";
                     break;
 
                 case 1:
@@ -325,7 +326,7 @@ public class ResultManager : MonoBehaviour
                     break;
 
                 case 7:
-                    StageNo.text = "7";
+                    StageNo.text = "BOSS";
                     break;
 
                 case 8:
@@ -364,35 +365,35 @@ public class ResultManager : MonoBehaviour
             switch (GameStateManager.GetNowStage())
             {
                 case 0:
-                    StageNo.text = "1";
+                    StageNo.text = "TUTORIAL";
                     break;
 
                 case 1:
-                    StageNo.text = "2";
+                    StageNo.text = "1";
                     break;
 
                 case 2:
-                    StageNo.text = "3";
+                    StageNo.text = "2";
                     break;
 
                 case 3:
-                    StageNo.text = "4";
+                    StageNo.text = "3";
                     break;
 
                 case 4:
-                    StageNo.text = "5";
+                    StageNo.text = "4";
                     break;
 
                 case 5:
-                    StageNo.text = "6";
+                    StageNo.text = "5";
                     break;
 
                 case 6:
-                    StageNo.text = "7";
+                    StageNo.text = "6";
                     break;
 
                 case 7:
-                    StageNo.text = "8";
+                    StageNo.text = "BOSS";
                     break;
 
                 case 8:
@@ -626,5 +627,35 @@ public class ResultManager : MonoBehaviour
             }
         }
 
+    }
+
+    private void TextChange()
+    {
+        if (debug_check)
+        {
+            if (debug_stageNo == 0)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 80; // 文字サイズ調整
+            }
+            else if (debug_stageNo == 7)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 92; // 文字サイズ調整
+            }
+        }
+        else
+        {
+            if (GameStateManager.GetNowStage() == 0)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 80; // 文字サイズ調整
+            }
+            else if (GameStateManager.GetNowStage() == 7)
+            {
+                StageNo.gameObject.transform.localPosition = new Vector3(252.0f, -497.0f, 0.0f); // 座標調整
+                StageNo.fontSize = 92; // 文字サイズ調整
+            }
+        }
     }
 }
