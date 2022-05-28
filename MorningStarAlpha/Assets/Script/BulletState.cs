@@ -37,30 +37,37 @@ public abstract class BulletState
 
     protected void AdjustBulletPos_Ray()
     {
-        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
 
-        Vector3 rayOrigin = PlayerScript.rb.position;
-        rayOrigin.y += 3.0f;
-        Ray ray = new Ray(rayOrigin, vec);
-
-        float distance = 3.0f;
-
-        if(Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 3.0f, LayerMask.GetMask("Platform")))
+        if (PlayerScript.isOnGround)
         {
-            distance = Vector3.Distance(PlayerScript.rb.position, hit.point);
-            Debug.DrawRay(ray.origin, ray.direction * distance, Color.magenta, 0, true);
+            AdjustBulletPos();
         }
         else
         {
-            Debug.DrawRay(ray.origin, ray.direction * distance, Color.cyan, 0, true);
+            Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+            Vector3 rayOrigin = PlayerScript.rb.position;
+            rayOrigin.y += 3.0f;
+            Ray ray = new Ray(rayOrigin, vec);
+
+            float distance = 3.0f;
+
+            if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 3.0f, LayerMask.GetMask("Platform")))
+            {
+                distance = Vector3.Distance(PlayerScript.rb.position, hit.point);
+                Debug.DrawRay(ray.origin, ray.direction * distance, Color.magenta, 0, true);
+            }
+            else
+            {
+                Debug.DrawRay(ray.origin, ray.direction * distance, Color.cyan, 0, true);
+            }
+
+            vec = vec * distance;
+            Vector3 adjustPos = PlayerScript.rb.position + vec;
+
+            BulletScript.rb.position = adjustPos;
         }
-
-        vec = vec * distance;
-        Vector3 adjustPos = PlayerScript.rb.position + vec;
-
-        BulletScript.rb.position = adjustPos;
+        }
     }
-}
 
 
 // 手に持ってるステート(このステート以外発射不可)

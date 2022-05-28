@@ -269,6 +269,11 @@ public class PlayerStateSwing_Vel : PlayerState
         float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
         float animFrame = 0.0f;
 
+
+        const float WallGoAng = 60;
+        const float WallReturnAng = 20;
+        const float NoneGoAng = 0;
+        const float NoneReturnAng = 60;
        
 
         if (firstDir == PlayerMoveDir.RIGHT)
@@ -280,6 +285,32 @@ public class PlayerStateSwing_Vel : PlayerState
             Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
             Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
             if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
+            {
+                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                {
+                    if (degree < 180 + NoneGoAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
+                }
+                else
+                {
+                    if (degree < 180 - NoneReturnAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+                }
+            }
+            else
             {
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
@@ -295,7 +326,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
                 else
                 {
-                    if (degree < 120)
+                    if (degree < 160)
                     {
                         counterAnimFlag = true;
                     }
@@ -304,7 +335,7 @@ public class PlayerStateSwing_Vel : PlayerState
                         counterAnimFlag = false;
                     }
                 }
-            }        
+            }
         }
         else if(firstDir == PlayerMoveDir.LEFT)
         {
@@ -314,6 +345,33 @@ public class PlayerStateSwing_Vel : PlayerState
             Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
             Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
             if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
+            {
+                //壁ジャンプ用
+                if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                {
+                    if (degree > 180 - NoneGoAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
+                }
+                else
+                {
+                    if (degree > 180 + NoneReturnAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+                }
+            }
+            else
             {
                 //壁ジャンプ用
                 if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -372,8 +430,19 @@ public class PlayerStateSwing_Vel : PlayerState
         //    PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
         //}
 
-        Debug.Log("KickRatio" + counterAnimRatio);
+        Debug.Log("KickRatio" + counterAnimRatio.ToString());
 
+#if false
+        if (firstDir == PlayerScript.dir)
+        {
+            PlayerScript.animator.Play("Swing.swingGo_Kick", -1, animFrame);
+        }
+        else
+        {
+            animFrame = 1 - animFrame;
+            PlayerScript.animator.Play("Swing.swingBack_Kick", -1, animFrame);
+        }
+#else
         if (firstDir == PlayerScript.dir)
         {
             PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
@@ -384,7 +453,8 @@ public class PlayerStateSwing_Vel : PlayerState
             PlayerScript.animator.Play("Swing.swingBack", -1, animFrame);
         }
 
-       
+#endif 
+
     }
 
     public Vector3 ReleaseForceCalicurale()
