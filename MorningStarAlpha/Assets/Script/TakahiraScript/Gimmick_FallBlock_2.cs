@@ -492,7 +492,10 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
 
             // 揺れ開始
             if (NowFall && NowTime <= 0)
+            {
                 StartShake(1.0f, 20.0f, 0.1f);  // 揺れの情報セット
+                SoundManager.Instance.PlaySound("sound_28", 0.7f);
+            }
 
             // 床移動
             if (NowFall)

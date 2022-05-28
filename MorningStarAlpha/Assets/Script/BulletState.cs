@@ -37,13 +37,8 @@ public abstract class BulletState
 
     protected void AdjustBulletPos_Ray()
     {
+        const float rayDistance = 3.0f;
 
-        if (PlayerScript.isOnGround)
-        {
-            AdjustBulletPos();
-        }
-        else
-        {
             Vector3 vec = PlayerScript.adjustLeftStick.normalized;
             Vector3 rayOrigin = PlayerScript.rb.position;
             rayOrigin.y += 3.0f;
@@ -51,9 +46,10 @@ public abstract class BulletState
 
             float distance = 3.0f;
 
-            if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 3.0f, LayerMask.GetMask("Platform")))
+            if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, rayDistance, LayerMask.GetMask("Platform")))
             {
-                distance = Vector3.Distance(PlayerScript.rb.position, hit.point);
+                distance = Vector3.Distance(rayOrigin, hit.point);
+                distance -= 0.5f;
                 Debug.DrawRay(ray.origin, ray.direction * distance, Color.magenta, 0, true);
             }
             else
@@ -62,10 +58,9 @@ public abstract class BulletState
             }
 
             vec = vec * distance;
-            Vector3 adjustPos = PlayerScript.rb.position + vec;
+            Vector3 adjustPos = rayOrigin + vec;
 
             BulletScript.rb.position = adjustPos;
-        }
         }
     }
 
