@@ -195,7 +195,8 @@ public class PlayerStateDeath_Void : PlayerState
     {
         if (PlayerScript.refState != EnumPlayerState.DEATH)
         {
-            deathVoidSE();
+            //deathVoidSE();
+            SoundManager.Instance.PlaySound("1", 0.8f);
             CameraMainShimokawara.instance.StopCamera();
             PlayerScript.refState = EnumPlayerState.DEATH;
             PlayerScript.canShotState = false;

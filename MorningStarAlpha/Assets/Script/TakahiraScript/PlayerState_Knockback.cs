@@ -57,11 +57,35 @@ public class PlayerState_Knockback : PlayerState
         // 錨引き戻し
         BulletScript.ReturnBullet();
 
+        PlaySE();
+
         Knockback(); // ノックバック処理
     }
 
     public override void UpdateState()
     {
+
+    }
+
+    void PlaySE()
+    {
+        int seNum = Random.Range(0, 2);
+
+        switch (seNum)
+        {
+            case 0:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_05", 1.0f);
+                break;
+
+            case 1:
+                SoundManager.Instance.PlaySound("CVoice_06", 1.0f);
+                break;
+
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
 
     }
 
@@ -108,7 +132,6 @@ public class PlayerState_Knockback : PlayerState
 
             }
         }
-
 
         NowTime += Time.fixedDeltaTime;
     }
