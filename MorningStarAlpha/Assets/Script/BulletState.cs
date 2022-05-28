@@ -38,11 +38,14 @@ public abstract class BulletState
     protected void AdjustBulletPos_Ray()
     {
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
-        Ray ray = new Ray(PlayerScript.rb.position, vec);
+
+        Vector3 rayOrigin = PlayerScript.rb.position;
+        rayOrigin.y += 3.0f;
+        Ray ray = new Ray(rayOrigin, vec);
 
         float distance = 3.0f;
 
-        if(Physics.Raycast(ray.origin, ray.direction * 3.0f, out RaycastHit hit, LayerMask.GetMask("Platform")))
+        if(Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 3.0f, LayerMask.GetMask("Platform")))
         {
             distance = Vector3.Distance(PlayerScript.rb.position, hit.point);
             Debug.DrawRay(ray.origin, ray.direction * distance, Color.magenta, 0, true);
@@ -51,8 +54,8 @@ public abstract class BulletState
         {
             Debug.DrawRay(ray.origin, ray.direction * distance, Color.cyan, 0, true);
         }
+
         vec = vec * distance;
-        vec.y += 3.0f;
         Vector3 adjustPos = PlayerScript.rb.position + vec;
 
         BulletScript.rb.position = adjustPos;
@@ -79,7 +82,7 @@ public class BulletReady : BulletState
     public override void Move()
     {
         // バレットの位置を常にスティック方向に調整
-        AdjustBulletPos();
+        AdjustBulletPos_Ray();
     }
 }
 
@@ -100,7 +103,7 @@ public class BulletGo : BulletState
         BulletScript.co.isTrigger = false;
         BulletScript.CanShotFlag = false;
 
-        AdjustBulletPos();
+        AdjustBulletPos_Ray();
         PlayerScript.ResetBulletRecover();
 
         BulletScript.ShotBullet();   
