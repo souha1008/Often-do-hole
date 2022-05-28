@@ -9,4 +9,9 @@ public class Stump_Callback : MonoBehaviour
         //ResultManager.instance.stump_animator.SetBool(ResultManager.instance.Stump_Start, false);
         ResultManager.instance.stump_animator.SetBool(ResultManager.instance.Stump_end, true);
     }
+
+    public void PlayStumpSound()
+    {
+        SoundManager.Instance.PlaySound("sound_45");
+    }
 }

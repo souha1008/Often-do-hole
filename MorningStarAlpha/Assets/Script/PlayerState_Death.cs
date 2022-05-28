@@ -43,11 +43,30 @@ public class PlayerStateDeath_Thorn : PlayerState
         PlayerScript.animator.Play("NockBack");
         PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
 
-        //SE
-        SoundManager.Instance.PlaySound("death", 0.3f);
+        deathSE();
 
         Knockback();
     }
+
+    void deathSE()
+    {
+        int seNum = Random.Range(0, 2);
+
+        switch (seNum) {
+            case 0:
+                break;
+
+           
+            case 1:
+                break;
+
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
+
+    }
+
 
     // ノックバック処理
     private void Knockback()

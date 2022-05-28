@@ -13,8 +13,8 @@ public class ResultManager : MonoBehaviour
     [Header("手配書揺れ関係")]
     [SerializeField] Image Wanted_Sprite;
 
-    Tweener shaketeener; // DOTweenのやつ
-    Vector3 initPos;    // 手配書の初期位置
+    //Tweener shaketeener; // DOTweenのやつ
+    //Vector3 initPos;    // 手配書の初期位置
 
     // ステージナンバー
     [Header("ステージナンバー")]
@@ -52,20 +52,20 @@ public class ResultManager : MonoBehaviour
     [System.NonSerialized] public int Stump_end;
     [System.NonSerialized] public int Shake_Start;
     [System.NonSerialized] public int Shake_End;
-    int Wanted_SkipAnime;
-    int Stump_SkipAnime;
+    //int Wanted_SkipAnime;
+    //int Stump_SkipAnime;
 
     // 取得コイン
     [SerializeField] Text coin_Text;
     [SerializeField] Text Coin_AllNum;
 
     // クリアランク用
-    Sprite[] Stump_sprite;
+    //Sprite[] Stump_sprite;
 
     // BGMディレイ用
-    bool BGM_Dlay;
-    int flame_count01;
-    [SerializeField] int wait_flame = 100;
+    //bool BGM_Dlay;
+    //float NowTime;
+    //[SerializeField] float wait_Time = 100;
 
     // コントローラー
     bool OncePush = false;
@@ -134,33 +134,32 @@ public class ResultManager : MonoBehaviour
         Next_UI.sprite = White_Next_UI;
         StageSelect_UI.sprite = Glay_StageSelect_UI;
 
-        initPos = Wanted_Sprite.transform.position;
+        //initPos = Wanted_Sprite.transform.position;
 
     }
 
     private void Update()
     {
-        SoundDlay();
         OncePush = false;
 
         // ボタンを押したらスキップ
-        if (UI_Canvas.activeSelf == false)
-        {
-            if (Input.GetButtonDown("ButtonA") && OncePush == false)
-            {
-                OncePush = true;    // ボタンを押している
+        //if (UI_Canvas.activeSelf == false)
+        //{
+        //    if (Input.GetButtonDown("ButtonA") && OncePush == false)
+        //    {
+        //        OncePush = true;    // ボタンを押している
 
-                // アニメーター設定
-                Wanted_animator.SetBool(Wanted_SkipAnime, true);
-                stump_animator.SetBool(Stump_SkipAnime, true);
-                stump_animator.SetBool(Stump_end, true);
+        //        // アニメーター設定
+        //        Wanted_animator.SetBool(Wanted_SkipAnime, true);
+        //        stump_animator.SetBool(Stump_SkipAnime, true);
+        //        stump_animator.SetBool(Stump_end, true);
 
-                // UIをアクティブ
-                UI_Canvas.SetActive(true);
-            }
-        }
+        //        // UIをアクティブ
+        //        UI_Canvas.SetActive(true);
+        //    }
+        //}
 
-        if (anim_end == true)
+        if (!stump_animator.GetBool(Stump_Start) && anim_end == true)
         {
             stump_animator.SetBool(Stump_Start, true);
             Stump_UI.color = new Color(1, 1, 1, 1);
@@ -245,30 +244,16 @@ public class ResultManager : MonoBehaviour
         Stump_end = Animator.StringToHash("Stump_End");
         Shake_Start = Animator.StringToHash("Shake_Start");
         Shake_End = Animator.StringToHash("Shake_End");
-        Wanted_SkipAnime = Animator.StringToHash("Wanted_Skip_Anime");
-        Stump_SkipAnime = Animator.StringToHash("Stump_Skip_Anime");
+        //Wanted_SkipAnime = Animator.StringToHash("Wanted_Skip_Anime");
+        //Stump_SkipAnime = Animator.StringToHash("Stump_Skip_Anime");
 
-    }
-
-    void SoundDlay()
-    {
-        if (flame_count01 < wait_flame)
-        {
-            flame_count01++;
-        }
-
-        if (flame_count01 >= wait_flame && BGM_Dlay == false)
-        {
-            BGM_Dlay = true;
-            SoundManager.Instance.PlaySound("Result_BGM");
-        }
     }
 
     void Photo_Random()
     {
         int rand = Random.Range(0, 4);
 
-        Debug.Log("ランダム値：" + rand);
+        //Debug.Log("ランダム値：" + rand);
 
         switch(rand)
         {

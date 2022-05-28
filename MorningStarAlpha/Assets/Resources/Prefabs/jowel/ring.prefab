@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2487503146591474012}
   - component: {fileID: 2982254267391500656}
   - component: {fileID: -8132982150701088562}
-  - component: {fileID: -3243000531278170529}
+  - component: {fileID: -8806803286168496531}
   m_Layer: 0
   m_Name: ring
   m_TagString: Untagged
@@ -99,8 +99,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &-3243000531278170529
-BoxCollider:
+--- !u!64 &-8806803286168496531
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,6 +109,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 17.825691, y: 10.027386, z: 19.879463}
-  m_Center: {x: 0.0000047683716, y: -0.00000047683716, z: 0.000002861023}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3861478300804232965, guid: 844ac6debf7e2f0418bc095fb44f278d, type: 3}

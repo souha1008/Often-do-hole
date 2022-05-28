@@ -8,9 +8,11 @@ using UnityEngine.UI;
 public class TimeCountUp_Result : MonoBehaviour
 {
     [SerializeField] Text timeText;
-    [SerializeField] int anim_exitFlame = 120;     // アニメーション終了フレーム
-    [SerializeField] float duration = 3;         // アニメーション時間
-    [SerializeField] float Start_Time = 999;       // 一番最初の時間
+    [SerializeField] float anim_exitFlame = 2;    // アニメーション終了フレーム
+    [SerializeField] float duration = 3;            // アニメーション時間
+    [SerializeField] float Start_Time = 999;        // 一番最初の時間
+
+    private float NowTime = 0.0f;
 
     [Header("デバッグ用")]
     [SerializeField] bool debug_check;
@@ -24,7 +26,7 @@ public class TimeCountUp_Result : MonoBehaviour
     }
     [SerializeField] ClearRank clearRank;
 
-    int flame_time = 0;     // フレームカウント
+    //int flame_time = 0;     // フレームカウント
     bool anim_start;
 
     // タイム保存
@@ -45,19 +47,17 @@ public class TimeCountUp_Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("ButtonA") && ResultManager.instance.anim_end == false)
-        {
-            StopAllCoroutines();
-            DecimalPoint_Change();
-            anim_start = true;
-            ResultManager.instance.anim_end = true;
-        }
-
-        flame_time++;
+        //if (Input.GetButtonDown("ButtonA") && ResultManager.instance.anim_end == false)
+        //{
+        //    StopAllCoroutines();
+        //    DecimalPoint_Change();
+        //    anim_start = true;
+        //    ResultManager.instance.anim_end = true;
+        //}
 
         if (anim_start == false)
         { 
-            if(flame_time >= anim_exitFlame)
+            if(NowTime >= anim_exitFlame)
             { 
                 //StartCoroutine(TimeAnimetion(1f, , 4f));
 
@@ -71,8 +71,13 @@ public class TimeCountUp_Result : MonoBehaviour
                     StartCoroutine(TimeAnimetion(Start_Time, scoreTime, duration));
                 }
 
+                SoundManager.Instance.PlaySound("sound_44");
 
                 anim_start = true;
+            }
+            else
+            {
+                NowTime += Time.deltaTime;
             }
         }
 
