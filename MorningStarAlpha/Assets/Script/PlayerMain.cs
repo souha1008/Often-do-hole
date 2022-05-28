@@ -101,6 +101,7 @@ public class PlayerMain : MonoBehaviour
     private RaycastHit footHit;                      // ‰º‚É“–‚½‚Á‚Ä‚¢‚é‚à‚Ì‚Ìî•ñŠi”[
     [System.NonSerialized] public float landTimer;                         //’…’nƒ`ƒƒƒ^ƒŠƒ“ƒO–h~
     [System.NonSerialized] public float counterTimer;                      //U‚èqƒ`ƒƒƒ^ƒŠƒ“ƒO–h~
+    [System.NonSerialized] public bool swingLandVoice;        //ºU‚èqŒã‚Ì
 
     [System.NonSerialized] public float colliderRadius = 1.7f;   //Ú’n”»’è—pray”¼Œa
     [System.NonSerialized] public float coliderDistance = 1.5f; //
@@ -233,6 +234,7 @@ public class PlayerMain : MonoBehaviour
         useVelocity = true;
         landTimer = 0.0f;
         counterTimer = 0.0f;
+        swingLandVoice = false;
 
         ClearModeTransitionFlag();
         SetAnimHash();
@@ -787,6 +789,12 @@ public class PlayerMain : MonoBehaviour
 
                 SoundManager.Instance.PlaySound("sound_16_Landing", 0.3f);
             }
+        }
+
+        if (swingLandVoice)
+        {
+            SoundManager.Instance.PlaySound("CVoice_ (27)", 1.0f);
+            swingLandVoice = false;
         }
     }
 

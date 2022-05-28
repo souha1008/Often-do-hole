@@ -75,11 +75,11 @@ public class PlayerState_Knockback : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_05", 1.0f);
+                SoundManager.Instance.PlaySound("CVoice_ (5)", 1.0f);
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_06", 1.0f);
+                SoundManager.Instance.PlaySound("CVoice_ (6)", 1.0f);
                 break;
 
             default:

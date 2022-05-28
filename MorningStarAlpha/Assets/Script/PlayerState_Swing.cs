@@ -52,6 +52,7 @@ public class PlayerStateSwing_Vel : PlayerState
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isSwing, true);
         PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, 0.0f);
+        PlayerScript.swingLandVoice = true;
         CalculateStartVariable();
 
         PlayerScript.counterTimer = 1.0f;
@@ -556,6 +557,60 @@ public class PlayerStateSwing_Vel : PlayerState
         }
     }
 
+    void PlayReleaseSE()
+    {
+        int seNum = Random.Range(0, 4);
+
+        switch (seNum)
+        {
+            case 0:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_ (8)", 1.0f);
+                break;
+
+            case 1:
+                SoundManager.Instance.PlaySound("CVoice_ (9)", 1.0f);
+                break;
+
+            case 2:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_ (10)", 1.0f);
+                break;
+
+            case 3:
+                SoundManager.Instance.PlaySound("CVoice_ (11)", 1.0f);
+                break;
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
+
+    }
+
+
+    void PlayCounterVoice()
+    {
+        int seNum = Random.Range(0, 2);
+
+        switch (seNum)
+        {
+            case 0:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_ (14)", 1.0f);
+                break;
+
+            case 1:
+                SoundManager.Instance.PlaySound("CVoice_ (15)", 1.0f);
+                break;
+
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
+
+    }
+
+
     public override void UpdateState()
     {
         //êÿÇËó£Çµ
@@ -566,21 +621,11 @@ public class PlayerStateSwing_Vel : PlayerState
 
             AnimFrameSetting();
             soundSwing();
-            if (PlayerScript.endSwing)
-            {
-                finishFlag = true;
-                if (PlayerScript.forciblySwingSaveVelocity)
-                {
-                    PlayerScript.vel = ReleaseForceCalicurale();
-                }
-                else
-                {
-                    PlayerScript.vel = Vector3.zero;
-                }
-            }
+           
 
             if (releaseButton == true)
             {
+                PlayReleaseSE();
                 if (PlayerScript.forciblySwingNextFollow)
                 {
                     PlayerScript.vel = (BulletScript.rb.position - PlayerScript.rb.position ).normalized * 50.0f;
@@ -593,6 +638,22 @@ public class PlayerStateSwing_Vel : PlayerState
 
                 PlayerScript.useVelocity = true;
                 finishFlag = true;
+            }
+            else
+            {
+                if (PlayerScript.endSwing)
+                {
+                    PlayReleaseSE();
+                    finishFlag = true;
+                    if (PlayerScript.forciblySwingSaveVelocity)
+                    {
+                        PlayerScript.vel = ReleaseForceCalicurale();
+                    }
+                    else
+                    {
+                        PlayerScript.vel = Vector3.zero;
+                    }
+                }
             }
         }
     }
@@ -648,7 +709,8 @@ public class PlayerStateSwing_Vel : PlayerState
 
                 //ï«íµÇÀï‘ÇËèàóù
                 if (PlayerScript.conuterSwing)
-                {           
+                {
+                    PlayCounterVoice();
                     SoundManager.Instance.PlaySound("sound_19_2_Counter", 0.5f);
                     PlayerScript.animator.SetTrigger(PlayerScript.animHash.wallKick);
                     CalculateCounterVariable();

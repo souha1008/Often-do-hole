@@ -46,9 +46,32 @@ public class PlayerStateShot : PlayerState
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
 
-        SoundManager.Instance.PlaySound("shot");
+        PlayShotVoice();
         SoundManager.Instance.PlaySound("sound_70_shot", 0.5f, 0.1f);
     }
+
+    void PlayShotVoice()
+    {
+        int seNum = Random.Range(0, 2);
+
+        switch (seNum)
+        {
+            case 0:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_ (12)", 1.0f);
+                break;
+
+            case 1:
+                SoundManager.Instance.PlaySound("CVoice_ (13)", 1.0f);
+                break;
+
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
+
+    }
+
 
     public PlayerStateShot(bool isFollow)//コンストラクタ
     {

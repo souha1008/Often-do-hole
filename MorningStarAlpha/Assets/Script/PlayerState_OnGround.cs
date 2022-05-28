@@ -304,6 +304,21 @@ public class PlayerStateOnGround : PlayerState
                 PlayerScript.animator.SetTrigger(PlayerScript.animHash.rareWaitTrigger);
 
                 int motionType = Random.Range(0, 2);
+                switch (motionType)
+                {
+                    case 0:
+                        //SE
+                        SoundManager.Instance.PlaySound("CVoice_ (25)", 1.0f);
+                        break;
+
+                    case 1:
+                        SoundManager.Instance.PlaySound("CVoice_ (26)", 1.0f);
+                        break;
+
+                    default:
+                        Debug.LogWarning("random :Out OfRange");
+                        break;
+                }
                 PlayerScript.animator.SetInteger(PlayerScript.animHash.rareWaitType, motionType);
             }
         }
@@ -312,4 +327,6 @@ public class PlayerStateOnGround : PlayerState
             rareMotionTimer = 0.0f;
         }
     }
+
+
 }

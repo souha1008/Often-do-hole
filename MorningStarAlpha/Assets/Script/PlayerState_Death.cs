@@ -56,11 +56,11 @@ public class PlayerStateDeath_Thorn : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_03", 0.8f);
+                SoundManager.Instance.PlaySound("CVoice_ (3)", 0.8f);
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_04", 0.8f);
+                SoundManager.Instance.PlaySound("CVoice_ (4)", 0.8f);
                 break;
 
             default:
@@ -195,8 +195,7 @@ public class PlayerStateDeath_Void : PlayerState
     {
         if (PlayerScript.refState != EnumPlayerState.DEATH)
         {
-            //deathVoidSE();
-            SoundManager.Instance.PlaySound("1", 0.8f);
+            deathVoidSE();
             CameraMainShimokawara.instance.StopCamera();
             PlayerScript.refState = EnumPlayerState.DEATH;
             PlayerScript.canShotState = false;
@@ -219,11 +218,11 @@ public class PlayerStateDeath_Void : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_01", 0.8f);
+                SoundManager.Instance.PlaySound("CVoice_ (1)", 0.8f);
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_02", 0.8f);
+                SoundManager.Instance.PlaySound("CVoice_ (2)", 0.8f);
                 break;
 
             default:
