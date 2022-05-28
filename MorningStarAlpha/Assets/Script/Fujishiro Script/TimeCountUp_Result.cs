@@ -45,13 +45,13 @@ public class TimeCountUp_Result : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("ButtonA") && ResultManager.instance.anim_end == false)
-        {
-            StopAllCoroutines();
-            DecimalPoint_Change();
-            anim_start = true;
-            ResultManager.instance.anim_end = true;
-        }
+        //if (Input.GetButtonDown("ButtonA") && ResultManager.instance.anim_end == false)
+        //{
+        //    StopAllCoroutines();
+        //    DecimalPoint_Change();
+        //    anim_start = true;
+        //    ResultManager.instance.anim_end = true;
+        //}
 
         flame_time++;
 
@@ -71,6 +71,7 @@ public class TimeCountUp_Result : MonoBehaviour
                     StartCoroutine(TimeAnimetion(Start_Time, scoreTime, duration));
                 }
 
+                SoundManager.Instance.PlaySound("sound_44");
 
                 anim_start = true;
             }
