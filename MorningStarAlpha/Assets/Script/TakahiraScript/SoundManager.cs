@@ -1074,7 +1074,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         NowPlaySound.Sound_Source.isUse = true;
 
         UpdateVolume(); // ‰¹—ÊXV
-        Debug.LogWarning("‰¹Ä¶");
+        //Debug.LogWarning("‰¹Ä¶");
     }
 
 

@@ -193,6 +193,7 @@ public class PlayerMain : MonoBehaviour
             if (Physics.Raycast(ray.origin, ray.direction * 100.0f, out hit, LayerMask.GetMask("Platform")))
             {
                 Vector3 RespornPos = hit.point;
+                RespornPos.z = 0;
                 RespornPos.y += 3.0f;
                 transform.position = RespornPos;
 

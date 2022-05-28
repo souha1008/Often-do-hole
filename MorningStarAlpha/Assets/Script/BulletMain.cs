@@ -165,7 +165,6 @@ public class BulletMain : MonoBehaviour
         rb.isKinematic = false;
         onceFlag = false;
         StopVelChange = false;
-      
         
         colPoint = Vector3.zero;
         Vector3 vec = PlayerScript.adjustLeftStick.normalized;
@@ -401,6 +400,7 @@ public class BulletMain : MonoBehaviour
                         break;
 
                     case "Iron":
+                        Debug.Log("collision Iron");
                         onceFlag = true;
                         isTouched = true;
                         SoundManager.Instance.PlaySound("sound_69_Sasaranai", 1.0f, 0.05f);
@@ -483,6 +483,7 @@ public class BulletMain : MonoBehaviour
                             case Aspect_8.DOWN_RIGHT:
                             case Aspect_8.UP_LEFT:
                             case Aspect_8.DOWN_LEFT:
+                            default:
                                 PlayerScript.ForciblyReleaseMode(true);
                                 break;
 

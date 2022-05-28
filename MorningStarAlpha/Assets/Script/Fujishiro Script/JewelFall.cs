@@ -29,7 +29,7 @@ public class JewelFall : MonoBehaviour
     private static float FallLength_X = 160.0f;     // XÀ•W‚Ì~‚ç‚¹‚éÅ‘å•
     private static float FallLength_Z = 125.0f;     // ZÀ•W‚Ì~‚ç‚¹‚éÅ‘å•
     private static float StartVel_Y = -100.0f;      // Å‰‚É‰Á‚¦‚éY•ûŒüˆÚ“®—Ê
-    private static float StartDelayTime = 1.5f;     // Å‰‚É’x‚ç‚¹‚éŽžŠÔ(•b)
+    private static float StartDelayTime = 1.65f;     // Å‰‚É’x‚ç‚¹‚éŽžŠÔ(•b)
     private static float JewelFallTime = 0.02f;    // ƒWƒ…ƒGƒ‹‚ª~‚éŽžŠÔ(•b)
     private static int JewelFallNum = 10;           // ƒWƒ…ƒGƒ‹‚ªˆê“x‚É~‚é—Ê
     private static float JewelFallRot = 2.0f;       // ƒWƒ…ƒGƒ‹‚ÌÅ‘å‰ñ“]—Ê
@@ -52,6 +52,7 @@ public class JewelFall : MonoBehaviour
         {
             if (NowTime >= StartDelayTime)
             {
+                SoundManager.Instance.PlaySound("Result_BGM");
                 StartDelayFlag = true;
                 NowTime = 0.0f;
             }

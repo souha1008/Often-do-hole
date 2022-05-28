@@ -19717,7 +19717,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73cbe406b6a989418441b36adb2c6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NoUseDistanceFlag: 0
+  StartDisAppearDistance: 23
+  EndDisAppearDistance: 18
   StartAlpha: 1
+  EndAlpha: 0
+  NowAlpha: 0
 --- !u!1001 &821947543
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23522,6 +23527,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1895764824792721244, guid: f56889fd83e72c54b8e90843764f2158, type: 3}
+      propertyPath: EndAlpha
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1895764824792721244, guid: f56889fd83e72c54b8e90843764f2158, type: 3}
+      propertyPath: StartAlpha
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 1895764824792721244, guid: f56889fd83e72c54b8e90843764f2158, type: 3}
       propertyPath: EndDisAppearDistance
       value: 15
@@ -35679,7 +35692,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73cbe406b6a989418441b36adb2c6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NoUseDistanceFlag: 0
+  StartDisAppearDistance: 23
+  EndDisAppearDistance: 18
   StartAlpha: 1
+  EndAlpha: 0
+  NowAlpha: 0
 --- !u!4 &1341721859 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 625285564438891132, guid: 9aba964005f4cb740a771ef8ed5ab51e, type: 3}
@@ -43016,7 +43034,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a73cbe406b6a989418441b36adb2c6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NoUseDistanceFlag: 0
+  StartDisAppearDistance: 23
+  EndDisAppearDistance: 18
   StartAlpha: 1
+  EndAlpha: 0
+  NowAlpha: 0
 --- !u!1 &1770146528
 GameObject:
   m_ObjectHideFlags: 0
