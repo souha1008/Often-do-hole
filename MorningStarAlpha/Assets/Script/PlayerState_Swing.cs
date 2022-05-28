@@ -270,8 +270,8 @@ public class PlayerStateSwing_Vel : PlayerState
         float animFrame = 0.0f;
 
 
-        const float WallGoAng = 60;
-        const float WallReturnAng = 20;
+        const float WallGoAng = 0;
+        const float WallReturnAng = 60;
         const float NoneGoAng = 0;
         const float NoneReturnAng = 60;
        
@@ -285,6 +285,32 @@ public class PlayerStateSwing_Vel : PlayerState
             Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
             Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
             if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
+            {
+                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                {
+                    if (degree < 180 + WallGoAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
+                }
+                else
+                {
+                    if (degree < 180 - WallReturnAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+                }
+            }
+            else
             {
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
@@ -310,11 +336,20 @@ public class PlayerStateSwing_Vel : PlayerState
                     }
                 }
             }
-            else
+        }
+        else if(firstDir == PlayerMoveDir.LEFT)
+        {
+            animFrame = (degree - 95) / 170;
+            animFrame = Mathf.Clamp01(animFrame);
+
+            Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
+            Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
+            if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
             {
-                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                //壁ジャンプ用
+                if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {
-                    if (degree < 240)
+                    if (degree > 180 - WallGoAng)
                     {
                         counterAnimFlag = true;
                     }
@@ -326,7 +361,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
                 else
                 {
-                    if (degree < 160)
+                    if (degree > 180 + WallReturnAng)
                     {
                         counterAnimFlag = true;
                     }
@@ -336,15 +371,7 @@ public class PlayerStateSwing_Vel : PlayerState
                     }
                 }
             }
-        }
-        else if(firstDir == PlayerMoveDir.LEFT)
-        {
-            animFrame = (degree - 95) / 170;
-            animFrame = Mathf.Clamp01(animFrame);
-
-            Ray ray = new Ray(PlayerScript.rb.position, Vector3.right);
-            Debug.DrawRay(ray.origin, ray.direction * RayLength, Color.magenta, 0, true);
-            if (Physics.Raycast(PlayerScript.rb.position, Vector3.right, RayLength, LayerMask.GetMask("Platform")))
+            else
             {
                 //壁ジャンプ用
                 if (PlayerScript.dir == PlayerMoveDir.LEFT)
@@ -362,33 +389,6 @@ public class PlayerStateSwing_Vel : PlayerState
                 else
                 {
                     if (degree > 180 + NoneReturnAng)
-                    {
-                        counterAnimFlag = true;
-                    }
-                    else
-                    {
-                        counterAnimFlag = false;
-                    }
-                }
-            }
-            else
-            {
-                //壁ジャンプ用
-                if (PlayerScript.dir == PlayerMoveDir.LEFT)
-                {
-                    if (degree > 120)
-                    {
-                        counterAnimFlag = true;
-                    }
-                    else
-                    {
-                        counterAnimFlag = false;
-                    }
-
-                }
-                else
-                {
-                    if (degree > 160)
                     {
                         counterAnimFlag = true;
                     }
@@ -661,7 +661,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
 
                 float easeRatio = Easing.EasingTypeFloat(EASING_TYPE.SINE_OUT, deg180Ratio, 1.0f, 0.0f, 1.0f);
-
+                easeRatio = Mathf.Clamp01(easeRatio);
             
                 //前回計算後のAfterAngleを持ってくる
                 LastBtoP_Angle = AfterBtoP_Angle;
