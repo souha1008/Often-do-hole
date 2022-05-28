@@ -102,36 +102,36 @@ public class SoundManagerEditor : Editor
 
 #if UNITY_EDITOR
 // アセットインポート時に自動で設定する
-public class AssetPostProcessorSound : AssetPostprocessor
-{
-    public void OnPostprocessAudio(AudioClip audioClip)
-    {
-        AudioImporter audioImporter = assetImporter as AudioImporter;
-        string Path = assetImporter.assetPath;
+//public class AssetPostProcessorSound : AssetPostprocessor
+//{
+//    public void OnPostprocessAudio(AudioClip audioClip)
+//    {
+//        AudioImporter audioImporter = assetImporter as AudioImporter;
+//        string Path = assetImporter.assetPath;
 
-        // BGM, OBJECTサウンドはバックグラウンド読み込みする
-        audioImporter.loadInBackground |= Path.Contains("BGM");
-        audioImporter.loadInBackground |= Path.Contains("OBJECT");
+//        // BGM, OBJECTサウンドはバックグラウンド読み込みする
+//        audioImporter.loadInBackground |= Path.Contains("BGM");
+//        audioImporter.loadInBackground |= Path.Contains("OBJECT");
 
-        // タグセット
-        var settings = AddressableAssetSettingsDefaultObject.Settings;
-        var group = settings.DefaultGroup;
-        var AssetData = AssetDatabase.AssetPathToGUID(audioImporter.assetPath);
-        var entry = group.GetAssetEntry(AssetData);
-        if (Path.Contains("BGM"))
-        {           
-            entry.SetLabel("BGM", true, true);
-        }
-        else if (Path.Contains("SE"))
-        {
-            entry.SetLabel("SE", true, true);
-        }
-        else if (Path.Contains("OBJECT"))
-        {
-            entry.SetLabel("OBJECT", true, true);
-        }
-    }
-}
+//        // タグセット
+//        var settings = AddressableAssetSettingsDefaultObject.Settings;
+//        var group = settings.DefaultGroup;
+//        var AssetData = AssetDatabase.AssetPathToGUID(audioImporter.assetPath);
+//        var entry = group.GetAssetEntry(AssetData);
+//        if (Path.Contains("BGM"))
+//        {
+//            entry.SetLabel("BGM", true, true);
+//        }
+//        else if (Path.Contains("SE"))
+//        {
+//            entry.SetLabel("SE", true, true);
+//        }
+//        else if (Path.Contains("OBJECT"))
+//        {
+//            entry.SetLabel("OBJECT", true, true);
+//        }
+//    }
+//}
 #endif
 
 
@@ -328,6 +328,14 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         StartCoroutine(SetBGMData());
         StartCoroutine(SetOBJECTData());
     }
+    //private IEnumerator SetInitSoundData()
+    //{
+    //    // サウンドデータ読み込み処理
+    //    yield return StartCoroutine(SetSEData());
+    //    yield return StartCoroutine(SetBGMData());
+    //    yield return StartCoroutine(SetOBJECTData());
+    //    SoundLoadBGMFlag = true;
+    //}
 
     private void Start()
     {
@@ -572,10 +580,11 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         do
         {
-            //Debug.Log("読み込み中");
+            Debug.Log("読み込み中");
             yield return null;
         }
         while (!(SoundLoadBGMFlag && SoundLoadSEFlag && SoundLoadOBJECTFlag));
+        //while (!SoundLoadBGMFlag);
 
         SOUND_CLIP Sound_Clip = new SOUND_CLIP("", null, SOUND_TYPE.NULL);
 
@@ -592,7 +601,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
 
         if (Sound_Clip.AudioClip == null)
             yield break;
-
 
         // 音量の範囲指定
         Mathf.Clamp(Volume, 0.0f, 1.0f);
@@ -1066,6 +1074,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         NowPlaySound.Sound_Source.isUse = true;
 
         UpdateVolume(); // 音量更新
+        Debug.LogWarning("音再生");
     }
 
 
