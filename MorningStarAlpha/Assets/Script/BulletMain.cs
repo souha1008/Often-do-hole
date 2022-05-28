@@ -573,6 +573,7 @@ public class BulletMain : MonoBehaviour
                                 PlayerScript.ForciblySwingMode(false);
                                 PlayerMain.instance.RecoverBullet();
                                 SoundManager.Instance.PlaySound("sound_30");
+                                VibrationManager.Instance.StartVibration(0.85f, 0.85f, 0.25f);
                                 break;
 
                             case "SpringBoard":
