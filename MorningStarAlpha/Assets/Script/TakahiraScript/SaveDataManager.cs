@@ -69,7 +69,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     // マウスの非表示処理用
     private Vector3 MousePosPre = Vector3.zero;
     private float CursorTimer = 0.0f;
-    private static float HiddenTime = 10.0f;    // マウスが消える時間
+    private static float HiddenTime = 7.0f;    // マウスが消える時間
 
 
     private void Awake()
@@ -110,6 +110,10 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         //        Cursor.lockState = CursorLockMode.None;
         //        Cursor.visible = false;
         //#endif
+
+        // マウスの処理用変数に初期値代入
+        MousePosPre = Input.mousePosition;
+        CursorTimer = HiddenTime;
     }
 
     private void Update()
