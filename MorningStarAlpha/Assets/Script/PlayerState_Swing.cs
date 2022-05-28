@@ -269,6 +269,11 @@ public class PlayerStateSwing_Vel : PlayerState
         float degree = CalculationScript.TwoPointAngle360(BulletScript.rb.position, Player.transform.position);
         float animFrame = 0.0f;
 
+
+        const float WallGoAng = 0;
+        const float WallReturnAng = 60;
+        const float NoneGoAng = 0;
+        const float NoneReturnAng = 60;
        
 
         if (firstDir == PlayerMoveDir.RIGHT)
@@ -283,7 +288,7 @@ public class PlayerStateSwing_Vel : PlayerState
             {
                 if (PlayerScript.dir == PlayerMoveDir.RIGHT)
                 {
-                    if (degree < 240)
+                    if (degree < 180 + WallGoAng)
                     {
                         counterAnimFlag = true;
                     }
@@ -295,7 +300,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
                 else
                 {
-                    if (degree < 120)
+                    if (degree < 180 - WallReturnAng)
                     {
                         counterAnimFlag = true;
                     }
@@ -304,7 +309,33 @@ public class PlayerStateSwing_Vel : PlayerState
                         counterAnimFlag = false;
                     }
                 }
-            }        
+            }
+            else
+            {
+                if (PlayerScript.dir == PlayerMoveDir.RIGHT)
+                {
+                    if (degree < 180 + NoneGoAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
+                }
+                else
+                {
+                    if (degree < 180 - NoneReturnAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+                }
+            }
         }
         else if(firstDir == PlayerMoveDir.LEFT)
         {
@@ -318,7 +349,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 //壁ジャンプ用
                 if (PlayerScript.dir == PlayerMoveDir.LEFT)
                 {
-                    if (degree > 120)
+                    if (degree > 180 - WallGoAng)
                     {
                         counterAnimFlag = true;
                     }
@@ -330,7 +361,34 @@ public class PlayerStateSwing_Vel : PlayerState
                 }
                 else
                 {
-                    if (degree > 160)
+                    if (degree > 180 + WallReturnAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+                }
+            }
+            else
+            {
+                //壁ジャンプ用
+                if (PlayerScript.dir == PlayerMoveDir.LEFT)
+                {
+                    if (degree > 180 - NoneGoAng)
+                    {
+                        counterAnimFlag = true;
+                    }
+                    else
+                    {
+                        counterAnimFlag = false;
+                    }
+
+                }
+                else
+                {
+                    if (degree > 180 + NoneReturnAng)
                     {
                         counterAnimFlag = true;
                     }
@@ -372,8 +430,19 @@ public class PlayerStateSwing_Vel : PlayerState
         //    PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
         //}
 
-        Debug.Log("KickRatio" + counterAnimRatio);
+        //Debug.Log("KickRatio" + counterAnimRatio.ToString());
 
+#if false
+        if (firstDir == PlayerScript.dir)
+        {
+            PlayerScript.animator.Play("Swing.swingGo_Kick", -1, animFrame);
+        }
+        else
+        {
+            animFrame = 1 - animFrame;
+            PlayerScript.animator.Play("Swing.swingBack_Kick", -1, animFrame);
+        }
+#else
         if (firstDir == PlayerScript.dir)
         {
             PlayerScript.animator.Play("Swing.swingGo", -1, animFrame);
@@ -384,7 +453,8 @@ public class PlayerStateSwing_Vel : PlayerState
             PlayerScript.animator.Play("Swing.swingBack", -1, animFrame);
         }
 
-       
+#endif 
+
     }
 
     public Vector3 ReleaseForceCalicurale()
@@ -518,6 +588,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 else
                 {
                     PlayerScript.vel = ReleaseForceCalicurale();
+                    EffectManager.Instance.BoostEffect(PlayerScript.vel);
                 }
 
                 PlayerScript.useVelocity = true;
@@ -590,7 +661,7 @@ public class PlayerStateSwing_Vel : PlayerState
                 deg180Ratio = 1 - deg180Ratio; //真下を1,最高到達点を0とする
 
                 float easeRatio = Easing.EasingTypeFloat(EASING_TYPE.SINE_OUT, deg180Ratio, 1.0f, 0.0f, 1.0f);
-
+                easeRatio = Mathf.Clamp01(easeRatio);
             
                 //前回計算後のAfterAngleを持ってくる
                 LastBtoP_Angle = AfterBtoP_Angle;

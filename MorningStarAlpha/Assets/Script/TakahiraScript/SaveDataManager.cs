@@ -66,6 +66,11 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     // パス
     static private string Path;
 
+    // マウスの非表示処理用
+    private Vector3 MousePosPre = Vector3.zero;
+    private float CursorTimer = 0.0f;
+    private static float HiddenTime = 7.0f;    // マウスが消える時間
+
 
     private void Awake()
     {
@@ -99,11 +104,25 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         //Debug.Log(MainData.Stage[1].Time);
         //Debug.Log(MainData.Stage[2].Time);
         //Debug.Log(MainData.Stage[2].Time);
+
+        // マウスロック処理
+        //#if !UNITY_EDITOR
+        //        Cursor.lockState = CursorLockMode.None;
+        //        Cursor.visible = false;
+        //#endif
+
+        // マウスの処理用変数に初期値代入
+        MousePosPre = Input.mousePosition;
+        CursorTimer = HiddenTime;
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        // マウス非表示処理
+        CursorUpdate();
+
+        // ESCキーでの強制終了処理
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
@@ -210,5 +229,31 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
     public StageData GetStageData(int StageNum)
     {
         return MainData.Stage[StageNum];
+    }
+
+
+    // カーソル非表示処理
+    private void CursorUpdate()
+    {
+        Vector3 MousePos = Input.mousePosition; // 現在のマウス座標
+
+        if (MousePos != MousePosPre)
+        {
+            Cursor.visible = true;
+            CursorTimer = 0.0f;
+        }
+        else
+        {
+            if (CursorTimer >= HiddenTime)    // 非表示にする時間
+            {
+                Cursor.visible = false;
+            }
+            else
+            {
+                CursorTimer += Time.deltaTime;
+            }
+        }
+
+        MousePosPre = MousePos;
     }
 }

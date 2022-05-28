@@ -61,13 +61,13 @@ public class Title_p2 : MonoBehaviour
         Select_GO.SetActive(false);
 
         // ÉTÉEÉìÉhçƒê∂
-        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.5f);
+        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.7f);
     }
 
     private void Update()
     {
         // PressAnyButton
-        if (Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select") && once_press == false)
+        if ((Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select")) && once_press == false)
         {
             once_press = true;
             PressAny_animator.SetBool(PushButton, true);

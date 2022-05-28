@@ -60,17 +60,6 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     };
 #endif
 
-    //public CLEAR_RANK_TIME[] ClearRankTime = {
-    //    new CLEAR_RANK_TIME(50,150,999) ,
-    //    new CLEAR_RANK_TIME(150,240,999) ,
-    //    new CLEAR_RANK_TIME(120,250,999) ,
-    //    new CLEAR_RANK_TIME(130,300,999) ,
-    //    new CLEAR_RANK_TIME(150,400,999) ,
-    //    new CLEAR_RANK_TIME(150,400,999) ,
-    //    new CLEAR_RANK_TIME(200,450,999) ,
-    //    new CLEAR_RANK_TIME(250,450,999) 
-    //};
-
     private GAME_STATE GameState;
     private float GameTime;
     private GAME_RANK GameRank;

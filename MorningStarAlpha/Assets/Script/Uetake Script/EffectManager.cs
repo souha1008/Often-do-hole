@@ -59,7 +59,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     public GameObject BoostEffect(Vector3 BoostVel)
     {
         Vector3 forwardVel = BoostVel.normalized;
-        const float adjustDistance =0.0f;
+        const float adjustDistance = -1.0f;
         Quaternion rot = Quaternion.Euler(-90, 0, 0);
 
         Quaternion rotateRot = Quaternion.LookRotation(forwardVel);

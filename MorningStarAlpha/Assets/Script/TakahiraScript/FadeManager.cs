@@ -53,6 +53,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     private string NextSceneName;
 
+    private bool TextureFlag = false;
+
     private void Awake()
     {
         if (this != Instance)
@@ -76,30 +78,45 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
         NowFadeState = OldFadeState = FADE_STATE.FADE_NONE;
         NowFadeKind = FADE_KIND.FADE_GAMOVER;
-        FadeColor = new Color(0, 0, 0, 0);
 
         //テクスチャ作成
         //Debug.Log("FadeManager作成");
 
+        StartCoroutine(FadeTextrueInit()); // フェード用テクスチャ生成
+    }
+
+    // フェード用テクスチャ生成処理
+    private IEnumerator FadeTextrueInit()
+    {
+        // これがないとReadPixels()でエラーになる
+        yield return new WaitForEndOfFrame();
+
+        // フェード用テクスチャ生成
+        FadeColor = new Color(0, 0, 0, 0);
         FadeTexture = new Texture2D(32, 32, TextureFormat.RGB24, false);
         FadeTexture.ReadPixels(new Rect(0, 0, 32, 32), 0, 0, false);
         FadeTexture.SetPixel(0, 0, Color.white);
         FadeTexture.Apply();
+        TextureFlag = true;
     }
+
     private void OnGUI()
     {
         if (NowFadeState == FADE_STATE.FADE_NONE)
             return;
 
         //透明度を更新してテクスチャを描画
-        GUI.color = FadeColor;
-        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), FadeTexture);
+        if (TextureFlag)
+        {
+            GUI.color = FadeColor;
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), FadeTexture);
+        }        
     }
 
-    private void Start() 
-    {
-    
-    }
+    //private void Start() 
+    //{
+
+    //}
 
     private void Update()
     {

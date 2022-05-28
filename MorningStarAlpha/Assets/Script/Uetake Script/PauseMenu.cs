@@ -140,6 +140,9 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
 
         StartOnceFlag = false;
 
+        // 振動
+        VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+
         PauseCanvas.gameObject.SetActive(false);
         SoundVolumeCanvas.gameObject.SetActive(false);
     }
@@ -160,8 +163,12 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         VibrationManager.Instance.StopVibration();
         SoundVolumeInit();
 
+        // 音
         SoundManager.Instance.PlaySound("sound_40");
-        StartOnceFlag = true;
+
+        // 振動
+        VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+        StartOnceFlag = true;   // 最初の一回フラグ切り替え
     }
 
     public void ClickResume()
@@ -228,7 +235,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         // 振動更新
         if (VibrationSlider.value <= 0.5f)
         {
-            VibrationManager.Instance.StartVibration(0.0f, 0.0f, 0.0f);
+            if (StartOnceFlag) VibrationManager.Instance.StartVibration(0.0f, 0.0f, 0.0f);
             VibrationManager.Instance.SetVibrationFlag(false);
             // イメージ変更
             SetSizeDown(VibrationObjectHandle);
@@ -236,7 +243,7 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
         else
         {
             VibrationManager.Instance.SetVibrationFlag(true);
-            VibrationManager.Instance.StartVibration(0.5f, 0.5f, 0.4f);
+            if (StartOnceFlag) VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.4f);
             // イメージ変更
             SetSizeUp(VibrationObjectHandle);
         }
