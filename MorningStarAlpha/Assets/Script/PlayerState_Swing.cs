@@ -430,7 +430,7 @@ public class PlayerStateSwing_Vel : PlayerState
         //    PlayerScript.animator.SetFloat(PlayerScript.animHash.KickFloat, counterAnimRatio);
         //}
 
-        Debug.Log("KickRatio" + counterAnimRatio.ToString());
+        //Debug.Log("KickRatio" + counterAnimRatio.ToString());
 
 #if false
         if (firstDir == PlayerScript.dir)
