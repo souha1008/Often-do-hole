@@ -29,11 +29,6 @@ public class OptionManager : MonoBehaviour
         VibrationSlider = VibrationObject.GetComponent<Slider>();
 
         Random.InitState(System.DateTime.Now.Millisecond); // 乱数初期化
-                                                           //マウスロック
-//#if !UNITY_EDITOR
-//        Cursor.lockState = CursorLockMode.None;
-//        Cursor.visible = false;
-//#endif
     }
 
 
