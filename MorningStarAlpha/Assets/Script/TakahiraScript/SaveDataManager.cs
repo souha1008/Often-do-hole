@@ -28,10 +28,10 @@ public class DataFile
             Stage[i] = new StageData();
         }
 
-        SoundVolumeMaster = 100 * 0.8f;
-        SoundVolumeBGM = 100 * 0.7f;
-        SoundVolumeSE = 100 * 0.7f;
-        SoundVolumeOBJECT = 100 * 0.7f;
+        SoundVolumeMaster = 100 * 0.9f;
+        SoundVolumeBGM = 100 * 0.6f;
+        SoundVolumeSE = 100 * 0.6f;
+        SoundVolumeOBJECT = 100 * 0.6f;
 
         VibrationFlag = true;
     }

@@ -6,6 +6,6 @@ public class PlaySound_Wind : MonoBehaviour
 {
     void Start()
     {
-        SoundManager.Instance.PlaySound("sound_50");
+        SoundManager.Instance.PlaySound("sound_50", 0.5f, this.gameObject);
     }
 }

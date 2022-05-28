@@ -6,6 +6,6 @@ public class PlaySound_Water : MonoBehaviour
 {
     void Start()
     {
-        SoundManager.Instance.PlaySound("sound_49");
+        SoundManager.Instance.PlaySound("sound_49", 0.5f, this.gameObject);
     }
 }
