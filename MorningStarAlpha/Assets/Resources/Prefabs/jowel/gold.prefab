@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9020212263492805509}
   - component: {fileID: 8823358101366089753}
   - component: {fileID: -7522562525246662985}
-  - component: {fileID: 4116127233933371343}
+  - component: {fileID: -6842875881257779539}
   m_Layer: 0
   m_Name: gold
   m_TagString: Untagged
@@ -99,8 +99,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &4116127233933371343
-BoxCollider:
+--- !u!64 &-6842875881257779539
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,6 +109,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 7.5626297, y: 4.063881, z: 22.738792}
-  m_Center: {x: 0.00000023841858, y: 0, z: -0.0000038146973}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3758573805739257388, guid: 844ac6debf7e2f0418bc095fb44f278d, type: 3}

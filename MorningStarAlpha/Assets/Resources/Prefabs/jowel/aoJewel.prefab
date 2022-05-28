@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 373837509602698114}
   - component: {fileID: 4133499614305217422}
   - component: {fileID: -1155525184953360069}
-  - component: {fileID: -8525043025552881198}
+  - component: {fileID: 2129693473541664802}
   m_Layer: 0
   m_Name: aoJewel
   m_TagString: Untagged
@@ -99,8 +99,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &-8525043025552881198
-BoxCollider:
+--- !u!64 &2129693473541664802
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,6 +109,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.7043648, y: 2.1165347, z: 6.023102}
-  m_Center: {x: 0.00000023841858, y: 0, z: -0.000009298325}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8659943070623925175, guid: 844ac6debf7e2f0418bc095fb44f278d, type: 3}
