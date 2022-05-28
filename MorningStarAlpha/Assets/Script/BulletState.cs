@@ -34,6 +34,29 @@ public abstract class BulletState
 
         BulletScript.rb.position = adjustPos;
     }
+
+    protected void AdjustBulletPos_Ray()
+    {
+        Vector3 vec = PlayerScript.adjustLeftStick.normalized;
+        Ray ray = new Ray(PlayerScript.rb.position, vec);
+
+        float distance = 3.0f;
+
+        if(Physics.Raycast(ray.origin, ray.direction * 3.0f, out RaycastHit hit, LayerMask.GetMask("Platform")))
+        {
+            distance = Vector3.Distance(PlayerScript.rb.position, hit.point);
+            Debug.DrawRay(ray.origin, ray.direction * distance, Color.magenta, 0, true);
+        }
+        else
+        {
+            Debug.DrawRay(ray.origin, ray.direction * distance, Color.cyan, 0, true);
+        }
+        vec = vec * distance;
+        vec.y += 3.0f;
+        Vector3 adjustPos = PlayerScript.rb.position + vec;
+
+        BulletScript.rb.position = adjustPos;
+    }
 }
 
 
