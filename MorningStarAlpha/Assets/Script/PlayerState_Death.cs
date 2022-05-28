@@ -52,12 +52,15 @@ public class PlayerStateDeath_Thorn : PlayerState
     {
         int seNum = Random.Range(0, 2);
 
-        switch (seNum) {
+        switch (seNum)
+        {
             case 0:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_03", 0.8f);
                 break;
 
-           
             case 1:
+                SoundManager.Instance.PlaySound("CVoice_04", 0.8f);
                 break;
 
             default:
@@ -192,7 +195,7 @@ public class PlayerStateDeath_Void : PlayerState
     {
         if (PlayerScript.refState != EnumPlayerState.DEATH)
         {
-            SoundManager.Instance.PlaySound("fallVoice", 0.3f);
+            deathVoidSE();
             CameraMainShimokawara.instance.StopCamera();
             PlayerScript.refState = EnumPlayerState.DEATH;
             PlayerScript.canShotState = false;
@@ -205,6 +208,28 @@ public class PlayerStateDeath_Void : PlayerState
             PlayerScript.ResetAnimation();
             //‚È‚µ
         }
+    }
+
+    void deathVoidSE()
+    {
+        int seNum = Random.Range(0, 2);
+
+        switch (seNum)
+        {
+            case 0:
+                //SE
+                SoundManager.Instance.PlaySound("CVoice_01", 0.8f);
+                break;
+
+            case 1:
+                SoundManager.Instance.PlaySound("CVoice_02", 0.8f);
+                break;
+
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
+
     }
 
     public override void UpdateState()
