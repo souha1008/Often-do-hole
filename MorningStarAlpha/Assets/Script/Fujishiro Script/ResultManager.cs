@@ -144,23 +144,23 @@ public class ResultManager : MonoBehaviour
         OncePush = false;
 
         // ボタンを押したらスキップ
-        if (UI_Canvas.activeSelf == false)
-        {
-            if (Input.GetButtonDown("ButtonA") && OncePush == false)
-            {
-                OncePush = true;    // ボタンを押している
+        //if (UI_Canvas.activeSelf == false)
+        //{
+        //    if (Input.GetButtonDown("ButtonA") && OncePush == false)
+        //    {
+        //        OncePush = true;    // ボタンを押している
 
-                // アニメーター設定
-                Wanted_animator.SetBool(Wanted_SkipAnime, true);
-                stump_animator.SetBool(Stump_SkipAnime, true);
-                stump_animator.SetBool(Stump_end, true);
+        //        // アニメーター設定
+        //        Wanted_animator.SetBool(Wanted_SkipAnime, true);
+        //        stump_animator.SetBool(Stump_SkipAnime, true);
+        //        stump_animator.SetBool(Stump_end, true);
 
-                // UIをアクティブ
-                UI_Canvas.SetActive(true);
-            }
-        }
+        //        // UIをアクティブ
+        //        UI_Canvas.SetActive(true);
+        //    }
+        //}
 
-        if (anim_end == true)
+        if (!stump_animator.GetBool(Stump_Start) && anim_end == true)
         {
             stump_animator.SetBool(Stump_Start, true);
             Stump_UI.color = new Color(1, 1, 1, 1);
@@ -268,7 +268,7 @@ public class ResultManager : MonoBehaviour
     {
         int rand = Random.Range(0, 4);
 
-        Debug.Log("ランダム値：" + rand);
+        //Debug.Log("ランダム値：" + rand);
 
         switch(rand)
         {
