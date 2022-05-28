@@ -67,7 +67,7 @@ public class Title_p2 : MonoBehaviour
     private void Update()
     {
         // PressAnyButton
-        if (Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select") && once_press == false)
+        if ((Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select")) && once_press == false)
         {
             once_press = true;
             PressAny_animator.SetBool(PushButton, true);

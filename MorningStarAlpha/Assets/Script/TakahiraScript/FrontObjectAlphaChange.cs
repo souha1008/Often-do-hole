@@ -48,7 +48,16 @@ public class FrontObjectAlphaChange : MonoBehaviour
 #endif
 
             // プレイヤーの座標
-            Vector3 PlayerPos = PlayerMain.instance.transform.position;
+            Vector3 PlayerPos;
+            if (PlayerMain.instance != null)
+            {
+                PlayerPos = PlayerMain.instance.transform.position;
+            }
+            else
+            {
+                NoUseDistanceFlag = true;
+                return;
+            }
             Vector3 ThisPos = this.gameObject.transform.position;
             float Dis = Vector2.Distance(PlayerPos, ThisPos);
 
