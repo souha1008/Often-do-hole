@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1770711500948533672}
   - component: {fileID: 9114246438404006454}
   - component: {fileID: 6898508219921123753}
-  - component: {fileID: 2260077026576514275}
+  - component: {fileID: 5515405136888797285}
   m_Layer: 0
   m_Name: Scoin
   m_TagString: Untagged
@@ -99,8 +99,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &2260077026576514275
-BoxCollider:
+--- !u!64 &5515405136888797285
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,6 +109,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 6.0650635, y: 0.62626994, z: 6.09848}
-  m_Center: {x: 0.000007390976, y: 0, z: 0.000004053116}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4162253513501663206, guid: 844ac6debf7e2f0418bc095fb44f278d, type: 3}

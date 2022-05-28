@@ -25,13 +25,13 @@ public class JewelFall : MonoBehaviour
     List<JEWEL_LIST> JewelList = new List<JEWEL_LIST>();
 
     private static float StartPos_Y = 90.0f;        // 初期Y座標
-    private static float EndPos_Y = -120.0f;        // 消失Y座標
-    private static float FallLength_X = 80.0f;      // X座標の降らせる最大幅
-    private static float FallLength_Z = 100.0f;     // Z座標の降らせる最大幅
+    private static float EndPos_Y = -140.0f;        // 消失Y座標
+    private static float FallLength_X = 160.0f;     // X座標の降らせる最大幅
+    private static float FallLength_Z = 125.0f;     // Z座標の降らせる最大幅
     private static float StartVel_Y = -100.0f;      // 最初に加えるY方向移動量
     private static float StartDelayTime = 1.5f;     // 最初に遅らせる時間(秒)
-    private static float JewelFallTime = 0.015f;    // ジュエルが降る時間(秒)
-    private static int JewelFallNum = 4;            // ジュエルが一度に降る量
+    private static float JewelFallTime = 0.02f;    // ジュエルが降る時間(秒)
+    private static int JewelFallNum = 10;           // ジュエルが一度に降る量
     private static float JewelFallRot = 2.0f;       // ジュエルの最大回転量
 
     private bool StartDelayFlag = false;            // 最初に遅らせる用フラグ
@@ -69,7 +69,13 @@ public class JewelFall : MonoBehaviour
             {
                 int Jewel_rand = Random.Range(0, 8);                            // ランダムでジュエル選ぶ
                 float Pos_rand_X = Random.Range(-FallLength_X, FallLength_X);   // X座標指定
-                float Pos_rand_Z = Random.Range(0.0f, FallLength_Z);            // Z座標指定
+                float Pos_rand_Z;   // Z座標指定
+
+                // 後ろに多く降らす
+                if (i <= JewelFallNum * 0.3f)
+                    Pos_rand_Z = Random.Range(0.0f, FallLength_Z); 
+                else
+                    Pos_rand_Z = Random.Range(FallLength_Z * 0.5f, FallLength_Z); // Z座標指定
 
                 Vector3 FallPos = new Vector3(Pos_rand_X, StartPos_Y, Pos_rand_Z);   // 座標入力
 
@@ -97,12 +103,12 @@ public class JewelFall : MonoBehaviour
                 {
                     GameObject Jw = Instantiate(Jewel[Jewel_rand], FallPos, Quaternion.identity);
                     Rigidbody JwRb = Jw.GetComponent<Rigidbody>();
+                    JwRb.AddForce(0.0f, StartVel_Y, 0.0f, ForceMode.VelocityChange);   // 最初に加えるY方向移動量
                     Vector3 JwVec = new Vector3(
                             Random.Range(-JewelFallRot, JewelFallRot),
                             Random.Range(-JewelFallRot, JewelFallRot),
                             Random.Range(-JewelFallRot, JewelFallRot)
                             ); // 回転量ランダム
-                    JwRb.AddForce(0.0f, StartVel_Y, 0.0f, ForceMode.VelocityChange);   // 最初に加えるY方向移動量
                     JewelList.Add(new JEWEL_LIST(Jw, JwRb, JwVec, Jewel_rand));
                 }
                 

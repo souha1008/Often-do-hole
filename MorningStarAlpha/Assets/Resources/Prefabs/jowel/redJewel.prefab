@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4358395834211713863}
   - component: {fileID: 5477398423991977595}
   - component: {fileID: -1483406218125727830}
-  - component: {fileID: 8780646224529272661}
+  - component: {fileID: -6863384623109232411}
   m_Layer: 0
   m_Name: redJewel
   m_TagString: Untagged
@@ -99,8 +99,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &8780646224529272661
-BoxCollider:
+--- !u!64 &-6863384623109232411
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,6 +109,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 4.515053, y: 2.995593, z: 8.094177}
-  m_Center: {x: -0.00000047683716, y: 0, z: 0.0000071525574}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5065503977446733706, guid: 844ac6debf7e2f0418bc095fb44f278d, type: 3}
