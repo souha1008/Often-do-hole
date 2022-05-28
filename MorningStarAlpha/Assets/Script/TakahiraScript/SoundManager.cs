@@ -580,7 +580,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     {
         do
         {
-            Debug.Log("ì«Ç›çûÇ›íÜ");
+            //Debug.Log("ì«Ç›çûÇ›íÜ");
             yield return null;
         }
         while (!(SoundLoadBGMFlag && SoundLoadSEFlag && SoundLoadOBJECTFlag));
