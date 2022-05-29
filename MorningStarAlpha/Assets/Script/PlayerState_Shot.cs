@@ -45,7 +45,7 @@ public class PlayerStateShot : PlayerState
         //アニメーション用
         PlayerScript.ResetAnimation();
         PlayerScript.animator.SetBool(PlayerScript.animHash.isShot, true);
-
+        PlayerScript.swingLandVoice = false;
         PlayShotVoice();
         SoundManager.Instance.PlaySound("sound_70_shot", 0.5f, 0.1f);
     }
@@ -58,11 +58,11 @@ public class PlayerStateShot : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_ (12)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (12)");
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_ (13)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (13)");
                 break;
 
             default:
