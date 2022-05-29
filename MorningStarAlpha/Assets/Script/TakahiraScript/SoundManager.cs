@@ -1029,7 +1029,7 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         return isPlay;
     }
 
-    // Œ»İÄ¶’†‚Ì‰¹æ“¾
+    // ‰¹‚Ì’·‚³æ“¾
     public float GetSoundLength(string SoundName)
     {
         float Length = 0.0f;
@@ -1042,7 +1042,6 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
                 break;
             }
         }
-
         return Length;
     }
 

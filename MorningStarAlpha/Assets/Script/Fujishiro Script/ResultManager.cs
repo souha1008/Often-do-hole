@@ -222,6 +222,7 @@ public class ResultManager : MonoBehaviour
                             VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
                             // Œˆ’è‰¹
                             SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                             GameStateManager.LoadNextStage();
                         }
                         break;
@@ -234,6 +235,7 @@ public class ResultManager : MonoBehaviour
                             VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
                             // Œˆ’è‰¹
                             SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                             GameStateManager.LoadStageSelect(true);
                         }
                         break;
@@ -250,6 +252,7 @@ public class ResultManager : MonoBehaviour
                     VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
                     // Œˆ’è‰¹
                     SoundManager.Instance.PlaySound("sound_03_01");
+                    SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                     GameStateManager.LoadStageSelect(true);
                 }
             }
