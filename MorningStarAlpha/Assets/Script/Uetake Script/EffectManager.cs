@@ -12,6 +12,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     private GameObject BoostParticle;
     private GameObject CoinGetParticle;
     private GameObject BoxParticle;
+    private GameObject unit;
 
     private void Awake()
     {
