@@ -1014,6 +1014,38 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     }
 
 
+    // 現在再生中の音取得
+    public bool isNowPlaySound(string SoundName)
+    {
+        bool isPlay = false;
+        for (int i = 0; i < NowPlaySoundList.Count; i++)
+        {
+            if (NowPlaySoundList[i].Sound_Clip.SoundName == SoundName)
+            {
+                isPlay = true;
+                break;
+            }
+        }
+        return isPlay;
+    }
+
+    // 現在再生中の音取得
+    public float GetSoundLength(string SoundName)
+    {
+        float Length = 0.0f;
+        // オーディオの名前と合うもの取得
+        for (int i = 0; i < SoundList.Count; i++)
+        {
+            if (SoundList[i].SoundName == SoundName)
+            {
+                Length = SoundList[i].AudioClip.length;
+                break;
+            }
+        }
+
+        return Length;
+    }
+
 
     // サウンドソース一時停止処理
     private void PauseSoundSource(SOUND_SOURCE Sound_Source)
