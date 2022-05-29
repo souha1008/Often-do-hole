@@ -9,22 +9,27 @@ public class Result_WantedChange : MonoBehaviour
     [SerializeField] private Sprite NoStageWantedSprite;
     void Start()
     {
-        //if (GameStateManager.GetNowStage() == 0 || GameStateManager.GetNowStage() == 7)
-        //{
-        //    this.gameObject.GetComponent<Image>().sprite = NoStageWantedSprite;
-        //}
-        //else
-        //{
-        //    this.gameObject.GetComponent<Image>().sprite = StageWantedSprite;
-        //}
-
-        if (ResultManager.instance.debug_stageNo == 0 || ResultManager.instance.debug_stageNo == 7)
+        if (ResultManager.instance.debug_check)
         {
-            this.gameObject.GetComponent<Image>().sprite = NoStageWantedSprite;
+            if (ResultManager.instance.debug_stageNo == 0 || ResultManager.instance.debug_stageNo == 7)
+            {
+                this.gameObject.GetComponent<Image>().sprite = NoStageWantedSprite;
+            }
+            else
+            {
+                this.gameObject.GetComponent<Image>().sprite = StageWantedSprite;
+            }
         }
         else
         {
-            this.gameObject.GetComponent<Image>().sprite = StageWantedSprite;
+            if (GameStateManager.GetNowStage() == 0 || GameStateManager.GetNowStage() == 7)
+            {
+                this.gameObject.GetComponent<Image>().sprite = NoStageWantedSprite;
+            }
+            else
+            {
+                this.gameObject.GetComponent<Image>().sprite = StageWantedSprite;
+            }
         }
     }
 }
