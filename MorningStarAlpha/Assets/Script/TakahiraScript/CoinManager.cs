@@ -110,21 +110,23 @@ public class CoinManager : SingletonMonoBehaviour<CoinManager>
         Coins2 = Coins.transform.GetChild(1).gameObject;
         Coins3 = Coins.transform.GetChild(2).gameObject;
 
-
-        // ※セーブデータからコインの取得データ持ってくる、ない場合初期化
-        if (SaveDataManager.Instance.MainData != null && SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].Clear == true)
+        if (!CoinManagerStageFlag)
         {
-            coin = SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].coin;
-        }
-        else if (!CoinManagerStageFlag)
-        {
-            // コイン初期化
-            coin = new Coin(
-                Coins1.transform.childCount,
-                Coins2.transform.childCount,
-                Coins3.transform.childCount
-                );
-        }
+            // ※セーブデータからコインの取得データ持ってくる、ない場合初期化
+            if (SaveDataManager.Instance.MainData != null && SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].Clear == true)
+            {
+                coin = SaveDataManager.Instance.MainData.Stage[GameStateManager.GetNowStage()].coin;
+            }
+            else
+            {
+                // コイン初期化
+                coin = new Coin(
+                    Coins1.transform.childCount,
+                    Coins2.transform.childCount,
+                    Coins3.transform.childCount
+                    );
+            }
+        }        
         SubCoin = new Coin(coin);
 
         // コインオブジェクトに情報セット
