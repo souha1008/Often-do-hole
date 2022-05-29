@@ -61,7 +61,8 @@ public class Title_p2 : MonoBehaviour
         Select_GO.SetActive(false);
 
         // ƒTƒEƒ“ƒhÄ¶
-        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.7f);
+        if (!SoundManager.Instance.isNowPlaySound("Title_BGM"))
+            SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.7f, AudioReverbPreset.Mountains);
     }
 
     private void Update()
