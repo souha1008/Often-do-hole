@@ -50,6 +50,7 @@ public class PlayerStateDeath_Thorn : PlayerState
 
     void deathSE()
     {
+        PlayerScript.StopAllVoice();
         int seNum = Random.Range(0, 2);
 
         switch (seNum)
@@ -156,7 +157,30 @@ public class PlayerStateDeath_Kujira : PlayerState
         PlayerScript.animator.Play("NockBack");
         PlayerScript.animator.SetBool(PlayerScript.animHash.IsDead, true);
 
-      
+        deathSE();
+    }
+
+    void deathSE()
+    {
+        PlayerScript.StopAllVoice();
+        int seNum = Random.Range(0, 2);
+
+        switch (seNum)
+        {
+            case 0:
+                //SE
+                PlayerScript.PlayVoice("CVoice_ (29)");
+                break;
+
+            case 1:
+                PlayerScript.PlayVoice("CVoice_ (30)");
+                break;
+
+            default:
+                Debug.LogWarning("random :Out OfRange");
+                break;
+        }
+
     }
 
     public override void UpdateState()
@@ -212,6 +236,7 @@ public class PlayerStateDeath_Void : PlayerState
 
     void deathVoidSE()
     {
+        PlayerScript.StopAllVoice();
         int seNum = Random.Range(0, 2);
 
         switch (seNum)

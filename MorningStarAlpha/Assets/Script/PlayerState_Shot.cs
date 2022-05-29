@@ -48,6 +48,8 @@ public class PlayerStateShot : PlayerState
         PlayerScript.swingLandVoice = false;
         PlayShotVoice();
         SoundManager.Instance.PlaySound("sound_70_shot", 0.5f, 0.1f);
+
+       
     }
 
     void PlayShotVoice()
