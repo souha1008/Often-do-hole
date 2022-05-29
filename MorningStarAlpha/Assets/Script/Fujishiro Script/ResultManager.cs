@@ -72,7 +72,7 @@ public class ResultManager : MonoBehaviour
 
     // デバッグ用
     [Header("以下デバッグコンソール")]
-    [SerializeField] bool debug_check;
+    [SerializeField] public bool debug_check;
     [SerializeField][Range(0, 14)] public int debug_stageNo;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
@@ -136,7 +136,7 @@ public class ResultManager : MonoBehaviour
 
         //initPos = Wanted_Sprite.transform.position;
 
-        SoundManager.Instance.PlaySound("sound_50", 0.7f, SOUND_FADE_TYPE.OUT, 3.5f, 0.0f, true); // 風の音再生
+        SoundManager.Instance.PlaySound("sound_50", 0.7f, SOUND_FADE_TYPE.OUT, 3.0f, 0.0f, true); // 風の音再生
 
     }
 
