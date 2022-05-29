@@ -29,6 +29,7 @@ public class MenuManager : MonoBehaviour
         StagesSelect = 0,
         Option,
         Exit,
+        ALLNUM,
     }
 
     public enum SOUND_OK_TEST
@@ -66,23 +67,23 @@ public class MenuManager : MonoBehaviour
         {
             if (Input.GetAxis("Vertical") <= -0.8 && input_stick == false)
             {
-                nowSelect++;
-                SpriteChange();
-                if (nowSelect > (NOWSELECT)2)
+                nowSelect++;              
+                if (nowSelect > NOWSELECT.ALLNUM - 1)
                 {
-                    nowSelect = NOWSELECT.Exit;
+                    nowSelect = 0;
                 }
+                SpriteChange();
                 input_stick = true;
                 SoundManager.Instance.PlaySound("sound_04_‘I‘ð‰¹", 1.0f, 0.1f);
             }
             if (Input.GetAxis("Vertical") >= 0.8 && input_stick == false)
             {
                 nowSelect--;
-                SpriteChange();
                 if (nowSelect < 0)
                 {
-                    nowSelect = NOWSELECT.StagesSelect;
+                    nowSelect = NOWSELECT.ALLNUM - 1;
                 }
+                SpriteChange();
                 input_stick = true;
                 SoundManager.Instance.PlaySound("sound_04_‘I‘ð‰¹", 1.0f, 0.1f);
             }
@@ -97,6 +98,8 @@ public class MenuManager : MonoBehaviour
                     if (Input.GetButtonDown("ButtonA"))
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
+                        // U“®
+                        VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
                         GameStateManager.LoadStageSelect(false);
                         this.gameObject.SetActive(false);
                     }
@@ -114,8 +117,12 @@ public class MenuManager : MonoBehaviour
                     if (Input.GetButtonDown("ButtonA"))
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
+                        // U“®
+                        VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
                         Application.Quit();
                     }
+                    break;
+                default:
                     break;
             }
             OnceFlag = true;
@@ -142,6 +149,8 @@ public class MenuManager : MonoBehaviour
                 StageSelect_UI.sprite = Glay_StageSelect_UI;
                 Option_UI.sprite = Glay_Option_UI;
                 Exit_UI.sprite = White_Exit_UI;
+                break;
+            default:
                 break;
         }
     }
