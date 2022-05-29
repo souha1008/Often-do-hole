@@ -107,8 +107,8 @@ public class FrontObjectAlphaChange : MonoBehaviour
             StartDisAppearDistance = EndDisAppearDistance;
         }
 
-        Mathf.Clamp(StartAlpha, 0.0f, 1.0f);
-        Mathf.Clamp(EndAlpha, 0.0f, 1.0f);
+        StartAlpha = Mathf.Clamp(StartAlpha, 0.0f, 1.0f);
+        EndAlpha = Mathf.Clamp(EndAlpha, 0.0f, 1.0f);
 
         if (StartAlpha < EndAlpha)
         {
