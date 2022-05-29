@@ -44,6 +44,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
         if (!RespawnFlag || SetFlag && PlayerMain.instance != null && PlayerMain.instance.refState != EnumPlayerState.DEATH)
         {
             RespawnPos = checkpoint.RespawnPointObject.transform.position;
+            RespawnPos.z = 0.0f;
             RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
             NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
 
