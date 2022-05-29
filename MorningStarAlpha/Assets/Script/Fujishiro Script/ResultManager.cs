@@ -136,8 +136,7 @@ public class ResultManager : MonoBehaviour
 
         //initPos = Wanted_Sprite.transform.position;
 
-        SoundManager.Instance.PlaySound("sound_50", 0.7f, SOUND_FADE_TYPE.OUT, 2.5f, 0.0f, true); // •—‚Ì‰¹Ä¶
-
+        SoundManager.Instance.PlaySound("sound_50", 0.5f, 29.0f, SOUND_FADE_TYPE.OUT, 2.3f, 0.0f, true); // •—‚Ì‰¹Ä¶
     }
 
     private void Update()
