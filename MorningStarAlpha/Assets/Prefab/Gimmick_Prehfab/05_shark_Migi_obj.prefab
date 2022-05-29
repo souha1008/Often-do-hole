@@ -31,6 +31,7 @@ Transform:
   m_LocalScale: {x: 88, y: 88, z: 88}
   m_Children:
   - {fileID: 6373195738635130913}
+  - {fileID: 5528074914412148785}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -171,3 +172,33 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00044889003, y: 0.0014087576, z: 0}
     m_Extent: {x: 0.069572516, y: 0.03666064, z: 0.0270961}
   m_DirtyAABB: 0
+--- !u!1 &8923382292050646523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5528074914412148785}
+  m_Layer: 8
+  m_Name: Explosion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5528074914412148785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8923382292050646523}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.05579, y: -0.00964, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4619650049902407452}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

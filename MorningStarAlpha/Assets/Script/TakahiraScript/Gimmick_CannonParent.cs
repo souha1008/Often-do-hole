@@ -214,12 +214,18 @@ public class Gimmick_CannonParent : Gimmick_Main
                 {
                     Bullet[i] = Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)).GetComponent<Gimmick_CannonChild>(); // íeê∂ê¨
                     Child = Bullet[i];
+                    GameObject explosion_child = this.transform.GetChild(1).gameObject;
+                    Debug.Log(explosion_child.transform.position);
+                    EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position);
                     ///Debug.LogWarning("ê∂ê¨");
                     break;
                 }
                 else if (!Bullet[i].gameObject.activeSelf)
                 {
                     Child = Bullet[i];
+                    GameObject explosion_child = this.transform.GetChild(1).gameObject;
+                    
+                    EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position);
                     //Debug.LogWarning("çƒóòóp");
                     break;
                 }
