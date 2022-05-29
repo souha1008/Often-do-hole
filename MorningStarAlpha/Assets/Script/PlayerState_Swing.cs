@@ -565,20 +565,20 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_ (8)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (8)");
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_ (9)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (9)");
                 break;
 
             case 2:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_ (10)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (10)");
                 break;
 
             case 3:
-                SoundManager.Instance.PlaySound("CVoice_ (11)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (11)");
                 break;
             default:
                 Debug.LogWarning("random :Out OfRange");
@@ -596,11 +596,11 @@ public class PlayerStateSwing_Vel : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_ (14)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (14)");
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_ (15)", 1.0f);
+                PlayerScript.PlayVoice("CVoice_ (15)");
                 break;
 
             default:

@@ -56,11 +56,11 @@ public class PlayerStateDeath_Thorn : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_ (3)", 0.8f);
+                PlayerScript.PlayVoice("CVoice_ (3)");
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_ (4)", 0.8f);
+                PlayerScript.PlayVoice("CVoice_ (4)");
                 break;
 
             default:
@@ -218,11 +218,11 @@ public class PlayerStateDeath_Void : PlayerState
         {
             case 0:
                 //SE
-                SoundManager.Instance.PlaySound("CVoice_ (1)", 0.8f);
+                PlayerScript.PlayVoice("CVoice_ (1)");
                 break;
 
             case 1:
-                SoundManager.Instance.PlaySound("CVoice_ (2)", 0.8f);
+                PlayerScript.PlayVoice("CVoice_ (2)");
                 break;
 
             default:

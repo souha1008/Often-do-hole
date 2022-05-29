@@ -162,6 +162,7 @@ public class PlayerMain : MonoBehaviour
     [ReadOnly, Tooltip("スイングぶら下がり用")] public bool conuterSwing;
     [ReadOnly, Tooltip("発射回復")] public bool recoverBullet;
     //public float GameSpeed = 1.0f;
+    float nowVoiceLimit;
 
     void Awake()
     {
@@ -235,7 +236,7 @@ public class PlayerMain : MonoBehaviour
         landTimer = 0.0f;
         counterTimer = 0.0f;
         swingLandVoice = false;
-
+        nowVoiceLimit = 0.0f;
         ClearModeTransitionFlag();
         SetAnimHash();
         getFootHit();
@@ -272,11 +273,27 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+    public void PlayVoice(string clip_name, float volume = 1.0f, float duration = 0.0f)
+    {
+        Debug.Log(clip_name + "duration " + duration);
+        if (nowVoiceLimit <= 0.0f)
+        {
+            nowVoiceLimit = SoundManager.Instance.GetSoundLength(clip_name);
+            Debug.Log("playVoice: Length " + nowVoiceLimit);
+            SoundManager.Instance.PlaySound(clip_name, volume, duration);
+        }
+        else
+        {
+            //再生しない
+        }
+    }
+
 
     private void TimerCount()
     {
         landTimer = Mathf.Min(landTimer + Time.deltaTime, 10.0f);
         counterTimer = Mathf.Min(counterTimer + Time.deltaTime, 10.0f);
+        nowVoiceLimit = Mathf.Max(-10.0f, nowVoiceLimit - Time.deltaTime);
     }
 
     private void Update()
@@ -793,7 +810,7 @@ public class PlayerMain : MonoBehaviour
 
         if (swingLandVoice)
         {
-            SoundManager.Instance.PlaySound("CVoice_ (27)", 1.0f, 0.1f);
+            PlayVoice("CVoice_ (27)", 1.0f, 0.13f);
             swingLandVoice = false;
         }
     }
