@@ -20,7 +20,7 @@ public class Kujira_Effect_ONOFF : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerStay(Collider collider)
     {
         if(collider.CompareTag("Iron"))
         {
