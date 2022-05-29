@@ -288,6 +288,18 @@ public class PlayerMain : MonoBehaviour
         }
     }
 
+    public void StopAllVoice()
+    {
+        string clipName;
+
+        for (int i = 1; i <= 30; i++)
+        {
+            clipName = "CVoice_ (" + i.ToString() + ")";
+            SoundManager.Instance.StopSound(clipName);
+        }
+
+        nowVoiceLimit = -1.0f;
+    }
 
     private void TimerCount()
     {
@@ -316,6 +328,11 @@ public class PlayerMain : MonoBehaviour
                 Debug.LogError("STATE == NULL");
             }
             
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            StopAllVoice();
         }
     }
 
