@@ -72,6 +72,8 @@ public class Title_p2 : MonoBehaviour
             once_press = true;
             PressAny_animator.SetBool(PushButton, true);
             SoundManager.Instance.PlaySound("sound_03_Title", 0.7f);
+            // êUìÆ
+            VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.35f);
         }
     }
 
