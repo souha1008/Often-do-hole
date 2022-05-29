@@ -18,7 +18,7 @@ public class PlayerState_Rail : PlayerState
         PlayerScript.vel = Vector3.zero;
 
         PlayerScript.animator.Play("Shot.midair_roop");
-        PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
+        PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, false);
         BulletScript.SetBulletState(EnumBulletState.STOP);
     }
 

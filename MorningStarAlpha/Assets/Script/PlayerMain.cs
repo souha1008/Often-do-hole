@@ -817,8 +817,11 @@ public class PlayerMain : MonoBehaviour
 
                 if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
                 {
-                    isOnGround = true;
-                    animator.SetBool(animHash.onGround, true);
+                    if (refState != EnumPlayerState.RAILING)
+                    {
+                        isOnGround = true;
+                        animator.SetBool(animHash.onGround, true);
+                    }
 
                     LandEffectSound();
                  }
