@@ -5,11 +5,13 @@ using UnityEngine;
 public class PlayerDirectionalLight_static : MonoBehaviour
 {
     Vector3 staticPOS;
+    Quaternion defaultRotation;
     // Start is called before the first frame update
     void Start()
     {
         staticPOS = transform.position;
         Debug.Log("ƒ‰ƒCƒg:"+staticPOS);
+        defaultRotation = transform.localRotation;
     }
 
     // Update is called once per frame
@@ -17,14 +19,14 @@ public class PlayerDirectionalLight_static : MonoBehaviour
     {
         //transform.localPosition = staticPOS;
         
-        if(Input.GetAxis("Horizontal") > 0.8f)
+        if(PlayerMain.instance.dir == PlayerMoveDir.RIGHT)
         {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.rotation = defaultRotation;
         }
-        if(Input.GetAxis("Horizontal") < -0.8f)
+        if(PlayerMain.instance.dir == PlayerMoveDir.LEFT)
         {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            Quaternion inverseRotation = defaultRotation * Quaternion.Euler(0, 0, 180);
+            transform.rotation = inverseRotation;
         }
-
     }
 }
