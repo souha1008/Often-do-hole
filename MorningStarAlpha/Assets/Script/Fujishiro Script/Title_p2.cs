@@ -61,7 +61,8 @@ public class Title_p2 : MonoBehaviour
         Select_GO.SetActive(false);
 
         // ÉTÉEÉìÉhçƒê∂
-        SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.7f);
+        if (!SoundManager.Instance.isNowPlaySound("Title_BGM"))
+            SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.7f, AudioReverbPreset.Mountains);
     }
 
     private void Update()
@@ -72,6 +73,8 @@ public class Title_p2 : MonoBehaviour
             once_press = true;
             PressAny_animator.SetBool(PushButton, true);
             SoundManager.Instance.PlaySound("sound_03_Title", 0.7f);
+            // êUìÆ
+            VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.35f);
         }
     }
 

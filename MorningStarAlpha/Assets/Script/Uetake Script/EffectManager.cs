@@ -12,7 +12,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     private GameObject BoostParticle;
     private GameObject CoinGetParticle;
     private GameObject BoxParticle;
-    private GameObject unit;
+    private GameObject SharkExplosion;
 
     private void Awake()
     {
@@ -23,6 +23,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         TreasureOpenParticle = (GameObject)Resources.Load("Effect/05_Treasure_open");
         CoinGetParticle = (GameObject)Resources.Load("Effect/05_coin");
         BoxParticle = (GameObject)Resources.Load("Effect/05_uiterudebris_effect");
+        SharkExplosion = (GameObject)Resources.Load("Effect/05_Explosion");
     }
 
     public void StartShotEffect(Vector3 Pos, Quaternion rot)
@@ -107,5 +108,19 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         const float size = 4.0f;
         GameObject effect = Instantiate(BoxParticle, pos, Quaternion.identity);
         effect.transform.localScale = Vector3.one * size; //サイズ変更
+    }
+
+    public void SharkExplosionEffect(Vector3 pos)
+    {
+        GameObject effect = Instantiate(SharkExplosion, pos, Quaternion.identity);
+        //effect.transform.localScale = Vector3.one * size;
+        Destroy(effect.gameObject, 2.0f);
+    }
+    public void SharkExplosionEffect(Vector3 pos, GameObject Perant)
+    {
+        GameObject effect = Instantiate(SharkExplosion, pos, Quaternion.identity);
+        Perant.transform.parent = effect.transform;
+        //effect.transform.localScale = Vector3.one * size;
+        Destroy(effect.gameObject, 2.0f);
     }
 }

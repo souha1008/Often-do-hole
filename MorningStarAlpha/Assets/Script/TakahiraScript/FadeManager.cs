@@ -244,10 +244,10 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
 
             // チェックポイントのリセット
-            if (FadeKind != FADE_KIND.FADE_GAMOVER)
-            {
-                CheckPointManager.Instance.ResetCheckPoint();
-            }
+            //if (FadeKind != FADE_KIND.FADE_GAMOVER)
+            //{
+            //    CheckPointManager.Instance.ResetCheckPoint();
+            //}
         }
     }
 

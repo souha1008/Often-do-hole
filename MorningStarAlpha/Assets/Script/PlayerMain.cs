@@ -793,7 +793,7 @@ public class PlayerMain : MonoBehaviour
 
         if (swingLandVoice)
         {
-            SoundManager.Instance.PlaySound("CVoice_ (27)", 1.0f);
+            SoundManager.Instance.PlaySound("CVoice_ (27)", 1.0f, 0.1f);
             swingLandVoice = false;
         }
     }
@@ -814,10 +814,14 @@ public class PlayerMain : MonoBehaviour
             //if (vel.y < 0)
             //{
                 Ray ray = new Ray(rb.position, Vector3.down);
+
                 if (Physics.SphereCast(ray, colliderRadius, coliderDistance, LayerMask.GetMask("Platform")))
                 {
-                    isOnGround = true;
-                    animator.SetBool(animHash.onGround, true);
+                    if (refState != EnumPlayerState.RAILING)
+                    {
+                        isOnGround = true;
+                        animator.SetBool(animHash.onGround, true);
+                    }
 
                     LandEffectSound();
                  }

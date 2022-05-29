@@ -58,7 +58,9 @@ public class SelectManager : MonoBehaviour
         //無理矢理スタートを呼びます
         StageSelectCamera.instance.ManualStart();
 
-        
+        // サウンド再生
+        if (!SoundManager.Instance.isNowPlaySound("Title_BGM"))
+            SoundManager.Instance.PlaySound("Title_BGM", 0.5f, 0.7f, AudioReverbPreset.Mountains);
     }
 
     void Awake()
@@ -84,12 +86,19 @@ public class SelectManager : MonoBehaviour
             {
                 //関数空呼び
                 PushLeftMomentOrLongPush();
-
-                NowSelectStage++;
+                if (!(NowSelectStage >= CanStage))
+                {
+                    SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+                    NowSelectStage++;
+                }                
             }
             else if (PushLeftMomentOrLongPush())//今押した or 長押しいい感じ
             {
-                NowSelectStage--;
+                if (!(NowSelectStage <= 0))
+                {
+                    SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+                    NowSelectStage--;
+                }
             }
 
 
@@ -101,14 +110,19 @@ public class SelectManager : MonoBehaviour
             //ステージ侵入
             if (CanStart && Input.GetButton("ButtonA"))
             {
-                SoundManager.Instance.PlaySound("sound_03_03");
+                SoundManager.Instance.PlaySound("sound_03_03", 0.8f);
+                SoundManager.Instance.FadeSound("Title_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                // 振動
+                VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.27f);
                 GameStateManager.LoadStage(NowSelectStage);
 
             }
             else if (CanStart && Input.GetButton("ButtonB"))
             {
-                SoundManager.Instance.PlaySound("sound_03_06");
-                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
+                SoundManager.Instance.PlaySound("sound_03_06", 0.8f);
+                // 振動
+                VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_STAGECHANGE);
             }
             //Debug.Log(CanStart);
         }

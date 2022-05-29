@@ -76,8 +76,8 @@ public class ResultManager : MonoBehaviour
     [SerializeField][Range(0, 14)] public int debug_stageNo;
     [SerializeField] [Range(0, 9)] int debug_coins;
 
-    // 一回のみ反応用
-    bool OnceFlag = false;
+    // 一回のみ選択反応用
+    bool OnceSentakuFlag = false;
 
     enum ClearRank
     {
@@ -136,14 +136,11 @@ public class ResultManager : MonoBehaviour
 
         //initPos = Wanted_Sprite.transform.position;
 
-        SoundManager.Instance.PlaySound("sound_50", 0.7f, SOUND_FADE_TYPE.OUT, 3.0f, 0.0f, true); // 風の音再生
-
+        SoundManager.Instance.PlaySound("sound_50", 0.5f, 29.0f, SOUND_FADE_TYPE.OUT, 2.3f, 0.0f, true); // 風の音再生
     }
 
     private void Update()
     {
-        OncePush = false;
-
         // ボタンを押したらスキップ
         //if (UI_Canvas.activeSelf == false)
         //{
@@ -187,35 +184,58 @@ public class ResultManager : MonoBehaviour
             // ラストステージ以外
             if (UI_Canvas.activeSelf == true)
             {
-                // スティック上
-                if (Input.GetAxis("Vertical") > 0.8f)
+                // スティック上下
+                if (Input.GetAxis("Vertical") > 0.8f || Input.GetAxis("Vertical") < -0.8)
                 {
-                    ui_command = UI_COMMAND.NextStage;
-                    Next_UI.sprite = White_Next_UI;
-                    StageSelect_UI.sprite = Glay_StageSelect_UI;
+                    if (!OnceSentakuFlag)
+                    {
+                        SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+
+                        if (ui_command == UI_COMMAND.NextStage)
+                        {
+                            ui_command = UI_COMMAND.StageSelect;
+                            Next_UI.sprite = Glay_Next_UI;
+                            StageSelect_UI.sprite = White_StageSelect_UI;
+                        }
+                        else
+                        {
+                            ui_command = UI_COMMAND.NextStage;
+                            Next_UI.sprite = White_Next_UI;
+                            StageSelect_UI.sprite = Glay_StageSelect_UI;
+                        }
+
+                        OnceSentakuFlag = true;
+                    }                    
                 }
-                // スティック下
-                if (Input.GetAxis("Vertical") < -0.8)
+                else
                 {
-                    ui_command = UI_COMMAND.StageSelect;
-                    Next_UI.sprite = Glay_Next_UI;
-                    StageSelect_UI.sprite = White_StageSelect_UI;
+                    OnceSentakuFlag = false;
                 }
 
                 switch (ui_command)
                 {
                     case UI_COMMAND.NextStage:
-                        if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
                         {
-                            OnceFlag = true;
+                            OncePush = true;
+                            // 振動
+                            VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                            // 決定音
+                            SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                             GameStateManager.LoadNextStage();
                         }
                         break;
 
                     case UI_COMMAND.StageSelect:
-                        if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
                         {
-                            OnceFlag = true;
+                            OncePush = true;
+                            // 振動
+                            VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                            // 決定音
+                            SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                             GameStateManager.LoadStageSelect(true);
                         }
                         break;
@@ -225,9 +245,14 @@ public class ResultManager : MonoBehaviour
             // ラストステージ
             if (LastStage_UICanvas.activeSelf == true)
             {
-                if (Input.GetButtonDown("ButtonA") && OncePush == false && !OnceFlag)
+                if (Input.GetButtonDown("ButtonA") && OncePush == false)
                 {
-                    OnceFlag = true;
+                    OncePush = true;
+                    // 振動
+                    VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                    // 決定音
+                    SoundManager.Instance.PlaySound("sound_03_01");
+                    SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                     GameStateManager.LoadStageSelect(true);
                 }
             }

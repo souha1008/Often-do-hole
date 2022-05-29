@@ -70,6 +70,7 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
+        // 弾だけ消える
         if (collider.gameObject.CompareTag("Bullet") ||
             (collider.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))
         {
@@ -79,21 +80,26 @@ public class Gimmick_CannonChild : Gimmick_Main
             // 振動
             VibrationManager.Instance.StartVibration(0.4f, 0.4f, 0.2f);
 
-            // 死亡
+            // 自身が死亡
             Death();
         }
+
+        // ノックバック
         else if (collider.gameObject.CompareTag("Player"))
         {
             // ヒットストップ
             //GameSpeedManager.Instance.StartHitStop(0.1f);
 
+            // エフェクト
+            EffectManager.Instance.SharkExplosionEffect(this.transform.position);
+
             // 振動
             VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.2f);
 
-            // プレイヤーを死亡状態に変更
+            // プレイヤーをノックバック状態に変更
             PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
 
-            // 死亡
+            // 自身が死亡
             Death();
         }
 

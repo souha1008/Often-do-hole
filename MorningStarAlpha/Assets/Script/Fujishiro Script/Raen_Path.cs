@@ -8,7 +8,8 @@ public class Raen_Path : MonoBehaviour
 {
     public GameObject[] positions; // ウェイポイント配列
     public GameObject[] player_postions;
-    [SerializeField, Tooltip("開始から終了にかかる時間")] private float Time = 4.0f;
+    //[SerializeField, Tooltip("開始から終了にかかる時間")] 
+    private float Time = 2.5f;
 
     private Vector3[] path;
     private Vector3[] player_path;
@@ -48,7 +49,8 @@ public class Raen_Path : MonoBehaviour
                  Debug.Log("Complete");
                  PlayerState.PlayerScript.mode = new PlayerStateMidair(true, MidairState.NORMAL);
                  Rall_Start = false;
-                 Rall_Now = false; 
+                 Rall_Now = false;
+                 PlayerMain.instance.addVel.x = 50.0f;
              });
 
             PlayerMain.instance.transform

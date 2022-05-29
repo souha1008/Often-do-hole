@@ -403,6 +403,7 @@ public class BulletMain : MonoBehaviour
                         Debug.Log("collision Iron");
                         onceFlag = true;
                         isTouched = true;
+                        CameraShake.instance.Shake(rb.velocity);
                         SoundManager.Instance.PlaySound("sound_69_Sasaranai", 1.0f, 0.05f);
 
                         VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
@@ -422,7 +423,7 @@ public class BulletMain : MonoBehaviour
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
                         VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
-
+                        CameraShake.instance.Shake(rb.velocity);
 
                         //–ÊŒvŽZ
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
@@ -470,7 +471,7 @@ public class BulletMain : MonoBehaviour
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
                         VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
-
+                        CameraShake.instance.Shake(rb.velocity);
 
                         //–ÊŒvŽZ
                         colAspect = DetectAspect.Detection8Pos(collision.gameObject.GetComponent<BoxCollider>(), this.rb.position);
@@ -520,6 +521,7 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         isTouched = true;
                         SoundManager.Instance.PlaySound("sound_30", 1.0f);
+                        CameraShake.instance.Shake(rb.velocity);
 
                         VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 
@@ -572,6 +574,7 @@ public class BulletMain : MonoBehaviour
                                 isTouched = true;
                                 onceFlag = true;
                                 PlayerScript.ForciblySwingMode(false);
+                                CameraShake.instance.Shake(rb.velocity);
                                 PlayerMain.instance.RecoverBullet();
                                 SoundManager.Instance.PlaySound("sound_30");
                                 VibrationManager.Instance.StartVibration(0.85f, 0.85f, 0.25f);
@@ -587,7 +590,7 @@ public class BulletMain : MonoBehaviour
                                 onceFlag = true;
                                 isTouched = true;
                                 SoundManager.Instance.PlaySound("sound_30");
-
+                                CameraShake.instance.Shake(rb.velocity);
                                 VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.25f);
 
                                 if (PlayerScript.isOnGround)
