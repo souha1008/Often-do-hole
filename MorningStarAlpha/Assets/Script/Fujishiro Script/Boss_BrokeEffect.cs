@@ -5,11 +5,11 @@ using UnityEngine;
 public class Boss_BrokeEffect : MonoBehaviour
 {
     [SerializeField] ParticleSystem brokeEffect;
-    [SerializeField] int loop_num = 3;
-    [SerializeField] float effect_interval = 30.0f;
-    [SerializeField] float start_y = 30;
-    [SerializeField] bool sizeChange;
-    [SerializeField] Vector3 sizeChange_V3 = new Vector3(0.7f, 0.7f, 0.7f);
+    [Header("何個エフェクトを出すか")][SerializeField] int loop_num = 3;
+    [Header("エフェクトの距離間隔")][SerializeField] float effect_interval = 30.0f;
+    [Header("一個目のエフェクトを出す位置")][SerializeField] float start_y = 30;
+    [Header("サイズを変更するかどうか")][SerializeField] bool sizeChange;
+    [Header("スケールの変更")][SerializeField] Vector3 sizeChange_V3 = new Vector3(0.7f, 0.7f, 0.7f);
 
     Vector3 pos;    // エフェクト発生場所
     
