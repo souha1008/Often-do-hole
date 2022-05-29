@@ -5,10 +5,11 @@ using UnityEngine;
 public class Boss_BrokeEffect : MonoBehaviour
 {
     [SerializeField] ParticleSystem brokeEffect;
-    [SerializeField] GameObject _brokeEffect;
     [SerializeField] int loop_num = 3;
     [SerializeField] float effect_interval = 30.0f;
-    [SerializeField] Vector3 scale_change = new Vector3(0.3f, 0.3f, 0.3f);
+    [SerializeField] float start_y = 30;
+    [SerializeField] bool sizeChange;
+    [SerializeField] Vector3 sizeChange_V3 = new Vector3(0.7f, 0.7f, 0.7f);
 
     Vector3 pos;    // エフェクト発生場所
     
@@ -16,7 +17,7 @@ public class Boss_BrokeEffect : MonoBehaviour
     void Start()
     {
         pos = this.gameObject.transform.position;
-        pos.y += 30;
+        pos.y += start_y;
     }
 
     // Update is called once per frame
@@ -33,16 +34,14 @@ public class Boss_BrokeEffect : MonoBehaviour
             
             for(int i = 0; i < loop_num; i++)
             {
-                //ParticleSystem newParticle = Instantiate(brokeEffect);
-                //newParticle.gameObject.transform.localScale = scale_change;
-                //newParticle.gameObject.transform.position = new Vector3(pos.x, pos.y - effect_interval * i, 0);
+                ParticleSystem newParticle = Instantiate(brokeEffect);
+                if(sizeChange)
+                {
+                    newParticle.gameObject.transform.localScale = sizeChange_V3;
+                }
+                newParticle.gameObject.transform.position = new Vector3(pos.x, pos.y - effect_interval * i, 0);
 
-                //newParticle.Play();
-
-                GameObject particle = Instantiate(_brokeEffect);
-                particle.transform.localScale = scale_change;
-                particle.gameObject.transform.position = new Vector3(pos.x, pos.y - effect_interval * i, 0);
-                //Destroy(newParticle.gameObject, 5.0f);
+                newParticle.Play();
             }
         }
     }
