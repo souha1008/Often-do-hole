@@ -17,12 +17,15 @@ public class PlayerState_Rail : PlayerState
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel = Vector3.zero;
 
+        PlayerScript.animator.Play("Shot.midair_roop");
+        PlayerScript.animator.SetBool(PlayerScript.animHash.onGround, true);
         BulletScript.SetBulletState(EnumBulletState.STOP);
     }
 
     public override void UpdateState()
     {
         //ƒL[“ü—Í•s‰Â
+
     }
 
     public override void Move()

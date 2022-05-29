@@ -69,17 +69,13 @@ public class PlayerState_Knockback : PlayerState
 
     void PlaySE()
     {
-        int seNum = Random.Range(0, 2);
+        int seNum = Random.Range(0, 1);
 
         switch (seNum)
         {
             case 0:
                 //SE
                 SoundManager.Instance.PlaySound("CVoice_ (5)", 1.0f);
-                break;
-
-            case 1:
-                SoundManager.Instance.PlaySound("CVoice_ (6)", 1.0f);
                 break;
 
             default:

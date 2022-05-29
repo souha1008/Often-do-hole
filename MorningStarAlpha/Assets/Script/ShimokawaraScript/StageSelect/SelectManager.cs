@@ -84,12 +84,19 @@ public class SelectManager : MonoBehaviour
             {
                 //関数空呼び
                 PushLeftMomentOrLongPush();
-
-                NowSelectStage++;
+                if (!(NowSelectStage >= CanStage))
+                {
+                    SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+                    NowSelectStage++;
+                }                
             }
             else if (PushLeftMomentOrLongPush())//今押した or 長押しいい感じ
             {
-                NowSelectStage--;
+                if (!(NowSelectStage <= 0))
+                {
+                    SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+                    NowSelectStage--;
+                }
             }
 
 
@@ -101,13 +108,17 @@ public class SelectManager : MonoBehaviour
             //ステージ侵入
             if (CanStart && Input.GetButton("ButtonA"))
             {
-                SoundManager.Instance.PlaySound("sound_03_03");
+                SoundManager.Instance.PlaySound("sound_03_03", 0.8f);
+                // 振動
+                VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.25f);
                 GameStateManager.LoadStage(NowSelectStage);
 
             }
             else if (CanStart && Input.GetButton("ButtonB"))
             {
-                SoundManager.Instance.PlaySound("sound_03_06");
+                SoundManager.Instance.PlaySound("sound_03_06", 0.8f);
+                // 振動
+                VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
                 FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
             }
             //Debug.Log(CanStart);
