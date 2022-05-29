@@ -208,6 +208,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         // ゲームシーンのリセット
         SceneManager.LoadScene(NextSceneName);
         GameStateManager.SetGameState(GAME_STATE.PLAY);
+        // 環境音停止
+        SoundManager.Instance.StopSound("sound_49");
+        SoundManager.Instance.StopSound("sound_50");
+        SoundManager.Instance.StopSound("sound_51");
+        SoundManager.Instance.StopSound("sound_52");
         Time.timeScale = 1.0f;
     }
     // フェードインしたときの処理(シーン変更)

@@ -38,6 +38,10 @@ public class SelectManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+#if !UNITY_EDITOR
+    DEBUG_ALL_STAGE_SELECT = false;
+#endif
+
         instance = this;
 
         //Max = StageObj.Length - 1;
