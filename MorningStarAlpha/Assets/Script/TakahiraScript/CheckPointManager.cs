@@ -44,14 +44,12 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
         if (!RespawnFlag || SetFlag && PlayerMain.instance != null && PlayerMain.instance.refState != EnumPlayerState.DEATH)
         {
             RespawnPos = checkpoint.RespawnPointObject.transform.position;
-            RespawnPos.z = 0.0f;
+            OldCheckPoint.Add(checkpoint.RespawnPointObject.transform.position);
             RespawnObject = checkpoint.GetComponentInParent<MeshOnOff>().gameObject; // メッシュ切り替えの付いた親オブジェクト取得
             NowRespawnPos = GetCheckPointPos(); // 現在のリスポーン座標更新
 
             // ※同じチェックポイントに触れてもコイン入手に変更するかも(その場合エフェクト出す)
             CoinManager.Instance.SetCheckPointCoinData(); // コインの情報を入力
-
-            OldCheckPoint.Add(RespawnPos);
 
             // 音再生
             if (RespawnFlag)
@@ -64,6 +62,7 @@ public class CheckPointManager : SingletonMonoBehaviour<CheckPointManager>
     public Vector3 GetCheckPointPos()
     {
         //Debug.LogWarning(RespawnPos);
+        RespawnPos.z = 0.0f;
         return RespawnPos;
     }
 
