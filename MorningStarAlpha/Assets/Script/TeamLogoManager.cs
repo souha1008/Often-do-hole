@@ -22,11 +22,11 @@ public class TeamLogoManager : MonoBehaviour
         {
             if ((Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select")))
             {
-                nowTime = 3.0f;
+                nowTime = 5.0f;
             }
 
 
-            if (nowTime > 2.0f)
+            if (nowTime > 4.0f)
             {
                 once = true;
                 FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
