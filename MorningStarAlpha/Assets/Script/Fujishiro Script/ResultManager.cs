@@ -13,9 +13,6 @@ public class ResultManager : MonoBehaviour
     [Header("手配書揺れ関係")]
     [SerializeField] Image Wanted_Sprite;
 
-    //Tweener shaketeener; // DOTweenのやつ
-    //Vector3 initPos;    // 手配書の初期位置
-
     // ステージナンバー
     [Header("ステージナンバー")]
     [SerializeField] Text StageNo;
@@ -24,15 +21,19 @@ public class ResultManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] GameObject UI_Canvas;
     [SerializeField] GameObject LastStage_UICanvas;
-    [SerializeField] Image Next_UI;
+    [SerializeField] Image NextStage_UI;
     [SerializeField] Image StageSelect_UI;
+    [SerializeField] Image Last_StageSelect_UI;
+    [SerializeField] Image Next_UI;
     [SerializeField] Image Stump_UI;
     [SerializeField] Image Photo_UI;
 
-    Sprite White_Next_UI;
-    Sprite Glay_Next_UI;
+    Sprite White_NextStage_UI;
+    Sprite Glay_NextStage_UI;
     Sprite White_StageSelect_UI;
     Sprite Glay_StageSelect_UI;
+    Sprite White_Next_UI;
+    Sprite Glay_Next_UI;
 
     UI_COMMAND ui_command;
 
@@ -90,7 +91,8 @@ public class ResultManager : MonoBehaviour
     enum UI_COMMAND
     {
         NextStage = 0,
-        StageSelect
+        StageSelect,
+        Next
     };
 
     void Awake()
@@ -101,6 +103,10 @@ public class ResultManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+#if !UNITY_EDITOR
+        debug_check = false;
+#endif
+
         // UIパス設定
         ResourceSave();
 
@@ -130,9 +136,37 @@ public class ResultManager : MonoBehaviour
         anim_end = false;
         UI_Canvas.SetActive(false);
         LastStage_UICanvas.SetActive(false);
-        ui_command = UI_COMMAND.NextStage;
-        Next_UI.sprite = White_Next_UI;
-        StageSelect_UI.sprite = Glay_StageSelect_UI;
+
+        if (debug_check)
+        {
+            if (debug_stageNo != 7)
+            {
+                ui_command = UI_COMMAND.NextStage;
+                NextStage_UI.sprite = White_NextStage_UI;
+                StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
+            else
+            {
+                ui_command = UI_COMMAND.Next;
+                Next_UI.sprite = White_Next_UI;
+                Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
+        }
+        else
+        {
+            if (GameStateManager.GetNowStage() != 7)
+            {
+                ui_command = UI_COMMAND.NextStage;
+                NextStage_UI.sprite = White_NextStage_UI;
+                StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
+            else
+            {
+                ui_command = UI_COMMAND.Next;
+                Next_UI.sprite = White_Next_UI;
+                Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
+        }
 
         //initPos = Wanted_Sprite.transform.position;
 
@@ -167,13 +201,28 @@ public class ResultManager : MonoBehaviour
         // UI操作
         if (stump_animator.GetBool(Stump_end) == true && UI_Canvas.activeSelf == false)
         {
-            if (GameStateManager.GetNowStage() != 7)
+            if (debug_check)
             {
-                UI_Canvas.SetActive(true);
+                if (debug_stageNo != 7)
+                {
+                    UI_Canvas.SetActive(true);
+                }
+                else
+                {
+                    LastStage_UICanvas.SetActive(true);
+                }
             }
+
             else
             {
-                LastStage_UICanvas.SetActive(true);
+                if (GameStateManager.GetNowStage() != 7)
+                {
+                    UI_Canvas.SetActive(true);
+                }
+                else
+                {
+                    LastStage_UICanvas.SetActive(true);
+                }
             }
             Wanted_animator.SetBool(Shake_Start, true);
         }
@@ -194,13 +243,13 @@ public class ResultManager : MonoBehaviour
                         if (ui_command == UI_COMMAND.NextStage)
                         {
                             ui_command = UI_COMMAND.StageSelect;
-                            Next_UI.sprite = Glay_Next_UI;
+                            NextStage_UI.sprite = Glay_NextStage_UI;
                             StageSelect_UI.sprite = White_StageSelect_UI;
                         }
                         else
                         {
                             ui_command = UI_COMMAND.NextStage;
-                            Next_UI.sprite = White_Next_UI;
+                            NextStage_UI.sprite = White_NextStage_UI;
                             StageSelect_UI.sprite = Glay_StageSelect_UI;
                         }
 
@@ -245,15 +294,63 @@ public class ResultManager : MonoBehaviour
             // ラストステージ
             if (LastStage_UICanvas.activeSelf == true)
             {
-                if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                // スティック上下
+                if (Input.GetAxis("Vertical") > 0.8f || Input.GetAxis("Vertical") < -0.8)
                 {
-                    OncePush = true;
-                    // 振動
-                    VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
-                    // 決定音
-                    SoundManager.Instance.PlaySound("sound_03_01");
-                    SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
-                    GameStateManager.LoadStageSelect(true);
+                    if (!OnceSentakuFlag)
+                    {
+                        SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+
+                        // ステートネクストだったら変える
+                        if (ui_command == UI_COMMAND.Next)
+                        {
+                            ui_command = UI_COMMAND.StageSelect;
+                            Next_UI.sprite = Glay_Next_UI;
+                            Last_StageSelect_UI.sprite = White_StageSelect_UI;
+                        }
+                        else
+                        {
+                            ui_command = UI_COMMAND.Next;
+                            Next_UI.sprite = White_Next_UI;
+                            Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
+                        }
+
+                        OnceSentakuFlag = true;
+                    }
+                }
+
+                else
+                {
+                    OnceSentakuFlag = false;
+                }
+
+                switch (ui_command)
+                {
+                    case UI_COMMAND.Next:
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                        {
+                            OncePush = true;
+                            // 振動
+                            VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                            // 決定音
+                            SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                            FadeManager.Instance.FadeStart("StaffRoleScene", FADE_KIND.FADE_SCENECHANGE);
+                        }
+                        break;
+
+                    case UI_COMMAND.StageSelect:
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                        {
+                            OncePush = true;
+                            // 振動
+                            VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                            // 決定音
+                            SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                            GameStateManager.LoadStageSelect(true);
+                        }
+                        break;
                 }
             }
         }
@@ -596,10 +693,12 @@ public class ResultManager : MonoBehaviour
 
     void ResourceSave()
     {
-        White_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage_btn");
+        White_NextStage_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage_btn");
         White_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/01_stageselect_btn");
-        Glay_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage2_btn");
+        White_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/08_next_btn");
+        Glay_NextStage_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/07_next-stage2_btn");
         Glay_StageSelect_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/01_stageselect2_btn");
+        Glay_Next_UI = Resources.Load<Sprite>("Sprite/UI/Resulut/08_next2_btn");
     }
 
     void RankStump_Set()

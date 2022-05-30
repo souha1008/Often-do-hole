@@ -41,6 +41,9 @@ public class TimeCountUp_Result : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+#if !UNITY_EDITOR
+        debug_check = false;
+#endif
         scoreTime = GameStateManager.GetGameTime();
     }
 
@@ -109,11 +112,11 @@ public class TimeCountUp_Result : MonoBehaviour
                     break;
 
                 case ClearRank.Rank_A:
-                    timeText.text = endScoreTime.ToString("f4");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
                 case ClearRank.Rank_B:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
             }
@@ -127,11 +130,11 @@ public class TimeCountUp_Result : MonoBehaviour
                     break;
 
                 case GAME_RANK.A:
-                    timeText.text = endScoreTime.ToString("f4");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
                 case GAME_RANK.B:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
             }
         }
@@ -153,11 +156,11 @@ public class TimeCountUp_Result : MonoBehaviour
                     break;
 
                 case ClearRank.Rank_A:
-                    timeText.text = debug_maxTime.ToString("f4");
+                    timeText.text = debug_maxTime.ToString("f5");
                     break;
 
                 case ClearRank.Rank_B:
-                    timeText.text = debug_maxTime.ToString("f3");
+                    timeText.text = debug_maxTime.ToString("f5");
                     break;
 
             }
@@ -171,11 +174,11 @@ public class TimeCountUp_Result : MonoBehaviour
                     break;
 
                 case GAME_RANK.A:
-                    timeText.text = GameStateManager.GetGameTime().ToString("f4");
+                    timeText.text = GameStateManager.GetGameTime().ToString("f5");
                     break;
 
                 case GAME_RANK.B:
-                    timeText.text = GameStateManager.GetGameTime().ToString("f3");
+                    timeText.text = GameStateManager.GetGameTime().ToString("f5");
                     break;
 
             }
