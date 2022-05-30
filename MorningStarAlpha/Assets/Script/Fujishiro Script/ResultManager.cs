@@ -13,9 +13,6 @@ public class ResultManager : MonoBehaviour
     [Header("手配書揺れ関係")]
     [SerializeField] Image Wanted_Sprite;
 
-    //Tweener shaketeener; // DOTweenのやつ
-    //Vector3 initPos;    // 手配書の初期位置
-
     // ステージナンバー
     [Header("ステージナンバー")]
     [SerializeField] Text StageNo;
