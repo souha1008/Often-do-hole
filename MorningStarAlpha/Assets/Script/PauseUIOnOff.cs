@@ -18,7 +18,6 @@ public class PauseUIOnOff : MonoBehaviour
         DontMoveTime = 0.0f;
         isStop = true;
         image = GetComponent<Image>();
-        image.enabled = false;
         PauseImage.SetActive(false);
     }
 
