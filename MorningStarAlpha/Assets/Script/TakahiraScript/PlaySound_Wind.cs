@@ -7,7 +7,7 @@ public class PlaySound_Wind : MonoBehaviour
     void Start()
     {
         if (!SoundManager.Instance.isNowPlaySound("sound_50"))
-            SoundManager.Instance.PlaySound("sound_50", 0.3f);
+            SoundManager.Instance.PlaySound("sound_50", 0.4f);
         MeshRenderer Mr = null;
         if ((Mr = this.GetComponent<MeshRenderer>()) != null)
         {
