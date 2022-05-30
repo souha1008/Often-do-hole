@@ -44,9 +44,9 @@ public class Gimmick_Thorn : Gimmick_Main
 
     public void OnCollisionStay(Collision collision)
     {
-        if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            if (collision.gameObject.CompareTag("Player"))
+            if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
                 // ヒットストップ
                 GameSpeedManager.Instance.StartHitStop(0.1f);
