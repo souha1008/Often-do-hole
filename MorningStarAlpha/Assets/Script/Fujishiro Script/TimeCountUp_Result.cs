@@ -98,7 +98,7 @@ public class TimeCountUp_Result : MonoBehaviour
 
             float updateValue = (float)((endScoreTime - startScoreTime) * timeRate + startScoreTime);
 
-            timeText.text = updateValue.ToString("f3");
+            timeText.text = updateValue.ToString("f5");
 
             yield return null;
         } while (Time.time < endtime);
@@ -108,15 +108,15 @@ public class TimeCountUp_Result : MonoBehaviour
             switch (clearRank)
             {
                 case ClearRank.Rank_S:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
                 case ClearRank.Rank_A:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
                 case ClearRank.Rank_B:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
             }
@@ -126,15 +126,15 @@ public class TimeCountUp_Result : MonoBehaviour
             switch (GameStateManager.GetGameRank())
             {
                 case GAME_RANK.S:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
                 case GAME_RANK.A:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
 
                 case GAME_RANK.B:
-                    timeText.text = endScoreTime.ToString("f3");
+                    timeText.text = endScoreTime.ToString("f5");
                     break;
             }
         }
@@ -152,15 +152,15 @@ public class TimeCountUp_Result : MonoBehaviour
             switch (clearRank)
             {
                 case ClearRank.Rank_S:
-                    timeText.text = debug_maxTime.ToString("f3");
+                    timeText.text = debug_maxTime.ToString("f5");
                     break;
 
                 case ClearRank.Rank_A:
-                    timeText.text = debug_maxTime.ToString("f3");
+                    timeText.text = debug_maxTime.ToString("f5");
                     break;
 
                 case ClearRank.Rank_B:
-                    timeText.text = debug_maxTime.ToString("f3");
+                    timeText.text = debug_maxTime.ToString("f5");
                     break;
 
             }
@@ -170,15 +170,15 @@ public class TimeCountUp_Result : MonoBehaviour
             switch (GameStateManager.GetGameRank())
             {
                 case GAME_RANK.S:
-                    timeText.text = GameStateManager.GetGameTime().ToString("f3");
+                    timeText.text = GameStateManager.GetGameTime().ToString("f5");
                     break;
 
                 case GAME_RANK.A:
-                    timeText.text = GameStateManager.GetGameTime().ToString("f3");
+                    timeText.text = GameStateManager.GetGameTime().ToString("f5");
                     break;
 
                 case GAME_RANK.B:
-                    timeText.text = GameStateManager.GetGameTime().ToString("f3");
+                    timeText.text = GameStateManager.GetGameTime().ToString("f5");
                     break;
 
             }
