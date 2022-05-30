@@ -29,6 +29,8 @@ public class Raen_Path : MonoBehaviour
       
         if (Rall_Start == true && Rall_Now == false)
         {
+            SoundManager.Instance.PlaySound("sound_27", 0.5f);
+
             PlayerMain.instance.mode = new PlayerState_Rail();
 
             positions[0] = BulletMain.instance.gameObject;
