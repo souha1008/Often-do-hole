@@ -34,7 +34,8 @@ public class StaffRoleManager : MonoBehaviour
         {
             if (once == false)
             {
-                SoundManager.Instance.StopSound("Ending");
+                // âπí‚é~
+                SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                 FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
                 once = true;
             }

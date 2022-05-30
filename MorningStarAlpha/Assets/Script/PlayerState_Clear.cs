@@ -44,8 +44,8 @@ public class PlayerState_Clear : PlayerState
         {
             state = ClearState.WALK;
 
-            //SEVoice
-            SoundManager.Instance.PlaySound("goal");
+            ////SEVoice
+            //SoundManager.Instance.PlaySound("goal");
         }
         else
         {
@@ -71,8 +71,8 @@ public class PlayerState_Clear : PlayerState
                 state = ClearState.WALK;
                 PlayerScript.vel.y = 0.0f;
 
-                //SEVoice
-                SoundManager.Instance.PlaySound("goal");
+                ////SEVoice
+                //SoundManager.Instance.PlaySound("goal");
             }
         }
         else if(state == ClearState.WALK)
@@ -96,20 +96,21 @@ public class PlayerState_Clear : PlayerState
 
                 PlayerScript.animator.SetBool("isRunning", false);
                 PlayerScript.animator.SetTrigger("ClearTrigger");
-                switch (GameStateManager.GetGameRank()) {
-                    case GAME_RANK.S:
-                        PlayerScript.animator.SetInteger("ClearType", 0);
-                        break;
 
-                    case GAME_RANK.A:
-                        PlayerScript.animator.SetInteger("ClearType", 1);
-                        break;
+                //switch (GameStateManager.GetGameRank()) {
+                //    case GAME_RANK.S:
+                //        PlayerScript.animator.SetInteger("ClearType", 0);
+                //        break;
 
-                    case GAME_RANK.B:
-                        PlayerScript.animator.SetInteger("ClearType", 2);
-                        break;
-                }
+                //    case GAME_RANK.A:
+                //        PlayerScript.animator.SetInteger("ClearType", 1);
+                //        break;
 
+                //    case GAME_RANK.B:
+                //        PlayerScript.animator.SetInteger("ClearType", 2);
+                //        break;
+                //}
+                PlayerScript.animator.SetInteger("ClearType", 1);
 
                 goal.GetComponent<Animator>().SetTrigger("OpenTrigger");
             }
