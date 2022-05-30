@@ -10,9 +10,9 @@ public class Kujira_Hit : MonoBehaviour
         this.gameObject.tag = "Thorn";
     }
 
-    public void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider collider)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
@@ -25,15 +25,15 @@ public class Kujira_Hit : MonoBehaviour
                 // 音
                 //SoundManager.Instance.PlaySound("sound_21", 0.2f, 0.1f);
 
-                // プレイヤーステートをクジラ死亡に変更
-                PlayerMain.instance.mode = new PlayerStateDeath_Kujira();
+                // プレイヤーステートを棘の死亡に変更
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn(this.gameObject.transform.position);
             }
         }
     }
 
-    public void OnCollisionStay(Collision collision)
+    public void OnTriggerStay(Collider collider)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
@@ -46,8 +46,8 @@ public class Kujira_Hit : MonoBehaviour
                 // 音
                 //SoundManager.Instance.PlaySound("sound_21", 1.0f, 0.2f);
 
-                // プレイヤーステートをクジラ死亡に変更
-                PlayerMain.instance.mode = new PlayerStateDeath_Kujira();
+                // プレイヤーステートを棘の死亡に変更
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn(this.gameObject.transform.position);
             }
         }
     }
