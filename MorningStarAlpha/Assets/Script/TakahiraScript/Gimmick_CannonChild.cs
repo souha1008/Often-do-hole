@@ -70,6 +70,7 @@ public class Gimmick_CannonChild : Gimmick_Main
 
     public override void OnTriggerEnter(Collider collider)
     {
+        Debug.LogWarning(collider.gameObject.name);
         // ’e‚¾‚¯Á‚¦‚é
         if (collider.gameObject.CompareTag("Bullet") ||
             (collider.gameObject.CompareTag("Player") && PlayerMain.instance.refState == EnumPlayerState.SWING))

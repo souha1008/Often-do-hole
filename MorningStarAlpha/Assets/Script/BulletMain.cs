@@ -422,6 +422,7 @@ public class BulletMain : MonoBehaviour
                         onceFlag = true;
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
+                        SoundManager.Instance.PlaySound("sound_13_wood");
                         VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
                         CameraShake.instance.Shake(rb.velocity);
 
@@ -471,6 +472,7 @@ public class BulletMain : MonoBehaviour
                         isTouched = true;
                         SetBulletState(EnumBulletState.STOP);
                         VibrationManager.Instance.StartVibration(1.0f, 1.0f, 0.25f);
+                        SoundManager.Instance.PlaySound("sound_13_wood");
                         CameraShake.instance.Shake(rb.velocity);
 
                         //–ÊŒvŽZ
