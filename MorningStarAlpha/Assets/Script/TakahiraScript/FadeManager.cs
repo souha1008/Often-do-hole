@@ -28,11 +28,11 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     // フェード秒数(ゲームオーバー)
     [Label("フェード秒数(ゲームオーバー)")]
-    private float FadeTime_GameOver = 0.6f;
+    private float FadeTime_GameOver = 0.4f;
 
     // フェード秒数(シーン変更)
     [Label("フェード秒数(シーン変更)")]
-    private float FadeTime_SceneChange = 1;
+    private float FadeTime_SceneChange = 0.6f;
 
     // フェード秒数(ステージ変更)
     [Label("フェード秒数(ステージ変更)")]
@@ -139,7 +139,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     default:
                         break;
                 }
-                NowTime += Time.unscaledDeltaTime; // 時間加算
+                //NowTime += Time.unscaledDeltaTime; // 時間加算
+                NowTime += 1.0f / 60.0f;
 
                 if (FadeColor.a >= 1.0f)
                 {
@@ -165,7 +166,8 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     default:
                         break;
                 }
-                NowTime += Time.unscaledDeltaTime; // 時間加算
+                //NowTime += Time.unscaledDeltaTime; // 時間加算
+                NowTime +=  1.0f / 60.0f;
 
                 if (FadeColor.a <= 0.0f)
                 {
@@ -281,7 +283,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             if (SoundStop)
                 NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
             else
-                NowFadeKind = FADE_KIND.FADE_STAGECHANGE;
+                NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
 
             NowTime = 0.0f;
 

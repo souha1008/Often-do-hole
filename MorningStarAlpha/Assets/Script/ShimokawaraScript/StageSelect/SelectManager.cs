@@ -128,7 +128,7 @@ public class SelectManager : MonoBehaviour
                 SoundManager.Instance.PlaySound("sound_03_06", 0.8f);
                 // êUìÆ
                 VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
-                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_STAGECHANGE);
+                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
             }
             //Debug.Log(CanStart);
         }
