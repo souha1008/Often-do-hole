@@ -41,7 +41,7 @@ ParticleSystem:
   m_GameObject: {fileID: 2869477686014463909}
   serializedVersion: 7
   lengthInSec: 5
-  simulationSpeed: 9.9
+  simulationSpeed: 23
   stopAction: 0
   cullingMode: 0
   ringBufferMode: 0
@@ -115,7 +115,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 64.13
+      scalar: 64
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -665,9 +665,9 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 7.39, z: 2.5}
-    m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 45, y: 45, z: 45}
+    m_Position: {x: 2, y: 7.39, z: 2.5}
+    m_Rotation: {x: 0, y: 90, z: 0}
+    m_Scale: {x: 1, y: 45, z: 45}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -733,7 +733,7 @@ ParticleSystem:
     m_Sprite: {fileID: 0}
     m_SpriteRenderer: {fileID: 0}
     m_UseMeshMaterialIndex: 0
-    m_UseMeshColors: 1
+    m_UseMeshColors: 0
     alignToDirection: 0
     m_Texture: {fileID: 0}
     m_TextureClipChannel: 3
@@ -865,7 +865,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.6
+      scalar: 0.24
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1303,7 +1303,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 0.93172294, b: 0.5990566, a: 0}
+        key0: {r: 1, g: 0.93172294, b: 0.5990566, a: 0.47058824}
         key1: {r: 1, g: 0.9373373, b: 0.63202554, a: 1}
         key2: {r: 1, g: 0.9347352, b: 0.6167453, a: 1}
         key3: {r: 1, g: 1, b: 1, a: 0}
@@ -1364,7 +1364,7 @@ ParticleSystem:
     enabled: 1
     mode: 0
     timeMode: 0
-    fps: 30
+    fps: 5
     frameOverTime:
       serializedVersion: 2
       minMaxState: 1
@@ -1476,7 +1476,7 @@ ParticleSystem:
     tilesY: 3
     animationType: 0
     rowIndex: 0
-    cycles: 19.6
+    cycles: 8.1
     uvChannelMask: -1
     rowMode: 1
     sprites:
