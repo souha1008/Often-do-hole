@@ -114,7 +114,7 @@ public class KujiraPos : MonoBehaviour
         }
 
         //　ターゲットポイントがひとつでもカメラに写っていたらUI非表示
-        if (Flag)
+        if (Flag || PlayerMain.instance.refState == EnumPlayerState.CLEAR)
         {
             ImageUI.gameObject.SetActive(false);
 
