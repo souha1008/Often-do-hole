@@ -25,8 +25,8 @@ public class Kujira_Hit : MonoBehaviour
                 // 音
                 //SoundManager.Instance.PlaySound("sound_21", 0.2f, 0.1f);
 
-                // プレイヤーステートをクジラ死亡に変更
-                PlayerMain.instance.mode = new PlayerStateDeath_Kujira();
+                // プレイヤーステートを棘の死亡に変更
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn(this.gameObject.transform.position);
             }
         }
     }
@@ -46,8 +46,8 @@ public class Kujira_Hit : MonoBehaviour
                 // 音
                 //SoundManager.Instance.PlaySound("sound_21", 1.0f, 0.2f);
 
-                // プレイヤーステートをクジラ死亡に変更
-                PlayerMain.instance.mode = new PlayerStateDeath_Kujira();
+                // プレイヤーステートを棘の死亡に変更
+                PlayerMain.instance.mode = new PlayerStateDeath_Thorn(this.gameObject.transform.position);
             }
         }
     }
