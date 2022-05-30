@@ -25,13 +25,13 @@ public class LogoFade : MonoBehaviour
         else if (NowTime < FadeTime)
         {
             float Alpha = 1.0f - (NowTime / FadeTime);
-            MyImage.color = new Color(0, 0, 0, Alpha);
+            MyImage.color = new Color(MyImage.color.r, MyImage.color.g, MyImage.color.b, Alpha);
 
             NowTime += Time.deltaTime;
         }
         else
         {
-            MyImage.color = new Color(0, 0, 0, 0);
+            MyImage.color = new Color(MyImage.color.r, MyImage.color.g, MyImage.color.b, 0);
         }
     }
 }

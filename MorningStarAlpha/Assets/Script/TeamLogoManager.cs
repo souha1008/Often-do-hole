@@ -26,7 +26,7 @@ public class TeamLogoManager : MonoBehaviour
             }
 
 
-            if (nowTime > 4.0f)
+            if (nowTime > 3.5f)
             {
                 once = true;
                 FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
