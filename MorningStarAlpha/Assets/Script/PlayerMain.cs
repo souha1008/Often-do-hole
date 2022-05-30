@@ -825,10 +825,13 @@ public class PlayerMain : MonoBehaviour
             }
         }
 
-        if (swingLandVoice)
+        if (refState == EnumPlayerState.MIDAIR)
         {
-            PlayVoice("CVoice_ (27)", 1.0f, 0.13f);
-            swingLandVoice = false;
+            if (swingLandVoice)
+            {
+                PlayVoice("CVoice_ (27)", 1.0f, 0.13f);
+                swingLandVoice = false;
+            }
         }
     }
 
