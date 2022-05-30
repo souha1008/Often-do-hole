@@ -20,7 +20,7 @@ public class TeamLogoManager : MonoBehaviour
 
         if (once == false)
         {
-            if ((Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select")))
+            if (GameStateManager.Instance.PressAny())
             {
                 nowTime = 5.0f;
             }

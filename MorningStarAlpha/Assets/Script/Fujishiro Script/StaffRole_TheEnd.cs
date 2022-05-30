@@ -16,7 +16,7 @@ public class StaffRole_TheEnd : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((Input.GetButtonDown("ButtonA") || Input.GetButtonDown("ButtonB") || Input.GetButtonDown("Button_Select")))
+        if (GameStateManager.Instance.PressAny())
         {
             if (once == false)
             {

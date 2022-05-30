@@ -136,6 +136,54 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         }
     }
 
+    public bool PressAny()
+    {
+        bool returnBool = false;
+
+        if (Input.GetKeyDown("joystick button 0"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 1"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 2"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 3"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 4"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 5"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 6"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 7"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 8"))
+        {
+            returnBool = true;
+        }
+        if (Input.GetKeyDown("joystick button 9"))
+        {
+            returnBool = true;
+        }
+
+        return returnBool;
+    }
+
     public static GAME_STATE GetGameState()
     {
         return Instance.GameState;
