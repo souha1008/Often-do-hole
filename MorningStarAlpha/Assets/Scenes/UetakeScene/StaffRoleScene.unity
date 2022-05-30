@@ -443,7 +443,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -11370}
+  m_AnchoredPosition: {x: 0, y: -12667}
   m_SizeDelta: {x: 1800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1114927656
@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b2fdac26ed0dfc45a921c1d91afe18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textScrollSpeed: 300
+  textScrollSpeed: 200
 --- !u!1 &1263682677
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,14 +698,15 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1618616249}
   m_Father: {fileID: 1582643923}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -5880}
-  m_SizeDelta: {x: 1800, y: 10144}
+  m_AnchoredPosition: {x: 0, y: -6535.6655}
+  m_SizeDelta: {x: 1800, y: 11455.332}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1404357712
 MonoBehaviour:
@@ -719,7 +720,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6400784db0c51842bf1eff8f3ddab5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textScrollSpeed: 300
+  textScrollSpeed: 200
   limitPosition: 7000
 --- !u!114 &1404357713
 MonoBehaviour:
@@ -754,7 +755,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1.6
-  m_Text: "\r<color=Black><size=200>\u30EA\u30FC\u30C0\u30FC</size></color>\r\n\u5927\u718A\u3000\u4E00\u8F1D\n\n\n\n\r<color=Black><size=200>\u30D7\u30E9\u30F3\u30CA\u30FC</size></color>\r\n\u79CB\u5C71\u3000\u5F70\u592A\n\r\n\n\n<color=Black><size=200>\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC</size></color>\r\n\r\u690D\u7AF9\u3000\u5229\u5F70\n\u5CA1\u7530\u3000\u7FD4\n\u4E0B\u5DDD\u539F\u3000\u6E13\u543E\n\u9AD8\u5E73\u3000\u5927\u6570\n\u85E4\u4EE3\u3000\u9065\u7A00\n\n\n\n<color=Black><size=200>\u30C7\u30B6\u30A4\u30CA\u30FC</size></color>\r\r\n\u5C0F\u77F3\u3000\u53CE\u7A42\n\u5449\u6893\u6BC5\n\u5BFA\u5CF6\u3000\u82F1\u6CBB\n\u8207\u90A3\u8987\u3000\u4EAC\u752B\n\n\n\n<color=Black><size=180>\u30B5\u30A6\u30F3\u30C9\u30AF\u30EA\u30A8\u30A4\u30BF\u30FC</size></color>\r\n\u77F3\u4E95\u3000\u7483\u7A7A\n\u5009\u6797\u3000\u6F64\n\u771F\u5CF6\u3000\u7950\u5178\n\u5185\u7530\u3000\u6DBC\u8F14\n\u6FF1\u540D\u3000\u4F73\u90A3\n\r\n\n\n\r<color=Black><size=180>\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30DC\u30A4\u30B9</size></color>\r\n\r\u5F8C\u85E4\u3000\u307F\u304F\n\r"
+  m_Text: "\r<color=Black><size=200>\u30EA\u30FC\u30C0\u30FC</size></color>\r\n\u5927\u718A\u3000\u4E00\u8F1D\n\n\n\n\r<color=Black><size=200>\u30D7\u30E9\u30F3\u30CA\u30FC</size></color>\r\n\u79CB\u5C71\u3000\u5F70\u592A\n\r\n\n\n<color=Black><size=200>\u30D7\u30ED\u30B0\u30E9\u30DE\u30FC</size></color>\r\n\r\u690D\u7AF9\u3000\u5229\u5F70\n\u5CA1\u7530\u3000\u7FD4\n\u4E0B\u5DDD\u539F\u3000\u6E13\u543E\n\u9AD8\u5E73\u3000\u5927\u6570\n\u85E4\u4EE3\u3000\u9065\u7A00\n\n\n\n<color=Black><size=200>\u30C7\u30B6\u30A4\u30CA\u30FC</size></color>\r\r\n\u5C0F\u77F3\u3000\u53CE\u7A42\n\u5449\u6893\u6BC5\n\u5BFA\u5CF6\u3000\u82F1\u6CBB\n\u8207\u90A3\u8987\u3000\u4EAC\u752B\n\n\n\n<color=Black><size=180>\u30B5\u30A6\u30F3\u30C9\u30AF\u30EA\u30A8\u30A4\u30BF\u30FC</size></color>\r\n\u77F3\u4E95\u3000\u7483\u7A7A\n\u5009\u6797\u3000\u6F64\n\u771F\u5CF6\u3000\u7950\u5178\n\u5185\u7530\u3000\u6DBC\u8F14\n\u6FF1\u540D\u3000\u4F73\u90A3\n\r\n\n\n\r<color=Black><size=180>\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u30DC\u30A4\u30B9</size></color>\r\n\r\u5F8C\u85E4\u3000\u307F\u304F\n\n\n\n\r<color=Black><size=180>Created
+    by</size></color>\r\n\r"
 --- !u!222 &1404357714
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1005,6 +1007,81 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f13ce43a65ca88340a6f987c6046b361, type: 3}
+--- !u!1 &1618616248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1618616249}
+  - component: {fileID: 1618616251}
+  - component: {fileID: 1618616250}
+  m_Layer: 5
+  m_Name: TeamLogo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1618616249
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618616248}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1404357711}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -4984.334}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1618616250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618616248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1618616251
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618616248}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1778268460
 PrefabInstance:
   m_ObjectHideFlags: 0
