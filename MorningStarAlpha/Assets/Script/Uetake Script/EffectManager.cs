@@ -13,6 +13,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
     private GameObject CoinGetParticle;
     private GameObject BoxParticle;
     private GameObject SharkExplosion;
+    private GameObject CheckPointButterfly;
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         CoinGetParticle = (GameObject)Resources.Load("Effect/05_coin");
         BoxParticle = (GameObject)Resources.Load("Effect/05_uiterudebris_effect");
         SharkExplosion = (GameObject)Resources.Load("Effect/05_Explosion");
+        CheckPointButterfly = (GameObject)Resources.Load("Effect/05_butterfly_effect");
     }
 
     public void StartShotEffect(Vector3 Pos, Quaternion rot)
@@ -122,5 +124,10 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
         Perant.transform.parent = effect.transform;
         //effect.transform.localScale = Vector3.one * size;
         Destroy(effect.gameObject, 2.0f);
+    }
+
+    public void CheckPointButterflyEffect(Vector3 pos)
+    {
+        GameObject effect = Instantiate(CheckPointButterfly, pos, Quaternion.identity);
     }
 }

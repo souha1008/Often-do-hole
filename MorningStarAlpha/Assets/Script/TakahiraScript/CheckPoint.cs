@@ -49,6 +49,9 @@ public class CheckPoint : MonoBehaviour
             // チェックポイントのHitBoxに触れたらチェックポイント更新
             CheckPointManager.Instance.SetCheckPoint(this);
 
+            // ちょうちょエフェクト再生
+            EffectManager.Instance.CheckPointButterflyEffect(this.transform.position);
+
             // アニメーション再生
             SetAnimator();
         }
