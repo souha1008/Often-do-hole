@@ -74,6 +74,10 @@ public class CameraCenterX : MonoBehaviour
 
         DifferenceX = MAX_DIFFERENCE_X;
         DifferenceY = UP_DIFFERENCE_Y;
+
+#if !UNITY_EDITOR
+        isDraw = false;
+#endif
     }
 
 
