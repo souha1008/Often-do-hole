@@ -85,6 +85,8 @@ public class SelectManager : MonoBehaviour
             StickX = Input.GetAxis("Horizontal");
             OldSelectStage = NowSelectStage;
 
+            Debug.Log("nowStageSelect" + NowSelectStage);
+
             //ここに更新処理
             if (PushRightMomentOrLongPush())//今押した or 長押しいい感じ
             {
@@ -260,14 +262,16 @@ public class SelectManager : MonoBehaviour
             int OldCanStage = -1;//今開放済みステージを格納  
             if (SaveDataManager.Instance)
             {
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 7; i++)
                 {
-                    //i番目がクリア済みなら
-                    if (SaveDataManager.Instance.MainData.Stage[i].Clear)
-                        OldCanStage = i;
-                    //クリアしてない添え字まで来た
-                    else
-                        break;
+                    OldCanStage = i;
+                    ////i番目がクリア済みなら
+                    //if (SaveDataManager.Instance.MainData.Stage[i].Clear)
+                    //    OldCanStage = i;
+                    ////クリアしてない添え字まで来た
+                    //else
+                    //    break;
+                    Debug.Log(i.ToString() + "stage" + "Clear:" + SaveDataManager.Instance.MainData.Stage[i].Clear.ToString());
                 }
             }
 
