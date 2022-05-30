@@ -113,7 +113,10 @@ public class PauseMenu : MonoBehaviour //ポーズメニューキャンバスにアタッチ
             {
                 if (Input.GetButtonDown("Button_Select") && FadeManager.GetNowState() == FADE_STATE.FADE_NONE)
                 {
-                    StartPause();
+                    if (GameStateManager.GetGameState() == GAME_STATE.PLAY)
+                    {
+                        StartPause();
+                    }
                 }
             }
         }
