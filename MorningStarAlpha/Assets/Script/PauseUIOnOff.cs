@@ -10,6 +10,8 @@ public class PauseUIOnOff : MonoBehaviour
     bool isStop;
     Image image;
 
+    public GameObject PauseImage;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +19,7 @@ public class PauseUIOnOff : MonoBehaviour
         isStop = true;
         image = GetComponent<Image>();
         image.enabled = false;
+        PauseImage.SetActive(false);
     }
 
     // Update is called once per frame
@@ -55,25 +58,24 @@ public class PauseUIOnOff : MonoBehaviour
         {
             if (DontMoveTime > 5.0f)
             {
-
-                if (image.isActiveAndEnabled == false)
+                if (PauseImage.activeSelf == false)
                 {
-                    image.enabled = true;
+                    PauseImage.SetActive(true);
                 }
             }
             else
             {
-                if (image.isActiveAndEnabled == true)
+                if (PauseImage.activeSelf == true)
                 {
-                    image.enabled = false;
+                    PauseImage.SetActive(false);
                 }
             }
         }
         else
         {
-            if (image.isActiveAndEnabled == true)
+            if (PauseImage.activeSelf == true)
             {
-                image.enabled = false;
+                PauseImage.SetActive(false);
             }
             DontMoveTime = 0.0f;
         }
