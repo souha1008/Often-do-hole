@@ -36,7 +36,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
 
     // フェード秒数(ステージ変更)
     [Label("フェード秒数(ステージ変更)")]
-    private float FadeTime_StageChange = 1;
+    private float FadeTime_StageChange = 0.6f;
 
 
     private Texture2D FadeTexture;                    // フェードのテクスチャ
@@ -283,7 +283,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             if (SoundStop)
                 NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
             else
-                NowFadeKind = FADE_KIND.FADE_SCENECHANGE;
+                NowFadeKind = FADE_KIND.FADE_STAGECHANGE;
 
             NowTime = 0.0f;
 
