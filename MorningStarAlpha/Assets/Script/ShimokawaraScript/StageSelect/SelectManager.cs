@@ -264,14 +264,14 @@ public class SelectManager : MonoBehaviour
             {
                 for (int i = 0; i < 7; i++)
                 {
-                    OldCanStage = i;
-                    ////i番目がクリア済みなら
-                    //if (SaveDataManager.Instance.MainData.Stage[i].Clear)
-                    //    OldCanStage = i;
-                    ////クリアしてない添え字まで来た
-                    //else
-                    //    break;
-                    Debug.Log(i.ToString() + "stage" + "Clear:" + SaveDataManager.Instance.MainData.Stage[i].Clear.ToString());
+                    //OldCanStage = i;
+                    //i番目がクリア済みなら
+                    if (SaveDataManager.Instance.MainData.Stage[i].Clear)
+                        OldCanStage = i;
+                    //クリアしてない添え字まで来た
+                    else
+                        break;
+                    //Debug.Log(i.ToString() + "stage" + "Clear:" + SaveDataManager.Instance.MainData.Stage[i].Clear.ToString());
                 }
             }
 
