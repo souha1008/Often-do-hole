@@ -260,7 +260,7 @@ public class SelectManager : MonoBehaviour
             int OldCanStage = -1;//今開放済みステージを格納  
             if (SaveDataManager.Instance)
             {
-                for (int i = 0; i < SaveDataManager.Instance.MainData.Stage.Length; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     //i番目がクリア済みなら
                     if (SaveDataManager.Instance.MainData.Stage[i].Clear)
