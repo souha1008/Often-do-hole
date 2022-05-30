@@ -23,7 +23,7 @@ public class PlayerState_Clear : PlayerState
     {
         GameStateManager.SetGameState(GAME_STATE.RESULT);
 
-        CameraMainShimokawara.instance.isGoal = true;
+        CameraMainShimokawara.instance.GoalZoom(30);
 
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
@@ -110,7 +110,7 @@ public class PlayerState_Clear : PlayerState
                 //        PlayerScript.animator.SetInteger("ClearType", 2);
                 //        break;
                 //}
-                PlayerScript.animator.SetInteger("ClearType", 1);
+                PlayerScript.animator.SetInteger("ClearType", 0);
 
                 goal.GetComponent<Animator>().SetTrigger("OpenTrigger");
             }
