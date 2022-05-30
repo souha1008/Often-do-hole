@@ -18,6 +18,7 @@ public class PlayerState_Clear : PlayerState
     ClearState state;
     GameObject goal;
     private float motionTimer;
+    private int groundCnt;
     
     public PlayerState_Clear()
     {
@@ -30,6 +31,7 @@ public class PlayerState_Clear : PlayerState
         PlayerScript.rb.velocity = Vector3.zero;
         PlayerScript.vel.x = 0.0f;
         motionTimer = 0.0f;
+        groundCnt = 0;
 
         goal = GoalManager.Instance.gameObject;
         BulletScript.vel = Vector3.zero;
@@ -67,17 +69,29 @@ public class PlayerState_Clear : PlayerState
         Debug.Log(state);
         if (state == ClearState.MIDAIR)
         {
+            PlayerScript.vel.x = 0.0f;
             PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
             PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
 
 
             if (PlayerScript.isOnGround)
             {
-                state = ClearState.WALK;
-                PlayerScript.vel.y = 0.0f;
-
+                groundCnt++;
+                
                 ////SEVoice
                 //SoundManager.Instance.PlaySound("goal");
+            }
+            else
+            {
+                groundCnt = 0;
+            }
+
+
+            if (groundCnt > 5)
+            {
+                state = ClearState.WALK;
+                PlayerScript.vel.y = 0.0f;
+                groundCnt = 0;
             }
         }
         else if(state == ClearState.WALK)
