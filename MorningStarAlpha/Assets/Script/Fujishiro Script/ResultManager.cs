@@ -92,7 +92,7 @@ public class ResultManager : MonoBehaviour
     {
         NextStage = 0,
         StageSelect,
-        //Next
+        Next
     };
 
     void Awake()
@@ -139,37 +139,37 @@ public class ResultManager : MonoBehaviour
 
         if (debug_check)
         {
-            //if (debug_stageNo != 7)
-            //{
-            //    ui_command = UI_COMMAND.NextStage;
-            //    NextStage_UI.sprite = White_NextStage_UI;
-            //    StageSelect_UI.sprite = Glay_StageSelect_UI;
-            //}
-            //else
-            //{
-            //    ui_command = UI_COMMAND.Next;
-            //    Next_UI.sprite = White_Next_UI;
-            //    Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
-            //}
+            if (debug_stageNo != 7)
+            {
+                ui_command = UI_COMMAND.NextStage;
+                NextStage_UI.sprite = White_NextStage_UI;
+                StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
+            else
+            {
+                ui_command = UI_COMMAND.Next;
+                Next_UI.sprite = White_Next_UI;
+                Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
         }
         else
         {
-            //if (GameStateManager.GetNowStage() != 7)
-            //{
-            //    ui_command = UI_COMMAND.NextStage;
-            //    NextStage_UI.sprite = White_NextStage_UI;
-            //    StageSelect_UI.sprite = Glay_StageSelect_UI;
-            //}
-            //else
-            //{
-            //    ui_command = UI_COMMAND.Next;
-            //    Next_UI.sprite = White_Next_UI;
-            //    Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
-            //}
+            if (GameStateManager.GetNowStage() != 7)
+            {
+                ui_command = UI_COMMAND.NextStage;
+                NextStage_UI.sprite = White_NextStage_UI;
+                StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
+            else
+            {
+                ui_command = UI_COMMAND.Next;
+                Next_UI.sprite = White_Next_UI;
+                Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
+            }
         }
 
-        ui_command = UI_COMMAND.StageSelect;
-        StageSelect_UI.sprite = White_StageSelect_UI;
+        //ui_command = UI_COMMAND.StageSelect;
+        //StageSelect_UI.sprite = White_StageSelect_UI;
 
 
         //initPos = Wanted_Sprite.transform.position;
@@ -299,49 +299,49 @@ public class ResultManager : MonoBehaviour
             if (LastStage_UICanvas.activeSelf == true)
             {
                 // スティック上下
-                //if (Input.GetAxis("Vertical") > 0.8f || Input.GetAxis("Vertical") < -0.8)
-                //{
-                //    if (!OnceSentakuFlag)
-                //    {
-                //        SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
+                if (Input.GetAxis("Vertical") > 0.8f || Input.GetAxis("Vertical") < -0.8)
+                {
+                    if (!OnceSentakuFlag)
+                    {
+                        SoundManager.Instance.PlaySound("sound_04_選択音", 1.0f, 0.1f);
 
-                //        // ステートネクストだったら変える
-                //        if (ui_command == UI_COMMAND.Next)
-                //        {
-                //            ui_command = UI_COMMAND.StageSelect;
-                //            Next_UI.sprite = Glay_Next_UI;
-                //            Last_StageSelect_UI.sprite = White_StageSelect_UI;
-                //        }
-                //        else
-                //        {
-                //            ui_command = UI_COMMAND.Next;
-                //            Next_UI.sprite = White_Next_UI;
-                //            Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
-                //        }
+                        // ステートネクストだったら変える
+                        if (ui_command == UI_COMMAND.Next)
+                        {
+                            ui_command = UI_COMMAND.StageSelect;
+                            Next_UI.sprite = Glay_Next_UI;
+                            Last_StageSelect_UI.sprite = White_StageSelect_UI;
+                        }
+                        else
+                        {
+                            ui_command = UI_COMMAND.Next;
+                            Next_UI.sprite = White_Next_UI;
+                            Last_StageSelect_UI.sprite = Glay_StageSelect_UI;
+                        }
 
-                //        OnceSentakuFlag = true;
-                //    }
-                //}
+                        OnceSentakuFlag = true;
+                    }
+                }
 
-                //else
-                //{
-                //    OnceSentakuFlag = false;
-                //}
+                else
+                {
+                    OnceSentakuFlag = false;
+                }
 
                 switch (ui_command)
                 {
-                    //case UI_COMMAND.Next:
-                    //    if (Input.GetButtonDown("ButtonA") && OncePush == false)
-                    //    {
-                    //        OncePush = true;
-                    //        // 振動
-                    //        VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
-                    //        // 決定音
-                    //        SoundManager.Instance.PlaySound("sound_03_01");
-                    //        SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
-                    //        FadeManager.Instance.FadeStart("StaffRoleScene", FADE_KIND.FADE_SCENECHANGE);
-                    //    }
-                    //    break;
+                    case UI_COMMAND.Next:
+                        if (Input.GetButtonDown("ButtonA") && OncePush == false)
+                        {
+                            OncePush = true;
+                            // 振動
+                            VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                            // 決定音
+                            SoundManager.Instance.PlaySound("sound_03_01");
+                            SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                            FadeManager.Instance.FadeStart("StaffRoleScene", FADE_KIND.FADE_SCENECHANGE);
+                        }
+                        break;
 
                     case UI_COMMAND.StageSelect:
                         if (Input.GetButtonDown("ButtonA") && OncePush == false)
