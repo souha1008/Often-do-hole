@@ -29,7 +29,7 @@ public class Raen_Path : MonoBehaviour
       
         if (Rall_Start == true && Rall_Now == false)
         {
-            SoundManager.Instance.PlaySound("sound_27", 0.5f);
+            SoundManager.Instance.PlaySound("sound_27", 1.0f, 0.4f);
 
             PlayerMain.instance.mode = new PlayerState_Rail();
 
@@ -53,6 +53,8 @@ public class Raen_Path : MonoBehaviour
                  Rall_Start = false;
                  Rall_Now = false;
                  PlayerMain.instance.addVel.x = 50.0f;
+                 SoundManager.Instance.StopSound("sound_27");
+
              });
 
             PlayerMain.instance.transform
