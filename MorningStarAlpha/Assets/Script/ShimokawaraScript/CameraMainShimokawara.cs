@@ -75,6 +75,12 @@ public class CameraMainShimokawara: MonoBehaviour
     //    TraceObj();
     //}
 
+    public void GoalZoom(float CameraDistance)
+    {
+        CameraMainShimokawara.instance.isGoal = true;
+        GOAL_CAMERA_DISTANCE = CameraDistance;
+    }
+
     //プレイヤーをカメラの中央に収め続ける
     void TraceObj()
     {

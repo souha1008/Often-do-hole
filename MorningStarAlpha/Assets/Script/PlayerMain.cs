@@ -979,6 +979,12 @@ public class PlayerMain : MonoBehaviour
         SoundManager.Instance.PlaySound("CVoice_ (21)");
     }
 
+    private void VoiceRankSSound()
+    {
+        SoundManager.Instance.PlaySound("CVoice_ (24)");
+    }
+
+
     //private void OnDrawGizmos()
     //{
     //    //ê⁄ínray
