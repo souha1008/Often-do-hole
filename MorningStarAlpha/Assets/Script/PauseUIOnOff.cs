@@ -50,11 +50,23 @@ public class PauseUIOnOff : MonoBehaviour
             DontMoveTime = 0.0f;
         }
 
-        if(DontMoveTime > 5.0f)
+
+        if (GameStateManager.GetGameState() == GAME_STATE.PLAY)
         {
-            if (image.isActiveAndEnabled == false)
+            if (DontMoveTime > 5.0f)
             {
-                image.enabled = true;
+
+                if (image.isActiveAndEnabled == false)
+                {
+                    image.enabled = true;
+                }
+            }
+            else
+            {
+                if (image.isActiveAndEnabled == true)
+                {
+                    image.enabled = false;
+                }
             }
         }
         else
@@ -63,6 +75,7 @@ public class PauseUIOnOff : MonoBehaviour
             {
                 image.enabled = false;
             }
+            DontMoveTime = 0.0f;
         }
     }
 }
