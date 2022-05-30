@@ -974,6 +974,11 @@ public class PlayerMain : MonoBehaviour
         GoalManager.Instance.StartMotionBlur();
     }
 
+    private void VoiceRankASound()
+    {
+        SoundManager.Instance.PlaySound("CVoice_ (21)");
+    }
+
     //private void OnDrawGizmos()
     //{
     //    //ê⁄ínray

@@ -71,7 +71,6 @@ public class PlayerStateShot : PlayerState
                 Debug.LogWarning("random :Out OfRange");
                 break;
         }
-
     }
 
 
