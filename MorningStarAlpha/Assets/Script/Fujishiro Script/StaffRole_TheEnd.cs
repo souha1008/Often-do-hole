@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class StaffRole_TheEnd : MonoBehaviour
 {
-    //　テキストのスクロールスピード
-    [SerializeField]
-    private float textScrollSpeed = 30;
+    private bool once = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        SoundManager.Instance.PlaySound("Ending", 0.6f, AudioReverbPreset.City);
+        once = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y < 500)
-        transform.position = new Vector2(transform.position.x, transform.position.y + textScrollSpeed * Time.deltaTime);
+        if(Input.GetButton("A") || Input.GetButton("B"))
+        {
+            if (once == false)
+            {
+                // 音停止
+                SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
+                once = true;
+            }
+        }
     }
 }

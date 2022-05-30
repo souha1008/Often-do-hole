@@ -168,6 +168,10 @@ public class ResultManager : MonoBehaviour
             }
         }
 
+        //ui_command = UI_COMMAND.StageSelect;
+        //StageSelect_UI.sprite = White_StageSelect_UI;
+
+
         //initPos = Wanted_Sprite.transform.position;
 
         SoundManager.Instance.PlaySound("sound_50", 0.5f, 29.0f, SOUND_FADE_TYPE.OUT, 3.0f, 0.0f, true); // •—‚Ì‰¹Ä¶
