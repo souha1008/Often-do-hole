@@ -10,9 +10,9 @@ public class Kujira_Hit : MonoBehaviour
         this.gameObject.tag = "Thorn";
     }
 
-    public void OnCollisionEnter(Collision collision)
+    public void OnTriggerEnter(Collider collider)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
@@ -31,9 +31,9 @@ public class Kujira_Hit : MonoBehaviour
         }
     }
 
-    public void OnCollisionStay(Collision collision)
+    public void OnTriggerStay(Collider collider)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collider.gameObject.CompareTag("Player"))
         {
             if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
             {
