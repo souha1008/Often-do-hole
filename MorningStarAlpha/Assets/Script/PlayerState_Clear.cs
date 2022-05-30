@@ -23,7 +23,7 @@ public class PlayerState_Clear : PlayerState
     {
         GameStateManager.SetGameState(GAME_STATE.RESULT);
 
-        CameraMainShimokawara.instance.GoalZoom(30);
+        CameraMainShimokawara.instance.GoalZoom(25);
 
         PlayerScript.refState = EnumPlayerState.CLEAR;
         PlayerScript.canShotState = false;
