@@ -95,6 +95,8 @@ public class GoalManager : MonoBehaviour
         {
             PlayerMain.instance.mode = new PlayerState_Clear();
         }
+
+
     }
 
     private void OnTriggerEnter(Collider other)

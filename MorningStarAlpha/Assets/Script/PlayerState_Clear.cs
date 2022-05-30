@@ -32,6 +32,8 @@ public class PlayerState_Clear : PlayerState
         motionTimer = 0.0f;
 
         goal = GoalManager.Instance.gameObject;
+        BulletScript.vel = Vector3.zero;
+        BulletScript.rb.velocity = Vector3.zero;
         BulletScript.ReturnBullet();
         PlayerScript.dir = PlayerMoveDir.RIGHT; //ã≠êßâEå¸Ç´
         RotationStand();
@@ -40,26 +42,29 @@ public class PlayerState_Clear : PlayerState
         SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
 
         PlayerScript.ResetAnimation();
-        if (PlayerScript.isOnGround)
-        {
-            state = ClearState.WALK;
 
-            ////SEVoice
-            //SoundManager.Instance.PlaySound("goal");
-        }
-        else
-        {
-            state = ClearState.MIDAIR;
-        }
+        state = ClearState.MIDAIR;
+        //if (PlayerScript.isOnGround)
+        //{
+        //    state = ClearState.WALK;
+
+        //    ////SEVoice
+        //    //SoundManager.Instance.PlaySound("goal");
+        //}
+        //else
+        //{
+        //    state = ClearState.MIDAIR;
+        //}
     }
 
     public override void UpdateState()
     {
-        
+        BulletScript.ReturnBullet();
     }
 
     public override void Move()
     {
+        Debug.Log(state);
         if (state == ClearState.MIDAIR)
         {
             PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
