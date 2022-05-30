@@ -124,56 +124,59 @@ public class KujiraPos : MonoBehaviour
         }
         else
         {
-            ImageUI.gameObject.SetActive(true);
-
-            //結構遠ければ爆速になる
-            if((transform.position - PlayerMain.instance.transform.position).magnitude > 100)
+            if (GameStateManager.GetGameState() == GAME_STATE.PLAY || GameStateManager.GetGameState() == GAME_STATE.PAUSE)
             {
-                KujiraCenterPos.instance.MyKujiraSpeed = KujiraSpeed.MechaHayai;
+                ImageUI.gameObject.SetActive(true);
 
+                //結構遠ければ爆速になる
+                if ((transform.position - PlayerMain.instance.transform.position).magnitude > 100)
+                {
+                    KujiraCenterPos.instance.MyKujiraSpeed = KujiraSpeed.MechaHayai;
+
+                }
+                else
+                {
+                    KujiraCenterPos.instance.MyKujiraSpeed = KujiraSpeed.High;
+
+                }
+                //Debug.Log("表示");
+
+
+
+
+
+                //  X
+
+                //縦軸三点
+                float Bottom = 0;
+                float Top = CameraRightTop.y - CameraLeftBottom.y;
+                float KujiraY = transform.position.y - CameraLeftBottom.y;
+
+                //クジラを下から数えた割合  0.n
+                float Wariai = KujiraY / Top;
+
+                //割合から座標計算
+                float CanvasHeight = CanvasObj.rect.height;
+                float CanvasPosY = CanvasObj.rect.y;
+                float TempObjPosY = Wariai * CanvasHeight + CanvasPosY;
+
+                float ImageHeight = ImageUI.GetComponent<RectTransform>().transform.localScale.y * ImageUI.GetComponent<RectTransform>().rect.height;
+                float PosMin = CanvasPosY + ImageHeight * 0.5f;
+                float PosMax = CanvasPosY + CanvasHeight - ImageHeight * 0.5f;
+
+                TempObjPosY = Mathf.Clamp(TempObjPosY, PosMin, PosMax);
+
+
+                //float HukidashiHeight = HukidasiUI.GetComponent<RectTransform>().transform.localScale.y * HukidasiUI.GetComponent<RectTransform>().rect.height;
+                float CanvasPosX = CanvasObj.rect.x;
+                float TempObjPosX;
+                float ImageWidth = ImageUI.GetComponent<RectTransform>().transform.localScale.x * ImageUI.GetComponent<RectTransform>().rect.width;
+
+                TempObjPosX = CanvasPosX + ImageWidth * 0.5f;
+
+                ImageUI.GetComponent<RectTransform>().localPosition = new Vector3(TempObjPosX,
+                    TempObjPosY, ImageUI.transform.localPosition.z);
             }
-            else
-            {
-                KujiraCenterPos.instance.MyKujiraSpeed = KujiraSpeed.High;
-
-            }
-            //Debug.Log("表示");
-
-
-
-
-
-            //  X
-
-            //縦軸三点
-            float Bottom = 0;
-            float Top = CameraRightTop.y - CameraLeftBottom.y;
-            float KujiraY = transform.position.y - CameraLeftBottom.y;
-
-            //クジラを下から数えた割合  0.n
-            float Wariai = KujiraY / Top;
-
-            //割合から座標計算
-            float CanvasHeight = CanvasObj.rect.height;
-            float CanvasPosY = CanvasObj.rect.y;
-            float TempObjPosY = Wariai * CanvasHeight + CanvasPosY;
-
-            float ImageHeight = ImageUI.GetComponent<RectTransform>().transform.localScale.y * ImageUI.GetComponent<RectTransform>().rect.height;
-            float PosMin = CanvasPosY + ImageHeight * 0.5f;
-            float PosMax = CanvasPosY + CanvasHeight - ImageHeight * 0.5f;
-
-            TempObjPosY = Mathf.Clamp(TempObjPosY, PosMin, PosMax);
-
-
-            //float HukidashiHeight = HukidasiUI.GetComponent<RectTransform>().transform.localScale.y * HukidasiUI.GetComponent<RectTransform>().rect.height;
-            float CanvasPosX = CanvasObj.rect.x;
-            float TempObjPosX;
-            float ImageWidth = ImageUI.GetComponent<RectTransform>().transform.localScale.x * ImageUI.GetComponent<RectTransform>().rect.width;
-
-            TempObjPosX = CanvasPosX + ImageWidth * 0.5f;
-
-            ImageUI.GetComponent<RectTransform>().localPosition = new Vector3(TempObjPosX,
-                TempObjPosY, ImageUI.transform.localPosition.z);
         }
 
         // Flag = false;

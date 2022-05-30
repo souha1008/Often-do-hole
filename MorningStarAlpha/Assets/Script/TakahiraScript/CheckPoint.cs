@@ -51,6 +51,7 @@ public class CheckPoint : MonoBehaviour
 
             // ちょうちょエフェクト再生
             EffectManager.Instance.CheckPointButterflyEffect(this.transform.position);
+            
 
             // アニメーション再生
             SetAnimator();
