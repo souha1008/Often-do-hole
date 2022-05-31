@@ -114,7 +114,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
                 case 3:
                 case 4:
-                    SoundManager.Instance.PlaySound("EveningBGM", 0.53f, AudioReverbPreset.City);
+                    SoundManager.Instance.PlaySound("EveningBGM", 0.6f, AudioReverbPreset.City);
                     break;
 
                 case 5:
