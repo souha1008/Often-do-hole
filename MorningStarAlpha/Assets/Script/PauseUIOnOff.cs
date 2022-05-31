@@ -55,11 +55,21 @@ public class PauseUIOnOff : MonoBehaviour
 
         if (GameStateManager.GetGameState() == GAME_STATE.PLAY)
         {
-            if (DontMoveTime > 5.0f)
+            if (PlayerMain.instance.refState == EnumPlayerState.ON_GROUND)
             {
-                if (PauseImage.activeSelf == false)
+                if (DontMoveTime > 5.0f)
                 {
-                    PauseImage.SetActive(true);
+                    if (PauseImage.activeSelf == false)
+                    {
+                        PauseImage.SetActive(true);
+                    }
+                }
+                else
+                {
+                    if (PauseImage.activeSelf == true)
+                    {
+                        PauseImage.SetActive(false);
+                    }
                 }
             }
             else
