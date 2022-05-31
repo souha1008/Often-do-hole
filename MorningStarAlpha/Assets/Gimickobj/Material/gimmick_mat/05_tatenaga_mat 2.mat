@@ -23,11 +23,11 @@ Material:
   m_Name: 05_tatenaga_mat 2
   m_Shader: {fileID: 4800000, guid: 766736548846cdf459a9766614dcccab, type: 3}
   m_ShaderKeywords: UTS_USE_RAYTRACING_SHADOW _ _EMISSIVE_SIMPLE _IS_ANGELRING_OFF
-    _IS_OUTLINE_CLIPPING_YES _IS_TRANSCLIPPING_ON _OUTLINE_NML _SHADINGGRADEMAP
+    _IS_CLIPPING_TRANSMODE _IS_OUTLINE_CLIPPING_YES _OUTLINE_NML
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 500
   stringTagMap:
     IgnoreProjection: true
     RenderType: Transparent
@@ -177,7 +177,7 @@ Material:
     - _AngelRing: 0
     - _Ap_RimLight_FeatherOff: 0
     - _Ap_RimLight_Power: 0.1
-    - _AutoRenderQueue: 1
+    - _AutoRenderQueue: 0
     - _BaseColor_Step: 0.565
     - _BaseShade_Feather: 0.467
     - _Base_Speed: 0
@@ -189,7 +189,7 @@ Material:
     - _CameraRolling_Stabilizer: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ClippingMode: 1
+    - _ClippingMode: 2
     - _Clipping_Level: 0.512
     - _ColorShift_Speed: 0
     - _Cull: 2
@@ -295,7 +295,7 @@ Material:
     - _ZWrite: 1
     - _ZWriteMode: 0
     - _simpleUI: 0
-    - _utsTechnique: 1
+    - _utsTechnique: 0
     - _utsVersionX: 2
     - _utsVersionY: 4
     - _utsVersionZ: 0
