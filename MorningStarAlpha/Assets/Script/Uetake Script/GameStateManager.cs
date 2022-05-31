@@ -253,10 +253,18 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_SCENECHANGE);
     }
 
+    public static void LoadNext(int num)
+    {
+        Debug.Log("ロードステージ");
+        Instance.NowStage = num;
+        Instance.InitializeStage();
+        FadeManager.Instance.FadeStart(Instance.StageNames[Instance.NowStage], FADE_KIND.FADE_NEXT_STAGE);
+    }
+
     //ゲームオーバーリトライ及びメニューからリトライ時に使用する
     public static void LoadNowStage()
     {
-        LoadStage(Instance.NowStage);
+        LoadNext(Instance.NowStage);
     }
 
     //リザルトから次のステージに行くときのみに使用する

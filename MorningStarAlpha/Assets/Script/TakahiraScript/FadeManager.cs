@@ -18,6 +18,7 @@ public enum FADE_KIND
     FADE_GAMOVER = 0,      // ゲームオーバーフェード
     FADE_SCENECHANGE,      // シーン変更フェード
     FADE_STAGECHANGE,      // ステージ変更フェード
+    FADE_NEXT_STAGE,      // ステージ変更フェード2
     //FADE_MAX               // フェードの種類最大数
 }
 
@@ -38,6 +39,10 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     [Label("フェード秒数(ステージ変更)")]
     private float FadeTime_StageChange = 0.6f;
 
+    // フェード秒数(ステージ変更)
+    [Label("フェード秒数(次のステージ)")]
+    private float FadeTime_NextStage = 1.5f;
+
 
     private Texture2D FadeTexture;                    // フェードのテクスチャ
     static private FADE_STATE NowFadeState;           // 現在のフェードの状態
@@ -50,6 +55,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     private float TimeGameOver;
     private float TimeSceneChange;
     private float TimeStageChange;
+    private float TimeNextStage;
 
     private string NextSceneName;
 
@@ -69,10 +75,12 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
         FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
         FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+        FadeTime_NextStage = Mathf.Max(FadeTime_NextStage, 0.01f);
 
         TimeGameOver = FadeTime_GameOver;
         TimeSceneChange = FadeTime_SceneChange;
         TimeStageChange = FadeTime_StageChange;
+        TimeNextStage = FadeTime_NextStage;
 
         NowTime = 0.0f;
 
@@ -136,6 +144,9 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     case FADE_KIND.FADE_STAGECHANGE:
                         FadeColor.a = NowTime / TimeStageChange;
                         break;
+                    case FADE_KIND.FADE_NEXT_STAGE:
+                        FadeColor.a = NowTime / TimeNextStage;
+                        break;
                     default:
                         break;
                 }
@@ -162,6 +173,9 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                         break;
                     case FADE_KIND.FADE_STAGECHANGE:
                         FadeColor.a = 1.0f - NowTime / TimeStageChange;
+                        break;
+                    case FADE_KIND.FADE_NEXT_STAGE:
+                        FadeColor.a = 1.0f - NowTime / TimeNextStage;
                         break;
                     default:
                         break;
@@ -194,6 +208,9 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
                     break;
                 case FADE_KIND.FADE_STAGECHANGE:
                     FadeIn_StageChange();
+                    break;
+                case FADE_KIND.FADE_NEXT_STAGE:
+                    FadeIn_NextStage();
                     break;
                 default:
                     break;
@@ -231,6 +248,13 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
         // BGM等消さない
     }
 
+    public void FadeIn_NextStage()
+    {
+        SceneManager.LoadScene(NextSceneName);
+        SoundManager.Instance.StopSound(); // BGM等音消す
+        // BGM等消す
+    }
+
     // フェード変更
     //
     // 引数１：フェード状態の種類(今のところフェードアウトのみ)
@@ -249,6 +273,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
             TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
             TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+            TimeNextStage = FadeTime_NextStage = Mathf.Max(FadeTime_NextStage, 0.01f);
 
             // チェックポイントのリセット
             //if (FadeKind != FADE_KIND.FADE_GAMOVER)
@@ -271,6 +296,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
             TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
             TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+            TimeNextStage = FadeTime_NextStage = Mathf.Max(FadeTime_NextStage, 0.01f);
         }
     }
 
@@ -290,6 +316,7 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
             TimeGameOver = FadeTime_GameOver = Mathf.Max(FadeTime_GameOver, 0.01f);
             TimeSceneChange = FadeTime_SceneChange = Mathf.Max(FadeTime_SceneChange, 0.01f);
             TimeStageChange = FadeTime_StageChange = Mathf.Max(FadeTime_StageChange, 0.01f);
+            TimeNextStage = FadeTime_NextStage = Mathf.Max(FadeTime_NextStage, 0.01f);
         }
     }
 
