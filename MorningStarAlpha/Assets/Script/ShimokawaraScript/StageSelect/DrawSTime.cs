@@ -15,6 +15,6 @@ public class DrawSTime : MonoBehaviour
     void Update()
     {
         if (SelectManager.instance.CanStart)
-            gameObject.GetComponent<TextMeshProUGUI>().text = "-" + (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].S) + "sec";
+            gameObject.GetComponent<TextMeshProUGUI>().text = (int)(GameStateManager.Instance.ClearRankTime[SelectManager.instance.NowSelectStage].S) + "sec";
     }
 }

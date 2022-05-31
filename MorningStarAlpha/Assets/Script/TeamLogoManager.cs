@@ -6,6 +6,8 @@ public class TeamLogoManager : MonoBehaviour
 {
     private float nowTime;
     private bool once;
+
+    [SerializeField] LogoFade logoFade;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,16 +22,20 @@ public class TeamLogoManager : MonoBehaviour
 
         if (once == false)
         {
-            if (GameStateManager.Instance.PressAny())
+
+            if (logoFade.VoiceOnce)
             {
-                nowTime = 5.0f;
+                if (GameStateManager.Instance.PressAny())
+                {
+                    nowTime = 5.0f;
+                }
             }
 
 
             if (nowTime > 3.5f)
             {
                 once = true;
-                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
+                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_STAGECHANGE);
             }
         }
     }

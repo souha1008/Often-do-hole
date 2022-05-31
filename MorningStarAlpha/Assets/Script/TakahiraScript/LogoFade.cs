@@ -9,6 +9,7 @@ public class LogoFade : MonoBehaviour
     public float FadeTime = 1.0f;
     private float NowTime = 0.0f;
     private bool OnceFlag = false;
+    public bool VoiceOnce = false;
 
     private void Update()
     {
@@ -31,6 +32,11 @@ public class LogoFade : MonoBehaviour
         }
         else
         {
+            if (VoiceOnce == false)
+            {
+                VoiceOnce = true;
+                SoundManager.Instance.PlaySound("blueDiver");
+            }
             MyImage.color = new Color(MyImage.color.r, MyImage.color.g, MyImage.color.b, 0);
         }
     }
