@@ -10,6 +10,8 @@ public class CheckPoint : MonoBehaviour
     [Label("メッシュ切り替え用スクリプトがついたオブジェクト")]
     [SerializeField] private GameObject MeshOnOffObject;        // メッシュの表示非表示切り替え用
 
+    private bool once = false;
+
     private void Awake()
     {
         // 初期リスセット
@@ -49,9 +51,12 @@ public class CheckPoint : MonoBehaviour
             // チェックポイントのHitBoxに触れたらチェックポイント更新
             CheckPointManager.Instance.SetCheckPoint(this);
 
-            // ちょうちょエフェクト再生
-            EffectManager.Instance.CheckPointButterflyEffect(this.transform.position);
-            
+            if (once == false)
+            {
+                // ちょうちょエフェクト再生
+                EffectManager.Instance.CheckPointButterflyEffect(this.transform.position);
+                once = true;
+            }
 
             // アニメーション再生
             SetAnimator();
