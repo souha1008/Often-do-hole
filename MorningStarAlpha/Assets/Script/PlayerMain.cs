@@ -275,11 +275,9 @@ public class PlayerMain : MonoBehaviour
 
     public void PlayVoice(string clip_name, float volume = 1.0f, float duration = 0.0f)
     {
-        Debug.Log(clip_name + "duration " + duration);
         if (nowVoiceLimit <= 0.0f)
         {
             nowVoiceLimit = SoundManager.Instance.GetSoundLength(clip_name);
-            Debug.Log("playVoice: Length " + nowVoiceLimit);
             SoundManager.Instance.PlaySound(clip_name, volume, duration);
         }
         else

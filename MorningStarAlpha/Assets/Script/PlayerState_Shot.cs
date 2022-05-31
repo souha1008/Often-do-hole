@@ -219,9 +219,10 @@ public class PlayerStateShot : PlayerState
 
                 if(PlayerScript.isOnGround == false)
                 {
-                    if (BulletScript.rb.position.y - PlayerScript.rb.position.y < -3.0f)
+                    Debug.Log(BulletScript.rb.position.y - PlayerScript.rb.position.y);
+                    if (BulletScript.rb.position.y - PlayerScript.rb.position.y > -1.0f)
                     {
-                        float addUp = 30.0f;
+                        float addUp = 20.0f;
                         PlayerScript.vel.y += addUp;
 
                         Debug.Log("add Up Vec");

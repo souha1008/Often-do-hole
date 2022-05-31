@@ -308,11 +308,11 @@ public class PlayerStateOnGround : PlayerState
                 {
                     case 0:
                         //SE
-                        PlayerScript.PlayVoice("CVoice_ (25)");
+                        PlayerScript.PlayVoice("CVoice_ (25)", 0.2f);
                         break;
 
                     case 1:
-                        PlayerScript.PlayVoice("CVoice_ (26)");
+                        PlayerScript.PlayVoice("CVoice_ (26)", 0.2f);
                         break;
 
                     default:
