@@ -109,21 +109,21 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
                 case 0:
                 case 1:
                 case 2:
-                    SoundManager.Instance.PlaySound("MorningBGM", 0.6f, AudioReverbPreset.City);
+                    SoundManager.Instance.PlaySound("MorningBGM", 0.53f, AudioReverbPreset.City);
                     break;
 
                 case 3:
                 case 4:
-                    SoundManager.Instance.PlaySound("EveningBGM", 0.6f, AudioReverbPreset.City);
+                    SoundManager.Instance.PlaySound("EveningBGM", 0.53f, AudioReverbPreset.City);
                     break;
 
                 case 5:
                 case 6:               
-                    SoundManager.Instance.PlaySound("night_theme_0516", 0.6f, AudioReverbPreset.City);
+                    SoundManager.Instance.PlaySound("night_theme_0516", 0.53f, AudioReverbPreset.City);
                     break;
 
                 case 7:
-                    SoundManager.Instance.PlaySound("lastbattle_0516", 0.6f, AudioReverbPreset.City);
+                    SoundManager.Instance.PlaySound("lastbattle_0516", 0.53f, AudioReverbPreset.City);
                     break;
 
                 default:
