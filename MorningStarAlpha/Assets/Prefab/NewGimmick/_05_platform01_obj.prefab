@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 427201743131776506}
+  - component: {fileID: 3270738488546958728}
   m_Layer: 8
   m_Name: _05_platform01_obj
   m_TagString: Platform
@@ -23,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4348342544605098217}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -31,6 +32,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3270738488546958728
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4348342544605098217}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.4, y: 6.4, z: 6.4}
+  m_Center: {x: 3.2, y: -3.2, z: 0}
 --- !u!1 &8673269724137510067
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,9 +56,8 @@ GameObject:
   - component: {fileID: 150775907133316586}
   - component: {fileID: 6657793352829810342}
   - component: {fileID: 4249178888997143223}
-  - component: {fileID: 2386333896464540541}
   m_Layer: 8
-  m_Name: hitbox
+  m_Name: Gawa
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,8 +71,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8673269724137510067}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.2, y: -3.2, z: 0}
-  m_LocalScale: {x: 4.5, y: 5, z: 5}
+  m_LocalPosition: {x: 3.2, y: -4.52, z: 0}
+  m_LocalScale: {x: 5, y: 7, z: 5}
   m_Children: []
   m_Father: {fileID: 427201743131776506}
   m_RootOrder: 0
@@ -113,16 +126,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2386333896464540541
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673269724137510067}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.4122882, y: 1.2865856, z: 1.144976}
-  m_Center: {x: 0, y: 0, z: 0}
