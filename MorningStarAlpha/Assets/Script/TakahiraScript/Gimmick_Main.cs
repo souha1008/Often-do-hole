@@ -32,7 +32,7 @@ public abstract class Gimmick_Main : MonoBehaviour
     public virtual void UpdateMove() { }   // Updateを使った動き処理
     public abstract void Death(); // ギミック死亡処理
 
-    public virtual void GimmickBulletStart(Collision collision) { }   // ギミックの錨での移動開始処理
+    public virtual void GimmickBulletStart(GameObject collision) { }   // ギミックの錨での移動開始処理
     public virtual void OnTriggerEnter(Collider collider) { }    // 何かと衝突処理(トリガー)
     public virtual void OnCollisionEnter(Collision collision) { }   // 何かと衝突処理(コリジョン)
 

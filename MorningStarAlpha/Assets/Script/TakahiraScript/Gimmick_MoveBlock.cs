@@ -245,7 +245,7 @@ public class Gimmick_MoveBlock : Gimmick_Main
 
     }
 
-    public override void GimmickBulletStart(Collision collision)
+    public override void GimmickBulletStart(GameObject collision)
     {
         if (collision.gameObject == this.gameObject)
             BulletMoveFlag = true;

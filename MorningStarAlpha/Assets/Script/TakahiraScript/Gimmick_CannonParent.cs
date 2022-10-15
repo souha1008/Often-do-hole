@@ -5,6 +5,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
+[SelectionBase]
 // Gimmick_CannonParentクラスを拡張
 [CustomEditor(typeof(Gimmick_CannonParent))]
 
@@ -82,6 +83,7 @@ public class Gimmick_CannonParentEditor : Editor
 }
 #endif
 
+[SelectionBase]
 public class Gimmick_CannonParent : Gimmick_Main
 {
     public GameObject CannonChild;  // 砲台から打ち出す弾オブジェクト
@@ -93,7 +95,7 @@ public class Gimmick_CannonParent : Gimmick_Main
     public float Speed = 5;         // 弾の速度
     public float LifeTime = 5;      // 弾の生存時間
 
-    private const float Length = 7;        // 弾の出現位置調整用
+    private float Length = 7;        // 弾の出現位置調整用
 
     public bool WayRight;           // サメの向き
 
@@ -106,6 +108,21 @@ public class Gimmick_CannonParent : Gimmick_Main
     // 弾のプール
     private static int BulletNum = 6;   // サメの弾最大量
     private Gimmick_CannonChild[] Bullet = new Gimmick_CannonChild[BulletNum];
+
+    //private void OnValidate()
+    //{
+    //    // 向きを合わせる
+    //    if (WayRight)
+    //    {
+    //        //this.gameObject.transform.rotation = Quaternion.identity;
+    //        NowRotateZ = 0;
+    //    }
+    //    else
+    //    {
+    //        //this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
+    //        NowRotateZ = 180;
+    //    }
+    //}
 
     public override void Init()
     {
@@ -126,13 +143,18 @@ public class Gimmick_CannonParent : Gimmick_Main
         if (WayRight)
         {
             //this.gameObject.transform.rotation = Quaternion.identity;
-            NowRotateZ = 0;
+            NowRotateZ = 0 + transform.rotation.eulerAngles.z;
         }
         else
         {
             //this.gameObject.transform.rotation = Quaternion.Euler(0, 180.0f, 0);
-            NowRotateZ = 180;
+            NowRotateZ = 180 + transform.rotation.eulerAngles.z;
         }
+
+        Length = CannonChild.gameObject.GetComponent<Renderer>().bounds.size.x * 0.5f + Cd.bounds.size.x * 0.55f;
+
+        //Debug.LogWarning("発射:" + CannonChild.gameObject.GetComponent<Renderer>().bounds.size.x);
+        //Debug.LogWarning("サメ:" + Cd.bounds.size.x);
     }
 
     public override void UpdateMove()
@@ -215,7 +237,7 @@ public class Gimmick_CannonParent : Gimmick_Main
                     Bullet[i] = Instantiate(CannonChild, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)).GetComponent<Gimmick_CannonChild>(); // 弾生成
                     Child = Bullet[i];
                     GameObject explosion_child = this.transform.GetChild(1).gameObject;
-                    Debug.Log(explosion_child.transform.position);
+                    //Debug.Log(explosion_child.transform.position);
                     EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position);
                     ///Debug.LogWarning("生成");
                     break;
@@ -242,6 +264,7 @@ public class Gimmick_CannonParent : Gimmick_Main
                 // 完全に発射する
                 Child.SetCannonChild(Speed, LifeTime, ChaseFlag, vecQuaternion.Pos, Quaternion.Euler(0, 0, NowRotateZ)); // 弾の値セット
                 Child.gameObject.SetActive(true);
+                Child.Init();
                 SoundManager.Instance.PlaySound("sound_31", 1.0f, 0.06f);
             }          
         }

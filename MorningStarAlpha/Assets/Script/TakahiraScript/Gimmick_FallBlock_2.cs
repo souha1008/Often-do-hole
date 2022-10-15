@@ -687,7 +687,7 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         NoActive();
     }
 
-    public override void GimmickBulletStart(Collision collision)
+    public override void GimmickBulletStart(GameObject collision)
     {
         if (collision.gameObject == this.gameObject)
         {

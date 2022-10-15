@@ -12,7 +12,7 @@ public class ChainManager : MonoBehaviour
     int MAX_CHAIN_NUM = 20;
     GameObject Obj;
     GameObject[] Chain = new GameObject[20];
-    MeshRenderer[] ChainMesh = new MeshRenderer[20];
+    //MeshRenderer[] ChainMesh = new MeshRenderer[20];
 
     public Vector3 PlayerAngle = Vector3.zero;//“n‚·—p‚ÌƒvƒŒƒCƒ„[‰ñ“]Šp
 
@@ -111,11 +111,11 @@ public class ChainManager : MonoBehaviour
                     if (Chain[i] == null)
                     {
                         Chain[i] = Instantiate(Obj);
-                        ChainMesh[i] = Chain[i].GetComponent<MeshRenderer>();
+                        //ChainMesh[i] = Chain[i].GetComponent<MeshRenderer>();
                     }
                     else
                     {
-                        ChainMesh[i].enabled = true;
+                        Chain[i].SetActive(true);
                     }
 
                     //‘å‚«‚³
@@ -210,7 +210,7 @@ public class ChainManager : MonoBehaviour
                 {
                     if (Chain[i])
                     {
-                        ChainMesh[i].enabled = false;
+                        Chain[i].SetActive(false);
                         //Destroy(Chain[i]);
                     }
                 }
@@ -224,7 +224,7 @@ public class ChainManager : MonoBehaviour
             {
                 if (Chain[i])
                 {
-                    ChainMesh[i].enabled = false;
+                    Chain[i].SetActive(false);
                     //Destroy(Chain[i]);
                 }
             }
