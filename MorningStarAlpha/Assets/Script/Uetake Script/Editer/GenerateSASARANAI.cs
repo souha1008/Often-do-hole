@@ -11,19 +11,26 @@ public class GenerateSASARANAI : MonoBehaviour
 {
     const float GridSize = 3.2f;
 
+    public enum Direction
+    {
+        UP,
+        DOWN,
+    }
+
     [Tooltip("複製したいオブジェクト")] public GameObject ground;
     [Tooltip("道路の角オブジェクト")] public GameObject corner;
     [Tooltip("道路の角オブジェクト")] public GameObject flat;
 
-    public bool Top = true;
-    public bool Bottom = true;
-    public bool Left = true;
-    public bool right = true;
+    public bool Road_Top = true;
+    public bool Road_Bottom = true;
+    public bool Road_Left = true;
+    public bool Road_Light = true;
 
-    [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeX = -0.5f;
-    [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeY = -0.5f;
-    [Range(0.5f, 2.0f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustSizeZ = 0.0f;
-    [Range(-0.1f, -1.0f), Tooltip("サイズ調整用： 正の数（見た目用オブジェクトが大きめに表示される）負の数（見た目用オブジェクトが小さめに表示される）")] public float AdjustMove = 0.0f;
+    [Tooltip("真ん中の白い部分の向き")] public Direction direction;
+
+    [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（真ん中の白い部分が大きめに表示される）負の数（真ん中の白い部分が小さめに表示される）")] public float AdjustSizeX = -0.5f;
+    [Range(-0.1f, 0.1f), Tooltip("サイズ調整用： 正の数（真ん中の白い部分が大きめに表示される）負の数（真ん中の白い部分が小さめに表示される）")] public float AdjustSizeY = -0.5f;
+    [Range(0.5f, 1.0f), Tooltip("サイズ調整用： 正の数（真ん中の白い部分が大きめに表示される）負の数（真ん中の白い部分が小さめに表示される）")] public float AdjustSizeZ = 0.0f;
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(GenerateSASARANAI))]
@@ -40,20 +47,15 @@ public class GenerateSASARANAI : MonoBehaviour
             {
                 //元あるものは削除
                 DeleteChildObject();
-
-                GenerateGround();
-            }
-
-            if (GUILayout.Button("道路の生成", GUILayout.Height(72)))
-            {
                 GenerateRoad();
+                GenerateGround();
+
+                genPlat.GetComponent<Renderer>().enabled = false;
             }
-
-
-            GUILayout.Space(20);
             if (GUILayout.Button("削除", GUILayout.Height(72)))
             {
                 DeleteChildObject();
+                genPlat.GetComponent<Renderer>().enabled = true;
             }
 
 
@@ -87,6 +89,11 @@ public class GenerateSASARANAI : MonoBehaviour
                         obj.transform.localScale = newScale;
                     }
 
+                    if(genPlat.direction == Direction.DOWN)
+                    {
+                        obj.transform.rotation = Quaternion.Euler(0, 0, 180);
+                    }
+
                     obj.transform.parent = genPlat.transform;
 
                     ////ピボットズレによる最終位置調整
@@ -115,7 +122,7 @@ public class GenerateSASARANAI : MonoBehaviour
                 //角の生成
                 {
                     //左上
-                    if (genPlat.Top || genPlat.Left)
+                    if (genPlat.Road_Top || genPlat.Road_Left)
                     {
                         GameObject obj = InstantiateCorner();
                         obj.transform.position = new Vector3(minPos.x - 0.2f, maxPos.y, minPos.z);
@@ -124,7 +131,7 @@ public class GenerateSASARANAI : MonoBehaviour
                     }
 
                     //右上
-                    if (genPlat.Top || genPlat.right)
+                    if (genPlat.Road_Top || genPlat.Road_Light)
                     {
                         GameObject obj = InstantiateCorner();
                         obj.transform.position = new Vector3(maxPos.x, maxPos.y + 0.2f, minPos.z); ;
@@ -132,7 +139,7 @@ public class GenerateSASARANAI : MonoBehaviour
                     }
 
                     //左下
-                    if (genPlat.Bottom || genPlat.Left)
+                    if (genPlat.Road_Bottom || genPlat.Road_Left)
                     {
                         GameObject obj = InstantiateCorner();
                         obj.transform.position = new Vector3(minPos.x, minPos.y - 0.2f, minPos.z);
@@ -141,7 +148,7 @@ public class GenerateSASARANAI : MonoBehaviour
                     }
 
                     //右下
-                    if (genPlat.Bottom || genPlat.right)
+                    if (genPlat.Road_Bottom || genPlat.Road_Light)
                     {
                         GameObject obj = InstantiateCorner();
                         obj.transform.position = new Vector3(maxPos.x + 0.2f, minPos.y, minPos.z);
@@ -152,7 +159,7 @@ public class GenerateSASARANAI : MonoBehaviour
 
                 //角ではない部分作成
                 {  
-                    if (genPlat.Top)
+                    if (genPlat.Road_Top)
                     {
                         for (int i = 1; i < x_lne - 1; i++)
                         {
@@ -167,7 +174,7 @@ public class GenerateSASARANAI : MonoBehaviour
                     }
 
 
-                    if (genPlat.Bottom)
+                    if (genPlat.Road_Bottom)
                     {
                         for (int i = 1; i < x_lne - 1; i++)
                         {
@@ -181,7 +188,7 @@ public class GenerateSASARANAI : MonoBehaviour
                         }
                     }
 
-                    if (genPlat.Left)
+                    if (genPlat.Road_Left)
                     {
                         for (int i = 1; i < y_lne - 1; i++)
                         {
@@ -194,7 +201,7 @@ public class GenerateSASARANAI : MonoBehaviour
                         }
                     }
 
-                    if (genPlat.right)
+                    if (genPlat.Road_Light)
                     {
                         for (int i = 1; i < y_lne - 1; i++)
                         {
@@ -265,5 +272,4 @@ public class GenerateSASARANAI : MonoBehaviour
         }
     }
 #endif
-
 }

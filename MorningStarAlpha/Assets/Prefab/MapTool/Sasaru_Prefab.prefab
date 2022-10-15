@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3307113697395617673}
   - component: {fileID: 3307113697395617718}
   - component: {fileID: 3307113697395617719}
-  m_Layer: 0
-  m_Name: SasaruPrefab
-  m_TagString: Untagged
+  m_Layer: 8
+  m_Name: Sasaru_Prefab
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3307113697395617716}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -110,9 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   platform: {fileID: 4071471820647809152, guid: 6d4714c5af596344bb5b0705913cf788, type: 3}
-  AdjustSizeX: 0
-  AdjustSizeY: 0
-  AdjustSizeZ: 0
+  direction: 0
 --- !u!114 &3307113697395617719
 MonoBehaviour:
   m_ObjectHideFlags: 0

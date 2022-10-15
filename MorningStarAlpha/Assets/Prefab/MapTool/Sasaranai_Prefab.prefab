@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3802375129331499589}
   - component: {fileID: 3802375129331499588}
   - component: {fileID: 3802375129331499591}
-  m_Layer: 0
-  m_Name: SasaranaiPrefab
-  m_TagString: Untagged
+  m_Layer: 8
+  m_Name: Sasaranai_Prefab
+  m_TagString: Iron
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,7 +50,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3802375129331499590}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cde02fcc7d61dc5438e05178564bfbb8, type: 2}
+  - {fileID: 2100000, guid: 105f21e709d4a1946ae0480c028d6825, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,14 +112,14 @@ MonoBehaviour:
   ground: {fileID: 2714763673247290119, guid: 1a5be1ce96012e747b55ee6b73f2f13f, type: 3}
   corner: {fileID: 899150754685021749, guid: 009323829c74ca34ea953db8b30f8cad, type: 3}
   flat: {fileID: 3099519354921542156, guid: 02e653e483fde2143ae9890f8cfc0ea5, type: 3}
-  Top: 0
-  Bottom: 0
-  Left: 0
-  right: 1
+  Road_Top: 1
+  Road_Bottom: 1
+  Road_Left: 1
+  Road_Light: 1
+  direction: 0
   AdjustSizeX: 0.003
   AdjustSizeY: -0.0179
   AdjustSizeZ: 0.74
-  AdjustMove: -0.1
 --- !u!114 &3802375129331499591
 MonoBehaviour:
   m_ObjectHideFlags: 0
