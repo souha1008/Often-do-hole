@@ -18,14 +18,14 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
 
     private bool NowFall;               // 落下中か
     private float NowTime;              // 経過時間
-    private float StartPosY;           // 初期座標
+    private float StartPosY;            // 初期座標
     private float FallPosY;            // 落下座標
     private float OldFallPosY;            // １つ前の落下座標
 
     public override void Init()
     {
         // 初期化
-        Cd.isTrigger = false;
+        Cd.isTrigger = true;
         BulletMoveFlag = false;
 
         NowFall = false;
@@ -125,10 +125,10 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
         this.gameObject.SetActive(false);
     }
 
-    public override void OnCollisionEnter(Collision collision)
+    public override void OnTriggerEnter(Collider collider)
     {
         // プレイヤーと衝突(このオブジェクトに刺さってない)
-        if (collision.gameObject.CompareTag("Player") && !BulletMoveFlag)
+        if (collider.gameObject.CompareTag("Player") && !BulletMoveFlag)
         {
             if (PlayerMain.instance.refState == EnumPlayerState.SWING)
             {
@@ -147,7 +147,7 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
                 // プレイヤーをノックバック状態に変更
                 PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
 
-                //Debug.LogWarning("死亡:" + collision.gameObject.name);
+                //Debug.LogWarning("死亡:" + collider.gameObject.name);
 
                 // 自身が死亡
                 Death();
@@ -156,9 +156,9 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
         }
         
         // 壁とかに衝突
-        if (!(collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Bullet")))
+        if (!(collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Bullet") || collider.gameObject.CompareTag("Chain")))
         {
-            //Debug.LogWarning("死亡:" + collision.gameObject.name);
+            //Debug.LogWarning("死亡:" + collider.gameObject.name);
 
             // 自身が死亡
             Death();
@@ -166,7 +166,7 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
         }
     }
 
-    public override void GimmickBulletStart(Collision collision)
+    public override void GimmickBulletStart(GameObject collision)
     {
         if (collision.gameObject == this.gameObject)
         {

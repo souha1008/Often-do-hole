@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ChainHide : MonoBehaviour
 {
-    MeshRenderer MyMeshRenderer;
+    //MeshRenderer MyMeshRenderer;
     // Start is called before the first frame update
     void Start()
     {
-        MyMeshRenderer = GetComponent<MeshRenderer>();
+        //MyMeshRenderer = GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -21,7 +21,8 @@ public class ChainHide : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            MyMeshRenderer.enabled = false;
+            gameObject.SetActive(false);
+            //MyMeshRenderer.enabled = false;
         }
     }
 
@@ -29,7 +30,8 @@ public class ChainHide : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            MyMeshRenderer.enabled = false;
+            gameObject.SetActive(false);
+            //MyMeshRenderer.enabled = false;
         }
     }
 
@@ -37,7 +39,8 @@ public class ChainHide : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            MyMeshRenderer.enabled = true;
+            gameObject.SetActive(false);
+            //MyMeshRenderer.enabled = true;
         }
     }
 

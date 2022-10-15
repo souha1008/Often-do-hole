@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class BulletMain : MonoBehaviour
 {
@@ -394,7 +395,7 @@ public class BulletMain : MonoBehaviour
 
                         if ((Gmain = collision.gameObject.GetComponent<Gimmick_Main>()) != null)
                         {
-                            Gmain.GimmickBulletStart(collision); // ギミックの錨移動開始処理
+                            Gmain.GimmickBulletStart(collision.gameObject); // ギミックの錨移動開始処理
                         }
 
                         break;
@@ -580,6 +581,13 @@ public class BulletMain : MonoBehaviour
                                 PlayerMain.instance.RecoverBullet();
                                 SoundManager.Instance.PlaySound("sound_30");
                                 VibrationManager.Instance.StartVibration(0.85f, 0.85f, 0.25f);
+
+                                Gimmick_Main Gmain = null;
+
+                                if ((Gmain = other.gameObject.GetComponent<Gimmick_Main>()) != null)
+                                {
+                                    Gmain.GimmickBulletStart(other.gameObject); // ギミックの錨移動開始処理
+                                }
                                 break;
 
                             case "SpringBoard":
