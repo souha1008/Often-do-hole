@@ -120,7 +120,7 @@ public class SelectManager : MonoBehaviour
                 SoundManager.Instance.FadeSound("Title_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
                 // êUìÆ
                 VibrationManager.Instance.StartVibration(0.8f, 0.8f, 0.27f);
-                GameStateManager.LoadStage(NowSelectStage);
+                GameStateManager.LoadStageTitle(NowSelectStage);
 
             }
             else if (CanStart && Input.GetButton("ButtonB"))

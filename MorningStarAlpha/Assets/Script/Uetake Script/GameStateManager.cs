@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -244,6 +245,13 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
         CheckPointManager.Instance.ResetCheckPoint();   // チェックポイントのリセット
     }
 
+    // タイトルロゴの表示シーン(後のシーンでLoadStageを呼び出す)
+    public static void LoadStageTitle(int num)
+    {
+        Instance.NowStage = num;
+        FadeManager.Instance.FadeStart("StageTitleScene", FADE_KIND.FADE_SCENECHANGE);
+    }
+
     //ステージセレクトから入るときのみ
     public static void LoadStage(int num)
     {
@@ -271,7 +279,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
     public static void LoadNextStage()
     {
         Instance.NowStage = Mathf.Min(GetNowStage() + 1, STAGE_MAX_NUM - 1);
-        LoadStage(Instance.NowStage);
+        LoadStageTitle(Instance.NowStage);
     }
 
     // ステージセレクトに移行
