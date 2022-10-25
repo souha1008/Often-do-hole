@@ -94,6 +94,7 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public AnimHash animHash;
 
     [System.NonSerialized] public GameObject[] animBullet = new GameObject[3];
+    public GameObject animChain;
     [System.NonSerialized] public GameObject[] animJewel = new GameObject[3];
     const int BULLET_PART_NUM = 3;
     const int JEWEL_PART_NUM = 3;
@@ -182,6 +183,7 @@ public class PlayerMain : MonoBehaviour
         animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
         animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;
 
+        animChain = transform.Find("anchor_fix3:group12/anchor_fix3:handle/anchor_fix3:Anchor_handle/tian_0515_01:polySurface11").gameObject;
 
 
         GameObject sJowel = transform.Find("Body/takara/box_fix_01:pCone1").gameObject;
@@ -297,6 +299,8 @@ public class PlayerMain : MonoBehaviour
         {
             animBullet[i].SetActive(on_off);
         }
+
+        animChain.SetActive(on_off);
     }
 
     public void PlayVoice(string clip_name, float volume = 1.0f, float duration = 0.0f)
@@ -995,6 +999,9 @@ public class PlayerMain : MonoBehaviour
             }
         }
     }
+
+    //////////////アニメーションから呼び出し関数///////////////////
+
 
     private void StartClearCamera()
     {
