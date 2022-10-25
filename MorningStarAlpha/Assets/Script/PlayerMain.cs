@@ -92,8 +92,11 @@ public class PlayerMain : MonoBehaviour
     [System.NonSerialized] public static PlayerMain instance;
     [System.NonSerialized] public Animator animator;
     [System.NonSerialized] public AnimHash animHash;
-    [System.NonSerialized] public GameObject[] animBullet = new GameObject[3];
 
+    [System.NonSerialized] public GameObject[] animBullet = new GameObject[3];
+    [System.NonSerialized] public GameObject[] animJewel = new GameObject[3];
+    const int BULLET_PART_NUM = 3;
+    const int JEWEL_PART_NUM = 3;
 
     public bool VoiceON = true;
     public BulletMain BulletScript;
@@ -174,9 +177,32 @@ public class PlayerMain : MonoBehaviour
         animator = GetComponent<Animator>();
         gameObject.tag = "Player";
 
+        //イカリモデルの取得
         animBullet[0] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_body").gameObject;
         animBullet[1] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_L_needle").gameObject;
-        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;     
+        animBullet[2] = transform.Find("anchor_fix3:group12/anchor_fix3:body/anchor_fix3:Anchor_body/anchor_fix3:anchor_R_needle").gameObject;
+
+
+
+        GameObject sJowel = transform.Find("Body/takara/box_fix_01:pCone1").gameObject;
+        if (sJowel != null)
+        {
+            animJewel[0] = sJowel;
+            GameObject aJowel = transform.Find("Body/takara/box_fix_01:pCube3").gameObject;
+            animJewel[1] = aJowel;
+            GameObject bJowel = transform.Find("Body/takara/box_fix_01:pCone2").gameObject;
+            animJewel[2] = bJowel;
+
+            for (int i = 0; i < JEWEL_PART_NUM; i++)
+            {
+                //宝石モデルは最初に消しておく
+                animJewel[i].GetComponent<Renderer>().enabled = false;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("古いモデルを使っています");
+        } 
     }
 
     private void Start()
@@ -267,7 +293,7 @@ public class PlayerMain : MonoBehaviour
 
     public void VisibleAnimBullet(bool on_off)
     {
-        for (int i = 0; i < 3; i++) 
+        for (int i = 0; i < BULLET_PART_NUM; i++) 
         {
             animBullet[i].SetActive(on_off);
         }
@@ -990,6 +1016,20 @@ public class PlayerMain : MonoBehaviour
         SoundManager.Instance.PlaySound("CVoice_ (24)");
     }
 
+    private void VisibleJewel_RANKB()
+    {
+        animJewel[2].GetComponent<Renderer>().enabled = true;
+    }
+
+    private void VisibleJewel_RANKA()
+    {
+        animJewel[1].GetComponent<Renderer>().enabled = true;
+    }
+
+    private void VisibleJewel_RANKS()
+    {
+        animJewel[0].GetComponent<Renderer>().enabled = true;
+    }
 
     //private void OnDrawGizmos()
     //{
