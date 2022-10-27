@@ -69,6 +69,7 @@ public class PlayerState_Clear : PlayerState
         Debug.Log(state);
         if (state == ClearState.MIDAIR)
         {
+            //xˆÚ“®‚È‚µ
             PlayerScript.vel.x = 0.0f;
             PlayerScript.vel += Vector3.down * PlayerScript.FALL_GRAVITY * (fixedAdjust);
             PlayerScript.vel.y = Mathf.Max(PlayerScript.vel.y, PlayerScript.MAX_FALL_SPEED * -1);
@@ -86,8 +87,8 @@ public class PlayerState_Clear : PlayerState
                 groundCnt = 0;
             }
 
-
-            if (groundCnt > 5)
+            //’n–Ê‚É‚Â‚¢‚½‚ç•à‚«‚ÉˆÚs
+            if (groundCnt > 8)
             {
                 state = ClearState.WALK;
                 PlayerScript.vel.y = 0.0f;
