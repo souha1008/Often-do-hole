@@ -7,21 +7,27 @@ using UnityEngine.UI;
 
 public class StaffRoleManager : MonoBehaviour
 {
+    public GameObject BlackBoard;
     //　テキストのスクロールスピード
-    [SerializeField]
-    private float textScrollSpeed = 30;
+    private float textScrollSpeed = 110.0f;
     //　テキストの制限位置
-    [SerializeField]
-    private float limitPosition = 730f;
-    //　エンドロールが終了したかどうか
+    private float limitPosition = 1600f;
+    //　エンドロールが停止したかどうか
     private bool isStopEndRoll;
 
+    private float FadeTime = 2f;
+
+    private float FadeTimer;
+
+    private bool isDisplayEnd;
     private bool once;
 
     private void Start()
     {
         isStopEndRoll = false;
+        isDisplayEnd = false;
         once = false;
+        FadeTimer = -76.6f;
 
         SoundManager.Instance.PlaySound("Ending", 0.6f, AudioReverbPreset.City);
     }
@@ -29,21 +35,52 @@ public class StaffRoleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(FadeTimer);
         //　エンドロールが終了した時
-        if (isStopEndRoll)
+        if (isDisplayEnd)
         {
             if (once == false)
             {
-                // 音停止
-                SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
-                FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
-                once = true;
+                if(GameStateManager.Instance.PressAny())
+                {
+                    // 音停止
+                    SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                    FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
+                    once = true;
+                }
+
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    // 音停止
+                    SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
+                    FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
+                    once = true;
+                }
             }
         }
         else
         {
+            FadeTimer += Time.deltaTime;
+            float alpha = 1.0f - (FadeTimer / FadeTime);
+            alpha = Mathf.Clamp01(alpha);
+            Color temp = BlackBoard.GetComponent<Image>().color;
+            temp.a = alpha;
+            BlackBoard.GetComponent<Image>().color = temp;
+
+            if (FadeTimer >= FadeTime)
+            {
+                temp.a = 0.0f;
+                BlackBoard.GetComponent<Image>().color = temp;
+                isDisplayEnd = true;
+            }
+        }
+
+
+        //スタッフロール移動
+        if (!isStopEndRoll)
+        {
             //　エンドロール用テキストがリミットを越えるまで動かす
-            if (transform.position.y <= limitPosition)
+            if (transform.localPosition.y <= limitPosition)
             {
                 transform.position = new Vector2(transform.position.x, transform.position.y + textScrollSpeed * Time.deltaTime);
             }
