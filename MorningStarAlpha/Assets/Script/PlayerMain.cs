@@ -185,7 +185,6 @@ public class PlayerMain : MonoBehaviour
 
         animChain = transform.Find("anchor_fix3:group12/anchor_fix3:handle/anchor_fix3:Anchor_handle/tian_0515_01:polySurface11").gameObject;
 
-
         GameObject sJowel = transform.Find("Body/takara/box_fix_01:pCone1").gameObject;
         if (sJowel != null)
         {
