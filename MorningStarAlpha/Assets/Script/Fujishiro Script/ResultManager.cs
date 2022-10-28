@@ -339,7 +339,7 @@ public class ResultManager : MonoBehaviour
                             // Œˆ’è‰¹
                             SoundManager.Instance.PlaySound("sound_03_01");
                             SoundManager.Instance.FadeSound("Result_BGM", SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
-                            FadeManager.Instance.FadeStart("StaffRoleScene", FADE_KIND.FADE_SCENECHANGE);
+                            FadeManager.Instance.FadeStart("NewStaffRoleScene", FADE_KIND.FADE_SCENECHANGE);
                         }
                         break;
 

@@ -15,19 +15,23 @@ public class StaffRoleManager : MonoBehaviour
     //　エンドロールが停止したかどうか
     private bool isStopEndRoll;
 
-    private float FadeTime = 2f;
+    private const float FadeTime = 2f;
 
+    private const float BlackTime = -76.6f;
     private float FadeTimer;
+    private const float EndMusicTime = 5.0f;
 
     private bool isDisplayEnd;
     private bool once;
+
+
 
     private void Start()
     {
         isStopEndRoll = false;
         isDisplayEnd = false;
         once = false;
-        FadeTimer = -76.6f;
+        FadeTimer = BlackTime;
 
         SoundManager.Instance.PlaySound("Ending", 0.6f, AudioReverbPreset.City);
     }
@@ -48,14 +52,6 @@ public class StaffRoleManager : MonoBehaviour
                     FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
                     once = true;
                 }
-
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    // 音停止
-                    SoundManager.Instance.FadeSound(SOUND_FADE_TYPE.OUT, 1.0f, 0.0f, true);
-                    FadeManager.Instance.FadeStart("Title_part2", FADE_KIND.FADE_SCENECHANGE);
-                    once = true;
-                }
             }
         }
         else
@@ -67,7 +63,7 @@ public class StaffRoleManager : MonoBehaviour
             temp.a = alpha;
             BlackBoard.GetComponent<Image>().color = temp;
 
-            if (FadeTimer >= FadeTime)
+            if (FadeTimer >= EndMusicTime)
             {
                 temp.a = 0.0f;
                 BlackBoard.GetComponent<Image>().color = temp;
