@@ -151,7 +151,7 @@ public class Gimmick_CannonParent : Gimmick_Main
             NowRotateZ = 180 + transform.rotation.eulerAngles.z;
         }
 
-        Length = CannonChild.gameObject.GetComponent<Renderer>().bounds.size.x * 0.5f + Cd.bounds.size.x * 0.55f;
+        Length = CannonChild.gameObject.GetComponent<Renderer>().bounds.size.x * 0.55f + Cd.bounds.size.x * 0.55f;
 
         //Debug.LogWarning("î≠éÀ:" + CannonChild.gameObject.GetComponent<Renderer>().bounds.size.x);
         //Debug.LogWarning("ÉTÉÅ:" + Cd.bounds.size.x);
