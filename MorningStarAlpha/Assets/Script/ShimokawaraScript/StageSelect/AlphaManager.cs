@@ -34,10 +34,12 @@ public class AlphaManager : MonoBehaviour
         for (int i = 0; i < ImageArray.Length; i++)
         {
             ImageArray[i].SetOriginnal();
+            //ImageArray[i].gameObject.SetActive(true);
         }
         for (int i = 0; i < TextArray.Length; i++)
         {
             TextArray[i].SetOriginnal();
+            //TextArray[i].gameObject.SetActive(true);
         }
     }
 
@@ -46,10 +48,12 @@ public class AlphaManager : MonoBehaviour
         for (int i = 0; i < ImageArray.Length; i++)
         {
             ImageArray[i].SetClear();
+            //ImageArray[i].gameObject.SetActive(false);
         }
         for (int i = 0; i < TextArray.Length; i++)
         {
             TextArray[i].SetClear();
+            //TextArray[i].gameObject.SetActive(false);
         }
     }
 }
