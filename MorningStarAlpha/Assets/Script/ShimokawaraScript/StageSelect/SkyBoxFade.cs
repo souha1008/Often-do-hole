@@ -19,7 +19,8 @@ public class SkyBoxFade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        NowStage = Mathf.Min(MaxStage - 1, SelectManager.instance.NowSelectStage);
+        NowColor = GoColor[NowStage];
     }
 
     // Update is called once per frame
