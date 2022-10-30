@@ -14,14 +14,14 @@ public class StageTitleText : MonoBehaviour
 
     private string[] TitleText =
     {
-        "伝説の始まり",
-        "StageTitle2",
-        "StageTitle3",
-        "StageTitle4",
-        "StageTitle5",
-        "StageTitle6",
-        "StageTitle7",
-        "StageTitle8",
+        "夢のはじまり",
+        "空色の眼の少女",
+        "機械仕掛けの街",
+        "乱反射するスイショウ谷",
+        "スイショウ谷はもう一つ",
+        "月が落ちる街",
+        "旧市街のガンマンたち",
+        "迫りくるは巨大な...",
         "StageTitle9"
     };
 
