@@ -238,7 +238,7 @@ public class Gimmick_CannonParent : Gimmick_Main
                     Child = Bullet[i];
                     GameObject explosion_child = this.transform.GetChild(1).gameObject;
                     //Debug.Log(explosion_child.transform.position);
-                    EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position);
+                    EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position, 2.0f);
                     ///Debug.LogWarning("ê∂ê¨");
                     break;
                 }
@@ -247,7 +247,7 @@ public class Gimmick_CannonParent : Gimmick_Main
                     Child = Bullet[i];
                     GameObject explosion_child = this.transform.GetChild(1).gameObject;
                     
-                    EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position);
+                    EffectManager.Instance.SharkExplosionEffect(explosion_child.transform.position, 2.0f);
                     //Debug.LogWarning("çƒóòóp");
                     break;
                 }

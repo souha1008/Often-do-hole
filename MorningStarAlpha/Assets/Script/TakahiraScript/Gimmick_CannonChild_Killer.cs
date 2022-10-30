@@ -122,7 +122,7 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
         Init();
 
         // エフェクト
-        EffectManager.Instance.SharkExplosionEffect(this.transform.position);
+        EffectManager.Instance.SharkExplosionEffect(this.transform.position, 4.0f);
 
         // 非アクティブ化
         this.gameObject.SetActive(false);
