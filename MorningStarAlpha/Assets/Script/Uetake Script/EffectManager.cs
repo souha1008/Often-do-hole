@@ -114,15 +114,15 @@ public class EffectManager : SingletonMonoBehaviour<EffectManager>
 
     public void SharkExplosionEffect(Vector3 pos)
     {
+        //const float size = 4.0f;
         GameObject effect = Instantiate(SharkExplosion, pos, Quaternion.identity);
         //effect.transform.localScale = Vector3.one * size;
         Destroy(effect.gameObject, 2.0f);
     }
-    public void SharkExplosionEffect(Vector3 pos, GameObject Perant)
+    public void SharkExplosionEffect(Vector3 pos, float size)
     {
         GameObject effect = Instantiate(SharkExplosion, pos, Quaternion.identity);
-        Perant.transform.parent = effect.transform;
-        //effect.transform.localScale = Vector3.one * size;
+        effect.transform.localScale = Vector3.one * size;
         Destroy(effect.gameObject, 2.0f);
     }
 
