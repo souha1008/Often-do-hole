@@ -674,10 +674,13 @@ public class Gimmick_FallBlock_2 : Gimmick_Main
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
         {
-            PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.NORMAL);
-            PlayerMain.instance.ForciblyReleaseMode(true);
-            PlayerMain.instance.endSwing = true;
-            PlayerMain.instance.floorVel = Vector3.zero;
+            if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
+            {
+                PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.NORMAL);
+                PlayerMain.instance.ForciblyReleaseMode(true);
+                PlayerMain.instance.endSwing = true;
+                PlayerMain.instance.floorVel = Vector3.zero;
+            }
         }
 
         // 自分自身を消す

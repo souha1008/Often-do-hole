@@ -110,10 +110,13 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
         // プレイヤーの錨引き戻し
         if (BulletMoveFlag)
         {
-            PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.NORMAL);
-            PlayerMain.instance.ForciblyReleaseMode(true);
-            PlayerMain.instance.endSwing = true;
-            PlayerMain.instance.floorVel = Vector3.zero;
+            if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
+            {
+                PlayerMain.instance.mode = new PlayerStateMidair(true, MidairState.NORMAL);
+                PlayerMain.instance.ForciblyReleaseMode(true);
+                PlayerMain.instance.endSwing = true;
+                PlayerMain.instance.floorVel = Vector3.zero;
+            }
         }
 
         Init();
@@ -145,7 +148,10 @@ public class Gimmick_CannonChild_Killer : Gimmick_CannonChild
                 VibrationManager.Instance.StartVibration(0.7f, 0.7f, 0.2f);
 
                 // プレイヤーをノックバック状態に変更
-                PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
+                if (PlayerMain.instance.refState != EnumPlayerState.DEATH)
+                {
+                    PlayerMain.instance.mode = new PlayerState_Knockback(this.transform.position, false);
+                }
 
                 //Debug.LogWarning("死亡:" + collider.gameObject.name);
 
