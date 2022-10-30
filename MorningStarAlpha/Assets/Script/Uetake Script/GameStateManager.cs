@@ -33,7 +33,7 @@ public class GameStateManager : SingletonMonoBehaviour<GameStateManager>
 
 #if true
     private string[] StageNames = { "Stage1-1_fix" ,"Stage1-2_fix" , "Stage2-1_fix" , "Stage2-2_fix" , "Stage2-3_fix" , "Stage3-1_fix",
-    "Stage3-3_fix", "StageBoss_fix"};
+    "Stage3-3_fix_new", "StageBoss_fix_02"};
 
       public CLEAR_RANK_TIME[] ClearRankTime = {
         new CLEAR_RANK_TIME(50 ,150,999) ,
