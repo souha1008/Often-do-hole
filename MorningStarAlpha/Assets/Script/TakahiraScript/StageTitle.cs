@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StageTitle : MonoBehaviour
 {
-    [SerializeField] private float TitleTime = 2.5f;
+    [SerializeField] private float TitleTime = 3.0f;
     private float NowTime = 0.0f;
 
     // Start is called before the first frame update
