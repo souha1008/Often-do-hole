@@ -118,7 +118,8 @@ public class MenuManager : MonoBehaviour
                     {
                         SoundManager.Instance.PlaySound(sound_ok_test.ToString());
                         // êUìÆ
-                        VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                        //VibrationManager.Instance.StartVibration(0.65f, 0.65f, 0.3f);
+                        VibrationManager.Instance.StopVibration();
                         Application.Quit();
                     }
                     break;

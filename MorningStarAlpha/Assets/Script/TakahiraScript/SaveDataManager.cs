@@ -124,6 +124,7 @@ public class SaveDataManager : SingletonMonoBehaviour<SaveDataManager>
         // ESCƒL[‚Å‚Ì‹­§I—¹ˆ—
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            VibrationManager.Instance.StopVibration();
             Application.Quit();
         }
     }
