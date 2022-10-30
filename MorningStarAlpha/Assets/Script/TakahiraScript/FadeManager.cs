@@ -224,7 +224,9 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     // フェードインしたときの処理(ゲームオーバー)(ゲームリスタート)
     private void FadeIn_GameOver()
     {
-        // ゲームシーンのリセット
+        // 振動強制停止
+        VibrationManager.Instance.StopVibration();
+        // シーンの変更
         SceneManager.LoadScene(NextSceneName);
         GameStateManager.SetGameState(GAME_STATE.PLAY);
         // 環境音停止
@@ -237,22 +239,32 @@ public class FadeManager : SingletonMonoBehaviour<FadeManager>
     // フェードインしたときの処理(シーン変更)
     public void FadeIn_SceneChange()
     {
+        // 振動強制停止
+        VibrationManager.Instance.StopVibration();
+        // シーンの変更
         SceneManager.LoadScene(NextSceneName);
-        SoundManager.Instance.StopSound(); // BGM等音消す
+        // BGM等音消す
+        SoundManager.Instance.StopSound(); 
     }
 
     // フェードインしたときの処理(ステージ変更)
     public void FadeIn_StageChange()
     {
+        // 振動強制停止
+        VibrationManager.Instance.StopVibration();
+        // シーンの変更
         SceneManager.LoadScene(NextSceneName);
         // BGM等消さない
     }
 
     public void FadeIn_NextStage()
     {
+        // 振動強制停止
+        VibrationManager.Instance.StopVibration();
+        // シーンの変更
         SceneManager.LoadScene(NextSceneName);
-        SoundManager.Instance.StopSound(); // BGM等音消す
-        // BGM等消す
+        // BGM等音消す
+        SoundManager.Instance.StopSound();
     }
 
     // フェード変更
